@@ -1,0 +1,5 @@
+# python
+*.pyc
+
+# django
+refriall_backend/db.sqlite3
