@@ -11,6 +11,7 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = [
+            "id",
             "code",
             "name",
             "item_type",
@@ -22,4 +23,4 @@ class ItemSerializer(serializers.ModelSerializer):
 class KitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Kit
-        fields = ["name"]
+        fields = ["id", "name"]

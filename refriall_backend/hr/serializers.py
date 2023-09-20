@@ -11,6 +11,7 @@ class ProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Provider
         fields = [
+            "id",
             "username",
             "password",
             "first_name",
@@ -24,6 +25,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = [
+            "id",
             "customer_type",
             "name",
             "address",
