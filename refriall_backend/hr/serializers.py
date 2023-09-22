@@ -13,7 +13,6 @@ class ProviderSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "username",
-            "password",
             "first_name",
             "last_name",
             "license_number",
