@@ -4,10 +4,25 @@
 from rest_framework import serializers
 
 # local
-from .models import Order
+from .models import Order, ItemTime
+from stock.serializers import ItemSerializer
+
+
+class ItemTimeSerializer(serializers.ModelSerializer):
+    item = ItemSerializer()
+
+    class Meta:
+        model = ItemTime
+        fields = [
+            "id",
+            "item",
+            "times",
+        ]
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    itemtime_set = ItemTimeSerializer(many=True)
+
     class Meta:
         model = Order
         fields = [
@@ -26,7 +41,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "kit_model",
             "kit_serial",
             "job_description",
-            "items",
+            "itemtime_set",
             "provider",
             "provider_signature_date",
             "customer_signature_date",
