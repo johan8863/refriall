@@ -10,8 +10,8 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'orders', views.OrderViewSet, basename='orders')
-router.register(r'itemtimes', views.ItemTimeViewSet, basename='itemtimes')
+router.register(r'orders', views.OrderViewSetReadOnly, basename='orders')
+router.register(r'orders_write', views.OrderViewSet, basename='orders_write')
 
 urlpatterns = [
     path('', include(router.urls)),
