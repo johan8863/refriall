@@ -111,31 +111,34 @@ class OrderSerializer(serializers.ModelSerializer):
         return order
     
     def update(self, instance, validated_data):
-        instance.customer = validated_data.get('customer', instance)
-        instance.symptom = validated_data.get('symptom', instance)
-        instance.flaw = validated_data.get('flaw', instance)
-        instance.repair_description = validated_data.get('repair_description', instance)
-        instance.folio = validated_data.get('folio', instance)
-        instance.check_diagnosis = validated_data.get('check_diagnosis', instance)
-        instance.repair = validated_data.get('repair', instance)
-        instance.install = validated_data.get('install', instance)
-        instance.maintenance = validated_data.get('maintenance', instance)
-        instance.kit = validated_data.get('kit', instance)
-        instance.kit_brand = validated_data.get('kit_brand', instance)
-        instance.kit_model = validated_data.get('kit_model', instance)
-        instance.kit_serial = validated_data.get('kit_serial', instance)
-        instance.job_description = validated_data.get('job_description', instance)
-        instance.provider = validated_data.get('provider', instance)
-        instance.provider_signature_date = validated_data.get('provider_signature_date', instance)
-        instance.customer_signature_date = validated_data.get('customer_signature_date', instance)
-        instance.check_number = validated_data.get('check_number', instance)
-        instance.charge_aprove = validated_data.get('charge_aprove', instance)
-        instance.charge_check = validated_data.get('charge_check', instance)
-        instance.customer_charge = validated_data.get('customer_charge', instance)
-        instance.customer_name = validated_data.get('customer_name', instance)
-        instance.customer_personal_id = validated_data.get('customer_personal_id', instance)
-        instance.checked_by = validated_data.get('checked_by', instance)
-        instance.aproved_by = validated_data.get('aproved_by', instance)
+        for attr in [
+            "customer", 
+            "symptom", 
+            "flaw", 
+            "repair_description", 
+            "folio", 
+            "check_diagnosis", 
+            "repair", 
+            "install", 
+            "maintenance", 
+            "kit", 
+            "kit_brand", 
+            "kit_model", 
+            "kit_serial", 
+            "job_description", 
+            "provider", 
+            "provider_signature_date", 
+            "customer_signature_date", 
+            "check_number", 
+            "charge_aprove", 
+            "charge_check", 
+            "customer_charge", 
+            "customer_name", 
+            "customer_personal_id", 
+            "checked_by", 
+            "aproved_by"
+        ]:
+            setattr(instance, attr, validated_data.get(attr, instance))
 
         # itemtime updating
         new_itemtimes = validated_data.get('itemtime_set')
