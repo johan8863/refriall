@@ -7,6 +7,10 @@ import KitDetail from "../views/kits/KitDetail.vue";
 import ItemDetail from "../views/items/ItemDetail.vue";
 import ItemForm from "../views/items/ItemForm.vue";
 import ItemList from "../views/items/ItemList.vue";
+// providers
+import ProviderDetail from "../views/providers/ProviderDetail.vue";
+import ProviderForm from "../views/providers/ProviderForm.vue";
+import ProviderList from "../views/providers/ProviderList.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -65,6 +69,32 @@ const router = createRouter({
           path: 'detail/:id', 
           name: 'items_detail', 
           component: ItemDetail
+        },
+      ]
+    },
+    {
+      path: '/providers',
+      name: 'providers',
+      // component: ProviderList,
+      children: [
+        {
+          path: '',
+          redirect: {name: 'providers_list'}
+        },
+        {
+          path: 'list', 
+          name: 'providers_list', 
+          component: ProviderList,
+        },
+        {
+          path: 'create', 
+          name: 'providers_create', 
+          component: ProviderForm
+        },
+        {
+          path: 'detail/:id', 
+          name: 'providers_detail', 
+          component: ProviderDetail
         },
       ]
     },

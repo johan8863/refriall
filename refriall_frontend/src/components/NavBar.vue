@@ -39,7 +39,9 @@
                             RRHH
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Prestadores</a></li>
+                            <li>
+                                <RouterLink class="dropdown-item" :to="{name: 'providers_list'}">Prestadores</RouterLink>
+                            </li>
                             <li><a class="dropdown-item" href="#">Clientes</a></li>
                         </ul>
                     </li>
