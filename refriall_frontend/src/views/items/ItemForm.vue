@@ -1,20 +1,13 @@
-<script setup>
-
-import { RouterLink } from "vue-router";
-
-</script>
-
 <template>
-
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    <strong>Equipos</strong>
+                    <strong>Artículos</strong>
                 </li>
                 <li class="list-group-item">
-                    <router-link :to="{name: 'kits_list'}">Equipos</router-link>
+                    <RouterLink :to="{name: 'items_list'}">Artículos</RouterLink>
                 </li>
             </ul>
         </div>
@@ -36,8 +29,13 @@ import { RouterLink } from "vue-router";
         </div>
 
     </div> <!-- end row -->
-
 </template>
+
+<script setup>
+
+import { RouterLink } from "vue-router";
+
+</script>
 
 <style lang="scss" scoped>
 

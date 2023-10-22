@@ -4,21 +4,20 @@
         <div class="col-md-2">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    <strong>Equipos</strong>
+                    <strong>Artículos</strong>
                 </li>
                 <li class="list-group-item">
-                    <router-link :to="{name: 'kits_list'}">Equipos</router-link>
+                    <RouterLink :to="{name: 'items_list'}">Artículos</RouterLink>
                 </li>
             </ul>
         </div>
 
         <!-- main content -->
         <div class="col-md-4">
-            <h3>Kit: {{ $route.params.id }}</h3>
+            <h3>Artículo: {{ $route.params.id }}</h3>
         </div>
 
     </div> <!-- end row -->
-
 </template>
 
 <script setup>

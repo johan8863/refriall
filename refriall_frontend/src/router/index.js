@@ -1,7 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import KitList from "@/views/kits/KitList.vue";
-import KitForm from "@/views/kits/KitForm.vue";
-import KitDetail from "@/views/kits/KitDetail.vue";
+// kits
+import KitList from "../views/kits/KitList.vue";
+import KitForm from "../views/kits/KitForm.vue";
+import KitDetail from "../views/kits/KitDetail.vue";
+// items
+import ItemDetail from "../views/items/ItemDetail.vue";
+import ItemForm from "../views/items/ItemForm.vue";
+import ItemList from "../views/items/ItemList.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +39,32 @@ const router = createRouter({
           path: 'detail/:id', 
           name: 'kits_detail', 
           component: KitDetail
+        },
+      ]
+    },
+    {
+      path: '/items',
+      name: 'items',
+      // component: ItemList,
+      children: [
+        {
+          path: '',
+          redirect: {name: 'items_list'}
+        },
+        {
+          path: 'list', 
+          name: 'items_list', 
+          component: ItemList,
+        },
+        {
+          path: 'create', 
+          name: 'items_create', 
+          component: ItemForm
+        },
+        {
+          path: 'detail/:id', 
+          name: 'items_detail', 
+          component: ItemDetail
         },
       ]
     },

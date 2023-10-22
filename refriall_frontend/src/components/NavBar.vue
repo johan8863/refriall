@@ -25,9 +25,11 @@
                             Almacén
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Artículos</a></li>
                             <li>
-                                <router-link class="dropdown-item" :to="{name: 'kits_list'}">Equipos</router-link>
+                                <RouterLink class="dropdown-item" :to="{name: 'items_list'}">Artículos</RouterLink>
+                            </li>
+                            <li>
+                                <RouterLink class="dropdown-item" :to="{name: 'kits_list'}">Equipos</RouterLink>
                             </li>
                         </ul>
                     </li>
