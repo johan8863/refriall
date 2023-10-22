@@ -15,6 +15,10 @@ import ProviderList from "../views/providers/ProviderList.vue";
 import CustomerDetail from "../views/customers/CustomerDetail.vue";
 import CustomerForm from "../views/customers/CustomerForm.vue";
 import CustomerList from "../views/customers/CustomerList.vue";
+// orders
+import OrderDetail from "../views/orders/OrderDetail.vue";
+import OrderForm from "../views/orders/OrderForm.vue";
+import OrderList from "../views/orders/OrderList.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -125,6 +129,32 @@ const router = createRouter({
           path: 'detail/:id', 
           name: 'customers_detail', 
           component: CustomerDetail
+        },
+      ]
+    },
+    {
+      path: '/orders',
+      name: 'orders',
+      // component: OrderList,
+      children: [
+        {
+          path: '',
+          redirect: {name: 'orders_list'}
+        },
+        {
+          path: 'list', 
+          name: 'orders_list', 
+          component: OrderList,
+        },
+        {
+          path: 'create', 
+          name: 'orders_create', 
+          component: OrderForm
+        },
+        {
+          path: 'detail/:id', 
+          name: 'orders_detail', 
+          component: OrderDetail
         },
       ]
     },

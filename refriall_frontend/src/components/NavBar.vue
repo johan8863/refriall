@@ -15,7 +15,9 @@
                             Facturación
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Órdenes</a></li>
+                            <li>
+                                <RouterLink class="dropdown-item" :to="{name: 'orders_list'}">Órdenes</RouterLink>
+                            </li>
                             <li><a class="dropdown-item" href="#">Facturas</a></li>
                         </ul>
                     </li>
