@@ -26,7 +26,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">Artículos</a></li>
-                            <li><a class="dropdown-item" href="#">Equipos</a></li>
+                            <li>
+                                <router-link class="dropdown-item" :to="{name: 'kits_list'}">Equipos</router-link>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -47,3 +49,9 @@
         </div>
     </nav>
 </template>
+
+<script setup>
+
+import { RouterLink } from "vue-router";
+
+</script>
