@@ -42,7 +42,9 @@
                             <li>
                                 <RouterLink class="dropdown-item" :to="{name: 'providers_list'}">Prestadores</RouterLink>
                             </li>
-                            <li><a class="dropdown-item" href="#">Clientes</a></li>
+                            <li>
+                                <RouterLink class="dropdown-item" :to="{name: 'customers_list'}">Clientes</RouterLink>
+                            </li>
                         </ul>
                     </li>
                 </ul>
