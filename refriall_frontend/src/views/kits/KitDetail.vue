@@ -7,7 +7,7 @@
                     <strong>Equipos</strong>
                 </li>
                 <li class="list-group-item">
-                    <router-link :to="{name: 'kits_list'}">Equipos</router-link>
+                    <router-link :to="{name: 'kits'}">Equipos</router-link>
                 </li>
             </ul>
         </div>

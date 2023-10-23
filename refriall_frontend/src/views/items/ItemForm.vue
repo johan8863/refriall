@@ -7,7 +7,7 @@
                     <strong>Artículos</strong>
                 </li>
                 <li class="list-group-item">
-                    <RouterLink :to="{name: 'items_list'}">Artículos</RouterLink>
+                    <RouterLink :to="{name: 'items'}">Artículos</RouterLink>
                 </li>
             </ul>
         </div>

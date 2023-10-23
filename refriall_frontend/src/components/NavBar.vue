@@ -16,7 +16,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <RouterLink class="dropdown-item" :to="{name: 'orders_list'}">Órdenes</RouterLink>
+                                <RouterLink class="dropdown-item" :to="{name: 'orders'}">Órdenes</RouterLink>
                             </li>
                             <li><a class="dropdown-item" href="#">Facturas</a></li>
                         </ul>
@@ -28,10 +28,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <RouterLink class="dropdown-item" :to="{name: 'items_list'}">Artículos</RouterLink>
+                                <RouterLink class="dropdown-item" :to="{name: 'items'}">Artículos</RouterLink>
                             </li>
                             <li>
-                                <RouterLink class="dropdown-item" :to="{name: 'kits_list'}">Equipos</RouterLink>
+                                <RouterLink class="dropdown-item" :to="{name: 'kits'}">Equipos</RouterLink>
                             </li>
                         </ul>
                     </li>
@@ -42,10 +42,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <RouterLink class="dropdown-item" :to="{name: 'providers_list'}">Prestadores</RouterLink>
+                                <RouterLink class="dropdown-item" :to="{name: 'providers'}">Prestadores</RouterLink>
                             </li>
                             <li>
-                                <RouterLink class="dropdown-item" :to="{name: 'customers_list'}">Clientes</RouterLink>
+                                <RouterLink class="dropdown-item" :to="{name: 'customers'}">Clientes</RouterLink>
                             </li>
                         </ul>
                     </li>

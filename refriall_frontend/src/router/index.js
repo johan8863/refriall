@@ -1,23 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// kits
-import KitList from "../views/kits/KitList.vue";
-import KitForm from "../views/kits/KitForm.vue";
-import KitDetail from "../views/kits/KitDetail.vue";
-// items
-import ItemDetail from "../views/items/ItemDetail.vue";
-import ItemForm from "../views/items/ItemForm.vue";
-import ItemList from "../views/items/ItemList.vue";
-// providers
-import ProviderDetail from "../views/providers/ProviderDetail.vue";
-import ProviderForm from "../views/providers/ProviderForm.vue";
-import ProviderList from "../views/providers/ProviderList.vue";
-// customers
-import CustomerDetail from "../views/customers/CustomerDetail.vue";
-import CustomerForm from "../views/customers/CustomerForm.vue";
-import CustomerList from "../views/customers/CustomerList.vue";
-// orders
-import OrderDetail from "../views/orders/OrderDetail.vue";
-import OrderForm from "../views/orders/OrderForm.vue";
 import OrderList from "../views/orders/OrderList.vue";
 
 const router = createRouter({
@@ -26,146 +7,83 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: KitList
+      component: OrderList
     },
     {
       path: '/kits',
       name: 'kits',
-      // component: KitList,
-      children: [
-        {
-          path: '',
-          redirect: {name: 'kits_list'}
-        },
-        {
-          path: 'list', 
-          name: 'kits_list', 
-          component: KitList,
-        },
-        {
-          path: 'create', 
-          name: 'kits_create', 
-          component: KitForm
-        },
-        {
-          path: 'detail/:id', 
-          name: 'kits_detail', 
-          component: KitDetail
-        },
-      ]
+      component: () => import('../views/kits/KitList.vue'),
+    },
+    {
+      path: '/kits/create', 
+      name: 'kits_create', 
+      component: () => import('../views/kits/KitForm.vue')
+    },
+    {
+      path: '/kits/detail/:id', 
+      name: 'kits_detail', 
+      component: () => import('../views/kits/KitDetail.vue')
     },
     {
       path: '/items',
       name: 'items',
-      // component: ItemList,
-      children: [
-        {
-          path: '',
-          redirect: {name: 'items_list'}
-        },
-        {
-          path: 'list', 
-          name: 'items_list', 
-          component: ItemList,
-        },
-        {
-          path: 'create', 
-          name: 'items_create', 
-          component: ItemForm
-        },
-        {
-          path: 'detail/:id', 
-          name: 'items_detail', 
-          component: ItemDetail
-        },
-      ]
+      component: () => import('../views/items/ItemList.vue')
+    },
+    {
+      path: '/items/create', 
+      name: 'items_create', 
+      component: () => import('../views/items/ItemForm.vue')
+    },
+    {
+      path: '/items/detail/:id', 
+      name: 'items_detail', 
+      component: () => import('../views/items/ItemDetail.vue')
     },
     {
       path: '/providers',
       name: 'providers',
-      // component: ProviderList,
-      children: [
-        {
-          path: '',
-          redirect: {name: 'providers_list'}
-        },
-        {
-          path: 'list', 
-          name: 'providers_list', 
-          component: ProviderList,
-        },
-        {
-          path: 'create', 
-          name: 'providers_create', 
-          component: ProviderForm
-        },
-        {
-          path: 'detail/:id', 
-          name: 'providers_detail', 
-          component: ProviderDetail
-        },
-      ]
+      component: () => import('../views/providers/ProviderList.vue')
+    },
+    {
+      path: '/providers/create', 
+      name: 'providers_create', 
+      component: () => import('../views/providers/ProviderForm.vue')
+    },
+    {
+      path: '/providers/detail/:id', 
+      name: 'providers_detail', 
+      component: () => import('../views/providers/ProviderDetail.vue')
     },
     {
       path: '/customers',
       name: 'customers',
-      // component: CustomerList,
-      children: [
-        {
-          path: '',
-          redirect: {name: 'customers_list'}
-        },
-        {
-          path: 'list', 
-          name: 'customers_list', 
-          component: CustomerList,
-        },
-        {
-          path: 'create', 
-          name: 'customers_create', 
-          component: CustomerForm
-        },
-        {
-          path: 'detail/:id', 
-          name: 'customers_detail', 
-          component: CustomerDetail
-        },
-      ]
+      component: () => import('../views/customers/CustomerList.vue')
+    },
+    {
+      path: '/customers/create', 
+      name: 'customers_create', 
+      component: () => import('../views/customers/CustomerForm.vue')
+    },
+    {
+      path: '/customers/detail/:id', 
+      name: 'customers_detail', 
+      component: () => import('../views/customers/CustomerDetail.vue')
     },
     {
       path: '/orders',
       name: 'orders',
-      // component: OrderList,
-      children: [
-        {
-          path: '',
-          redirect: {name: 'orders_list'}
-        },
-        {
-          path: 'list', 
-          name: 'orders_list', 
-          component: OrderList,
-        },
-        {
-          path: 'create', 
-          name: 'orders_create', 
-          component: OrderForm
-        },
-        {
-          path: 'detail/:id', 
-          name: 'orders_detail', 
-          component: OrderDetail
-        },
-      ]
+      component: OrderList,
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('@/views/kits/KitList.vue')
-    // }
+    {
+      path: '/orders/create', 
+      name: 'orders_create', 
+      component: () => import('../views/orders/OrderForm.vue')
+    },
+    {
+      path: '/orders/detail/:id', 
+      name: 'orders_detail', 
+      component: () => import('../views/orders/OrderDetail.vue')
+    },
   ]
 })
 

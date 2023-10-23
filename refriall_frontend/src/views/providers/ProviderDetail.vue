@@ -7,7 +7,7 @@
                     <strong>Prestadores</strong>
                 </li>
                 <li class="list-group-item">
-                    <router-link :to="{name: 'providers_list'}">Prestadores</router-link>
+                    <router-link :to="{name: 'providers'}">Prestadores</router-link>
                 </li>
             </ul>
         </div>

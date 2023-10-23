@@ -14,7 +14,7 @@ import { RouterLink } from "vue-router";
                     <strong>Órdenes</strong>
                 </li>
                 <li class="list-group-item">
-                    <router-link :to="{name: 'orders_list'}">Órdenes</router-link>
+                    <router-link :to="{name: 'orders'}">Órdenes</router-link>
                 </li>
             </ul>
         </div>
