@@ -14,7 +14,7 @@
 
         <!-- main content -->
         <div class="col-md-4">
-            <h3>Kit: {{ $route.params.id }}</h3>
+            <h3>{{ kit.name }}</h3>
         </div>
 
     </div> <!-- end row -->
@@ -23,7 +23,22 @@
 
 <script setup>
 
-import { RouterLink } from "vue-router";
+import { onMounted, ref } from "vue";
+import { RouterLink, useRoute } from "vue-router";
+import axios from 'axios';
+
+const route = useRoute();
+const url = 'http://127.0.0.1:8000/stock/kits/';
+const id = route.params.id;
+const kit = ref({
+    name: ''
+});
+
+onMounted(async () => {
+    const resp = await axios.get(`${url}${id}`);
+    kit.value = resp.data;
+});
+
 
 </script>
 

@@ -24,8 +24,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><a href="#">Refrigerador</a></td>
+                                <tr v-for="kit in kits" :key="kit.id">
+                                    <td>
+                                        <RouterLink :to="{name: 'kits_detail', params: {id: kit.id}}">{{kit.name}}</RouterLink>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -42,11 +44,16 @@
 
 <script setup>
 
+import { onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
-import { ref } from "vue";
+import axios from "axios"; 
 
-const kits = ref([])
+const kits = ref([]);
+const url = 'http://127.0.0.1:8000/stock/kits/';
 
-// kits.value.push('Split')
+onMounted(async () => {
+    const resp = await axios.get(url);
+    kits.value = resp.data;
+});
 
 </script>
