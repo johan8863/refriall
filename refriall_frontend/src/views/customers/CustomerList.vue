@@ -24,8 +24,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><a href="#">Educación</a></td>
+                                <tr v-for="customer in customers" :key="customer.id">
+                                    <td>
+                                        <RouterLink :to="{name: 'customers_detail', params: {id: customer.id}}">{{ customer.name }}</RouterLink>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -42,9 +44,16 @@
 
 <script setup>
 
+import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
-import { ref } from "vue";
+import axios from "axios";
 
-const customers = ref([])
+const url = 'http://127.0.0.1:8000/hr/customers/';
+const customers = ref([]);
+
+onMounted(async () => {
+    const resp = await axios.get(`${url}`);
+    customers.value = resp.data;
+});
 
 </script>

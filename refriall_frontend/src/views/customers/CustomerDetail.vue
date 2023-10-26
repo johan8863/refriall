@@ -14,7 +14,11 @@
 
         <!-- main content -->
         <div class="col-md-4">
-            <h3>Cliente: {{ $route.params.id }}</h3>
+            <h3>{{ customer.name }}</h3>
+            <hr>
+            <p>{{ customer.address }}</p>
+            <p>Titular de la cuenta: {{ customer.bank_account_header }}</p>
+            <p>Buenta bancaria: {{ customer.bank_account }}</p>
         </div>
 
     </div> <!-- end row -->
@@ -23,7 +27,18 @@
 
 <script setup>
 
-import { RouterLink } from "vue-router";
+import { ref, onMounted } from "vue";
+import { RouterLink, useRoute } from "vue-router";
+import axios from "axios";
+
+const url = 'http://127.0.0.1:8000/hr/customers/';
+const route = useRoute();
+const customer = ref({});
+
+onMounted(async () => {
+    const resp = await axios.get(`${url}${route.params.id}`)
+    customer.value = resp.data;
+});
 
 </script>
 
