@@ -27,15 +27,14 @@ import { onMounted, ref } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 import axios from 'axios';
 
-const route = useRoute();
 const url = 'http://127.0.0.1:8000/stock/kits/';
-const id = route.params.id;
+const route = useRoute();
 const kit = ref({
     name: ''
 });
 
 onMounted(async () => {
-    const resp = await axios.get(`${url}${id}`);
+    const resp = await axios.get(`${url}${route.params.id}`);
     kit.value = resp.data;
 });
 

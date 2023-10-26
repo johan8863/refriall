@@ -13,8 +13,24 @@
         </div>
 
         <!-- main content -->
-        <div class="col-md-4">
-            <h3>Artículo: {{ $route.params.id }}</h3>
+        <div class="col-md-6">
+            <h3>Artículo: <small>{{ item.name }}</small></h3>
+            <hr>
+            <p>Código: {{ item.code }}</p>
+
+            <p v-if="item.item_type === 'product'">Tipo: Producto</p>
+            <p v-if="item.item_type === 'concept'">Tipo: Concepto</p>
+            <p v-if="item.item_type === 'repair'">Tipo: Reparación</p>
+            <p v-if="item.item_type === 'maintenace'">Tipo: Mtto</p>
+            <p v-if="item.item_type === 'install'">Tipo: Instal/Mont</p>
+            <p v-if="item.item_type === 'unmounting'">Tipo: Desmontaje</p>
+
+            <p v-if="item.measurement === 'u'">U/M: Uno</p>
+            <p v-if="item.measurement === 'm'">U/M: Metros</p>
+            <p v-if="item.measurement === 'kg'">U/M: Kilogramos</p>
+            <p v-if="item.measurement === 'lts'">U/M: Litros</p>
+
+            <p>Precio: {{ item.price }}</p>
         </div>
 
     </div> <!-- end row -->
@@ -22,7 +38,18 @@
 
 <script setup>
 
-import { RouterLink } from "vue-router";
+import { ref, onMounted } from "vue";
+import { RouterLink, useRoute } from "vue-router";
+import axios from "axios";
+
+const url = 'http://127.0.0.1:8000/stock/items/';
+const route = useRoute();
+const item = ref({});
+
+onMounted(async () => {
+    const resp = await axios.get(`${url}${route.params.id}`);
+    item.value = resp.data;
+});
 
 </script>
 

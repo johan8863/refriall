@@ -48,8 +48,8 @@ import { onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
 import axios from "axios"; 
 
-const kits = ref([]);
 const url = 'http://127.0.0.1:8000/stock/kits/';
+const kits = ref([]);
 
 onMounted(async () => {
     const resp = await axios.get(url);

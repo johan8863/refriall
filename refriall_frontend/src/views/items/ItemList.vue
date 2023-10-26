@@ -15,7 +15,7 @@
         <!-- main content -->
         <div class="col-md-10">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                         <table v-if="items.length > 0" class="table">
                             <thead>
                                 <tr>
@@ -23,8 +23,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><a href="#">Montaje de Split</a></td>
+                                <tr v-for="item in items" :key="item.id">
+                                    <td>
+                                        <RouterLink :to="{name: 'items_detail', params: {id: item.id}}">{{ item.name }}</RouterLink>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -39,10 +41,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
+import axios from "axios";
 
-const items = ref([])
+const url = 'http://127.0.0.1:8000/stock/items/';
+const items = ref([]);
+
+onMounted(async () => {
+    const resp = await axios.get(url);
+    items.value = resp.data;
+});
 
 </script>
 
