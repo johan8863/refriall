@@ -24,8 +24,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><a href="#">Pedro</a></td>
+                                <tr v-for="provider in providers" :key="provider.id">
+                                    <td>
+                                        <router-link :to="{name: 'providers_detail', params: {id: provider.id}}">{{ provider.first_name }}</router-link>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -42,9 +44,16 @@
 
 <script setup>
 
+import axios from "axios";
+import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
-import { ref } from "vue";
 
-const providers = ref([])
+const url = 'http://127.0.0.1:8000/hr/providers/';
+const providers = ref([]);
+
+onMounted(async () => {
+    const resp = await axios.get(url);
+    providers.value = resp.data;
+});
 
 </script>
