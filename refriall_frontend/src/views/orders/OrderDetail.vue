@@ -14,7 +14,7 @@
 
         <!-- main content -->
         <div class="col-md-4">
-            <h3>Orden: {{ $route.params.id }}</h3>
+            <h3>Orden: {{ order.id }}</h3>
         </div>
 
     </div> <!-- end row -->
@@ -23,7 +23,18 @@
 
 <script setup>
 
-import { RouterLink } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
+import { ref, onMounted } from 'vue';
+import axios from "axios";
+
+const url = 'http://127.0.0.1:8000/finance/orders/';
+const route = useRoute();
+const order = ref({});
+
+onMounted(async () => {
+    const resp = await axios.get(`${url}${route.params.id}`);
+    order.value = resp.data;
+});
 
 </script>
 

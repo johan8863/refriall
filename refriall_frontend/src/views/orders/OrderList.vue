@@ -24,8 +24,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><a href="#">HHB</a></td>
+                                <tr v-for="order in orders" :key="order.id">
+                                    <td>
+                                        <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.customer }}</router-link>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -42,8 +44,15 @@
 <script setup>
 
 import { RouterLink } from "vue-router";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-const orders = ref([])
+const url = 'http://127.0.0.1:8000/finance/orders/';
+const orders = ref([]);
+
+onMounted(async () => {
+    const resp = await axios.get(url);
+    orders.value = resp.data;
+});
 
 </script>
