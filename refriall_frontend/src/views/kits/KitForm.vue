@@ -39,7 +39,7 @@ const postKit = async (kit) => {
 
         <!-- main content -->
         <div class="col-md-4">
-            <form method="post" @submit.prevent="postKit(kit)">
+            <form method="post" @submit.prevent>
                 <!-- name control -->
                 <div class="mb-2">
                     <label for="name" class="form-label">Nombre</label>
@@ -51,11 +51,10 @@ const postKit = async (kit) => {
                 </div>
                 <!-- buttons -->
                 <div>
-                    <input
+                    <button
                       type="button"
                       @click="postKit(kit)"
-                      class="btn btn-sm btn-primary"
-                      value="Guardar">
+                      class="btn btn-sm btn-primary">Guardar</button>
                     <a href="#" class="btn btn-sm btn-secondary">Cancelar</a>
                 </div>
             </form>
