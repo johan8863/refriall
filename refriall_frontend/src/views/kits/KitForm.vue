@@ -24,9 +24,6 @@ const postKit = async (kit) => {
 const putKit = async (kit) => {
     try {
         const resp = await axios.put(`${url}${kit.id}/`, kit);
-        // kit.value = {
-        //     name: ''
-        // };
         router.push({name: 'kits_detail', params: {id: resp.data.id}});
     } catch (error) {
         console.log(error);
@@ -74,7 +71,7 @@ onMounted(async () => {
                 <div>
                     <button
                       type="button"
-                      @click="kit.id? putKit(kit) : postKit(kit)"
+                      @click="kit.id ? putKit(kit) : postKit(kit)"
                       class="btn btn-sm btn-primary">Guardar</button>
                     <a href="#" class="btn btn-sm btn-secondary">Cancelar</a>
                 </div>
