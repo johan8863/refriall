@@ -25,6 +25,11 @@ const router = createRouter({
       component: () => import('../views/kits/KitDetail.vue')
     },
     {
+      path: '/kits/update/:id', 
+      name: 'kits_update', 
+      component: () => import('../views/kits/KitForm.vue')
+    },
+    {
       path: '/items',
       name: 'items',
       component: () => import('../views/items/ItemList.vue')

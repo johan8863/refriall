@@ -1,11 +1,12 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
-import { RouterLink, useRouter } from "vue-router";
+import { ref, onMounted } from "vue";
+import { RouterLink, useRouter, useRoute } from "vue-router";
 
 const url = 'http://127.0.0.1:8000/stock/kits/';
 const kit = ref({});
 const router = useRouter();
+const route = useRoute();
 
 
 const postKit = async (kit) => {
@@ -19,6 +20,26 @@ const postKit = async (kit) => {
         console.log(error);
     }
 };
+
+const putKit = async (kit) => {
+    try {
+        const resp = await axios.put(`${url}${kit.id}/`, kit);
+        // kit.value = {
+        //     name: ''
+        // };
+        router.push({name: 'kits_detail', params: {id: resp.data.id}});
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+onMounted(async () => {
+    const id = route.params.id;
+    if (id) {
+        const resp = await axios.get(`${url}${route.params.id}`);
+        kit.value = resp.data;
+    }
+});
 
 </script>
 
@@ -53,7 +74,7 @@ const postKit = async (kit) => {
                 <div>
                     <button
                       type="button"
-                      @click="postKit(kit)"
+                      @click="kit.id? putKit(kit) : postKit(kit)"
                       class="btn btn-sm btn-primary">Guardar</button>
                     <a href="#" class="btn btn-sm btn-secondary">Cancelar</a>
                 </div>
