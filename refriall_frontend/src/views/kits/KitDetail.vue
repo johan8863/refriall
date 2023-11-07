@@ -12,6 +12,9 @@
                 <li class="list-group-item">
                     <router-link :to="{name: 'kits_update', params: {id: kit.id}}">Editar</router-link>
                 </li>
+                <li class="list-group-item">
+                    <router-link :to="{name: 'kits_update', params: {id: kit.id}}">Eliminar</router-link>
+                </li>
             </ul>
         </div>
 
@@ -28,16 +31,15 @@
 
 import { onMounted, ref } from "vue";
 import { RouterLink, useRoute } from "vue-router";
-import axios from 'axios';
+import { detatilKit } from "../../services/kit.service";
 
-const url = 'http://127.0.0.1:8000/stock/kits/';
 const route = useRoute();
 const kit = ref({
     name: ''
 });
 
 onMounted(async () => {
-    const resp = await axios.get(`${url}${route.params.id}`);
+    const resp = await detatilKit(route.params.id);
     kit.value = resp.data;
 });
 

@@ -1,40 +1,29 @@
 <script setup>
-import axios from "axios";
 import { ref, onMounted } from "vue";
 import { RouterLink, useRouter, useRoute } from "vue-router";
+import { postKit, putKit, detatilKit } from "../../services/kit.service";
 
-const url = 'http://127.0.0.1:8000/stock/kits/';
-const kit = ref({});
+const kit = ref({
+    name: ''
+});
 const router = useRouter();
 const route = useRoute();
 
-
-const postKit = async (kit) => {
-    try {
-        const resp = await axios.post(url, kit);
-        kit.value = {
-            name: ''
-        };
-        router.push({name: 'kits_detail', params: {id: resp.data.id}});
-    } catch (error) {
-        console.log(error);
-    }
+const createKit = async (kit) => {
+    const { data } = await postKit(kit);
+    router.push({name: 'kits_detail', params: {id: data.id}});
 };
 
-const putKit = async (kit) => {
-    try {
-        const resp = await axios.put(`${url}${kit.id}/`, kit);
-        router.push({name: 'kits_detail', params: {id: resp.data.id}});
-    } catch (error) {
-        console.log(error);
-    }
+const updateKit = async (kit) => {
+    const { data } = await putKit(kit);
+    router.push({name: 'kits_detail', params: {id: data.id}});
 };
 
 onMounted(async () => {
     const id = route.params.id;
     if (id) {
-        const resp = await axios.get(`${url}${route.params.id}`);
-        kit.value = resp.data;
+        const { data } = await detatilKit(id);
+        kit.value = data;
     }
 });
 
@@ -71,8 +60,8 @@ onMounted(async () => {
                 <div>
                     <button
                       type="button"
-                      @click="kit.id ? putKit(kit) : postKit(kit)"
-                      class="btn btn-sm btn-primary">Guardar</button>
+                      @click="kit.id ? updateKit(kit) : createKit(kit)"
+                      class="btn btn-sm btn-primary">{{kit.id ? 'Actualizar' : 'Guardar'}}</button>
                     <a href="#" class="btn btn-sm btn-secondary">Cancelar</a>
                 </div>
             </form>
