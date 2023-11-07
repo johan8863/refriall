@@ -44,15 +44,14 @@
 
 <script setup>
 
-import axios from "axios";
 import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
+import { listProvider } from "../../services/provider.service";
 
-const url = 'http://127.0.0.1:8000/hr/providers/';
 const providers = ref([]);
 
 onMounted(async () => {
-    const resp = await axios.get(url);
+    const resp = await listProvider();
     providers.value = resp.data;
 });
 

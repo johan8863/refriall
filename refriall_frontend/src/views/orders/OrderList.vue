@@ -45,13 +45,12 @@
 
 import { RouterLink } from "vue-router";
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import { listOrder } from "../../services/order.service";
 
-const url = 'http://127.0.0.1:8000/finance/orders/';
 const orders = ref([]);
 
 onMounted(async () => {
-    const resp = await axios.get(url);
+    const resp = await listOrder();
     orders.value = resp.data;
 });
 

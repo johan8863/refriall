@@ -25,14 +25,13 @@
 
 import { RouterLink, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
-import axios from "axios";
+import { detailOrder } from "../../services/order.service";
 
-const url = 'http://127.0.0.1:8000/finance/orders/';
 const route = useRoute();
 const order = ref({});
 
 onMounted(async () => {
-    const resp = await axios.get(`${url}${route.params.id}`);
+    const resp = await detailOrder(route.params.id);
     order.value = resp.data;
 });
 

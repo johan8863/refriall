@@ -25,14 +25,13 @@
 
 import { RouterLink, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
-import axios from "axios";
+import { detailProvider } from "../../services/provider.service";
 
-const url = 'http://127.0.0.1:8000/hr/providers/';
 const route = useRoute();
 const provider = ref({});
 
 onMounted(async () => {
-    const resp = await axios.get(`${url}${route.params.id}`);
+    const resp = await detailProvider(route.params.id);
     provider.value = resp.data;
 });
 

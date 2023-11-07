@@ -46,13 +46,12 @@
 
 import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
-import axios from "axios";
+import { listCustomer } from "../../services/customer.service";
 
-const url = 'http://127.0.0.1:8000/hr/customers/';
 const customers = ref([]);
 
 onMounted(async () => {
-    const resp = await axios.get(`${url}`);
+    const resp = await listCustomer();
     customers.value = resp.data;
 });
 

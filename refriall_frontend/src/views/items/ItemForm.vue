@@ -15,9 +15,29 @@
         <!-- main content -->
         <div class="col-md-4">
             <form method="post">
+                <!-- code control -->
+                <div class="mb-2">
+                    <label for="name" class="form-label">Código</label>
+                    <input type="text" id="name" class="form-control">
+                </div>
                 <!-- name control -->
                 <div class="mb-2">
                     <label for="name" class="form-label">Nombre</label>
+                    <input type="text" id="name" class="form-control">
+                </div>
+                <!-- item_type control -->
+                <div class="mb-2">
+                    <label for="name" class="form-label">Tipo</label>
+                    <input type="text" id="name" class="form-control">
+                </div>
+                <!-- measurement control -->
+                <div class="mb-2">
+                    <label for="name" class="form-label">U/M</label>
+                    <input type="text" id="name" class="form-control">
+                </div>
+                <!-- price control -->
+                <div class="mb-2">
+                    <label for="name" class="form-label">Precio</label>
                     <input type="text" id="name" class="form-control">
                 </div>
                 <!-- buttons -->

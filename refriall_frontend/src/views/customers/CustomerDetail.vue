@@ -29,14 +29,14 @@
 
 import { ref, onMounted } from "vue";
 import { RouterLink, useRoute } from "vue-router";
-import axios from "axios";
+import { detailCustomer } from "../../services/customer.service";
 
-const url = 'http://127.0.0.1:8000/hr/customers/';
+
 const route = useRoute();
 const customer = ref({});
 
 onMounted(async () => {
-    const resp = await axios.get(`${url}${route.params.id}`)
+    const resp = await detailCustomer(route.params.id);
     customer.value = resp.data;
 });
 

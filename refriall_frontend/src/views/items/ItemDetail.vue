@@ -40,14 +40,14 @@
 
 import { ref, onMounted } from "vue";
 import { RouterLink, useRoute } from "vue-router";
-import axios from "axios";
+import { detailItem } from "../../services/item.service";
 
-const url = 'http://127.0.0.1:8000/stock/items/';
+
 const route = useRoute();
 const item = ref({});
 
 onMounted(async () => {
-    const resp = await axios.get(`${url}${route.params.id}`);
+    const resp = await detailItem(route.params.id);
     item.value = resp.data;
 });
 
