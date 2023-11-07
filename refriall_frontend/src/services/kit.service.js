@@ -34,3 +34,11 @@ export const putKit = async (kit) => {
         console.log(error);
     }
 };
+
+export const deleteKit = async (id) => {
+    try {
+        await apiBase.delete(`${urlKit}/${id}/`);
+    } catch (error) {
+        console.log(error);
+    }
+};
