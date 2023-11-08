@@ -105,7 +105,7 @@
                 <div>
                     <button
                       class="btn btn-sm btn-primary"
-                      @click="createCustomer(customer)">Guardar</button>
+                      @click="customer.id ? updateCustomer(customer) : createCustomer(customer)">{{ customer.id ? 'Actualizar' : 'Guardar' }}</button>
                     <a href="#" class="btn btn-sm btn-secondary">Cancelar</a>
                 </div>
             </form>
@@ -137,6 +137,11 @@ const route = useRoute();
 
 const createCustomer = async (customer) => {
     const { data } = await postCustomer(customer);
+    router.push({name: 'customers_detail', params: {id: data.id}});
+};
+
+const updateCustomer = async (customer) => {
+    const { data } = await putCustomer(customer);
     router.push({name: 'customers_detail', params: {id: data.id}});
 };
 
