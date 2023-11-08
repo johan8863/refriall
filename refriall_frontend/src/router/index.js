@@ -45,6 +45,11 @@ const router = createRouter({
       component: () => import('../views/items/ItemDetail.vue')
     },
     {
+      path: '/items/update/:id', 
+      name: 'items_update', 
+      component: () => import('../views/items/ItemForm.vue')
+    },
+    {
       path: '/providers',
       name: 'providers',
       component: () => import('../views/providers/ProviderList.vue')
@@ -73,6 +78,11 @@ const router = createRouter({
       path: '/customers/detail/:id', 
       name: 'customers_detail', 
       component: () => import('../views/customers/CustomerDetail.vue')
+    },
+    {
+      path: '/customers/update/:id', 
+      name: 'customers_update', 
+      component: () => import('../views/customers/CustomerForm.vue')
     },
     {
       path: '/orders',

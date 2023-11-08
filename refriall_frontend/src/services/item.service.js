@@ -26,9 +26,9 @@ export const postItem = async (item) => {
     }
 };
 
-export const putItem = async (id) => {
+export const putItem = async (item) => {
     try {
-        return await apiBase.put(`${urlItem}/${id}/`);
+        return await apiBase.put(`${urlItem}/${item.id}/`, item);
     } catch (error) {
         console.log(error);
     }

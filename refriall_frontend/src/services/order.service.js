@@ -26,9 +26,9 @@ export const postOrder = async (order) => {
     }
 };
 
-export const putOrder = async (id) => {
+export const putOrder = async (order) => {
     try {
-        return await apiBase.put(`${urlOrder}/${id}/`);
+        return await apiBase.put(`${urlOrder}/${order.id}/`, order);
     } catch (error) {
         console.log(error);
     }

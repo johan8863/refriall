@@ -9,6 +9,9 @@
                 <li class="list-group-item">
                     <router-link :to="{name: 'customers'}">Clientes</router-link>
                 </li>
+                <li class="list-group-item">
+                    <router-link :to="{name: 'customers_update', params: {id: customer.id}}">Editar</router-link>
+                </li>
             </ul>
         </div>
 
@@ -33,7 +36,17 @@ import { detailCustomer } from "../../services/customer.service";
 
 
 const route = useRoute();
-const customer = ref({});
+const customer = ref({
+    customer_type: '',
+    name: '',
+    address: '',
+    province: '',
+    township: '',
+    code: '',
+    client_nit: '',
+    bank_account_header: '',
+    bank_account: '',
+});
 
 onMounted(async () => {
     const resp = await detailCustomer(route.params.id);

@@ -10,9 +10,9 @@ export const listCustomer = async () => {
     }
 };
 
-export const detailCustomer = async (id) => {
+export const detailCustomer = async (customer) => {
     try {
-        return await apiBase.get(`${urlCustomer}/${id}/`);
+        return await apiBase.get(`${urlCustomer}/${customer}/`);
     } catch (error) {
         console.log(error);
     }
@@ -26,17 +26,17 @@ export const postCustomer = async (customer) => {
     }
 };
 
-export const putCustomer = async (id) => {
+export const putCustomer = async (customer) => {
     try {
-        return await apiBase.put(`${urlCustomer}/${id}/`);
+        return await apiBase.put(`${urlCustomer}/${customer.id}/`, customer);
     } catch (error) {
         console.log(error);
     }
 };
 
-export const deleteCustomer = async (id) => {
+export const deleteCustomer = async (customer) => {
     try {
-        await apiBase.delete(`${urlCustomer}/${id}/`);
+        await apiBase.delete(`${urlCustomer}/${customer}/`);
     } catch (error) {
         console.log(error);
     }

@@ -9,6 +9,9 @@
                 <li class="list-group-item">
                     <RouterLink :to="{name: 'items'}">Artículos</RouterLink>
                 </li>
+                <li class="list-group-item">
+                    <RouterLink :to="{name: 'items_update', params: {id: item.id}}">Editar</RouterLink>
+                </li>
             </ul>
         </div>
 
@@ -44,7 +47,13 @@ import { detailItem } from "../../services/item.service";
 
 
 const route = useRoute();
-const item = ref({});
+const item = ref({
+    code: '',
+    name: '',
+    item_type: '',
+    measurement: '',
+    price: '',
+});
 
 onMounted(async () => {
     const resp = await detailItem(route.params.id);

@@ -28,7 +28,14 @@ import { ref, onMounted } from 'vue';
 import { detailProvider } from "../../services/provider.service";
 
 const route = useRoute();
-const provider = ref({});
+const provider = ref({
+    id: '',
+    username: '',
+    first_name: '',
+    last_name: '',
+    license_number: '',
+    personal_id: '',
+});
 
 onMounted(async () => {
     const resp = await detailProvider(route.params.id);

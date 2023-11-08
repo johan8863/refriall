@@ -26,9 +26,9 @@ export const postProvider = async (provider) => {
     }
 };
 
-export const putProvider = async (id) => {
+export const putProvider = async (provider) => {
     try {
-        return await apiBase.put(`${urlProvider}/${id}/`);
+        return await apiBase.put(`${urlProvider}/${provider.id}/`, provider);
     } catch (error) {
         console.log(error);
     }

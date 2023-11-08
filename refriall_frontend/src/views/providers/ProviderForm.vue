@@ -1,8 +1,4 @@
-<script setup>
 
-import { RouterLink } from "vue-router";
-
-</script>
 
 <template>
 
@@ -39,6 +35,18 @@ import { RouterLink } from "vue-router";
 
 </template>
 
-<style lang="scss" scoped>
+<script setup>
 
-</style>
+import { RouterLink } from "vue-router";
+import { ref } from 'vue';
+
+const provider = ref({
+    id: '',
+    username: '',
+    first_name: '',
+    last_name: '',
+    license_number: '',
+    personal_id: '',
+});
+
+</script>
