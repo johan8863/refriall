@@ -1,10 +1,10 @@
 import apiBase from "./base.service";
 
-const urlOrder = '/finance/orders'
+const urlOrderList = '/finance/orders/list'
 
 export const listOrder = async () => {
     try {
-        return await apiBase.get(`${urlOrder}/`);
+        return await apiBase.get(`${urlOrderList}/`);
     } catch (error) {
         console.log(error);
     }
@@ -12,7 +12,7 @@ export const listOrder = async () => {
 
 export const detailOrder = async (id) => {
     try {
-        return await apiBase.get(`${urlOrder}/${id}/`);
+        return await apiBase.get(`${urlOrderList}/${id}/`);
     } catch (error) {
         console.log(error);
     }
@@ -20,7 +20,7 @@ export const detailOrder = async (id) => {
 
 export const postOrder = async (order) => {
     try {
-        return await apiBase.post(`${urlOrder}/`, order);
+        return await apiBase.post(`${urlOrderList}/`, order);
     } catch (error) {
         console.log(error);
     }
@@ -28,7 +28,7 @@ export const postOrder = async (order) => {
 
 export const putOrder = async (order) => {
     try {
-        return await apiBase.put(`${urlOrder}/${order.id}/`, order);
+        return await apiBase.put(`${urlOrderList}/${order.id}/`, order);
     } catch (error) {
         console.log(error);
     }
@@ -36,7 +36,7 @@ export const putOrder = async (order) => {
 
 export const deleteOrder = async (id) => {
     try {
-        await apiBase.delete(`${urlOrder}/${id}/`);
+        await apiBase.delete(`${urlOrderList}/${id}/`);
     } catch (error) {
         console.log(error);
     }

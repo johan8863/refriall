@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 # local
 from .models import Order, ItemTime
+from hr.serializers import CustomerSerializer
 from stock.serializers import ItemSerializer
 
 
@@ -22,6 +23,7 @@ class ItemTimeSerializerForReadOnly(serializers.ModelSerializer):
 
 class OrderSerializerForReadOnly(serializers.ModelSerializer):
     itemtime_set = ItemTimeSerializerForReadOnly(many=True)
+    customer = CustomerSerializer()
 
     class Meta:
         model = Order
@@ -53,6 +55,13 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
             "customer_personal_id",
             "checked_by",
             "aproved_by",
+            "get_total_amount",
+            "get_total_amount_product",
+            "get_total_amount_concept",
+            "get_total_amount_repair",
+            "get_total_amount_maintenace",
+            "get_total_amount_install",
+            "get_total_amount_unmounting",
         ]
 
 

@@ -21,12 +21,16 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Cliente</th>
+                                    <th scope="col">Importe</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="order in orders" :key="order.id">
                                     <td>
-                                        <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.customer }}</router-link>
+                                        <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.customer.name }}</router-link>
+                                    </td>
+                                    <td>
+                                        <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.get_total_amount }}</router-link>
                                     </td>
                                 </tr>
                             </tbody>

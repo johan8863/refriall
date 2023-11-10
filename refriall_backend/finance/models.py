@@ -62,42 +62,49 @@ class Order(models.Model):
         return self.customer.name
     
     
+    @property
     def get_total_amount(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         return self.itemtime_set.all().aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
     
+    @property
     def get_total_amount_product(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         return self.itemtime_set.filter(item__item_type='product').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
     
+    @property
     def get_total_amount_concept(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         return self.itemtime_set.filter(item__item_type='concept').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
     
+    @property
     def get_total_amount_repair(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         return self.itemtime_set.filter(item__item_type='repair').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
     
+    @property
     def get_total_amount_maintenace(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         return self.itemtime_set.filter(item__item_type='maintenace').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
     
+    @property
     def get_total_amount_install(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         return self.itemtime_set.filter(item__item_type='install').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
     
+    @property
     def get_total_amount_unmounting(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         return self.itemtime_set.filter(item__item_type='unmounting').aggregate(
