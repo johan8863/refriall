@@ -106,7 +106,7 @@
                     <button
                       class="btn btn-sm btn-primary"
                       @click="customer.id ? updateCustomer(customer) : createCustomer(customer)">{{ customer.id ? 'Actualizar' : 'Guardar' }}</button>
-                    <a href="#" class="btn btn-sm btn-secondary">Cancelar</a>
+                    <router-link :to="{name: 'customers'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
                 </div>
             </form>
         </div>

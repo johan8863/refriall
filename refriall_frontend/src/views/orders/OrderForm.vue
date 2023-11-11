@@ -30,7 +30,7 @@ import { RouterLink } from "vue-router";
                 <!-- buttons -->
                 <div>
                     <input type="submit" class="btn btn-sm btn-primary" value="Guardar">
-                    <a href="#" class="btn btn-sm btn-secondary">Cancelar</a>
+                    <router-link :to="{name: 'orders'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
                 </div>
             </form>
         </div>

@@ -76,7 +76,7 @@
                     <button
                       class="btn btn-sm btn-primary"
                       @click="item.id ? updateItem(item) : createItem(item)">{{ item.id ? 'Actualizar' : 'Guardar' }}</button>
-                    <a href="#" class="btn btn-sm btn-secondary">Cancelar</a>
+                      <router-link :to="{name: 'items'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
                 </div>
             </form>
         </div>

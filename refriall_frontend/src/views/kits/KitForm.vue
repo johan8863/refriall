@@ -62,7 +62,7 @@ onMounted(async () => {
                       type="button"
                       @click="kit.id ? updateKit(kit) : createKit(kit)"
                       class="btn btn-sm btn-primary">{{kit.id ? 'Actualizar' : 'Guardar'}}</button>
-                    <a href="#" class="btn btn-sm btn-secondary">Cancelar</a>
+                      <router-link :to="{name: 'kits'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
                 </div>
             </form>
         </div>
