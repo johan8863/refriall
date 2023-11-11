@@ -19,14 +19,22 @@
             <form method="post" @submit.prevent>
                 <!-- customer_type control -->
                 <div class="mb-2">
-                    <label for="" class="form-label">Tipo</label>
+                    <label for="customer_type" class="form-label">Tipo</label>
                     <select
+                      autofocus
                       id="customer_type"
                       class="form-select"
-                      v-model.trim="customer.customer_type">
+                      v-model.trim="customer.customer_type"
+                      @blur="v$.customer_type.$touch">
                         <option value="es">ESTATAL</option>
                         <option value="pr">PARTICULAR</option>
                     </select>
+                    <span v-if="v$.customer_type.$error">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in v$.customer_type.$errors"
+                          :key="error.$uid">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- name control -->
                 <div class="mb-2">
@@ -35,7 +43,14 @@
                       type="text"
                       id="name"
                       class="form-control"
-                      v-model.trim="customer.name">
+                      v-model.trim="customer.name"
+                      @blur="v$.name.$touch">
+                    <span v-if="v$.name.$error">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in v$.name.$errors"
+                          :key="error.$uid">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- address control -->
                 <div class="mb-2">
@@ -45,7 +60,15 @@
                       id="address"
                       cols="30"
                       rows="10"
-                      v-model.trim="customer.address"></textarea>
+                      v-model.trim="customer.address"
+                      @blur="v$.address.$touch">
+                    </textarea>
+                    <span v-if="v$.address.$error">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in v$.address.$errors"
+                          :key="error.$uid">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- province control -->
                 <div class="mb-2">
@@ -54,7 +77,14 @@
                       type="text"
                       id="province"
                       class="form-control"
-                      v-model.trim="customer.province">
+                      v-model.trim="customer.province"
+                      @blur="v$.province.$touch">
+                    <span v-if="v$.province.$error">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in v$.province.$errors"
+                          :key="error.$uid">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- township control -->
                 <div class="mb-2">
@@ -63,7 +93,14 @@
                       type="text"
                       id="township"
                       class="form-control"
-                      v-model.trim="customer.township">
+                      v-model.trim="customer.township"
+                      @blur="v$.township.$touch">
+                    <span v-if="v$.township.$error">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in v$.township.$errors"
+                          :key="error.$uid">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- code control -->
                 <div class="mb-2">
@@ -72,7 +109,14 @@
                       type="text"
                       id="code"
                       class="form-control"
-                      v-model.trim="customer.code">
+                      v-model.trim="customer.code"
+                      @blur="v$.code.$touch">
+                    <span v-if="v$.code.$error">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in v$.code.$errors"
+                          :key="error.$uid">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- client_nit control -->
                 <div class="mb-2">
@@ -90,7 +134,14 @@
                       type="text"
                       id="bank_account_header"
                       class="form-control"
-                      v-model.trim="customer.bank_account_header">
+                      v-model.trim="customer.bank_account_header"
+                      @blur="v$.bank_account_header.$touch">
+                    <span v-if="v$.bank_account_header.$error">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in v$.bank_account_header.$errors"
+                          :key="error.$uid">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- bank_account control -->
                 <div class="mb-2">
@@ -99,7 +150,14 @@
                       type="text"
                       id="bank_account"
                       class="form-control"
-                      v-model.trim="customer.bank_account">
+                      v-model.trim="customer.bank_account"
+                      @blur="v$.bank_account.$touch">
+                    <span v-if="v$.bank_account.$error">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in v$.bank_account.$errors"
+                          :key="error.$uid">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- buttons -->
                 <div>
@@ -119,6 +177,10 @@
 
 import { RouterLink, useRouter, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
+
+import { useVuelidate } from "@vuelidate/core";
+import { required, helpers } from "@vuelidate/validators";
+
 import { postCustomer, putCustomer, detailCustomer } from "../../services/customer.service";
 
 const customer = ref({
@@ -135,16 +197,52 @@ const customer = ref({
 const router = useRouter();
 const route = useRoute();
 
+const rules = {
+    customer_type: {
+        required: helpers.withMessage('Seleccione el tipo de cliente.', required)
+    },
+    name: {
+        required: helpers.withMessage('El nombre es requerido.', required)
+    },
+    address: {
+        required: helpers.withMessage('La dirección es requerida.', required)
+    },
+    province: {
+        required: helpers.withMessage('La provincia es requerida.', required)
+    },
+    township: {
+        required: helpers.withMessage('El municipio es requerido.', required)
+    },
+    code: {
+        required: helpers.withMessage('El código es requerido.', required)
+    },
+    bank_account_header: {
+        required: helpers.withMessage('El titular de la cuenta es requerido.', required)
+    },
+    bank_account: {
+        required: helpers.withMessage('La cuenta bancaria es requerida.', required)
+    },
+}
+
+const v$ = useVuelidate(rules, customer);
+
 const createCustomer = async (customer) => {
-    const { data } = await postCustomer(customer);
-    router.push({name: 'customers_detail', params: {id: data.id}});
+    if (await v$.value.$validate()) {
+        const { data } = await postCustomer(customer);
+        router.push({name: 'customers_detail', params: {id: data.id}});
+    } else {
+        return;
+    }
 };
 
 const updateCustomer = async (customer) => {
-    const { data } = await putCustomer(customer);
-    router.push({name: 'customers_detail', params: {id: data.id}});
+    if (await v$.value.$validate()) {
+        const { data } = await putCustomer(customer);
+        router.push({name: 'customers_detail', params: {id: data.id}});
+    } else {
+        return;
+    }
 };
-
 
 onMounted(async () => {
     const id = route.params.id;
@@ -155,4 +253,3 @@ onMounted(async () => {
 });
 
 </script>
-

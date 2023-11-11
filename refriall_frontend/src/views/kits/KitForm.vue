@@ -1,6 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { RouterLink, useRouter, useRoute } from "vue-router";
+
+import { useVuelidate } from "@vuelidate/core";
+import { required, helpers } from "@vuelidate/validators";
+
 import { postKit, putKit, detatilKit } from "../../services/kit.service";
 
 const kit = ref({
@@ -9,14 +13,30 @@ const kit = ref({
 const router = useRouter();
 const route = useRoute();
 
+const rules = {
+    name: {
+        required: helpers.withMessage('El nombre es requierido.', required)
+    }
+};
+
+const v$ = useVuelidate(rules, kit);
+
 const createKit = async (kit) => {
-    const { data } = await postKit(kit);
-    router.push({name: 'kits_detail', params: {id: data.id}});
+    if (await v$.value.$validate()) {
+        const { data } = await postKit(kit);
+        router.push({name: 'kits_detail', params: {id: data.id}});
+    } else {
+        return;        
+    }
 };
 
 const updateKit = async (kit) => {
-    const { data } = await putKit(kit);
-    router.push({name: 'kits_detail', params: {id: data.id}});
+    if (await v$.value.$validate()) {
+        const { data } = await putKit(kit);
+        router.push({name: 'kits_detail', params: {id: data.id}});
+    } else {
+        return;
+    }
 };
 
 onMounted(async () => {
@@ -51,10 +71,18 @@ onMounted(async () => {
                 <div class="mb-2">
                     <label for="name" class="form-label">Nombre</label>
                     <input
+                      autofocus
                       type="text"
                       id="name"
                       class="form-control"
-                      v-model.trim="kit.name">
+                      v-model.trim="kit.name"
+                      @blur="v$.name.$touch">
+                    <span v-if="v$.name.$error">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in v$.name.$errors"
+                          :key="error.$uid">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- buttons -->
                 <div>
