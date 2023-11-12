@@ -30,6 +30,11 @@ const router = createRouter({
       component: () => import('../views/kits/KitForm.vue')
     },
     {
+      path: '/kits/confirm/delete/:id', 
+      name: 'kits_confirm_delete', 
+      component: () => import('../views/kits/KitConfirmDelete.vue')
+    },
+    {
       path: '/items',
       name: 'items',
       component: () => import('../views/items/ItemList.vue')
