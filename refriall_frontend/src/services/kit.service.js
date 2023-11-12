@@ -3,42 +3,21 @@ import apiBase from "./base.service";
 const urlKit ='/stock/kits';
 
 export const listKit = async () => {
-    try {
-        return await apiBase.get(`${urlKit}/`);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.get(`${urlKit}/`);
 };
 
 export const detatilKit = async (id) => {
-    try {
-        return await apiBase.get(`${urlKit}/${id}/`);
-    } catch (error) {
-        console.log(error);
-    }
-
+    return await apiBase.get(`${urlKit}/${id}/`);
 }
 
 export const postKit = async (kit) => {
-    try {
-        return await apiBase.post(`${urlKit}/`, kit);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.post(`${urlKit}/`, kit);
 };
 
 export const putKit = async (kit) => {
-    try {
-        return await apiBase.put(`${urlKit}/${kit.id}/`, kit);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.put(`${urlKit}/${kit.id}/`, kit);
 };
 
 export const deleteKit = async (id) => {
-    try {
-        await apiBase.delete(`${urlKit}/${id}/`);
-    } catch (error) {
-        console.log(error);
-    }
+    await apiBase.delete(`${urlKit}/${id}/`);
 };
