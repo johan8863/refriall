@@ -16,6 +16,12 @@
         <div class="col-md-4">
             <!-- form -->
             <form method="post" @submit.prevent>
+                <span v-if="itemErrors.non_field_errors">
+                    <p
+                        class="form-text text-danger"
+                        v-for="(error, i) in itemErrors.non_field_errors"
+                        :key="i">{{ error.$message }}</p>
+                </span>
                 <!-- code control -->
                 <div class="mb-2">
                     <label for="code" class="form-label">Código</label>

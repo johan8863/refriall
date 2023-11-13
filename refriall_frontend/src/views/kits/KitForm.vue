@@ -102,7 +102,14 @@ onMounted(async () => {
 
         <!-- main content -->
         <div class="col-md-4">
+            <!-- form -->
             <form method="post" @submit.prevent>
+                <span v-if="kitErrors.non_field_errors">
+                    <p
+                        class="form-text text-danger"
+                        v-for="(error, i) in kitErrors.non_field_errors"
+                        :key="i">{{ error.$message }}</p>
+                </span>
                 <!-- name control -->
                 <div class="mb-2">
                     <label for="name" class="form-label">Nombre</label>

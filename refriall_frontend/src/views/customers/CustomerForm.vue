@@ -16,6 +16,12 @@
         <!-- main content -->
         <div class="col-md-4">
             <!-- form -->
+            <span v-if="customerErrors.non_field_errors">
+                <p
+                    class="form-text text-danger"
+                    v-for="(error, i) in customerErrors.non_field_errors"
+                    :key="i">{{ error.$message }}</p>
+            </span>
             <form method="post" @submit.prevent>
                 <!-- customer_type control -->
                 <div class="mb-2">
