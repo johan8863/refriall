@@ -55,6 +55,11 @@ const router = createRouter({
       component: () => import('../views/items/ItemForm.vue')
     },
     {
+      path: '/items/confirm/delete/:id', 
+      name: 'items_confirm_delete', 
+      component: () => import('../views/items/ItemConfirmDelete.vue')
+    },
+    {
       path: '/providers',
       name: 'providers',
       component: () => import('../views/providers/ProviderList.vue')

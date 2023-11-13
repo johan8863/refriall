@@ -59,7 +59,7 @@ const delKit = async (id) => {
         router.push({name: 'kits'});
     } catch (error) {
         // in case of backend errors, log to the console... for now
-        console.log(error.response.data);
+        console.log(error);
     }
 };
 

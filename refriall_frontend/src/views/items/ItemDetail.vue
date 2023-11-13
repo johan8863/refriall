@@ -12,6 +12,9 @@
                 <li class="list-group-item">
                     <RouterLink :to="{name: 'items_update', params: {id: item.id}}">Editar</RouterLink>
                 </li>
+                <li class="list-group-item">
+                    <RouterLink :to="{name: 'items_confirm_delete', params: {id: item.id}}">Eliminar</RouterLink>
+                </li>
             </ul>
         </div>
 
