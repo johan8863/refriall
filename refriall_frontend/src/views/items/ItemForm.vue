@@ -31,6 +31,12 @@
                           v-for="error in v$.code.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
                       </span>
+                      <span v-if="itemErrors.code">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in itemErrors.code"
+                          :key="error.$uid">{{ error.$message }}</p>
+                      </span>
                 </div>
                 <!-- name control -->
                 <div class="mb-2">
@@ -47,6 +53,12 @@
                           v-for="error in v$.name.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
                     </span>
+                    <span v-if="itemErrors.name">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in itemErrors.name"
+                          :key="error.$uid">{{ error.$message }}</p>
+                      </span>
                 </div>
                 <!-- item_type control -->
                 <div class="mb-2">
@@ -69,6 +81,12 @@
                           v-for="error in v$.item_type.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
                     </span>
+                    <span v-if="itemErrors.item_type">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in itemErrors.item_type"
+                          :key="error.$uid">{{ error.$message }}</p>
+                      </span>
                 </div>
                 <!-- measurement control -->
                 <div class="mb-2">
@@ -79,6 +97,7 @@
                       v-model.trim="item.measurement"
                       @blur="v$.measurement.$touch">
                         <option value="u">Uno</option>
+                        <!-- only products can have any kind of measurement -->
                         <template v-if="item.item_type === 'product'">
                             <option value="m">Metros</option>
                             <option value="kg">Kilogramos</option>
@@ -91,6 +110,12 @@
                           v-for="error in v$.measurement.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
                     </span>
+                    <span v-if="itemErrors.measurement">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in itemErrors.measurement"
+                          :key="error.$uid">{{ error.$message }}</p>
+                      </span>
                 </div>
                 <!-- price control -->
                 <div class="mb-2">
@@ -108,6 +133,12 @@
                           v-for="error in v$.price.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
                     </span>
+                    <span v-if="itemErrors.price">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in itemErrors.price"
+                          :key="error.$uid">{{ error.$message }}</p>
+                      </span>
                 </div>
                 <!-- buttons -->
                 <div>
@@ -123,15 +154,18 @@
 </template>
 
 <script setup>
-
+// vue
 import { RouterLink, useRouter, useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 
+// third
 import { useVuelidate } from "@vuelidate/core";
 import { required, minValue, helpers } from "@vuelidate/validators";
 
+// local
 import { postItem, putItem, detailItem } from "../../services/item.service";
 
+// item object to be created or updated
 const item = ref({
     code: '',
     name: '',
@@ -139,9 +173,22 @@ const item = ref({
     measurement: '',
     price: '',
 });
+
+// item errors messages object to catch
+// errors from the django rest api
+const itemErrors = ref({
+    code: [],
+    name: [],
+    item_type: [],
+    measurement: [],
+    price: [],
+});
+
+// router tools to redirect and get routes params
 const router = useRouter();
 const route = useRoute();
 
+// vuelidate rules
 const rules = {
     code: {
         required: helpers.withMessage('El código es requerido.', required)
@@ -161,8 +208,10 @@ const rules = {
     },
 };
 
+// vuelidate object
 const v$ = useVuelidate(rules, item);
 
+// onMounted cycle to get an item object if editing intended
 onMounted(async () => {
     const id = route.params.id;
     if (id) {
@@ -171,24 +220,29 @@ onMounted(async () => {
     }
 });
 
-
-
+// create item function
 const createItem = async (item) => {
-    if (await v$.value.$validate()) {
-        const { data } = await postItem(item);
-        router.push({name: 'items_detail', params: {id: data.id}});
-    } else {
-        return;
+    try {
+        if (await v$.value.$validate()) {
+            const { data } = await postItem(item);
+            router.push({name: 'items_detail', params: {id: data.id}});
+        }
+    } catch (error) {
+        itemErrors.value = error.response.data;
     }
 };
 
+// update item function
 const updateItem = async (item) => {
-    if (await v$.value.$validate()) {
-        const { data } = await putItem(item);
-        router.push({name: 'items_detail', params: {id: data.id}});
-    } else {
-        return;
+    try {
+        if (await v$.value.$validate()) {
+            const { data } = await putItem(item);
+            router.push({name: 'items_detail', params: {id: data.id}});
+        }
+    } catch (error) {
+        itemErrors.value = error.response.data;
     }
+        
 };
 
 </script>
