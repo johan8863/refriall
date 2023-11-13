@@ -95,6 +95,11 @@ const router = createRouter({
       component: () => import('../views/customers/CustomerForm.vue')
     },
     {
+      path: '/customers/confirm/delete/:id', 
+      name: 'customers_confirm_delete', 
+      component: () => import('../views/customers/CustomerConfirmDelete.vue')
+    },
+    {
       path: '/orders',
       name: 'orders',
       component: OrderList,

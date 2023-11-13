@@ -20,11 +20,15 @@
 
         <!-- main content -->
         <div class="col-md-4">
-            <h3>{{ customer.name }}</h3>
-            <hr>
-            <p>{{ customer.address }}</p>
-            <p>Titular de la cuenta: {{ customer.bank_account_header }}</p>
-            <p>Buenta bancaria: {{ customer.bank_account }}</p>
+            <p>Está seguro que desea eliminar el cliente: {{ customer.name }}?</p>
+            <div>
+                <button
+                  class="btn btn-sm btn-danger"
+                  @click="delCustomer(customer.id)">Eliminar</button>
+                <RouterLink
+                  :to="{name: 'customers'}"
+                  class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+            </div>
         </div>
 
     </div> <!-- end row -->
@@ -34,11 +38,10 @@
 <script setup>
 
 import { ref, onMounted } from "vue";
-import { RouterLink, useRoute } from "vue-router";
-import { detailCustomer } from "../../services/customer.service";
+import { RouterLink, useRoute, useRouter } from "vue-router";
+import { deleteCustomer, detailCustomer } from "../../services/customer.service";
 
-
-const route = useRoute();
+// customer object to be filled
 const customer = ref({
     customer_type: '',
     name: '',
@@ -51,10 +54,22 @@ const customer = ref({
     bank_account: '',
 });
 
+const router = useRouter();
+const route = useRoute();
+
 onMounted(async () => {
     const resp = await detailCustomer(route.params.id);
     customer.value = resp.data;
 });
+
+const delCustomer = async (id) => {
+    try {
+        await deleteCustomer(id);
+        router.push({name: 'customers'});
+    } catch (error) {
+        console.log(error.response.data);
+    }
+};
 
 </script>
 
