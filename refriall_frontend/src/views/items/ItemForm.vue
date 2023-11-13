@@ -34,8 +34,8 @@
                       <span v-if="itemErrors.code">
                         <p
                           class="form-text text-danger"
-                          v-for="error in itemErrors.code"
-                          :key="error.$uid">{{ error.$message }}</p>
+                          v-for="(error, i) in itemErrors.code"
+                          :key="i">{{ error.$message }}</p>
                       </span>
                 </div>
                 <!-- name control -->
@@ -56,8 +56,8 @@
                     <span v-if="itemErrors.name">
                         <p
                           class="form-text text-danger"
-                          v-for="error in itemErrors.name"
-                          :key="error.$uid">{{ error.$message }}</p>
+                          v-for="(error, i) in itemErrors.name"
+                          :key="i">{{ error.$message }}</p>
                       </span>
                 </div>
                 <!-- item_type control -->
@@ -84,8 +84,8 @@
                     <span v-if="itemErrors.item_type">
                         <p
                           class="form-text text-danger"
-                          v-for="error in itemErrors.item_type"
-                          :key="error.$uid">{{ error.$message }}</p>
+                          v-for="(error, i) in itemErrors.item_type"
+                          :key="i">{{ error.$message }}</p>
                       </span>
                 </div>
                 <!-- measurement control -->
@@ -113,8 +113,8 @@
                     <span v-if="itemErrors.measurement">
                         <p
                           class="form-text text-danger"
-                          v-for="error in itemErrors.measurement"
-                          :key="error.$uid">{{ error.$message }}</p>
+                          v-for="(error, i) in itemErrors.measurement"
+                          :key="i">{{ error.$message }}</p>
                       </span>
                 </div>
                 <!-- price control -->
@@ -136,8 +136,8 @@
                     <span v-if="itemErrors.price">
                         <p
                           class="form-text text-danger"
-                          v-for="error in itemErrors.price"
-                          :key="error.$uid">{{ error.$message }}</p>
+                          v-for="(error, i) in itemErrors.price"
+                          :key="i">{{ error.$message }}</p>
                       </span>
                 </div>
                 <!-- buttons -->

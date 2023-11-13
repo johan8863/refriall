@@ -35,6 +35,12 @@
                           v-for="error in v$.customer_type.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
                     </span>
+                    <span v-if="customerErrors.customer_type">
+                        <p
+                          class="form-text text-danger"
+                          v-for="(error, i) in customerErrors.customer_type"
+                          :key="i">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- name control -->
                 <div class="mb-2">
@@ -50,6 +56,12 @@
                           class="form-text text-danger"
                           v-for="error in v$.name.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+                    <span v-if="customerErrors.name">
+                        <p
+                          class="form-text text-danger"
+                          v-for="(error, i) in customerErrors.name"
+                          :key="i">{{ error.$message }}</p>
                     </span>
                 </div>
                 <!-- address control -->
@@ -69,6 +81,12 @@
                           v-for="error in v$.address.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
                     </span>
+                    <span v-if="customerErrors.address">
+                        <p
+                          class="form-text text-danger"
+                          v-for="(error, i) in customerErrors.address"
+                          :key="i">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- province control -->
                 <div class="mb-2">
@@ -84,6 +102,12 @@
                           class="form-text text-danger"
                           v-for="error in v$.province.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+                    <span v-if="customerErrors.province">
+                        <p
+                          class="form-text text-danger"
+                          v-for="(error, i) in customerErrors.province"
+                          :key="i">{{ error.$message }}</p>
                     </span>
                 </div>
                 <!-- township control -->
@@ -101,6 +125,12 @@
                           v-for="error in v$.township.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
                     </span>
+                    <span v-if="customerErrors.township">
+                        <p
+                          class="form-text text-danger"
+                          v-for="(error, i) in customerErrors.township"
+                          :key="i">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- code control -->
                 <div class="mb-2">
@@ -116,6 +146,12 @@
                           class="form-text text-danger"
                           v-for="error in v$.code.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+                    <span v-if="customerErrors.code">
+                        <p
+                          class="form-text text-danger"
+                          v-for="(error, i) in customerErrors.code"
+                          :key="i">{{ error.$message }}</p>
                     </span>
                 </div>
                 <!-- client_nit control -->
@@ -142,6 +178,12 @@
                           v-for="error in v$.bank_account_header.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
                     </span>
+                    <span v-if="customerErrors.bank_account_header">
+                        <p
+                          class="form-text text-danger"
+                          v-for="(error, i) in customerErrors.bank_account_header"
+                          :key="i">{{ error.$message }}</p>
+                    </span>
                 </div>
                 <!-- bank_account control -->
                 <div class="mb-2">
@@ -157,6 +199,12 @@
                           class="form-text text-danger"
                           v-for="error in v$.bank_account.$errors"
                           :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+                    <span v-if="customerErrors.bank_account">
+                        <p
+                          class="form-text text-danger"
+                          v-for="(error, i) in customerErrors.bank_account"
+                          :key="i">{{ error.$message }}</p>
                     </span>
                 </div>
                 <!-- buttons -->
@@ -174,15 +222,18 @@
 </template>
 
 <script setup>
-
+// vue
 import { RouterLink, useRouter, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
 
+// third
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 
+// local
 import { postCustomer, putCustomer, detailCustomer } from "../../services/customer.service";
 
+// customer object to be created or updated
 const customer = ref({
     customer_type: 'es',
     name: '',
@@ -194,9 +245,25 @@ const customer = ref({
     bank_account_header: '',
     bank_account: '',
 });
+
+// customer object to be created or updated
+const customerErrors = ref({
+    customer_type: [],
+    name: [],
+    address: [],
+    province: [],
+    township: [],
+    code: [],
+    client_nit: [],
+    bank_account_header: [],
+    bank_account: [],
+});
+
+// router tools to redirect and get route params
 const router = useRouter();
 const route = useRoute();
 
+// vuelidate rules
 const rules = {
     customer_type: {
         required: helpers.withMessage('Seleccione el tipo de cliente.', required)
@@ -224,26 +291,43 @@ const rules = {
     },
 }
 
+// vuelidate object
 const v$ = useVuelidate(rules, customer);
 
+// create customer function
 const createCustomer = async (customer) => {
-    if (await v$.value.$validate()) {
-        const { data } = await postCustomer(customer);
-        router.push({name: 'customers_detail', params: {id: data.id}});
-    } else {
-        return;
+    try {
+        if (await v$.value.$validate()) {
+            // if front validations run, insert a customer 
+            // and redirect to its detail view
+            const { data } = await postCustomer(customer);
+            router.push({name: 'customers_detail', params: {id: data.id}});
+        }
+    } catch (error) {
+        // in case of backend exceptions, fill the corresponding ones in the 
+        // customerErrors object
+        customerErrors.value = error.response.data
     }
 };
 
+// update customer function
 const updateCustomer = async (customer) => {
-    if (await v$.value.$validate()) {
-        const { data } = await putCustomer(customer);
-        router.push({name: 'customers_detail', params: {id: data.id}});
-    } else {
-        return;
+    try {
+        if (await v$.value.$validate()) {
+            // if front validations run, update a customer 
+            // and redirect to its detail view
+            const { data } = await putCustomer(customer);
+            router.push({name: 'customers_detail', params: {id: data.id}});
+        }
+    } catch (error) {
+        // in case of backend exceptions, fill the corresponding ones in the 
+        // customerErrors object
+        customerErrors.value = error.response.data
     }
 };
 
+// onMounted cycle to get the customer object 
+// if editing intended
 onMounted(async () => {
     const id = route.params.id;
     if (id) {
