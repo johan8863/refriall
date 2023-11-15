@@ -111,11 +111,23 @@ class OrderSerializer(serializers.ModelSerializer):
             "checked_by",
             "aproved_by",
         ]
+    
+    def validate(self, attrs):
+        if len(attrs['itemtime_set']) == 0:
+            raise serializers.ValidationError({
+                'itemtime_set': 'Debe incluir al menos un artículo.'
+            })
+        return super().validate(attrs)
 
+    # once a nested serializer is configured, create and update methods
+    # must be overrriden
     def create(self, validated_data):
+        # get the itemtimes
         itemtime_set = validated_data.pop('itemtime_set')
+        # create the Order object from the rest of validated_data
         order = Order.objects.create(**validated_data)
         for itemtime in itemtime_set:
+            # create the relationship ItemTime - Order per itemtime "item" in the list
             ItemTime.objects.create(order=order, **itemtime)
         return order
     
