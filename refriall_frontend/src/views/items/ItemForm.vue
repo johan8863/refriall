@@ -41,7 +41,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in itemErrors.code"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                       </span>
                 </div>
                 <!-- name control -->
@@ -63,7 +63,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in itemErrors.name"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                       </span>
                 </div>
                 <!-- item_type control -->
@@ -91,7 +91,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in itemErrors.item_type"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                       </span>
                 </div>
                 <!-- measurement control -->
@@ -104,11 +104,11 @@
                       @blur="v$.measurement.$touch">
                         <option value="u">Uno</option>
                         <!-- only products can have any kind of measurement -->
-                        <template v-if="item.item_type === 'product'">
+                        <!-- <template v-if="item.item_type === 'product'"> -->
                             <option value="m">Metros</option>
                             <option value="kg">Kilogramos</option>
                             <option value="lts">Litros</option>
-                        </template>
+                        <!-- </template> -->
                     </select>
                     <span v-if="v$.measurement.$error">
                         <p
@@ -120,7 +120,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in itemErrors.measurement"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                       </span>
                 </div>
                 <!-- price control -->
@@ -143,7 +143,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in itemErrors.price"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                       </span>
                 </div>
                 <!-- buttons -->

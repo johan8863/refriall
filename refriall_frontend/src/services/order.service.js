@@ -1,43 +1,24 @@
 import apiBase from "./base.service";
 
 const urlOrderList = '/finance/orders/list'
+const urlOrderPost = '/finance/orders_write'
 
 export const listOrder = async () => {
-    try {
-        return await apiBase.get(`${urlOrderList}/`);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.get(`${urlOrderList}/`);
 };
 
 export const detailOrder = async (id) => {
-    try {
-        return await apiBase.get(`${urlOrderList}/${id}/`);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.get(`${urlOrderPost}/${id}/`);
 };
 
 export const postOrder = async (order) => {
-    try {
-        return await apiBase.post(`${urlOrderList}/`, order);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.post(`${urlOrderPost}/`, order);
 };
 
 export const putOrder = async (order) => {
-    try {
-        return await apiBase.put(`${urlOrderList}/${order.id}/`, order);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.put(`${urlOrderPost}/${order.id}/`, order);
 };
 
 export const deleteOrder = async (id) => {
-    try {
-        await apiBase.delete(`${urlOrderList}/${id}/`);
-    } catch (error) {
-        console.log(error);
-    }
+    await apiBase.delete(`${urlOrderPost}/${id}/`);
 };

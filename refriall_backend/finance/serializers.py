@@ -113,9 +113,25 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
     
     def validate(self, attrs):
+        print('validate...')
+        if attrs['customer'] == None:
+            raise serializers.ValidationError({
+                'non_field_errors': 'Debe seleccionar un cliente.'
+            })
+        if attrs['kit'] == None:
+            raise serializers.ValidationError({
+                'non_field_errors': 'Debe seleccionar un equipo.'
+            })
+        if (not attrs['check_diagnosis'] and
+           not attrs['repair'] and
+           not attrs['install'] and
+           not attrs['maintenance']):
+            raise serializers.ValidationError({
+                'non_field_errors': 'Debe incluir al menos una modalidad.'
+            })
         if len(attrs['itemtime_set']) == 0:
             raise serializers.ValidationError({
-                'itemtime_set': 'Debe incluir al menos un artículo.'
+                'non_field_errors': 'Debe incluir al menos un artículo.'
             })
         return super().validate(attrs)
 

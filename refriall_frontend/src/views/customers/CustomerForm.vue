@@ -45,7 +45,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in customerErrors.customer_type"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                     </span>
                 </div>
                 <!-- name control -->
@@ -67,7 +67,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in customerErrors.name"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                     </span>
                 </div>
                 <!-- address control -->
@@ -91,7 +91,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in customerErrors.address"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                     </span>
                 </div>
                 <!-- province control -->
@@ -113,7 +113,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in customerErrors.province"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                     </span>
                 </div>
                 <!-- township control -->
@@ -135,7 +135,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in customerErrors.township"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                     </span>
                 </div>
                 <!-- code control -->
@@ -157,7 +157,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in customerErrors.code"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                     </span>
                 </div>
                 <!-- client_nit control -->
@@ -188,7 +188,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in customerErrors.bank_account_header"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                     </span>
                 </div>
                 <!-- bank_account control -->
@@ -210,7 +210,7 @@
                         <p
                           class="form-text text-danger"
                           v-for="(error, i) in customerErrors.bank_account"
-                          :key="i">{{ error.$message }}</p>
+                          :key="i">{{ error }}</p>
                     </span>
                 </div>
                 <!-- buttons -->
