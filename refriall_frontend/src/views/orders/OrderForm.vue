@@ -17,13 +17,14 @@
         <div class="col-md-10">
             <!-- form -->
             <form @submit.prevent class="row">
-              <!-- backend errors -->
-              <span v-if="orderBackendErrors.non_field_errors">
-                <p
-                  class="form-text text-danger"
-                  v-for="(error, i) in orderBackendErrors.non_field_errors"
-                  :key="i">{{ error }}</p>
-              </span>
+                <!-- backend errors -->
+                <span v-if="orderBackendErrors.non_field_errors">
+                  <p
+                    class="form-text text-danger"
+                    v-for="(error, i) in orderBackendErrors.non_field_errors"
+                    :key="i">{{ error }}</p>
+                </span>
+              
                 <!-- customer control -->
                 <div class="col-md-3 mb-2">
                     <label for="customer" class="form-label">Cliente</label>
@@ -31,13 +32,22 @@
                       autofocus
                       id="customer"
                       class="form-select"
-                      v-model.trim="order.customer">
+                      v-model.trim="order.customer"
+                      @blur="v$.customer.$touch">
                         <option
                           v-for="customer in customers"
                           :key="customer.id"
-                          :value="customer.id"
-                          :selected=customers[0].id>{{ customer.name }}</option>
+                          :value="customer.id">{{ customer.name }}</option>
                     </select>
+
+                    <!-- frontend errors -->
+                    <span v-if="v$.customer.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.customer.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                     <!-- backend errors -->
                     <span v-if="orderBackendErrors.customer">
                       <p
@@ -46,6 +56,7 @@
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
+
                 <!-- symptom control -->
                 <div class="col-md-3 mb-2">
                     <label
@@ -55,7 +66,17 @@
                       type="text"
                       class="form-control"
                       id="symptom"
-                      v-model.trim="order.symptom">
+                      v-model.trim="order.symptom"
+                      @blur="v$.symptom.$touch">
+                    
+                    <!-- frontend errors -->
+                    <span v-if="v$.symptom.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.symptom.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                     <!-- backend errors -->
                     <span v-if="orderBackendErrors.symptom">
                       <p
@@ -64,6 +85,7 @@
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
+
                 <!-- flaw control -->
                 <div class="col-md-3 mb-2">
                     <label
@@ -73,7 +95,17 @@
                       type="text"
                       class="form-control"
                       id="flaw"
-                      v-model.trim="order.flaw">
+                      v-model.trim="order.flaw"
+                      @blur="v$.flaw.$touch">
+                    
+                    <!-- frontend errors -->
+                    <span v-if="v$.flaw.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.flaw.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                     <!-- backend errors -->
                     <span v-if="orderBackendErrors.flaw">
                       <p
@@ -82,6 +114,7 @@
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
+
                 <!-- repair_description control -->
                 <div class="col-md-3 mb-2">
                     <label
@@ -91,7 +124,17 @@
                       type="text"
                       class="form-control"
                       id="repair_description"
-                      v-model.trim="order.repair_description">
+                      v-model.trim="order.repair_description"
+                      @blur="v$.repair_description.$touch">
+
+                    <!-- frontend errors -->
+                    <span v-if="v$.repair_description.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.repair_description.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                     <!-- backend errors -->
                     <span v-if="orderBackendErrors.repair_description">
                       <p
@@ -100,6 +143,7 @@
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
+
                 <!-- folio control -->
                 <div class="col-md-3 mb-2">
                     <label
@@ -109,7 +153,17 @@
                       type="text"
                       class="form-control"
                       id="folio"
-                      v-model.trim="order.folio">
+                      v-model.trim="order.folio"
+                      @blur="v$.folio.$touch">
+
+                    <!-- frontend errors -->
+                    <span v-if="v$.folio.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.folio.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                     <!-- backend errors -->
                     <span v-if="orderBackendErrors.folio">
                       <p
@@ -119,6 +173,7 @@
                     </span>
                 </div>
                 <div class="col-md-9"></div>
+
                 <!-- check_diagnosis control -->
                 <div class="col-md-2 mb-2">
                     <label for="check_diagnosis">Rev/Diagnóstico</label>
@@ -128,6 +183,7 @@
                       class="form-check"
                       v-model.trim="order.check_diagnosis">
                 </div>
+
                 <!-- repair control -->
                 <div class="col-md-2 mb-2">
                     <label for="repair">Reparación</label>
@@ -137,6 +193,7 @@
                       class="form-check"
                       v-model.trim="order.repair">
                 </div>
+
                 <!-- install control -->
                 <div class="col-md-2 mb-2">
                     <label for="install">Instalación</label>
@@ -146,6 +203,7 @@
                       class="form-check"
                       v-model.trim="order.install">
                 </div>
+                
                 <!-- maintenance control -->
                 <div class="col-md-2 mb-2">
                     <label for="maintenance">Mtto</label>
@@ -156,18 +214,29 @@
                       v-model.trim="order.maintenance">
                 </div>
                 <div class="col-md-4"></div>
+
                 <!-- kit control -->
                 <div class="col-md-3 mb-2">
                     <label for="kit">Equipo</label>
                     <select
                       id="kit"
                       class="form-select"
-                      v-model.trim="order.kit">
+                      v-model.trim="order.kit"
+                      @blur="v$.kit.$touch">
                         <option
                           v-for="kit in kits"
                           :key="kit.id"
                           :value="kit.id">{{ kit.name }}</option>
                     </select>
+
+                    <!-- frontend errors -->
+                    <span v-if="v$.kit.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.kit.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                     <!-- backend errors -->
                     <span v-if="orderBackendErrors.kit">
                       <p
@@ -176,6 +245,7 @@
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
+
                 <!-- kit_brand control -->
                 <div class="col-md-3 mb-2">
                     <label
@@ -185,7 +255,17 @@
                       type="text"
                       class="form-control"
                       id="kit_brand"
-                      v-model.trim="order.kit_brand">
+                      v-model.trim="order.kit_brand"
+                      @blur="v$.kit_brand.$touch">
+
+                    <!-- frontend errors -->
+                    <span v-if="v$.kit_brand.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.kit_brand.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                     <!-- backend errors -->
                     <span v-if="orderBackendErrors.kit_brand">
                       <p
@@ -194,6 +274,7 @@
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
+
                 <!-- kit_model control -->
                 <div class="col-md-3 mb-2">
                     <label
@@ -203,7 +284,17 @@
                       type="text"
                       class="form-control"
                       id="kit_model"
-                      v-model.trim="order.kit_model">
+                      v-model.trim="order.kit_model"
+                      @blur="v$.kit_model.$touch">
+
+                    <!-- frontend errors -->
+                    <span v-if="v$.kit_model.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.kit_model.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                     <!-- backend errors -->
                     <span v-if="orderBackendErrors.kit_model">
                       <p
@@ -212,6 +303,7 @@
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
+
                 <!-- kit_serial control -->
                 <div class="col-md-3 mb-2">
                     <label
@@ -221,7 +313,17 @@
                       type="text"
                       class="form-control"
                       id="kit_serial"
-                      v-model.trim="order.kit_serial">
+                      v-model.trim="order.kit_serial"
+                      @blur="v$.kit_serial.$touch">
+
+                    <!-- frontend errors -->
+                    <span v-if="v$.kit_serial.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.kit_serial.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                     <!-- backend errors -->
                     <span v-if="orderBackendErrors.kit_serial">
                       <p
@@ -230,6 +332,7 @@
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
+
                 <!-- job_description control -->
                 <div class="col-md-8 offset-md-2 mb-2">
                     <label
@@ -241,6 +344,7 @@
                       class="form-control"
                       cols="30"
                       rows="10"></textarea>
+
                     <!-- backend errors -->
                     <span v-if="orderBackendErrors.job_description">
                       <p
@@ -249,24 +353,20 @@
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
+
                 <!-- items_times control -->
                 <div class="col-md-8 offset-md-2 mb-2" style="overflow-y: auto; height: 400px;">
                   <button
                     class="btn btn-sm btn-primary"
                     @click="createItemTime">Agregar artículo</button>
+
                   <template
                     v-for="(i, index) in order.itemtime_set"
                     :key="i">
                     <item-time v-if="order.itemtime_set.length > 0"
                       :items="items" :item="i" @on-delete-item="deleteItem(index)"/>
                   </template>
-                  <!-- backend errors -->
-                  <span v-if="orderBackendErrors.items_times">
-                      <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in orderBackendErrors.items_times"
-                        :key="i">{{ error }}</p>
-                    </span>
+
                 </div>
 
                 <!-- dates controls -->
@@ -276,8 +376,18 @@
                     type="date"
                     v-model="order.provider_signature_date"
                     id="provider_signature_date"
-                    class="form-control">
-                    <!-- backend errors -->
+                    class="form-control"
+                    @blur="v$.provider_signature_date.$touch">
+
+                  <!-- frontend errors -->
+                    <span v-if="v$.provider_signature_date.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.provider_signature_date.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
+                  <!-- backend errors -->
                   <span v-if="orderBackendErrors.provider_signature_date">
                       <p
                         class="form-text text-danger"
@@ -292,14 +402,31 @@
                     type="date"
                     v-model="order.customer_signature_date"
                     id="customer_signature_date"
-                    class="form-control">
-                    <!-- backend errors -->
+                    class="form-control"
+                    @blur="v$.customer_signature_date.$touch">
+
+                  <!-- frontend errors -->
+                    <span v-if="v$.customer_signature_date.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.customer_signature_date.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
+                  <!-- backend errors -->
                   <span v-if="orderBackendErrors.customer_signature_date">
                       <p
                         class="form-text text-danger"
                         v-for="(error, i) in orderBackendErrors.customer_signature_date"
                         :key="i">{{ error }}</p>
                     </span>
+                </div>
+
+                <div class="col-md-3">
+
+                  <label for="total" class="form-label">Importe Total</label>
+                  <p id="total">{{ total }}</p>
+
                 </div>
 
                 <!-- buttons -->
@@ -322,6 +449,10 @@
 import { RouterLink, useRouter } from "vue-router";
 import { ref, onMounted } from "vue";
 
+// third
+import { useVuelidate } from "@vuelidate/core";
+import { required, helpers } from "@vuelidate/validators";
+
 // local
 import { listCustomer } from "../../services/customer.service";
 import { listKit } from "../../services/kit.service";
@@ -330,6 +461,7 @@ import ItemTime from "../../components/ItemTime.vue";
 import { postOrder } from "../../services/order.service";
 
 const customers = ref([]);
+
 const order = ref({
     customer: '',
     symptom: '',
@@ -387,10 +519,53 @@ const orderBackendErrors = ref({
     checked_by: [],
     aproved_by: []
 });
+
 const kits = ref([]);
+
 const items = ref([]);
+
 const router = useRouter();
 
+const total = ref(0);
+
+const rules = {
+  customer: {
+    required: helpers.withMessage('El cliente es requerido.', required)
+  },
+  symptom: {
+    required: helpers.withMessage('El síntoma es requerido.', required)
+  },
+  flaw: {
+    required: helpers.withMessage('La falla es requerida.', required)
+  },
+  repair_description: {
+    required: helpers.withMessage('La descripción es requerida.', required)
+  },
+  folio: {
+    required: helpers.withMessage('El folio es requerido.', required)
+  },
+  kit: {
+    required: helpers.withMessage('El equipo es requerido.', required)
+  },
+  kit_brand: {
+    required: helpers.withMessage('La marca es requerida.', required)
+  },
+  kit_model: {
+    required: helpers.withMessage('El modelo es requerido.', required)
+  },
+  kit_serial: {
+    required: helpers.withMessage('La serie es requerida.', required)
+  },
+  provider_signature_date: {
+    required: helpers.withMessage('La firma del proveedor es requerida.', required)
+  },
+  customer_signature_date: {
+    required: helpers.withMessage('La firma del cliente es requerida.', required)
+  },
+};
+
+// vuelidate object
+const v$ = useVuelidate(rules, order);
 
 const createItemTime = () => {
   order.value.itemtime_set.push({
@@ -430,5 +605,9 @@ const createOrder = async (order) => {
       console.log(orderBackendErrors.value);
     }
 };
+
+const sumTotal = () => {
+  total.value = order.value.itemtime_set.map((el) => el.item.price * el.time)
+}
 
 </script>
