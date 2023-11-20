@@ -113,7 +113,6 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
     
     def validate(self, attrs):
-        print('validate...')
         if attrs['customer'] == None:
             raise serializers.ValidationError({
                 'non_field_errors': 'Debe seleccionar un cliente.'
