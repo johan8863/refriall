@@ -606,8 +606,5 @@ const createOrder = async (order) => {
     }
 };
 
-const sumTotal = () => {
-  total.value = order.value.itemtime_set.map((el) => el.item.price * el.time)
-}
 
 </script>
