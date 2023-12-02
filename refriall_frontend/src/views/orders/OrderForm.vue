@@ -447,7 +447,7 @@
 <script setup>
 // vue
 import { RouterLink, useRouter } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, toRaw } from "vue";
 
 // third
 import { useVuelidate } from "@vuelidate/core";
@@ -526,7 +526,15 @@ const items = ref([]);
 
 const router = useRouter();
 
-const total = ref(0);
+const total = computed(() => {
+  return order.value.itemtime_set
+    .filter((itemtime) => itemtime.item !== 0)
+    .reduce((count, itemtime) => {
+      const itemfiltered = items.value.filter((itf) => itf.id === itemtime.item)
+      const itemRaw = toRaw(itemfiltered[0])
+      return count + (itemRaw.price * itemtime.time)
+    }, 0)
+});
 
 const rules = {
   customer: {
@@ -596,10 +604,11 @@ onMounted(async () => {
 
 const createOrder = async (order) => {
     try {
-      order.itemtime_set = order.itemtime_set.filter( (x) => x.item > 0);
-      console.log(`Customer: ${order.customer}`);
-      const { data } = await postOrder(order);
-      router.push({name: 'orders_detail', params: {id: data.id}});
+      order.itemtime_set = order.itemtime_set.filter( (x) => x.item > 0)
+      const some = toRaw(order.itemtime_set)
+      console.log(some);
+      // const { data } = await postOrder(order);
+      // router.push({name: 'orders_detail', params: {id: data.id}});
     } catch (error) {
       orderBackendErrors.value = error.response.data
       console.log(orderBackendErrors.value);
