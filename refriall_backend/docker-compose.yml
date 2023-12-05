@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  db:
+    container_name: mariadb_refriall
+    image: mariadb:10.4.32-focal
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mariadb:/var/lib/mysql:rw
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+    restart: always

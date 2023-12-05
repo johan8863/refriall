@@ -3,3 +3,9 @@
 
 # django
 refriall_backend/db.sqlite3
+
+# docker
+mariadb/
+
+# environment
+.env
