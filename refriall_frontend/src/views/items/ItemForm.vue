@@ -104,11 +104,11 @@
                       @blur="v$.measurement.$touch">
                         <option value="u">Uno</option>
                         <!-- only products can have any kind of measurement -->
-                        <!-- <template v-if="item.item_type === 'product'"> -->
+                        <template v-if="item.item_type === 'product'">
                             <option value="m">Metros</option>
                             <option value="kg">Kilogramos</option>
                             <option value="lts">Litros</option>
-                        <!-- </template> -->
+                        </template>
                     </select>
                     <span v-if="v$.measurement.$error">
                         <p

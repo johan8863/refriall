@@ -532,7 +532,7 @@ const total = computed(() => {
     .reduce((count, itemtime) => {
       const itemfiltered = items.value.filter((itf) => itf.id === itemtime.item)
       const itemRaw = toRaw(itemfiltered[0])
-      return count + (itemRaw.price * itemtime.time)
+      return count + (itemRaw.price * itemtime.times)
     }, 0)
 });
 
@@ -578,7 +578,7 @@ const v$ = useVuelidate(rules, order);
 const createItemTime = () => {
   order.value.itemtime_set.push({
     item:0,
-    time:1
+    times:1
   })
 }
 
@@ -605,10 +605,8 @@ onMounted(async () => {
 const createOrder = async (order) => {
     try {
       order.itemtime_set = order.itemtime_set.filter( (x) => x.item > 0)
-      const some = toRaw(order.itemtime_set)
-      console.log(some);
-      // const { data } = await postOrder(order);
-      // router.push({name: 'orders_detail', params: {id: data.id}});
+      const { data } = await postOrder(order);
+      router.push({name: 'orders_detail', params: {id: data.id}});
     } catch (error) {
       orderBackendErrors.value = error.response.data
       console.log(orderBackendErrors.value);

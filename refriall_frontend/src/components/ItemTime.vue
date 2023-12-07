@@ -14,7 +14,7 @@
         <div class="col-md-2">
             <input
                 class="form-control"
-                v-model.number="item.time"
+                v-model.number="item.times"
                 type="number"
                 min="1"
                 step="1" />
