@@ -432,7 +432,7 @@
                 <!-- buttons -->
                 <div>
                     <button
-                    @click="createOrder(order)"
+                    @click="order.id? updateOrder(order) : createOrder(order)"
                       type="button"
                       class="btn btn-sm btn-primary">Guardar</button>
                     <router-link :to="{name: 'orders'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
@@ -446,7 +446,7 @@
 
 <script setup>
 // vue
-import { RouterLink, useRouter } from "vue-router";
+import { RouterLink, useRouter, useRoute } from "vue-router";
 import { ref, onMounted, computed, toRaw } from "vue";
 
 // third
@@ -458,7 +458,7 @@ import { listCustomer } from "../../services/customer.service";
 import { listKit } from "../../services/kit.service";
 import { listItem } from "../../services/item.service";
 import ItemTime from "../../components/ItemTime.vue";
-import { postOrder } from "../../services/order.service";
+import { detailOrder, postOrder, putOrder } from "../../services/order.service";
 
 const customers = ref([]);
 
@@ -525,6 +525,7 @@ const kits = ref([]);
 const items = ref([]);
 
 const router = useRouter();
+const route = useRoute();
 
 const total = computed(() => {
   return order.value.itemtime_set
@@ -600,6 +601,19 @@ onMounted(async () => {
     // get items
     const respItems = await listItem();
     items.value = respItems.data;
+
+    const id = route.params.id;
+    if (id) {
+      const { data } = await detailOrder(id);
+      order.value = data;
+      order.value.itemtime_set = order.value.itemtime_set.map((itemTime) => {
+        return {
+          item: itemTime.item,
+          times: itemTime.times
+        };
+      });
+    }
+
 });
 
 const createOrder = async (order) => {
@@ -612,6 +626,19 @@ const createOrder = async (order) => {
       console.log(orderBackendErrors.value);
     }
 };
+
+const updateOrder = async (order) => {
+  console.log(order);
+  try {
+    if (await v$.value.$validate()) {
+      const { data } = await putOrder(order)
+      console.log(data);
+      router.push({name: 'orders_detail', params: {id: data.id}})
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
 </script>

@@ -110,6 +110,11 @@ const router = createRouter({
       component: () => import('../views/orders/OrderForm.vue')
     },
     {
+      path: '/orders/update/:id', 
+      name: 'orders_update', 
+      component: () => import('../views/orders/OrderForm.vue')
+    },
+    {
       path: '/orders/detail/:id', 
       name: 'orders_detail', 
       component: () => import('../views/orders/OrderDetail.vue')
