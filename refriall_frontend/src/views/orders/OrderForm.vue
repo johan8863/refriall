@@ -359,6 +359,10 @@
                   <button
                     class="btn btn-sm btn-primary"
                     @click="createItemTime">Agregar artículo</button>
+                  <span v-if="orderBackendErrors.itemtime_set">
+                    <p
+                      class="form-text text-danger">Debe seleccionar un artículo de la lista desplegable.</p>
+                  </span>
 
                   <template
                     v-for="(i, index) in order.itemtime_set"
@@ -517,7 +521,8 @@ const orderBackendErrors = ref({
     customer_name: [],
     customer_personal_id: [],
     checked_by: [],
-    aproved_by: []
+    aproved_by: [],
+    non_field_errors: []
 });
 
 const kits = ref([]);
@@ -591,6 +596,7 @@ for (let index = 0; index < 5; index++) {
  createItemTime()
   
 }
+
 onMounted(async () => {
     // get customers
     const respCustomers = await listCustomer();
@@ -623,12 +629,11 @@ const createOrder = async (order) => {
       router.push({name: 'orders_detail', params: {id: data.id}});
     } catch (error) {
       orderBackendErrors.value = error.response.data
-      console.log(orderBackendErrors.value);
+      // console.log(orderBackendErrors.value);
     }
 };
 
 const updateOrder = async (order) => {
-  console.log(order);
   try {
     if (await v$.value.$validate()) {
       const { data } = await putOrder(order)
@@ -636,7 +641,8 @@ const updateOrder = async (order) => {
       router.push({name: 'orders_detail', params: {id: data.id}})
     }
   } catch (error) {
-    console.log(error);
+    orderBackendErrors.value = error.response.data
+    console.log(orderBackendErrors.value.itemtime_set);
   }
 }
 
