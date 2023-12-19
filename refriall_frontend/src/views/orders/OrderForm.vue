@@ -359,10 +359,6 @@
                   <button
                     class="btn btn-sm btn-primary"
                     @click="createItemTime">Agregar artículo</button>
-                  <span v-if="orderBackendErrors.itemtime_set">
-                    <p
-                      class="form-text text-danger">Debe seleccionar un artículo de la lista desplegable.</p>
-                  </span>
 
                   <template
                     v-for="(i, index) in order.itemtime_set"
@@ -629,7 +625,7 @@ const createOrder = async (order) => {
       router.push({name: 'orders_detail', params: {id: data.id}});
     } catch (error) {
       orderBackendErrors.value = error.response.data
-      // console.log(orderBackendErrors.value);
+      console.log(orderBackendErrors.value);
     }
 };
 
@@ -637,7 +633,6 @@ const updateOrder = async (order) => {
   try {
     if (await v$.value.$validate()) {
       const { data } = await putOrder(order)
-      console.log(data);
       router.push({name: 'orders_detail', params: {id: data.id}})
     }
   } catch (error) {
