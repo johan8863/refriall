@@ -90,7 +90,7 @@
                 <div class="col-md-3 mb-2">
                     <label
                       for="flaw"
-                      class="form-label">Falla</label>
+                      class="form-label">Defecto</label>
                     <input
                       type="text"
                       class="form-control"
