@@ -12,3 +12,13 @@ services:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - MARIADB_DATABASE=${MARIADB_DATABASE}
     restart: always
+  pma:
+    depends_on:
+      - db
+    container_name: phpmyadmin_refriall
+    image: phpmyadmin:5.2.1-apache
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_ARBITRARY=1
+    restart: always
