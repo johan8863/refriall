@@ -247,6 +247,7 @@ const updateItem = async (item) => {
         }
     } catch (error) {
         itemErrors.value = error.response.data;
+        console.log(error.response.data);
     }
         
 };

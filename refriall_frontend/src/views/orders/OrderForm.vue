@@ -172,7 +172,34 @@
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
-                <div class="col-md-9"></div>
+                <!-- support control -->
+                <div class="col-md-3 mb-2">
+                  <label for="support">Atención</label>
+                  <select
+                    id="support"
+                    class="form-select"
+                    v-model.trim="order.support"
+                    @blur="v$.support.$touch">
+                    <option value="t">Taller</option>
+                    <option value="i">In Situ</option>
+                  </select>
+                  <!-- frontend errors -->
+                  <span v-if="v$.support.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.support.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
+                    <!-- backend errors -->
+                    <span v-if="orderBackendErrors.support">
+                      <p
+                        class="form-text text-danger"
+                        v-for="(error, i) in orderBackendErrors.support"
+                        :key="i">{{ error }}</p>
+                    </span>
+                </div>
+                <div class="col-md-6"></div>
 
                 <!-- check_diagnosis control -->
                 <div class="col-md-2 mb-2">
@@ -472,6 +499,7 @@ const order = ref({
     repair: false,
     install: false,
     maintenance: false,
+    support: '',
     kit: '',
     kit_brand: '',
     kit_model: '',
@@ -501,6 +529,7 @@ const orderBackendErrors = ref({
     repair: [],
     install: [],
     maintenance: [],
+    support: [],
     kit: [],
     kit_brand: [],
     kit_model: [],
@@ -553,6 +582,9 @@ const rules = {
   },
   folio: {
     required: helpers.withMessage('El folio es requerido.', required)
+  },
+  support: {
+    required: helpers.withMessage('La atención es requerida.', required)
   },
   kit: {
     required: helpers.withMessage('El equipo es requerido.', required)
@@ -620,9 +652,11 @@ onMounted(async () => {
 
 const createOrder = async (order) => {
     try {
-      order.itemtime_set = order.itemtime_set.filter( (x) => x.item > 0)
-      const { data } = await postOrder(order);
-      router.push({name: 'orders_detail', params: {id: data.id}});
+      if (await v$.value.$validate()) {
+        order.itemtime_set = order.itemtime_set.filter( (x) => x.item > 0)
+        const { data } = await postOrder(order);
+        router.push({name: 'orders_detail', params: {id: data.id}});
+      }
     } catch (error) {
       orderBackendErrors.value = error.response.data
       console.log(orderBackendErrors.value);
@@ -632,6 +666,8 @@ const createOrder = async (order) => {
 const updateOrder = async (order) => {
   try {
     if (await v$.value.$validate()) {
+      order.itemtime_set = order.itemtime_set.filter( (x) => x.item > 0)
+      console.log(order.support);
       const { data } = await putOrder(order)
       router.push({name: 'orders_detail', params: {id: data.id}})
     }
