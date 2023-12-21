@@ -10,6 +10,11 @@ from stock.models import Item, Kit
 
 class Order(models.Model):
     """Pre Bill document to register job details performed"""
+    SUPPORT_TYPE = [
+        ('t', 'Taller'),
+        ('i', 'In Situ'),
+    ]
+
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True, verbose_name="Cliente")
     symptom = models.CharField('Síntoma', max_length=100)
     flaw = models.CharField('Defecto', max_length=100)
@@ -21,6 +26,7 @@ class Order(models.Model):
     install = models.BooleanField('Instal./Mont./Desmont.')
     maintenance = models.BooleanField('Mtto')
     # end of modality set
+    support = models.CharField(max_length=1, choices=SUPPORT_TYPE)
     kit = models.ForeignKey(Kit, on_delete=models.PROTECT, null=True, verbose_name="Equipo")
     kit_brand = models.CharField('Marca', max_length=20)
     kit_model = models.CharField('Modelo', max_length=20)
