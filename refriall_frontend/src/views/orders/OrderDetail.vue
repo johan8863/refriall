@@ -21,6 +21,31 @@
         <!-- main content -->
         <div class="col-md-4">
             <h3>Orden: {{ order.customer.name }}</h3>
+            <p>Síntoma: {{ order.symptom }}</p>
+            <p>Defecto: {{ order.flaw }}</p>
+            <p>Reparación: {{ order.repair_description }}</p>
+            <p>Revisión y Diagnóstico: {{ order.check_diagnosis }}</p>
+            <p>Reparación: {{ order.repair }}</p>
+            <p>Instalación: {{ order.install }}</p>
+            <p>Mtto: {{ order.maintenance }}</p>
+            <p>Atención: {{ order.support }}</p>
+            <p>Equipo: {{ order.kit.name }}</p>
+            <p>Marca: {{ order.kit_brand }}</p>
+            <p>Modelo: {{ order.kit_model }}</p>
+            <p>Serie: {{ order.kit_serial }}</p>
+            <p>Descripción del trabajo realizado: {{ order.job_description }}</p>
+            <p>Artículos: {{ order.itemtime_set }}</p>
+            <p>Prestador: {{ order.provider }}</p>
+            <p>Fecha firma prestador: {{ order.provider_signature_date }}</p>
+            <p>Fecha firma cliente: {{ order.customer_signature_date }}</p>
+            <p>Nro de cheque: {{ order.check_number }}</p>
+            <p>Cargo aprueba: {{ order.charge_aprove }}</p>
+            <p>Cargo revisa: {{ order.charge_check }}</p>
+            <p>Cargo: {{ order.customer_charge }}</p>
+            <p>Nombre cliente: {{ order.customer_name }}</p>
+            <p>CI cliente: {{ order.customer_personal_id }}</p>
+            <p>Aprobado: {{ order.checked_by }}</p>
+            <p>Revisado: {{ order.aproved_by }}</p>
         </div>
 
     </div> <!-- end row -->
