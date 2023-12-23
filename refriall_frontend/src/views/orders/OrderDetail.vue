@@ -35,7 +35,7 @@
             <p>Serie: {{ order.kit_serial }}</p>
             <p>Descripción del trabajo realizado: {{ order.job_description }}</p>
             <p>Artículos: {{ order.itemtime_set }}</p>
-            <p>Prestador: {{ order.provider }}</p>
+            <p>Prestador: {{ order.provider.first_name }}</p>
             <p>Fecha firma prestador: {{ order.provider_signature_date }}</p>
             <p>Fecha firma cliente: {{ order.customer_signature_date }}</p>
             <p>Nro de cheque: {{ order.check_number }}</p>
