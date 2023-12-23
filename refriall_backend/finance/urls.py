@@ -15,4 +15,5 @@ router.register(r'orders_write', views.OrderViewSet, basename='orders')
 urlpatterns = [
     path('', include(router.urls)),
     path('orders/list/', views.OrderList.as_view(), name='orders_list'),
+    path('orders/detail/<int:pk>/', views.OrderDetail.as_view(), name='orders_detail'),
 ]

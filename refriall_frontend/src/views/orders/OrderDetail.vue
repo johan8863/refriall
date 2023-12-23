@@ -20,7 +20,7 @@
 
         <!-- main content -->
         <div class="col-md-4">
-            <h3>Orden: {{ order.id }}</h3>
+            <h3>Orden: {{ order.customer.name }}</h3>
         </div>
 
     </div> <!-- end row -->

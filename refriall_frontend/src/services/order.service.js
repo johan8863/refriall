@@ -1,6 +1,7 @@
 import apiBase from "./base.service";
 
 const urlOrderList = '/finance/orders/list'
+const urlOrderDetail = '/finance/orders/detail'
 const urlOrderPost = '/finance/orders_write'
 
 export const listOrder = async () => {
@@ -8,7 +9,7 @@ export const listOrder = async () => {
 };
 
 export const detailOrder = async (id) => {
-    return await apiBase.get(`${urlOrderPost}/${id}/`);
+    return await apiBase.get(`${urlOrderDetail}/${id}/`);
 };
 
 export const postOrder = async (order) => {

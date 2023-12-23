@@ -396,6 +396,37 @@
 
                 </div>
 
+                <!-- customer in charge controls -->
+                <h4>Datos del cliente a cargo de recibir el servicio:</h4>
+                <div class="col-md-3 mb-2">
+                  <label for="customer_charge">Cargo</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="customer_charge"
+                    v-model.trim="order.customer_charge">
+                </div>
+
+                <div class="col-md-3 mb-2">
+                  <label for="customer_name">Nombre</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="customer_name"
+                    v-model.trim="order.customer_name">
+                </div>
+                
+                <div class="col-md-3 mb-2">
+                  <label for="customer_name">Nombre</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="customer_name"
+                    v-model.trim="order.customer_name">
+                </div>
+
+                <div class="col-md-3 mb-2"></div>
+
                 <!-- dates controls -->
                 <div class="col-md-3">
                   <label for="provider_signature_date" class="form-label">Firma del Prestador</label>
