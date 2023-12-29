@@ -36,6 +36,19 @@ class ItemSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
 
+class ItemSerializerForReadOnly(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = [
+            "id",
+            "code",
+            "name",
+            "get_item_type",
+            "get_measurement",
+            "price",
+        ]
+
+
 class KitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Kit

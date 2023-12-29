@@ -12,6 +12,10 @@ export const detailOrder = async (id) => {
     return await apiBase.get(`${urlOrderDetail}/${id}/`);
 };
 
+export const detailOrderUpdate = async (id) => {
+    return await apiBase.get(`${urlOrderPost}/${id}/`);
+};
+
 export const postOrder = async (order) => {
     return await apiBase.post(`${urlOrderPost}/`, order);
 };

@@ -48,6 +48,14 @@ class Item(models.Model):
         """Returns the string object representation"""
         return self.name
     
+    @property
+    def get_item_type(self):
+        return self.get_item_type_display()
+    
+    @property
+    def get_measurement(self):
+        return self.get_measurement_display()
+    
 
 class Kit(models.Model):
     """Kit model, it'll be used to select the kind of kit in the order"""

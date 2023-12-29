@@ -6,11 +6,11 @@ from rest_framework import serializers
 # local
 from .models import Order, ItemTime
 from hr.serializers import CustomerSerializer, ProviderSerializer
-from stock.serializers import ItemSerializer, KitSerializer
+from stock.serializers import ItemSerializer, ItemSerializerForReadOnly, KitSerializer
 
 
 class ItemTimeSerializerForReadOnly(serializers.ModelSerializer):
-    item = ItemSerializer()
+    item = ItemSerializerForReadOnly()
 
     class Meta:
         model = ItemTime
@@ -40,7 +40,7 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
             "repair",
             "install",
             "maintenance",
-            "support",
+            "get_order_support",
             "kit",
             "kit_brand",
             "kit_model",

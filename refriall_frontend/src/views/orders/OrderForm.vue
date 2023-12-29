@@ -516,7 +516,7 @@ import { listCustomer } from "../../services/customer.service";
 import { listKit } from "../../services/kit.service";
 import { listItem } from "../../services/item.service";
 import ItemTime from "../../components/ItemTime.vue";
-import { detailOrder, postOrder, putOrder } from "../../services/order.service";
+import { detailOrderUpdate, postOrder, putOrder } from "../../services/order.service";
 
 const customers = ref([]);
 
@@ -669,7 +669,7 @@ onMounted(async () => {
 
     const id = route.params.id;
     if (id) {
-      const { data } = await detailOrder(id);
+      const { data } = await detailOrderUpdate(id);
       order.value = data;
       order.value.itemtime_set = order.value.itemtime_set.map((itemTime) => {
         return {
