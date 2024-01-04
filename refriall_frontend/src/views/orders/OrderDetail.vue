@@ -13,6 +13,9 @@
                     <router-link :to="{name: 'orders_update', params: {id: order.id}}">Editar</router-link>
                 </li>
                 <li class="list-group-item">
+                    <button @click="pdf()">PDF</button>
+                </li>
+                <li class="list-group-item">
                     <router-link :to="{name: 'orders_confirm_delete', params: {id: order.id}}">Eliminar</router-link>
                 </li>
             </ul>
@@ -21,7 +24,7 @@
         <!-- main content -->
         <div class="col-md-8">
             <!-- order info -->
-            <div class="row">
+            <div class="row" id="order-to-pdf">
 
                 <div
                   class="col-md-9 d-flex align-items-center justify-content-center border-bottom border-3 mb-1">
@@ -191,6 +194,8 @@ import { RouterLink, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
 import { detailOrder } from "../../services/order.service";
 
+import html2pdf from "html2pdf.js";
+
 const route = useRoute();
 const order = ref({
     customer: '',
@@ -225,6 +230,11 @@ onMounted(async () => {
     const resp = await detailOrder(route.params.id);
     order.value = resp.data;
 });
+
+function pdf() {
+    var element = document.getElementById('order-to-pdf');
+    html2pdf(element);
+}
 
 </script>
 
