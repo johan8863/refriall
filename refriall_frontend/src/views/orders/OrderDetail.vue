@@ -13,7 +13,7 @@
                     <router-link :to="{name: 'orders_update', params: {id: order.id}}">Editar</router-link>
                 </li>
                 <li class="list-group-item">
-                    <button @click="pdf()">PDF</button>
+                    <a href="#" @click="pdf()">PDF</a>
                 </li>
                 <li class="list-group-item">
                     <router-link :to="{name: 'orders_confirm_delete', params: {id: order.id}}">Eliminar</router-link>
