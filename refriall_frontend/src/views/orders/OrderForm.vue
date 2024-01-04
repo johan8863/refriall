@@ -382,11 +382,14 @@
                 </div>
 
                 <!-- items_times control -->
-                <div class="col-md-8 offset-md-2 mb-2" style="overflow-y: auto; height: 400px;">
+                <div class="col-md-8 offset-md-2 mb-2">
                   <button
                     class="btn btn-sm btn-primary"
                     @click="createItemTime">Agregar artículo</button>
-
+                </div>
+                
+                <div class="col-md-8 offset-md-2 mb-2" style="overflow-y: auto; height: 400px;">
+                  
                   <template
                     v-for="(i, index) in order.itemtime_set"
                     :key="i">
