@@ -22,9 +22,9 @@
         </div>
 
         <!-- main content -->
-        <div class="col-md-8">
+        <div class="col-md-9">
             <!-- order info -->
-            <div class="row" id="order-to-pdf">
+            <div class="row px-3 py-1" id="order-to-pdf">
 
                 <div
                   class="col-md-9 d-flex align-items-center justify-content-center border-bottom border-3 mb-1">
@@ -129,11 +129,7 @@
                 </div>
 
                 <div class="col-md-4">
-
-                    <div class="d-flex justify-content-center">
-                        <span class="d-block">Desglose de importes</span>
-                    </div>
-
+                    <span class="d-block fw-bold">Desglose de importes</span>
                     <span class="d-block">Productos: {{ order.get_total_amount_product }}</span>
                     <span class="d-block">Conceptos: {{ order.get_total_amount_concept }}</span>
                     <span class="d-block">Reparación: {{ order.get_total_amount_repair }}</span>
@@ -145,42 +141,26 @@
                 </div>
                 
                 <div class="col-md-4">
-
-                    <div class="d-flex justify-content-center">
-                        <span class="d-block">Prestador</span>
-                    </div>
-
+                    <span class="d-block fw-bold">Prestador</span>
                     <span class="d-block">Licencia: {{ order.provider.license_number }}</span>
                     <span class="d-block">{{ order.provider.first_name }} {{ order.provider.last_name }}</span>
                     <span class="d-block">No. CI: {{ order.provider.personal_id }}</span>
-                    <span class="d-block">{{ order.provider_signature_date }}</span>
+                    <span class="d-block">Firma: </span>
+                    <span v-if="order.provider_signature_date" class="d-block">{{ order.provider_signature_date }}</span>
+                    <span v-else class="d-block">Fecha: </span>
 
                 </div>
                 
                 <div class="col-md-4">
-
-                    <div class="d-flex justify-content-center">
-                        <span class="d-block">Cliente</span>
-                    </div>
-
+                    <span class="d-block fw-bold">Cliente</span>
                     <span class="d-block">Cargo: {{ order.customer_charge }}</span>
                     <span class="d-block">Nombre: </span>
                     <span class="d-block">No. CI: {{ order.provider.personal_id }}</span>
-                    <span class="d-block">{{ order.customer_signature_date }}</span>
+                    <span class="d-block">Firma: </span>
+                    <span v-if="order.customer_signature_date" class="d-block">{{ order.customer_signature_date }}</span>
+                    <span v-else class="d-block">Fecha: </span>
                 </div>
                 
-                
-                <!-- <p>Prestador: {{ order.provider.first_name }}</p>
-                <p>Fecha firma prestador: {{ order.provider_signature_date }}</p>
-                <p>Fecha firma cliente: {{ order.customer_signature_date }}</p>
-                <p>Nro de cheque: {{ order.check_number }}</p>
-                <p>Cargo aprueba: {{ order.charge_aprove }}</p>
-                <p>Cargo revisa: {{ order.charge_check }}</p>
-                <p>Cargo: {{ order.customer_charge }}</p>
-                <p>Nombre cliente: {{ order.customer_name }}</p>
-                <p>CI cliente: {{ order.customer_personal_id }}</p>
-                <p>Aprobado: {{ order.checked_by }}</p>
-                <p>Revisado: {{ order.aproved_by }}</p> -->
             </div>
         </div>
 
@@ -229,6 +209,12 @@ const order = ref({
 onMounted(async () => {
     const resp = await detailOrder(route.params.id);
     order.value = resp.data;
+
+    const orderDetail = document.querySelector('#order-to-pdf');
+    const orderWidth = orderDetail.offsetWidth;
+    const orderHeight = orderDetail.offsetHeight;
+
+    console.log({orderWidth, orderHeight});
 });
 
 function pdf() {
