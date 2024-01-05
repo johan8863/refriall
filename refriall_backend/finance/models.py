@@ -75,9 +75,7 @@ class Order(models.Model):
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
-        total_amount = round(total_amount, 2)
-
-        return total_amount if total_amount is not None else 0
+        return round(total_amount, 2) if total_amount is not None else 0
     
     @property
     def get_total_amount_product(self):
@@ -86,9 +84,7 @@ class Order(models.Model):
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
-        total_amount_product = round(total_amount_product, 2)
-
-        return total_amount_product if total_amount_product is not None else 0
+        return round(total_amount_product, 2) if total_amount_product is not None else 0
     
     @property
     def get_total_amount_concept(self):
@@ -97,9 +93,7 @@ class Order(models.Model):
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
-        total_amount_concept = round(total_amount_concept, 2)
-
-        return total_amount_concept if total_amount_concept is not None else 0
+        return round(total_amount_concept, 2) if total_amount_concept is not None else 0
     
     @property
     def get_total_amount_repair(self):
@@ -108,9 +102,7 @@ class Order(models.Model):
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
-        total_amount_repair = round(total_amount_repair, 2)
-
-        return total_amount_repair if total_amount_repair is not None else 0
+        return round(total_amount_repair, 2) if total_amount_repair is not None else 0
     
     @property
     def get_total_amount_maintenace(self):
@@ -119,9 +111,7 @@ class Order(models.Model):
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
-        total_amount_maintenace = round(total_amount_maintenace, 2)
-
-        return total_amount_maintenace if total_amount_maintenace is not None else 0
+        return round(total_amount_maintenace, 2) if total_amount_maintenace is not None else 0
     
     @property
     def get_total_amount_install(self):
@@ -130,9 +120,7 @@ class Order(models.Model):
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
-        total_amount_install = round(total_amount_install, 2)
-
-        return total_amount_install if total_amount_install is not None else 0
+        return round(total_amount_install, 2) if total_amount_install is not None else 0
     
     @property
     def get_total_amount_unmounting(self):
@@ -141,9 +129,7 @@ class Order(models.Model):
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
-        total_amount_unmounting = round(total_amount_unmounting, 2)
-
-        return total_amount_unmounting if total_amount_unmounting is not None else 0
+        return round(total_amount_unmounting, 2) if total_amount_unmounting is not None else 0
     
     @property
     def get_order_support(self):
