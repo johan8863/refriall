@@ -13,6 +13,6 @@ class CustomerViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerSerializer
 
 
-class ProviderViewSet(viewsets.ReadOnlyModelViewSet):
+class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
     serializer_class = ProviderSerializer

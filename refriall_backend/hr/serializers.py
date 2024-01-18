@@ -15,6 +15,11 @@ class ProviderSerializer(serializers.ModelSerializer):
             "username",
             "first_name",
             "last_name",
+            "tcp_code",
+            "bank_account_header",
+            "bank_account",
+            "address",
+            "activity",
             "license_number",
             "personal_id",
         ]
