@@ -25,6 +25,7 @@
         <div class="col-md-9">
             <!-- order info -->
             <div  id="order-to-pdf">
+                <!-- paginated orders -->
                 <div
                   v-for="(paginatedOrder, index) of paginatedOrders"
                   :key="index"
@@ -103,7 +104,7 @@
                         <span class="d-block">Descripción del trabajo realizado: {{ paginatedOrder.job_description }}</span>
                     </div>
                     
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="height: 495px;">
     
                         <table class="table">
     
@@ -165,8 +166,9 @@
                         <span v-else class="d-block">Fecha: </span>
                     </div>
                     
-                    <div class="html2pdf__page-break"></div>
+                    <div v-if="index < paginatedOrders.length - 1" class="html2pdf__page-break"></div>
                 </div>
+                <!-- end paginated orders -->
             </div>
 
         </div>
@@ -259,8 +261,13 @@ const paginate = (order, itemsPerPage, start=0, pages=[]) => {
 }
 
 function pdf() {
-    var element = document.getElementById('order-to-pdf');
-    html2pdf(element);
+    const element = document.getElementById('order-to-pdf');
+    const opt = {
+        filename: 'orden_de_servicio'
+    }
+
+    html2pdf().from(element).set(opt).save()
+    // html2pdf(element);
 }
 
 </script>
