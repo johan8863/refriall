@@ -12,6 +12,7 @@ from . import views
 router = routers.DefaultRouter()
 router.register(r'customers', views.CustomerViewSet, basename='customers')
 router.register(r'providers', views.ProviderViewSet, basename='providers')
+router.register(r'dependencies', views.CustomerDependencyViewSet, basename='dependencies')
 
 urlpatterns = [
     path('', include(router.urls)),

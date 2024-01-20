@@ -61,3 +61,20 @@ class Customer(models.Model):
     def __str__(self):
         """Returns  the string object representation"""
         return self.name
+
+
+class CustomerDependency(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    name = models.CharField(max_length=150)
+    address = models.TextField()
+    province = models.CharField('Provincia', max_length=20)
+    township = models.CharField('Municipio', max_length=50)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Dependencia'
+        verbose_name_plural = 'Dependencias'
+    
+    def __str__(self):
+        """Returns  the string object representation"""
+        return self.name

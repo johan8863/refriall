@@ -4,8 +4,8 @@
 from rest_framework import viewsets
 
 # local
-from .models import Customer, Provider
-from .serializers import CustomerSerializer, ProviderSerializer
+from .models import Customer, Provider, CustomerDependency
+from .serializers import CustomerSerializer, ProviderSerializer, CustomerDependencySerializer
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
@@ -16,3 +16,8 @@ class CustomerViewSet(viewsets.ModelViewSet):
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
     serializer_class = ProviderSerializer
+
+
+class CustomerDependencyViewSet(viewsets.ModelViewSet):
+    queryset = CustomerDependency.objects.all()
+    serializer_class = CustomerDependencySerializer

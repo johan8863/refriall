@@ -4,7 +4,7 @@
 from rest_framework import serializers
 
 # local
-from .models import Provider, Customer
+from .models import Provider, Customer, CustomerDependency
 
 
 class ProviderSerializer(serializers.ModelSerializer):
@@ -39,4 +39,17 @@ class CustomerSerializer(serializers.ModelSerializer):
             "client_nit",
             "bank_account_header",
             "bank_account",
+        ]
+
+
+class CustomerDependencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerDependency
+        fields = [
+            "id",
+            "customer",
+            "name",
+            "address",
+            "province",
+            "township"
         ]
