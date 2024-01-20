@@ -61,10 +61,14 @@ class Customer(models.Model):
     def __str__(self):
         """Returns  the string object representation"""
         return self.name
+    
+    @property
+    def get_dependencies(self):
+        return self.dependencies.all()
 
 
 class CustomerDependency(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name="dependencies")
     name = models.CharField(max_length=150)
     address = models.TextField()
     province = models.CharField('Provincia', max_length=20)

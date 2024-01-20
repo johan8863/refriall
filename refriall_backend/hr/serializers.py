@@ -25,7 +25,22 @@ class ProviderSerializer(serializers.ModelSerializer):
         ]
 
 
+class CustomerDependencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerDependency
+        fields = [
+            "id",
+            "customer",
+            "name",
+            "address",
+            "province",
+            "township"
+        ]
+
+
 class CustomerSerializer(serializers.ModelSerializer):
+    get_dependencies = CustomerDependencySerializer(many=True)
+
     class Meta:
         model = Customer
         fields = [
@@ -39,17 +54,5 @@ class CustomerSerializer(serializers.ModelSerializer):
             "client_nit",
             "bank_account_header",
             "bank_account",
-        ]
-
-
-class CustomerDependencySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomerDependency
-        fields = [
-            "id",
-            "customer",
-            "name",
-            "address",
-            "province",
-            "township"
+            "get_dependencies",
         ]
