@@ -212,7 +212,14 @@ const order = ref({
     customer_name: '',
     customer_personal_id: '',
     checked_by: '',
-    aproved_by: ''
+    aproved_by: '',
+    get_total_amount: 0,
+    get_total_amount_product: 0,
+    get_total_amount_concept: 0,
+    get_total_amount_repair: 0,
+    get_total_amount_maintenace: 0,
+    get_total_amount_install: 0,
+    get_total_amount_unmounting: 0
 });
 
 const paginatedOrders = ref([]);
@@ -255,7 +262,14 @@ const paginate = (order, itemsPerPage, start=0, pages=[]) => {
         customer_name: order.value.customer_name,
         customer_personal_id: order.value.customer_personal_id,
         checked_by: order.value.checked_by,
-        aproved_by: order.value.aproved_by
+        aproved_by: order.value.aproved_by,
+        get_total_amount: order.value.get_total_amount,
+        get_total_amount_product: order.value.get_total_amount_product,
+        get_total_amount_concept: order.value.get_total_amount_concept,
+        get_total_amount_repair: order.value.get_total_amount_repair,
+        get_total_amount_maintenace: order.value.get_total_amount_maintenace,
+        get_total_amount_install: order.value.get_total_amount_install,
+        get_total_amount_unmounting: order.value.get_total_amount_unmounting
     });
     return paginate(order, itemsPerPage, end, pages);
 }
