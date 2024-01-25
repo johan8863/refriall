@@ -32,6 +32,7 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
         fields = [
             "id",
             "customer",
+            "customer_dependency",
             "symptom",
             "flaw",
             "repair_description",
@@ -88,6 +89,7 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "customer",
+            "customer_dependency",
             "symptom",
             "flaw",
             "repair_description",
@@ -117,9 +119,9 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
     
     def validate(self, attrs):
-        if attrs['customer'] == None:
+        if attrs['customer'] == None or attrs['customer_dependency'] == None:
             raise serializers.ValidationError({
-                'non_field_errors': 'Debe seleccionar un cliente.'
+                'non_field_errors': 'Debe seleccionar un cliente o una dependencia.'
             })
         if attrs['kit'] == None:
             raise serializers.ValidationError({

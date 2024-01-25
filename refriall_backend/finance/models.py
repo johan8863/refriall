@@ -4,7 +4,7 @@
 from django.db import models
 
 # local
-from hr.models import Customer, Provider
+from hr.models import Customer, CustomerDependency, Provider
 from stock.models import Item, Kit
 
 
@@ -16,6 +16,7 @@ class Order(models.Model):
     ]
 
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True, verbose_name="Cliente")
+    customer_dependency = models.ForeignKey(CustomerDependency, on_delete=models.PROTECT, null=True, verbose_name="Dependencia")
     symptom = models.CharField('Síntoma', max_length=100)
     flaw = models.CharField('Defecto', max_length=100)
     repair_description = models.CharField('Reparación', max_length=100)
