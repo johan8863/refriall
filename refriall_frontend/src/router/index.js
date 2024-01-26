@@ -105,6 +105,26 @@ const router = createRouter({
       component: () => import('../views/customers/CustomerConfirmDelete.vue')
     },
     {
+      path: '/customer/dependencies/detail/:id',
+      name: 'customer_dependecy_detail',
+      component: () => import ('../views/customerDependencies/CustomerDependencyDetail.vue')
+    },
+    {
+      path: '/customer/dependencies/create/:id',
+      name: 'customer_dependecy_create',
+      component: () => import ('../views/customerDependencies/CustomerDependencyCreate.vue')
+    },
+    {
+      path: '/customer/dependencies/update/:id',
+      name: 'customer_dependecy_update',
+      component: () => import ('../views/customerDependencies/CustomerDependencyUpdate.vue')
+    },
+    {
+      path: '/customer/dependencies/delete/:id',
+      name: 'customer_dependecy_delete',
+      component: () => import ('../views/customerDependencies/CustomerDependencyConfirmDelete.vue')
+    },
+    {
       path: '/orders',
       name: 'orders',
       component: OrderList,

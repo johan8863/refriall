@@ -18,9 +18,9 @@ export const detailCustomerDependecy = async (id) => {
     }
 }
 
-export const putCustomerDependcy = async (id) => {
+export const putCustomerDependcy = async (customerDependecy) => {
     try {
-        return await apiBase.put(`${urlCustomerDependency}/${id}/`);
+        return await apiBase.put(`${urlCustomerDependency}/${customerDependecy.id}/`, customerDependecy);
     } catch (error) {
         console.log(error);
     }
