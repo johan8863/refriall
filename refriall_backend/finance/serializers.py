@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 # local
 from .models import Order, ItemTime
-from hr.serializers import CustomerSerializer, ProviderSerializer
+from hr.serializers import CustomerSerializer, CustomerDependencySerializer, ProviderSerializer
 from stock.serializers import ItemSerializer, ItemSerializerForReadOnly, KitSerializer
 
 
@@ -24,6 +24,7 @@ class ItemTimeSerializerForReadOnly(serializers.ModelSerializer):
 class OrderSerializerForReadOnly(serializers.ModelSerializer):
     itemtime_set = ItemTimeSerializerForReadOnly(many=True)
     customer = CustomerSerializer()
+    customer_dependency = CustomerDependencySerializer()
     kit = KitSerializer()
     provider = ProviderSerializer()
 
@@ -119,7 +120,11 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
     
     def validate(self, attrs):
-        if attrs['customer'] == None or attrs['customer_dependency'] == None:
+        if attrs['customer'] and attrs['customer_dependency']:
+            raise serializers.ValidationError({
+                'non_field_errors': 'Debe seleccionar un cliente o una dependencia pero no ambos.'
+            })
+        if attrs['customer'] == None and attrs['customer_dependency'] == None:
             raise serializers.ValidationError({
                 'non_field_errors': 'Debe seleccionar un cliente o una dependencia.'
             })

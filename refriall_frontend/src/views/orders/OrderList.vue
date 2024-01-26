@@ -26,8 +26,11 @@
                             </thead>
                             <tbody>
                                 <tr v-for="order in orders" :key="order.id">
-                                    <td>
+                                    <td v-if="order.customer">
                                         <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.customer.name }}</router-link>
+                                    </td>
+                                    <td v-if="order.customer_dependency">
+                                        <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.customer_dependency.name }}</router-link>
                                     </td>
                                     <td>
                                         <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.get_total_amount }}</router-link>

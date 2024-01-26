@@ -41,18 +41,49 @@
                     </select>
 
                     <!-- frontend errors -->
-                    <span v-if="v$.customer.$errors">
+                    <!-- <span v-if="v$.customer.$errors">
                       <p
                         class="form-text text-danger"
                         v-for="error in v$.customer.$errors"
                         :key="error.$uid">{{ error.$message }}</p>
-                    </span>
+                    </span> -->
 
                     <!-- backend errors -->
                     <span v-if="orderBackendErrors.customer">
                       <p
                         class="form-text text-danger"
                         v-for="(error, i) in orderBackendErrors.customer"
+                        :key="i">{{ error }}</p>
+                    </span>
+                </div>
+
+                <!-- customer_dependency control -->
+                <div class="col-md-3 mb-2">
+                    <label for="customer_dependency" class="form-label">Dependencia</label>
+                    <select
+                      id="customer_dependency"
+                      class="form-select"
+                      v-model.trim="order.customer_dependency"
+                      @blur="v$.customer_dependency.$touch">
+                        <option
+                          v-for="dependency in dependencies"
+                          :key="dependency.id"
+                          :value="dependency.id">{{ dependency.name }}</option>
+                    </select>
+
+                    <!-- frontend errors -->
+                    <!-- <span v-if="v$.customer_dependency.$errors">
+                      <p
+                        class="form-text text-danger"
+                        v-for="error in v$.customer_dependency.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span> -->
+
+                    <!-- backend errors -->
+                    <span v-if="orderBackendErrors.customer_dependency">
+                      <p
+                        class="form-text text-danger"
+                        v-for="(error, i) in orderBackendErrors.customer_dependency"
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
@@ -199,7 +230,7 @@
                         :key="i">{{ error }}</p>
                     </span>
                 </div>
-                <div class="col-md-6"></div>
+                <div class="col-md-3"></div>
 
                 <!-- check_diagnosis control -->
                 <div class="col-md-2 mb-2">
@@ -491,7 +522,7 @@
                 </div>
 
                 <!-- buttons -->
-                <div>
+                <div class="mb-4">
                     <button
                     @click="order.id? updateOrder(order) : createOrder(order)"
                       type="button"
@@ -520,11 +551,14 @@ import { listKit } from "../../services/kit.service";
 import { listItem } from "../../services/item.service";
 import ItemTime from "../../components/ItemTime.vue";
 import { detailOrderUpdate, postOrder, putOrder } from "../../services/order.service";
+import { listCustomerDependecy } from "../../services/customerDependency.service";
 
 const customers = ref([]);
+const dependencies = ref([]);
 
 const order = ref({
     customer: '',
+    customer_dependency: '',
     symptom: '',
     flaw: '',
     repair_description: '',
@@ -555,6 +589,7 @@ const order = ref({
 
 const orderBackendErrors = ref({
     customer: [],
+    customer_dependency: [],
     symptom: [],
     flaw: [],
     repair_description: [],
@@ -602,9 +637,9 @@ const total = computed(() => {
 });
 
 const rules = {
-  customer: {
-    required: helpers.withMessage('El cliente es requerido.', required)
-  },
+  // customer: {
+  //   required: helpers.withMessage('El cliente es requerido.', required)
+  // },
   symptom: {
     required: helpers.withMessage('El síntoma es requerido.', required)
   },
@@ -669,6 +704,9 @@ onMounted(async () => {
     // get items
     const respItems = await listItem();
     items.value = respItems.data;
+    // get dependencies
+    const respDependencies = await listCustomerDependecy();
+    dependencies.value = respDependencies.data;
 
     const id = route.params.id;
     if (id) {
@@ -688,6 +726,7 @@ const createOrder = async (order) => {
     try {
       if (await v$.value.$validate()) {
         order.itemtime_set = order.itemtime_set.filter( (x) => x.item > 0)
+        console.log(order.customer_dependency);
         const { data } = await postOrder(order);
         router.push({name: 'orders_detail', params: {id: data.id}});
       }
