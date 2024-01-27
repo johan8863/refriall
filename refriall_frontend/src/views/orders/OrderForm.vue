@@ -517,7 +517,7 @@
                 <div class="col-md-3">
 
                   <label for="total" class="form-label">Importe Total</label>
-                  <p id="total">{{ total }}</p>
+                  <p id="total">{{ total.toFixed(2) }}</p>
 
                 </div>
 

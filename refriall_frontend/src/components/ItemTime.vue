@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row mb-1">
         <div class="col-md-8">
             <select
                 id=""
