@@ -8,6 +8,42 @@ from hr.models import Customer, CustomerDependency, Provider
 from stock.models import Item, Kit
 
 
+class Bill(models.Model):
+    """Final document to register the business income"""
+
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True, verbose_name="Cliente")
+    customer_dependency = models.ForeignKey(CustomerDependency, on_delete=models.PROTECT, null=True, verbose_name="Dependencia")
+    folio = models.CharField('No. folio', max_length=10, unique=True)
+    provider = models.ForeignKey(
+        Provider,
+        on_delete=models.PROTECT,
+        null=True,
+        verbose_name='Prestador'
+    )
+    provider_signature_date = models.DateField('Firma del proveedor')
+    customer_signature_date = models.DateField('Firma del cliente')
+    matched = models.BooleanField(default=False, editable=False)
+
+    # General but not required information
+    check_number = models.CharField('Nro. de Cheque', max_length=35, null=True, blank=True)
+    charge_aprove = models.CharField('Cargo aprueba', max_length=35, null=True, blank=True)
+    charge_check = models.CharField('Cargo revisa', max_length=35, null=True, blank=True)
+    customer_charge = models.CharField('Cargo', max_length=25, null=True, blank=True)
+    customer_name = models.CharField('Nombre', max_length=25, null=True, blank=True)
+    customer_personal_id = models.CharField('No. CI', max_length=11, null=True, blank=True)
+    checked_by = models.CharField('Revisado por', max_length=35, null=True, blank=True)
+    aproved_by = models.CharField('Aprobado por', max_length=35, null=True, blank=True)
+
+    class Meta:
+        ordering = ['provider_signature_date']
+        verbose_name = 'Factura'
+        verbose_name_plural = 'Facturas'
+    
+    def __str__(self):
+        """Returns  the string object representation"""
+        return self.customer.name
+
+
 class Order(models.Model):
     """Pre Bill document to register job details performed"""
     SUPPORT_TYPE = [
@@ -15,6 +51,7 @@ class Order(models.Model):
         ('i', 'In Situ'),
     ]
 
+    bill = models.ForeignKey(Bill, on_delete=models.PROTECT, null=True, related_name='orders')
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True, verbose_name="Cliente")
     customer_dependency = models.ForeignKey(CustomerDependency, on_delete=models.PROTECT, null=True, verbose_name="Dependencia")
     symptom = models.CharField('Síntoma', max_length=100)
