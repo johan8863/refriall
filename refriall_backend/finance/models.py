@@ -20,7 +20,7 @@ class Order(models.Model):
     symptom = models.CharField('Síntoma', max_length=100)
     flaw = models.CharField('Defecto', max_length=100)
     repair_description = models.CharField('Reparación', max_length=100)
-    folio = models.CharField('No. folio', max_length=10)
+    folio = models.CharField('No. folio', max_length=10, unique=True)
     # next four attributes are related to the modality of the order
     check_diagnosis = models.BooleanField('Revisión/Diagnóstico')
     repair = models.BooleanField('Reparación')
@@ -48,6 +48,7 @@ class Order(models.Model):
     )
     provider_signature_date = models.DateField('Firma del proveedor')
     customer_signature_date = models.DateField('Firma del cliente')
+    matched = models.BooleanField(default=False, editable=False)
 
     # General but not required information
     check_number = models.CharField('Nro. de Cheque', max_length=35, null=True, blank=True)
