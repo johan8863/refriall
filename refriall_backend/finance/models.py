@@ -41,6 +41,10 @@ class Bill(models.Model):
     def __str__(self):
         """Returns  the string object representation"""
         return self.customer.name
+    
+    @property
+    def get_orders(self):
+        return self.orders.all()
 
 
 class Order(models.Model):

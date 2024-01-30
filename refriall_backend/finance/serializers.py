@@ -21,54 +21,6 @@ class ItemTimeSerializerForReadOnly(serializers.ModelSerializer):
         ]
 
 
-class BillSerializerForReadOnly(serializers.ModelSerializer):
-    customer = CustomerSerializer()
-    customer_dependency = CustomerDependencySerializer()
-    provider = ProviderSerializer()
-
-    class Meta:
-        model = Bill
-        fields = [
-            "customer",
-            "customer_dependency",
-            "folio",
-            "provider",
-            "provider_signature_date",
-            "customer_signature_date",
-            "matched",
-            "check_number",
-            "charge_aprove",
-            "charge_check",
-            "customer_charge",
-            "customer_name",
-            "customer_personal_id",
-            "checked_by",
-            "aproved_by"
-        ]
-
-
-class BillSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Bill
-        fields = [
-            "customer",
-            "customer_dependency",
-            "folio",
-            "provider",
-            "provider_signature_date",
-            "customer_signature_date",
-            "check_number",
-            "charge_aprove",
-            "charge_check",
-            "customer_charge",
-            "customer_name",
-            "customer_personal_id",
-            "checked_by",
-            "aproved_by"
-        ]
-
-
 class OrderSerializerForReadOnly(serializers.ModelSerializer):
     itemtime_set = ItemTimeSerializerForReadOnly(many=True)
     customer = CustomerSerializer()
@@ -245,3 +197,53 @@ class OrderSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+class BillSerializerForReadOnly(serializers.ModelSerializer):
+    customer = CustomerSerializer()
+    customer_dependency = CustomerDependencySerializer()
+    provider = ProviderSerializer()
+    get_orders = OrderSerializer(many=True)
+
+    class Meta:
+        model = Bill
+        fields = [
+            "customer",
+            "customer_dependency",
+            "folio",
+            "provider",
+            "provider_signature_date",
+            "customer_signature_date",
+            "get_orders",
+            "check_number",
+            "charge_aprove",
+            "charge_check",
+            "customer_charge",
+            "customer_name",
+            "customer_personal_id",
+            "checked_by",
+            "aproved_by"
+        ]
+
+
+class BillSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Bill
+        fields = [
+            "customer",
+            "customer_dependency",
+            "folio",
+            "provider",
+            "provider_signature_date",
+            "customer_signature_date",
+            "orders",
+            "check_number",
+            "charge_aprove",
+            "charge_check",
+            "customer_charge",
+            "customer_name",
+            "customer_personal_id",
+            "checked_by",
+            "aproved_by"
+        ]
