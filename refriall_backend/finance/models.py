@@ -22,7 +22,6 @@ class Bill(models.Model):
     )
     provider_signature_date = models.DateField('Firma del proveedor')
     customer_signature_date = models.DateField('Firma del cliente')
-    matched = models.BooleanField(default=False, editable=False)
 
     # General but not required information
     check_number = models.CharField('Nro. de Cheque', max_length=35, null=True, blank=True)

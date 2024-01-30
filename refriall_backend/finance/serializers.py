@@ -4,7 +4,7 @@
 from rest_framework import serializers
 
 # local
-from .models import Order, ItemTime
+from .models import Bill, Order, ItemTime
 from hr.serializers import CustomerSerializer, CustomerDependencySerializer, ProviderSerializer
 from stock.serializers import ItemSerializer, ItemSerializerForReadOnly, KitSerializer
 
@@ -18,6 +18,54 @@ class ItemTimeSerializerForReadOnly(serializers.ModelSerializer):
             "id",
             "item",
             "times",
+        ]
+
+
+class BillSerializerForReadOnly(serializers.ModelSerializer):
+    customer = CustomerSerializer()
+    customer_dependency = CustomerDependencySerializer()
+    provider = ProviderSerializer()
+
+    class Meta:
+        model = Bill
+        fields = [
+            "customer",
+            "customer_dependency",
+            "folio",
+            "provider",
+            "provider_signature_date",
+            "customer_signature_date",
+            "matched",
+            "check_number",
+            "charge_aprove",
+            "charge_check",
+            "customer_charge",
+            "customer_name",
+            "customer_personal_id",
+            "checked_by",
+            "aproved_by"
+        ]
+
+
+class BillSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Bill
+        fields = [
+            "customer",
+            "customer_dependency",
+            "folio",
+            "provider",
+            "provider_signature_date",
+            "customer_signature_date",
+            "check_number",
+            "charge_aprove",
+            "charge_check",
+            "customer_charge",
+            "customer_name",
+            "customer_personal_id",
+            "checked_by",
+            "aproved_by"
         ]
 
 
