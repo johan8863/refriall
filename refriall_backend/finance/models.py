@@ -45,6 +45,69 @@ class Bill(models.Model):
     @property
     def get_orders(self):
         return self.orders.all()
+    
+    @property
+    def get_total_amount(self):
+        """Returns the Sum of the total price of the orders in this Bill"""
+        total = 0
+        for order in self.get_orders:
+            total += order.get_total_amount
+        
+        return total
+    
+    @property
+    def get_total_amount_product(self):
+        """Returns the Sum of the total price of products of the orders in this Bill"""
+        total = 0
+        for order in self.get_orders:
+            total += order.get_total_amount_product
+        
+        return total
+    
+    @property
+    def get_total_amount_concept(self):
+        """Returns the Sum of the total price of concepts of the orders in this Bill"""
+        total = 0
+        for order in self.get_orders:
+            total += order.get_total_amount_concept
+        
+        return total
+    
+    @property
+    def get_total_amount_repair(self):
+        """Returns the Sum of the total price of repairs of the orders in this Bill"""
+        total = 0
+        for order in self.get_orders:
+            total += order.get_total_amount_repair
+        
+        return total
+    
+    @property
+    def get_total_amount_maintenace(self):
+        """Returns the Sum of the total price of maintenance of the orders in this Bill"""
+        total = 0
+        for order in self.get_orders:
+            total += order.get_total_amount_maintenace
+        
+        return total
+    
+    @property
+    def get_total_amount_install(self):
+        """Returns the Sum of the total price of installs of the orders in this Bill"""
+        total = 0
+        for order in self.get_orders:
+            total += order.get_total_amount_install
+        
+        return total
+    
+    @property
+    def get_total_amount_unmounting(self):
+        """Returns the Sum of the total price of unmounting of the orders in this Bill"""
+        total = 0
+        for order in self.get_orders:
+            total += order.get_total_amount_unmounting
+        
+        return total
 
 
 class Order(models.Model):
