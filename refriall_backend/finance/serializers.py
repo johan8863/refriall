@@ -52,6 +52,7 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
             "provider",
             "provider_signature_date",
             "customer_signature_date",
+            "matched",
             "check_number",
             "charge_aprove",
             "charge_check",
@@ -203,11 +204,12 @@ class BillSerializerForReadOnly(serializers.ModelSerializer):
     customer = CustomerSerializer()
     customer_dependency = CustomerDependencySerializer()
     provider = ProviderSerializer()
-    get_orders = OrderSerializer(many=True)
+    get_orders = OrderSerializerForReadOnly(many=True)
 
     class Meta:
         model = Bill
         fields = [
+            "id",
             "customer",
             "customer_dependency",
             "folio",
@@ -227,10 +229,12 @@ class BillSerializerForReadOnly(serializers.ModelSerializer):
 
 
 class BillSerializer(serializers.ModelSerializer):
+    # orders = OrderSerializer(many=True)
 
     class Meta:
         model = Bill
         fields = [
+            "id",
             "customer",
             "customer_dependency",
             "folio",
@@ -247,3 +251,20 @@ class BillSerializer(serializers.ModelSerializer):
             "checked_by",
             "aproved_by"
         ]
+    
+    def match_orders(self, orders):
+        for order in orders:
+            order.matched = True
+            order.save()
+    
+    def create(self, validated_data):
+        orders = validated_data.pop('orders')
+        self.match_orders(orders)
+        validated_data['orders'] = orders
+        return super().create(validated_data)
+    
+    def update(self, instance, validated_data):
+        orders = validated_data.pop('orders')
+        self.match_orders(orders)
+        validated_data['orders'] = orders
+        return super().update(instance, validated_data)

@@ -54,7 +54,7 @@ class Order(models.Model):
         ('i', 'In Situ'),
     ]
 
-    bill = models.ForeignKey(Bill, on_delete=models.PROTECT, null=True, related_name='orders')
+    bill = models.ForeignKey(Bill, on_delete=models.SET_NULL, null=True, related_name='orders')
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True, verbose_name="Cliente")
     customer_dependency = models.ForeignKey(CustomerDependency, on_delete=models.PROTECT, null=True, verbose_name="Dependencia")
     symptom = models.CharField('Síntoma', max_length=100)
