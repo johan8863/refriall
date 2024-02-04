@@ -149,6 +149,11 @@ const router = createRouter({
       name: 'orders_confirm_delete', 
       component: () => import('../views/orders/OrderConfirmDelete.vue')
     },
+    {
+      path: '/bills',
+      name: 'bills',
+      component: () => import('../views/bills/BillList.vue')
+    }
   ]
 })
 

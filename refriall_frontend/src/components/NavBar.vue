@@ -18,7 +18,9 @@
                             <li>
                                 <RouterLink class="dropdown-item" :to="{name: 'orders'}">Órdenes</RouterLink>
                             </li>
-                            <li><a class="dropdown-item" href="#">Facturas</a></li>
+                            <li>
+                                <RouterLink class="dropdown-item" :to="{name: 'bills'}">Facturas</RouterLink>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
