@@ -27,13 +27,13 @@
                             <tbody>
                                 <tr v-for="bill in bills" :key="bill.id">
                                     <td v-if="bill.customer">
-                                        <a>{{ bill.customer.name }}</a>
+                                        <router-link :to="{name: 'bills_detail', params: {id: bill.id}}">{{ bill.customer.name }}</router-link>
                                     </td>
                                     <td v-if="bill.customer_dependency">
-                                        <a>{{ bill.customer_dependency.name }}</a>
+                                        <router-link :to="{name: 'bills_detail', params: {id: bill.id}}">{{ bill.customer_dependency.name }}</router-link>
                                     </td>
                                     <td>
-                                        <a>{{ bill.get_total_amount }}</a>
+                                        <router-link :to="{name: 'bills_detail', params: {id: bill.id}}">{{ bill.get_total_amount }}</router-link>
                                     </td>
                                 </tr>
                             </tbody>
