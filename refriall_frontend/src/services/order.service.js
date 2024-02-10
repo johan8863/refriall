@@ -4,6 +4,7 @@ const urlOrderList = '/finance/orders/list'
 const urlOrderDetail = '/finance/orders/detail'
 const urlOrderPost = '/finance/orders_write'
 const urlFromClient = '/finance/orders/fromclient'
+const urlNotMatched = '/finance/orders/notmatched'
 
 export const listOrder = async () => {
     return await apiBase.get(`${urlOrderList}/`);
@@ -31,4 +32,8 @@ export const deleteOrder = async (id) => {
 
 export const getOrdersFromClient = async (id) => {
     return await apiBase.get(`${urlFromClient}/${id}`);
+}
+
+export const getOrdersNotMatched = async () => {
+    return await apiBase.get(`${urlNotMatched}`);
 }

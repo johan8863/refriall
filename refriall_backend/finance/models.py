@@ -170,7 +170,10 @@ class Order(models.Model):
     
     def __str__(self):
         """Returns  the string object representation"""
-        return self.customer.name
+        if self.customer:
+            return self.customer.name
+        else:
+            return self.customer_dependency.name
     
     
     @property

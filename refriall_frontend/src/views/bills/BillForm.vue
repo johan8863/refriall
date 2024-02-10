@@ -221,7 +221,7 @@ import { RouterLink, useRouter } from "vue-router";
 // core
 import { postBill } from "../../services/bill.service";
 import { listCustomer } from "../../services/customer.service";
-import { listOrder, getOrdersFromClient } from "../../services/order.service";
+import { getOrdersNotMatched, getOrdersFromClient } from "../../services/order.service";
 
 
 const bill = ref({
@@ -274,7 +274,7 @@ onMounted(async () => {
     customers.value = respCustomers.data;
 
     // get orders
-    const respOrders = await listOrder();
+    const respOrders = await getOrdersNotMatched();
     orders.value = respOrders.data;
 });
 
