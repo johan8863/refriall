@@ -3,6 +3,7 @@ import apiBase from "./base.service";
 const urlOrderList = '/finance/orders/list'
 const urlOrderDetail = '/finance/orders/detail'
 const urlOrderPost = '/finance/orders_write'
+const urlFromClient = '/finance/orders/fromclient'
 
 export const listOrder = async () => {
     return await apiBase.get(`${urlOrderList}/`);
@@ -27,3 +28,7 @@ export const putOrder = async (order) => {
 export const deleteOrder = async (id) => {
     await apiBase.delete(`${urlOrderPost}/${id}/`);
 };
+
+export const getOrdersFromClient = async (id) => {
+    return await apiBase.get(`${urlFromClient}/${id}`);
+}

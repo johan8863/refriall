@@ -61,3 +61,11 @@ class OrderDetail(APIView):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+
+class OrderFromClient(APIView):
+    """returns all orders related to the given customer id"""
+    def get(self, request, pk, format=None):
+        orders = Order.objects.filter(customer=pk).filter(matched=False)
+        serializer = OrderSerializerForReadOnly(orders, many=True)
+        return Response(serializer.data)

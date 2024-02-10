@@ -158,6 +158,11 @@ const router = createRouter({
       path: '/bills/detail/:id',
       name: 'bills_detail',
       component: () => import('../views/bills/BillDetail.vue')
+    },
+    {
+      path: '/bills/create',
+      name: 'bills_create',
+      component: () => import('../views/bills/BillForm.vue')
     }
   ]
 })

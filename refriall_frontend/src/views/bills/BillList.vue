@@ -8,7 +8,7 @@
                     <strong>Facturas</strong>
                 </li>
                 <li class="list-group-item">
-                    <router-link :to="{name: 'orders_create'}">Nueva</router-link >
+                    <router-link :to="{name: 'bills_create'}">Nueva</router-link >
                 </li>
             </ul>
         </div>

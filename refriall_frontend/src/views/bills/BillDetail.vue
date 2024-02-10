@@ -62,7 +62,7 @@
                         <span class="d-block">Folio: {{ paginatedBill.folio }}</span>
                     </div>
 
-                    <div class="col-md-12" style="height: 695px;">
+                    <div class="col-md-12" style="height: 680px;">
                         <table class="table">
     
                             <thead>
