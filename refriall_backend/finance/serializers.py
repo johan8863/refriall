@@ -259,6 +259,17 @@ class BillSerializer(serializers.ModelSerializer):
             "aproved_by"
         ]
     
+    def validate(self, attrs):
+        print(attrs['orders'])
+        if attrs['customer'] == None:
+            raise serializers.ValidationError({
+                'customer': 'Debe seleccionar un cliente.'
+            })
+        if attrs['orders'] == []:
+            raise serializers.ValidationError({
+                'orders': 'Debe seleccionar al menos una orden'
+            })
+        return super().validate(attrs)
 
     def match_orders(self, orders):
         for order in orders:

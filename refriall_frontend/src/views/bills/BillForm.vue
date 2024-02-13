@@ -153,7 +153,15 @@
                         </tbody>
 
                     </table>
-
+                    <!-- backend errors -->
+                    <span v-if="billBackendErrors.orders">
+                        <p
+                            v-for="(error, index) in billBackendErrors.orders"
+                            :key="index"
+                            class="form-text text-danger">
+                            {{ error }}
+                        </p>
+                    </span>
                 </div>
 
                 <!-- check_number control -->
