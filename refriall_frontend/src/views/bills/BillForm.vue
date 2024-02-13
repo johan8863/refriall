@@ -17,7 +17,7 @@
         <div class="col-md-9">
             <!-- form -->
             <form @submit.prevent class="row">
-
+                <!-- backend errors from non_field_errors dictionary -->
                 <span v-if="billBackendErrors.non_field_errors">
                     <p
                       class="form-text text-danger"
@@ -41,6 +41,14 @@
                           :key="customer.id"
                           :value="customer.id">{{ customer.name }}</option>
                     </select>
+                    <!-- backend errors -->
+                    <span v-if="billBackendErrors.customer">
+                        <p
+                          v-for="(error, index) in billBackendErrors.customer"
+                          :key="index"
+                          class="form-text text-danger">
+                            {{ error }}</p>
+                    </span>
                 </div>
 
                 <!-- folio control -->
@@ -51,6 +59,15 @@
                       class="form-control"
                       id="folio"
                       v-model.trim="bill.folio">
+                      <!-- backend errors -->
+                      <span v-if="billBackendErrors.folio">
+                        <p
+                          v-for="(error, index) in billBackendErrors.folio"
+                          :key="index"
+                          class="form-text text-danger">
+                            {{ error }}
+                        </p>
+                      </span>
                 </div>
 
                 <!-- provider_signature_date control -->
@@ -62,6 +79,15 @@
                       id="provider_signature_date"
                       class="form-control"
                       v-model.trim="bill.provider_signature_date">
+                      <!-- backend errors -->
+                      <span v-if="billBackendErrors.provider_signature_date">
+                        <p
+                          v-for="(error, index) in billBackendErrors.provider_signature_date"
+                          :key="index"
+                          class="form-text text-danger">
+                            {{ error }}
+                        </p>
+                      </span>
                 </div>
 
                 <!-- customer_signature_date control -->
@@ -73,6 +99,15 @@
                       id="customer_signature_date"
                       class="form-control"
                       v-model.trim="bill.customer_signature_date">
+                      <!-- backend errors -->
+                      <span v-if="billBackendErrors.customer_signature_date">
+                        <p
+                          v-for="(error, index) in billBackendErrors.customer_signature_date"
+                          :key="index"
+                          class="form-text text-danger">
+                            {{ error }}
+                        </p>
+                      </span>
                 </div>
 
                 <!-- orders control -->
@@ -129,6 +164,15 @@
                       class="form-control"
                       id="check_number"
                       v-model.trim="bill.check_number">
+                      <!-- backend errors -->
+                      <span v-if="billBackendErrors.check_number">
+                        <p
+                          v-for="(error, index) in billBackendErrors.check_number"
+                          :key="index"
+                          class="form-text text-danger">
+                            {{ error }}
+                        </p>
+                      </span>
                 </div>
 
                 <!-- charge_aprove control -->
@@ -139,6 +183,15 @@
                       class="form-control"
                       id="charge_aprove"
                       v-model.trim="bill.charge_aprove">
+                      <!-- backend errors -->
+                      <span v-if="billBackendErrors.charge_aprove">
+                        <p
+                          v-for="(error, index) in billBackendErrors.charge_aprove"
+                          :key="index"
+                          class="form-text text-danger">
+                            {{ error }}
+                        </p>
+                      </span>
                 </div>
 
                 <!-- charge_check control -->
@@ -149,6 +202,15 @@
                       class="form-control"
                       id="charge_check"
                       v-model.trim="bill.charge_check">
+                      <!-- backend errors -->
+                      <span v-if="billBackendErrors.charge_check">
+                        <p
+                          v-for="(error, index) in billBackendErrors.charge_check"
+                          :key="index"
+                          class="form-text text-danger">
+                            {{ error }}
+                        </p>
+                      </span>
                 </div>
 
                 <!-- customer_charge control -->
@@ -159,6 +221,15 @@
                       class="form-control"
                       id="customer_charge"
                       v-model.trim="bill.customer_charge">
+                      <!-- backend errors -->
+                      <span v-if="billBackendErrors.customer_charge">
+                        <p
+                          v-for="(error, index) in billBackendErrors.customer_charge"
+                          :key="index"
+                          class="form-text text-danger">
+                            {{ error }}
+                        </p>
+                      </span>
                 </div>
 
                 <!-- customer_name control -->
@@ -169,6 +240,15 @@
                         class="form-control"
                         id="customer_name"
                         v-model.trim="bill.customer_name">
+                        <!-- backend errors -->
+                        <span v-if="billBackendErrors.customer_name">
+                            <p
+                            v-for="(error, index) in billBackendErrors.customer_name"
+                            :key="index"
+                            class="form-text text-danger">
+                                {{ error }}
+                            </p>
+                        </span>
                 </div>
 
                 <!-- customer_personal_id control -->
@@ -179,6 +259,15 @@
                       class="form-control"
                       id="customer_personal_id"
                       v-model.trim="bill.customer_personal_id">
+                      <!-- backend errors -->
+                      <span v-if="billBackendErrors.customer_personal_id">
+                        <p
+                        v-for="(error, index) in billBackendErrors.customer_personal_id"
+                        :key="index"
+                        class="form-text text-danger">
+                            {{ error }}
+                        </p>
+                    </span>
                 </div>
 
                 <!-- checked_by control -->
@@ -189,6 +278,15 @@
                         class="form-control"
                         id="checked_by"
                         v-model.trim="bill.checked_by">
+                        <!-- backend errors -->
+                        <span v-if="billBackendErrors.checked_by">
+                            <p
+                            v-for="(error, index) in billBackendErrors.checked_by"
+                            :key="index"
+                            class="form-text text-danger">
+                                {{ error }}
+                            </p>
+                        </span>
                 </div>
 
                 <!-- aproved_by control -->
@@ -199,6 +297,15 @@
                       class="form-control"
                       id="aproved_by"
                       v-model.trim="bill.aproved_by">
+                      <!-- backend errors -->
+                      <span v-if="billBackendErrors.aproved_by">
+                        <p
+                          v-for="(error, index) in billBackendErrors.aproved_by"
+                          :key="index"
+                          class="form-text text-danger">
+                            {{ error }}
+                        </p>
+                      </span>
                 </div>
 
                 <!-- buttons -->
