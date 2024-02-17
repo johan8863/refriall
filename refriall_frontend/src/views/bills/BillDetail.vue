@@ -10,7 +10,7 @@
                     <router-link :to="{name: 'bills'}">Facturas</router-link>
                 </li>
                 <li class="list-group-item">
-                    <span>Editar</span>
+                    <router-link :to="{name: 'bills_update', params: {id: bill.id}}">Editar</router-link>
                 </li>
                 <li class="list-group-item">
                     <a href="#"  @click="pdf()">PDF</a>
@@ -208,7 +208,6 @@ onMounted(async () => {
     prepareBillToPaginate(billToPaginate, bill);
 
     paginatedBills.value = paginate(billToPaginate, 11);
-    console.log(paginatedBills);
 });
 
 const prepareBillToPaginate = (billToPaginate, bill) => {

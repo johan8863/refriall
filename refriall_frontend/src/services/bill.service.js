@@ -12,6 +12,10 @@ export const detailBill = async (id) => {
     return await apiBase.get(`${urlBillDetail}/${id}/`);
 }
 
+export const detailBillUpdate = async (id) => {
+    return await apiBase.get(`${urlBillPost}/${id}/`);
+}
+
 export const postBill = async (bill) => {
     return await apiBase.post(`${urlBillPost}/`, bill);
 }

@@ -34,7 +34,7 @@
                       id="customer"
                       class="form-select"
                       autofocus
-                      @change="ordersFromClient"
+                      @change="ordersFromCustomer"
                       v-model.trim="bill.customer">
                         <option
                           v-for="customer in customers"
@@ -111,7 +111,59 @@
                 </div>
 
                 <!-- orders control -->
-                <div class="col-md-12">
+                <div v-if="bill.id" class="col-md-12">
+                    <table class="table">
+
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input
+                                      type="checkbox"
+                                      name=""
+                                      id=""
+                                      class="form-check"
+                                      @input="pushAllOrders">
+                                </th>
+                                <th>Folio</th>
+                                <th>Cliente</th>
+                                <th>Dependencia</th>
+                                <th>Importe Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr v-for="order in bill.orders" :key="order.id">
+                                <td>
+                                    <input
+                                      type="checkbox"
+                                      :id="order.id"
+                                      class="form-check"
+                                      :checked="order.matched"
+                                      v-model="bill.orders"
+                                      :value="order.id">
+                                </td>
+                                <td>{{ order.folio }}</td>
+                                <td v-if="order.customer">{{ order.customer.name }}</td>
+                                <td v-else>-</td>
+                                <td v-if="order.customer_dependency">{{ order.customer_dependency.name }}</td>
+                                <td v-else>-</td>
+                                <td>{{ order.get_total_amount }}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                    <!-- backend errors -->
+                    <span v-if="billBackendErrors.orders">
+                        <p
+                            v-for="(error, index) in billBackendErrors.orders"
+                            :key="index"
+                            class="form-text text-danger">
+                            {{ error }}
+                        </p>
+                    </span>
+                </div>
+                <!-- orders control -->
+                <div v-else class="col-md-12">
 
                     <table class="table">
 
@@ -331,12 +383,12 @@
 <script setup>
 // vue
 import { onMounted, ref } from 'vue';
-import { RouterLink, useRouter } from "vue-router";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 
 // core
-import { postBill } from "../../services/bill.service";
+import { detailBillUpdate, postBill } from "../../services/bill.service";
 import { listCustomer } from "../../services/customer.service";
-import { getOrdersNotMatched, getOrdersFromCustomer } from "../../services/order.service";
+import { getOrdersNotMatched, getOrdersFromCustomer, getOrdersFromCustomerNotMatched } from "../../services/order.service";
 
 
 const bill = ref({
@@ -379,7 +431,9 @@ const billBackendErrors = ref({
 const customers = ref([]);
 const orders = ref([]);
 
+// routes consts
 const router = useRouter();
+const route = useRoute();
 
 
 
@@ -387,10 +441,17 @@ onMounted(async () => {
     // get customers
     const respCustomers = await listCustomer();
     customers.value = respCustomers.data;
-
-    // get orders
-    const respOrders = await getOrdersNotMatched();
-    orders.value = respOrders.data;
+    
+    const id = route.params.id;
+    if (id) {
+        const { data } = await detailBillUpdate(id);
+        bill.value = data;
+        // bill.value.orders = (await getOrdersFromCustomer(bill.value.id)).data;
+    } else {
+      // get orders to create a bill
+      const respOrders = await getOrdersNotMatched();
+      orders.value = respOrders.data;
+    }
 });
 
 const createBill = async (bill) => {
@@ -402,11 +463,9 @@ const createBill = async (bill) => {
     }
 }
 
-const ordersFromClient = async (event) => {
+const ordersFromCustomer = async (event) => {
     try {
-        console.log(event.target.value);
-        // return await getOrdersFromClient(event);
-        orders.value = (await getOrdersFromCustomer(event.target.value)).data;
+        orders.value = (await getOrdersFromCustomerNotMatched(event.target.value)).data;
     } catch (error) {
         console.log(error.response.data);
     }

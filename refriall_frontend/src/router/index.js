@@ -163,6 +163,11 @@ const router = createRouter({
       path: '/bills/create',
       name: 'bills_create',
       component: () => import('../views/bills/BillForm.vue')
+    },
+    {
+      path: '/bills/update/:id',
+      name: 'bills_update',
+      component: () => import('../views/bills/BillForm.vue')
     }
   ]
 })

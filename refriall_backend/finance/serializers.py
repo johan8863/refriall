@@ -43,6 +43,7 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
             "install",
             "maintenance",
             "get_order_support",
+            "matched",
             "kit",
             "kit_brand",
             "kit_model",
@@ -236,7 +237,7 @@ class BillSerializerForReadOnly(serializers.ModelSerializer):
 
 
 class BillSerializer(serializers.ModelSerializer):
-    # orders = OrderSerializer(many=True)
+    orders = OrderSerializerForReadOnly(many=True)
 
     class Meta:
         model = Bill
