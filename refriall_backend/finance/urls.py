@@ -19,7 +19,8 @@ urlpatterns = [
     path('orders/detail/<int:pk>/', views.OrderDetail.as_view(), name='orders_detail'),
     path('orders/fromclientnotmatched/<int:pk>/', views.OrderFromClientNotMatched.as_view(), name='orders_fromclient_notmatched'),
     path('orders/fromclient/<int:pk>/', views.OrderFromClient.as_view(), name='orders_fromclient'),
-    path('orders/notmatched', views.OrderNotMatched.as_view(), name='orders_notmatched'),
+    path('orders/notmatched/', views.OrderNotMatched.as_view(), name='orders_notmatched'),
     path('bills/list/', views.BillList.as_view(), name='bills_list'),
     path('bills/detail/<int:pk>/', views.BillDetail.as_view(), name='bills_detail'),
+    path('bills/update/<int:pk>/', views.BillUpdate.as_view(), name='bills_update'),
 ]

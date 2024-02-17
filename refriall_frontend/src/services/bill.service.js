@@ -2,6 +2,7 @@ import apiBase from "./base.service";
 
 const urlBillList = '/finance/bills/list';
 const urlBillDetail = '/finance/bills/detail';
+const urlBillUpdate = '/finance/bills/update';
 const urlBillPost = '/finance/bills_write';
 
 export const listBills = async () => {
@@ -13,7 +14,7 @@ export const detailBill = async (id) => {
 }
 
 export const detailBillUpdate = async (id) => {
-    return await apiBase.get(`${urlBillPost}/${id}/`);
+    return await apiBase.get(`${urlBillDetail}/${id}/`);
 }
 
 export const postBill = async (bill) => {
@@ -21,7 +22,7 @@ export const postBill = async (bill) => {
 }
 
 export const putBill = async (bill) => {
-    return await apiBase.put(`${urlBillPost}/${bill.id}`, bill);
+    return await apiBase.put(`${urlBillUpdate}/${bill.id}`, bill);
 }
 
 export const deleteBill = async (id) => {

@@ -35,7 +35,7 @@
                       class="form-select"
                       autofocus
                       @change="ordersFromCustomer"
-                      v-model.trim="bill.customer">
+                      v-model="bill.customer">
                         <option
                           v-for="customer in customers"
                           :key="customer.id"
@@ -132,13 +132,12 @@
                         </thead>
 
                         <tbody>
-                            <tr v-for="order in bill.orders" :key="order.id">
+                            <tr v-for="order in bill.get_orders" :key="order.id">
                                 <td>
                                     <input
                                       type="checkbox"
                                       :id="order.id"
                                       class="form-check"
-                                      :checked="order.matched"
                                       v-model="bill.orders"
                                       :value="order.id">
                                 </td>
@@ -193,7 +192,8 @@
                                       :id="order.id"
                                       class="form-check"
                                       v-model="bill.orders"
-                                      :value="order.id">
+                                      :value="order.id"
+                                      >
                                 </td>
                                 <td>{{ order.folio }}</td>
                                 <td v-if="order.customer">{{ order.customer.name }}</td>
@@ -388,7 +388,7 @@ import { RouterLink, useRoute, useRouter } from "vue-router";
 // core
 import { detailBillUpdate, postBill } from "../../services/bill.service";
 import { listCustomer } from "../../services/customer.service";
-import { getOrdersNotMatched, getOrdersFromCustomer, getOrdersFromCustomerNotMatched } from "../../services/order.service";
+import { getOrdersNotMatched, getOrdersFromCustomerNotMatched, getOrdersFromCustomer } from "../../services/order.service";
 
 
 const bill = ref({
@@ -399,6 +399,7 @@ const bill = ref({
     provider_signature_date: '',
     customer_signature_date: '',
     orders: [],
+    get_orders: [],
     check_number: '',
     charge_aprove: '',
     charge_check: '',
@@ -446,7 +447,9 @@ onMounted(async () => {
     if (id) {
         const { data } = await detailBillUpdate(id);
         bill.value = data;
-        // bill.value.orders = (await getOrdersFromCustomer(bill.value.id)).data;
+        bill.value.orders = bill.value.get_orders.map(item => item.id)
+        // bill.value.get_orders = (await getOrdersFromCustomer(bill.value.id)).data;
+        console.log(bill.value.get_orders);
     } else {
       // get orders to create a bill
       const respOrders = await getOrdersNotMatched();
