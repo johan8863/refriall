@@ -442,14 +442,15 @@ onMounted(async () => {
     // get customers
     const respCustomers = await listCustomer();
     customers.value = respCustomers.data;
+    // para eliminar un attributo de un objeto
+    // const {...rest, get_orders} = bill.value
     
     const id = route.params.id;
     if (id) {
         const { data } = await detailBillUpdate(id);
         bill.value = data;
         bill.value.orders = bill.value.get_orders.map(item => item.id)
-        // bill.value.get_orders = (await getOrdersFromCustomer(bill.value.id)).data;
-        console.log(bill.value.get_orders);
+        bill.value.get_orders = (await getOrdersFromCustomer(bill.value.customer)).data;
     } else {
       // get orders to create a bill
       const respOrders = await getOrdersNotMatched();
@@ -476,8 +477,13 @@ const ordersFromCustomer = async (event) => {
 
 const pushAllOrders = (event) => {
     if (event.target.checked) {
-        const ordersPush = orders.value.map(item => item.id)
-        bill.value.orders = ordersPush
+        if (bill.value.id) {
+            const ordersPush = bill.value.get_orders.map(item => item.id)
+            bill.value.orders = ordersPush
+        } else {
+            const ordersPush = orders.value.map(item => item.id)
+            bill.value.orders = ordersPush
+        }
     } else {
         bill.value.orders = []
     }

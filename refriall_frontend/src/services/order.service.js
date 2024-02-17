@@ -38,7 +38,7 @@ export const getOrdersFromCustomerNotMatched = async (id) => {
 
 export const getOrdersFromCustomer = async (id) => {
     // consumes the endpoints that retrieves all order given a Customer ID
-    return await apiBase.get(`${urlFromClient}/${id}`);
+    return await apiBase.get(`${urlFromClient}/${id}/`);
 }
 
 export const getOrdersNotMatched = async () => {
