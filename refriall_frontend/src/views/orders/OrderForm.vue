@@ -728,7 +728,6 @@ const createOrder = async (order) => {
     try {
       if (await v$.value.$validate()) {
         order.itemtime_set = order.itemtime_set.filter( (x) => x.item > 0)
-        console.log(order.customer_dependency);
         const { data } = await postOrder(order);
         router.push({name: 'orders_detail', params: {id: data.id}});
       }
@@ -742,7 +741,6 @@ const updateOrder = async (order) => {
   try {
     if (await v$.value.$validate()) {
       order.itemtime_set = order.itemtime_set.filter( (x) => x.item > 0)
-      console.log(order.support);
       const { data } = await putOrder(order)
       router.push({name: 'orders_detail', params: {id: data.id}})
     }

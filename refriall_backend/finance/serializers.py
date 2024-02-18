@@ -43,7 +43,6 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
             "install",
             "maintenance",
             "get_order_support",
-            "matched",
             "kit",
             "kit_brand",
             "kit_model",
@@ -53,7 +52,6 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
             "provider",
             "provider_signature_date",
             "customer_signature_date",
-            "matched",
             "check_number",
             "charge_aprove",
             "charge_check",
@@ -271,22 +269,22 @@ class BillSerializer(serializers.ModelSerializer):
             })
         return super().validate(attrs)
 
-    def match_orders(self, orders):
-        for order in orders:
-            order.matched = True
-            order.save()
+    # def match_orders(self, orders):
+    #     for order in orders:
+    #         order.matched = True
+    #         order.save()
     
-    def create(self, validated_data):
-        orders = validated_data.pop('orders')
-        self.match_orders(orders)
-        validated_data['orders'] = orders
-        return super().create(validated_data)
+    # def create(self, validated_data):
+    #     orders = validated_data.pop('orders')
+    #     self.match_orders(orders)
+    #     validated_data['orders'] = orders
+    #     return super().create(validated_data)
     
-    def update(self, instance, validated_data):
-        orders = validated_data.pop('orders')
-        self.match_orders(orders)
-        validated_data['orders'] = orders
-        return super().update(instance, validated_data)
+    # def update(self, instance, validated_data):
+    #     orders = validated_data.pop('orders')
+    #     self.match_orders(orders)
+    #     validated_data['orders'] = orders
+    #     return super().update(instance, validated_data)
 
 
 class BillSerializerDetailUpdate(serializers.ModelSerializer):

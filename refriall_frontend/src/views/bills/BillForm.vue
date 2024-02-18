@@ -371,7 +371,7 @@
 
                 <!-- buttons -->
                 <div class="mb-5">
-                    <button class="btn btn-sm btn-primary" @click="createBill(bill)">Guardar</button>
+                    <button class="btn btn-sm btn-primary" @click="bill.id? updateBill(bill) : createBill(bill)">{{bill.id? 'Actualizar' : 'Guardar'}}</button>
                     <RouterLink :to="{name: 'bills'}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
                 </div>
 
@@ -386,15 +386,18 @@
 import { onMounted, ref } from 'vue';
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
+// third
+import { useVuelidate } from "@vuelidate/core";
+
 // core
-import { detailBillUpdate, postBill } from "../../services/bill.service";
+import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
 import { listCustomer } from "../../services/customer.service";
-import { getOrdersNotMatched, getOrdersFromCustomerNotMatched, getOrdersFromCustomer } from "../../services/order.service";
+import { getOrdersNotMatched, getOrdersFromCustomerNotMatched } from "../../services/order.service";
+import { helpers, required } from '@vuelidate/validators';
 
 
 const bill = ref({
     customer: '',
-    customer_dependency: '',
     folio: '',
     provider: 1,
     provider_signature_date: '',
@@ -437,7 +440,17 @@ const orders = ref([]);
 const router = useRouter();
 const route = useRoute();
 
+const rules = {
+    customer: {
+        required: helpers.withMessage('El cliente es requerido', required)
+    },
+    folio: {
+        required: helpers.withMessage('El folio es requerido', required)
+    }
+}
 
+// vuelidate object
+const v$ = useVuelidate(rules, bill);
 
 onMounted(async () => {
     // get customers
@@ -451,7 +464,9 @@ onMounted(async () => {
         const { data } = await detailBillUpdate(id);
         bill.value = data;
         bill.value.orders = bill.value.get_orders.map(item => item.id)
-        bill.value.get_orders = (await getOrdersFromCustomer(bill.value.customer)).data;
+        // get the orders that havent been related to a bill yet and display them to be selected
+        const ordersNotMatched = (await getOrdersFromCustomerNotMatched(bill.value.customer)).data;
+        bill.value.get_orders.push(...ordersNotMatched);
     } else {
       // get orders to create a bill
       const respOrders = await getOrdersNotMatched();
@@ -461,8 +476,21 @@ onMounted(async () => {
 
 const createBill = async (bill) => {
     try {
-        const { data } = await postBill(bill);
-        router.push({name: 'bills_detail', params: {id: data.id}})
+        if (await v$.value.$validate) {
+            const { data } = await postBill(bill);
+            router.push({name: 'bills_detail', params: {id: data.id}})
+        }
+    } catch (error) {
+        billBackendErrors.value = error.response.data
+    }
+}
+
+const updateBill = async (bill) => {
+    try {
+        if (await v$.value.$validate) {
+            const { data } = await putBill(bill);
+            router.push({name: 'bills_detail', params: {id: data.id}})
+        }
     } catch (error) {
         billBackendErrors.value = error.response.data
     }
