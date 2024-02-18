@@ -3,8 +3,8 @@ import apiBase from "./base.service";
 const urlOrderList = '/finance/orders/list'
 const urlOrderDetail = '/finance/orders/detail'
 const urlOrderPost = '/finance/orders_write'
-const urlFromClientNotMatched = '/finance/orders/fromclientnotmatched'
-const urlFromClient = '/finance/orders/fromclient'
+const urlFromCustomerNotMatched = '/finance/orders/fromcustomernotmatched'
+const urlFromCustomer = '/finance/orders/fromcustomer'
 const urlNotMatched = '/finance/orders/notmatched'
 
 export const listOrder = async () => {
@@ -33,12 +33,12 @@ export const deleteOrder = async (id) => {
 
 export const getOrdersFromCustomerNotMatched = async (id) => {
     // consumes the endpoints that retrieves all order given a Customer ID and matched attr = false
-    return await apiBase.get(`${urlFromClientNotMatched}/${id}`);
+    return await apiBase.get(`${urlFromCustomerNotMatched}/${id}`);
 }
 
 export const getOrdersFromCustomer = async (id) => {
     // consumes the endpoints that retrieves all order given a Customer ID
-    return await apiBase.get(`${urlFromClient}/${id}/`);
+    return await apiBase.get(`${urlFromCustomer}/${id}/`);
 }
 
 export const getOrdersNotMatched = async () => {

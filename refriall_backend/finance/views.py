@@ -94,15 +94,15 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
 
 
-class OrderFromClientNotMatched(APIView):
+class OrderFromCustomerNotMatched(APIView):
     """returns all orders related to the given customer id and matched=False"""
     def get(self, request, pk, format=None):
-        orders = Order.objects.filter(Q(customer=pk) | Q(customer_dependency__customer=pk), Q(matched=False))
+        orders = Order.objects.filter(Q(customer=pk) | Q(customer_dependency__customer=pk), Q(bill=None))
         serializer = OrderSerializerForReadOnly(orders, many=True)
         return Response(serializer.data)
 
 
-class OrderFromClient(APIView):
+class OrderFromCustomer(APIView):
     """returns all orders related to the given customer id"""
     def get(self, request, pk, format=None):
         orders = Order.objects.filter(Q(customer=pk) | Q(customer_dependency__customer=pk))
@@ -113,6 +113,6 @@ class OrderFromClient(APIView):
 class OrderNotMatched(APIView):
     """returns all orders with matched=False, e.g free to be matched"""
     def get(self, request, format=None):
-        orders = Order.objects.filter(matched=False)
+        orders = Order.objects.filter(bill=None)
         serializer = OrderSerializerForReadOnly(orders, many=True)
         return Response(serializer.data)
