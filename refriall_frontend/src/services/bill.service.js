@@ -2,6 +2,7 @@ import apiBase from "./base.service";
 
 const urlBillList = '/finance/bills/list';
 const urlBillDetail = '/finance/bills/detail';
+const urlBillDetailUpdate = '/finance/bills/detail/update';
 const urlBillUpdate = '/finance/bills/update';
 const urlBillPost = '/finance/bills_write';
 
@@ -14,7 +15,7 @@ export const detailBill = async (id) => {
 }
 
 export const detailBillUpdate = async (id) => {
-    return await apiBase.get(`${urlBillDetail}/${id}/`);
+    return await apiBase.get(`${urlBillDetailUpdate}/${id}/`);
 }
 
 export const postBill = async (bill) => {

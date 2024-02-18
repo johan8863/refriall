@@ -22,5 +22,5 @@ urlpatterns = [
     path('orders/notmatched/', views.OrderNotMatched.as_view(), name='orders_notmatched'),
     path('bills/list/', views.BillList.as_view(), name='bills_list'),
     path('bills/detail/<int:pk>/', views.BillDetail.as_view(), name='bills_detail'),
-    path('bills/update/<int:pk>/', views.BillUpdate.as_view(), name='bills_update'),
+    path('bills/detail/update/<int:pk>/', views.BillDetailUpdate.as_view(), name='bills_detail_update'),
 ]

@@ -12,7 +12,7 @@ from rest_framework import viewsets
 
 # local
 from .models import Order, Bill
-from .serializers import BillSerializer, BillSerializerForReadOnly, BillSerializerUpdate, OrderSerializerForReadOnly, OrderSerializer
+from .serializers import BillSerializer, BillSerializerForReadOnly, BillSerializerDetailUpdate, OrderSerializerForReadOnly, OrderSerializer
 
 
 class BillList(APIView):
@@ -35,20 +35,33 @@ class BillDetail(APIView):
         return Response(serializer.data)
 
 
-class BillUpdate(APIView):
+class BillDetailUpdate(APIView):
     def get_object(self, pk):
         try:
             return Bill.objects.get(pk=pk)
         except Bill.DoesNotExist:
             raise Http404
+        
+    def get(self, request, pk, format=None):
+        bill = self.get_object(pk=pk)
+        serializer = BillSerializerDetailUpdate(bill)
+        return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        bill = self.get_object(pk)
-        serializer = BillSerializerUpdate(bill, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# class BillUpdate(APIView):
+#     def get_object(self, pk):
+#         try:
+#             return Bill.objects.get(pk=pk)
+#         except Bill.DoesNotExist:
+#             raise Http404
+
+#     def put(self, request, pk, format=None):
+#         bill = self.get_object(pk)
+#         serializer = BillSerializerUpdate(bill, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class BillViewSet(viewsets.ModelViewSet):

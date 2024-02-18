@@ -202,8 +202,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class BillSerializerForReadOnly(serializers.ModelSerializer):
-    # customer = CustomerSerializer()
-    # customer_dependency = CustomerDependencySerializer()
+    customer = CustomerSerializer()
+    customer_dependency = CustomerDependencySerializer()
     provider = ProviderSerializer()
     get_orders = OrderSerializerForReadOnly(many=True)
 
@@ -290,8 +290,8 @@ class BillSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class BillSerializerUpdate(serializers.ModelSerializer):
-    orders = OrderSerializerForReadOnly(many=True)
+class BillSerializerDetailUpdate(serializers.ModelSerializer):
+    get_orders = OrderSerializerForReadOnly(many=True)
 
     class Meta:
         model = Bill
@@ -304,6 +304,7 @@ class BillSerializerUpdate(serializers.ModelSerializer):
             "provider_signature_date",
             "customer_signature_date",
             "orders",
+            "get_orders",
             "check_number",
             "charge_aprove",
             "charge_check",
