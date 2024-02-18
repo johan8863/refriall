@@ -82,8 +82,8 @@
                                     <td>{{ item.item.name }}</td>
                                     <td>{{ item.item.get_measurement }}</td>
                                     <td>{{ item.times }}</td>
-                                    <td>{{ item.item.price }}</td>
-                                    <td>{{ item.item.price * item.times }}</td>
+                                    <td>{{ item.item.price.toFixed(2) }}</td>
+                                    <td>{{ (item.item.price * item.times).toFixed(2) }}</td>
                                 </tr>
                             </tbody>
 

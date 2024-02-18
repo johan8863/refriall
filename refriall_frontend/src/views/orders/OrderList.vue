@@ -33,7 +33,7 @@
                                         <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.customer_dependency.name }}</router-link>
                                     </td>
                                     <td>
-                                        <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.get_total_amount }}</router-link>
+                                        <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.get_total_amount.toFixed(2) }}</router-link>
                                     </td>
                                 </tr>
                             </tbody>
