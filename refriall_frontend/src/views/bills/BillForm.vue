@@ -35,7 +35,8 @@
                       class="form-select"
                       autofocus
                       @change="ordersFromCustomer"
-                      v-model="bill.customer">
+                      v-model="bill.customer"
+                      :disabled="bill.id">
                         <option
                           v-for="customer in customers"
                           :key="customer.id"

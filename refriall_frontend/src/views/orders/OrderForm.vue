@@ -33,7 +33,8 @@
                       id="customer"
                       class="form-select"
                       v-model.trim="order.customer"
-                      @blur="v$.customer.$touch">
+                      @blur="v$.customer.$touch"
+                      :disabled="order.id">
                         <option
                           v-for="customer in customers"
                           :key="customer.id"
@@ -64,7 +65,8 @@
                       id="customer_dependency"
                       class="form-select"
                       v-model.trim="order.customer_dependency"
-                      @blur="v$.customer_dependency.$touch">
+                      @blur="v$.customer_dependency.$touch"
+                      :disabled="order.id">
                         <option
                           v-for="dependency in dependencies"
                           :key="dependency.id"
