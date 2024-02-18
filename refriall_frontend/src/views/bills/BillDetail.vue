@@ -16,7 +16,7 @@
                     <a href="#"  @click="pdf()">PDF</a>
                 </li>
                 <li class="list-group-item">
-                    <span>Eliminar</span>
+                    <router-link :to="{name: 'bills_delete', params: {id: bill.id}}">Eliminar</router-link>
                 </li>
             </ul>
         </div>

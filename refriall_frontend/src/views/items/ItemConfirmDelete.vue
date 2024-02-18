@@ -32,7 +32,7 @@ import { deleteItem, detailItem } from "../../services/item.service";
 
 
 const route = useRoute();
-const router = useRouter()
+const router = useRouter();
 const item = ref({
     code: '',
     name: '',
