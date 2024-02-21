@@ -2,9 +2,9 @@ import apiBase from "./base.service";
 
 const urlCustomer = '/hr/customers'
 
-export const listCustomer = async () => {
+export const listCustomer = async (currentPage) => {
     try {
-        return await apiBase.get(`${urlCustomer}/`);
+        return await apiBase.get(`${urlCustomer}/?page=${currentPage}`);
     } catch (error) {
         console.log(error);
     }
