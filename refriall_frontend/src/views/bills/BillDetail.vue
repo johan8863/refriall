@@ -10,6 +10,9 @@
                     <router-link :to="{name: 'bills'}">Facturas</router-link>
                 </li>
                 <li class="list-group-item">
+                    <router-link :to="{name: 'bills_create'}">Nueva</router-link >
+                </li>
+                <li class="list-group-item">
                     <router-link :to="{name: 'bills_update', params: {id: bill.id}}">Editar</router-link>
                 </li>
                 <li class="list-group-item">

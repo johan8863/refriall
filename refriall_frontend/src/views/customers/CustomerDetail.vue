@@ -10,6 +10,9 @@
                     <router-link :to="{name: 'customers'}">Clientes</router-link>
                 </li>
                 <li class="list-group-item">
+                    <router-link :to="{name: 'customers_create'}">Nuevo</router-link >
+                </li>
+                <li class="list-group-item">
                     <router-link :to="{name: 'customers_update', params: {id: customer.id}}">Editar</router-link>
                 </li>
                 <li class="list-group-item">

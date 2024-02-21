@@ -10,6 +10,9 @@
                     <router-link :to="{name: 'kits'}">Equipos</router-link>
                 </li>
                 <li class="list-group-item">
+                    <router-link :to="{name: 'kits_create'}">Nuevo</router-link >
+                </li>
+                <li class="list-group-item">
                     <router-link :to="{name: 'kits_update', params: {id: kit.id}}">Editar</router-link>
                 </li>
                 <li class="list-group-item">
