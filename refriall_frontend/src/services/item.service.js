@@ -2,8 +2,8 @@ import apiBase from "./base.service";
 
 const urlItem = '/stock/items'
 
-export const listItem = async () => {
-    return await apiBase.get(`${urlItem}/`);
+export const listItem = async (currentPage) => {
+    return await apiBase.get(`${urlItem}/?page=${currentPage}`);
 };
 
 export const detailItem = async (id) => {

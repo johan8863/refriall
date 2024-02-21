@@ -10,6 +10,9 @@
                     <RouterLink :to="{name: 'items'}">Artículos</RouterLink>
                 </li>
                 <li class="list-group-item">
+                    <RouterLink :to="{name: 'items_create'}">Nuevo</RouterLink >
+                </li>
+                <li class="list-group-item">
                     <RouterLink :to="{name: 'items_update', params: {id: item.id}}">Editar</RouterLink>
                 </li>
                 <li class="list-group-item">

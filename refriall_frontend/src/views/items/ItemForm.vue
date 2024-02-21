@@ -129,6 +129,7 @@
                     <input
                       type="number"
                       id="price"
+                      step="0.01"
                       class="form-control"
                       min="1"
                       v-model.trim="item.price"
