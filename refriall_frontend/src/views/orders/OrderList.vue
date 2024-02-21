@@ -109,14 +109,8 @@ const loadPrevItems = () => {
     getOrders()
 }
 
-
 onMounted(async () => {
     getOrders()
-});
-
-onMounted(async () => {
-    const resp = await listOrder();
-    orders.value = resp.data;
 });
 
 </script>
