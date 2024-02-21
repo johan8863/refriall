@@ -9,17 +9,19 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 
 # local
 from .models import Order, Bill
 from .serializers import BillSerializer, BillSerializerForReadOnly, BillSerializerDetailUpdate, OrderSerializerForReadOnly, OrderSerializer
 
 
-class BillList(APIView):
+class BillList(APIView, PageNumberPagination):
     def get(self, request, format=None):
         bills = Bill.objects.all()
-        serializer = BillSerializerForReadOnly(bills, many=True)
-        return Response(serializer.data)
+        results = self.paginate_queryset(bills, request, view=self)
+        serializer = BillSerializerForReadOnly(results, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class BillDetail(APIView):
