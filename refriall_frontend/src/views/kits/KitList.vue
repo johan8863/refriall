@@ -40,14 +40,14 @@
                             <!-- buttons -->
                             <div>
                                 <button
-                                v-if="showNextButton"
-                                class="btn btn-sm btn-primary"
-                                @click="loadNextItems()">Siguiente</button>
-                                
+                                  v-if="showPrevButton"
+                                  class="btn btn-sm btn-primary"
+                                  @click="loadPrevItems()">Anterior</button>
+
                                 <button
-                                v-if="showPrevButton"
-                                class="btn btn-sm btn-primary"
-                                @click="loadPrevItems()">Anterior</button>
+                                  v-if="showNextButton"
+                                  class="btn btn-sm btn-primary"
+                                  @click="loadNextItems()">Siguiente</button>
                             </div>
 
                         </div>
