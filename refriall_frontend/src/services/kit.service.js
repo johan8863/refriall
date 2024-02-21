@@ -2,8 +2,8 @@ import apiBase from "./base.service";
 
 const urlKit ='/stock/kits';
 
-export const listKit = async () => {
-    return await apiBase.get(`${urlKit}/`);
+export const listKit = async (currentPage) => {
+    return await apiBase.get(`${urlKit}/?page=${currentPage}`);
 };
 
 export const detatilKit = async (id) => {

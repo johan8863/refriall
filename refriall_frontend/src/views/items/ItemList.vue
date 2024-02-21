@@ -37,8 +37,6 @@
                             </table>
 
                         </div>
-
-
                         
                         <!-- buttons -->
                         <div>
@@ -52,6 +50,7 @@
                               class="btn btn-sm btn-primary"
                               @click="loadPrevItems()">Anterior</button>
                         </div>
+                        
                     </div>
 
                     <div v-else>
