@@ -71,11 +71,12 @@ class BillViewSet(viewsets.ModelViewSet):
     serializer_class = BillSerializer
 
 
-class OrderList(APIView):
+class OrderList(APIView, PageNumberPagination):
     def get(self, request, format=None):
         orders = Order.objects.all()
-        serializer = OrderSerializerForReadOnly(orders, many=True)
-        return Response(serializer.data)
+        results = self.paginate_queryset(orders, request, view=self)
+        serializer = OrderSerializerForReadOnly(results, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class OrderDetail(APIView):

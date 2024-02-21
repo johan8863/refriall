@@ -7,8 +7,8 @@ const urlFromCustomerNotMatched = '/finance/orders/fromcustomernotmatched'
 const urlFromCustomer = '/finance/orders/fromcustomer'
 const urlNotMatched = '/finance/orders/notmatched'
 
-export const listOrder = async () => {
-    return await apiBase.get(`${urlOrderList}/`);
+export const listOrder = async (currentPage) => {
+    return await apiBase.get(`${urlOrderList}/?page=${currentPage}`);
 };
 
 export const detailOrder = async (id) => {
