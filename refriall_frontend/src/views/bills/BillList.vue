@@ -77,7 +77,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { listBills } from '../../services/bill.service';
+import { listBillsPagination } from '../../services/bill.service';
 
 const bills = ref([]);
 const currentPage = ref(1);
@@ -85,7 +85,7 @@ const showNextButton = ref(false);
 const showPrevButton = ref(false);
 
 const getBills = async () => {
-    const resp = (await listBills(currentPage.value)).data;
+    const resp = (await listBillsPagination(currentPage.value)).data;
     
     showNextButton.value = false;
     if (resp.next) {

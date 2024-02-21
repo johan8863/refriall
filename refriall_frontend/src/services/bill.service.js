@@ -1,13 +1,13 @@
 import apiBase from "./base.service";
 
-const urlBillList = '/finance/bills/list';
+const urlBillListPagination = '/finance/bills/list/pagination';
 const urlBillDetail = '/finance/bills/detail';
 const urlBillDetailUpdate = '/finance/bills/detail/update';
 // const urlBillUpdate = '/finance/bills/update';
 const urlBillPost = '/finance/bills_write';
 
-export const listBills = async (currentPage) => {
-    return await apiBase.get(`${urlBillList}/?page=${currentPage}`);
+export const listBillsPagination = async (currentPage) => {
+    return await apiBase.get(`${urlBillListPagination}/?page=${currentPage}`);
 }
 
 export const detailBill = async (id) => {

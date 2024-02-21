@@ -76,7 +76,7 @@
 
 import { RouterLink } from "vue-router";
 import { ref, onMounted } from "vue";
-import { listOrder } from "../../services/order.service";
+import { listOrderPagination } from "../../services/order.service";
 
 const orders = ref([]);
 const currentPage = ref(1);
@@ -84,7 +84,7 @@ const showNextButton = ref(false);
 const showPrevButton = ref(false);
 
 const getOrders = async () => {
-    const resp = (await listOrder(currentPage.value)).data;
+    const resp = (await listOrderPagination(currentPage.value)).data;
     
     showNextButton.value = false;
     if (resp.next) {

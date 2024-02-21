@@ -1,11 +1,16 @@
 import apiBase from "./base.service";
 
 const urlOrderList = '/finance/orders/list'
+const urlOrderListPagination = '/finance/orders/list/pagination'
 const urlOrderDetail = '/finance/orders/detail'
 const urlOrderPost = '/finance/orders_write'
 const urlFromCustomerNotMatched = '/finance/orders/fromcustomernotmatched'
 const urlFromCustomer = '/finance/orders/fromcustomer'
 const urlNotMatched = '/finance/orders/notmatched'
+
+export const listOrderPagination = async (currentPage) => {
+    return await apiBase.get(`${urlOrderListPagination}/?page=${currentPage}`);
+};
 
 export const listOrder = async (currentPage) => {
     return await apiBase.get(`${urlOrderList}/?page=${currentPage}`);

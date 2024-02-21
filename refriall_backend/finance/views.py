@@ -14,9 +14,10 @@ from rest_framework.pagination import PageNumberPagination
 # local
 from .models import Order, Bill
 from .serializers import BillSerializer, BillSerializerForReadOnly, BillSerializerDetailUpdate, OrderSerializerForReadOnly, OrderSerializer
+from .paginators import BillPagination, OrderPagination
 
 
-class BillList(APIView, PageNumberPagination):
+class BillListPagination(APIView, BillPagination):
     def get(self, request, format=None):
         bills = Bill.objects.all()
         results = self.paginate_queryset(bills, request, view=self)
@@ -71,11 +72,18 @@ class BillViewSet(viewsets.ModelViewSet):
     serializer_class = BillSerializer
 
 
-class OrderList(APIView, PageNumberPagination):
+class OrderListPagination(APIView, OrderPagination):
     def get(self, request, format=None):
         orders = Order.objects.all()
         results = self.paginate_queryset(orders, request, view=self)
         serializer = OrderSerializerForReadOnly(results, many=True)
+        return self.get_paginated_response(serializer.data)
+
+
+class OrderList(APIView):
+    def get(self, request, format=None):
+        orders = Order.objects.all()
+        serializer = OrderSerializerForReadOnly(orders, many=True)
         return self.get_paginated_response(serializer.data)
 
 
