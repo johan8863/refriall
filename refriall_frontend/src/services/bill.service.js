@@ -6,8 +6,8 @@ const urlBillDetailUpdate = '/finance/bills/detail/update';
 // const urlBillUpdate = '/finance/bills/update';
 const urlBillPost = '/finance/bills_write';
 
-export const listBills = async () => {
-    return await apiBase.get(`${urlBillList}/`);
+export const listBills = async (currentPage) => {
+    return await apiBase.get(`${urlBillList}/?page=${currentPage}`);
 }
 
 export const detailBill = async (id) => {
