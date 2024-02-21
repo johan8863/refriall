@@ -2,9 +2,9 @@ import apiBase from "./base.service";
 
 const urlProvider = '/hr/providers'
 
-export const listProvider = async () => {
+export const listProvider = async (currentPage) => {
     try {
-        return await apiBase.get(`${urlProvider}/`);
+        return await apiBase.get(`${urlProvider}/?page=${currentPage}`);
     } catch (error) {
         console.log(error);
     }

@@ -50,7 +50,7 @@
                               class="btn btn-sm btn-primary"
                               @click="loadPrevItems()">Anterior</button>
                         </div>
-                        
+
                     </div>
 
                     <div v-else>
@@ -76,7 +76,6 @@ const showPrevButton = ref(false);
 
 const getItems = async () => {
     const resp = (await listItem(currentPage.value)).data;
-    console.log(resp);
     
     showNextButton.value = false;
     if (resp.next) {
