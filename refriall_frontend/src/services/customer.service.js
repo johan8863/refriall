@@ -1,10 +1,15 @@
 import apiBase from "./base.service";
 
 const urlCustomer = '/hr/customers'
+const urlCustomerListPagination = '/hr/customers/list/pagination'
 
-export const listCustomer = async (currentPage) => {
+export const listCustomer = async (currentPage=null) => {
     try {
-        return await apiBase.get(`${urlCustomer}/?page=${currentPage}`);
+        if (currentPage) {
+            return await apiBase.get(`${urlCustomerListPagination}/?page=${currentPage}`);
+        } else {
+            return await apiBase.get(`${urlCustomer}/`);
+        }
     } catch (error) {
         console.log(error);
     }
