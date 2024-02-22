@@ -51,22 +51,6 @@ class BillDetailUpdate(APIView):
         return Response(serializer.data)
 
 
-# class BillUpdate(APIView):
-#     def get_object(self, pk):
-#         try:
-#             return Bill.objects.get(pk=pk)
-#         except Bill.DoesNotExist:
-#             raise Http404
-
-#     def put(self, request, pk, format=None):
-#         bill = self.get_object(pk)
-#         serializer = BillSerializerUpdate(bill, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class BillViewSet(viewsets.ModelViewSet):
     queryset = Bill.objects.all()
     serializer_class = BillSerializer
