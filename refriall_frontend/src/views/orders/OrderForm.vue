@@ -33,14 +33,14 @@
                       id="customer"
                       class="form-select"
                       v-model.trim="order.customer"
-                      @blur="v$.customer.$touch"
                       :disabled="order.id">
-                        <option
+                      <option
                           v-for="customer in customers"
                           :key="customer.id"
                           :value="customer.id">{{ customer.name }}</option>
-                    </select>
-
+                        </select>
+                        
+                    <!-- @blur="v$.customer.$touch" -->
                     <!-- frontend errors -->
                     <!-- <span v-if="v$.customer.$errors">
                       <p
@@ -65,14 +65,14 @@
                       id="customer_dependency"
                       class="form-select"
                       v-model.trim="order.customer_dependency"
-                      @blur="v$.customer_dependency.$touch"
                       :disabled="order.id">
-                        <option
-                          v-for="dependency in dependencies"
-                          :key="dependency.id"
-                          :value="dependency.id">{{ dependency.name }}</option>
+                      <option
+                      v-for="dependency in dependencies"
+                      :key="dependency.id"
+                      :value="dependency.id">{{ dependency.name }}</option>
                     </select>
 
+                    <!-- @blur="v$.customer_dependency.$touch" -->
                     <!-- frontend errors -->
                     <!-- <span v-if="v$.customer_dependency.$errors">
                       <p
