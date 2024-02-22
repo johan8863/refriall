@@ -1,10 +1,15 @@
 import apiBase from "./base.service";
 
 const urlKit ='/stock/kits';
+const urlKitListPagination ='/stock/kits/list/pagination';
 
-export const listKit = async (currentPage) => {
+export const listKit = async (currentPage=null) => {
     try {
-        return await apiBase.get(`${urlKit}/?page=${currentPage}`);
+        if (currentPage) {
+            return await apiBase.get(`${urlKitListPagination}/?page=${currentPage}`);
+        } else {
+            return await apiBase.get(`${urlKit}/`);
+        }
     } catch (error) {
         console.log(error);
     }

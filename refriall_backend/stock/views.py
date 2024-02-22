@@ -26,3 +26,11 @@ class ItemListPagination(APIView, paginators.ItemPagination):
 class KitViewSet(viewsets.ModelViewSet):
     queryset = Kit.objects.all()
     serializer_class = KitSerializer
+
+
+class KitListPagination(APIView, paginators.KitPagination):
+    def get(self, request, format=None):
+        kits = Kit.objects.all()
+        results = self.paginate_queryset(kits, request, view=self)
+        serializer = KitSerializer(results, many=True)
+        return self.get_paginated_response(serializer.data)
