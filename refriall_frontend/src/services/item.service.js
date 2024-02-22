@@ -1,10 +1,15 @@
 import apiBase from "./base.service";
 
 const urlItem = '/stock/items'
+const urlItemListPagination = '/stock/items/list/pagination'
 
-export const listItem = async (currentPage) => {
+export const listItem = async (currentPage=null) => {
     try {
-        return await apiBase.get(`${urlItem}/?page=${currentPage}`);
+        if (currentPage) {
+            return await apiBase.get(`${urlItemListPagination}/?page=${currentPage}`);
+        } else {
+            return await apiBase.get(`${urlItem}/?page=${currentPage}`);
+        }
     } catch (error) {
         console.log(error);
     }
