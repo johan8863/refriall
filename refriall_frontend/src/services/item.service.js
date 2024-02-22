@@ -8,7 +8,7 @@ export const listItem = async (currentPage=null) => {
         if (currentPage) {
             return await apiBase.get(`${urlItemListPagination}/?page=${currentPage}`);
         } else {
-            return await apiBase.get(`${urlItem}/?page=${currentPage}`);
+            return await apiBase.get(`${urlItem}/`);
         }
     } catch (error) {
         console.log(error);
