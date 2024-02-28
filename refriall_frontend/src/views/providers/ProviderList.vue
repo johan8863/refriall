@@ -79,7 +79,7 @@ const currentPage = ref(1);
 const showNextButton = ref(false);
 const showPrevButton = ref(false);
 
-const getItems = async () => {
+const getProviders = async () => {
     const resp = (await listProvider(currentPage.value)).data;
     
     showNextButton.value = false;
@@ -97,17 +97,17 @@ const getItems = async () => {
 
 const loadNextItems = () => {
     currentPage.value += 1;
-    getItems()
+    getProviders()
 }
 
 const loadPrevItems = () => {
     currentPage.value -= 1;
-    getItems()
+    getProviders()
 }
 
 
 onMounted(async () => {
-    getItems()
+    getProviders()
 });
 
 

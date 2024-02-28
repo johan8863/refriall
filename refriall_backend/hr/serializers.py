@@ -39,6 +39,24 @@ class CustomerDependencySerializer(serializers.ModelSerializer):
 
 
 class CustomerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Customer
+        fields = [
+            "id",
+            "customer_type",
+            "name",
+            "address",
+            "province",
+            "township",
+            "code",
+            "client_nit",
+            "bank_account_header",
+            "bank_account",
+        ]
+
+
+class CustomerSerializerDetail(serializers.ModelSerializer):
     get_dependencies = CustomerDependencySerializer(many=True)
 
     class Meta:

@@ -17,4 +17,6 @@ router.register(r'dependencies', views.CustomerDependencyViewSet, basename='depe
 urlpatterns = [
     path('', include(router.urls)),
     path('customers/list/pagination/', views.CustomerListPagination.as_view(), name='customers_list_pagination'),
+    path('customers/detail/<int:pk>/', views.CustomerDetail.as_view(), name='customers_detail'),
+    path('providers/list/pagination/', views.ProviderListPagination.as_view(), name='providers_list_pagination'),
 ]

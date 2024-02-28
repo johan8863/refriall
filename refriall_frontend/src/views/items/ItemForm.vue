@@ -74,6 +74,7 @@
                       class="form-select"
                       v-model.trim="item.item_type"
                       @blur="v$.item_type.$touch">
+                        <option value="revision">Rev/Diag.</option>
                         <option value="product">Producto</option>
                         <option value="concept">Concepto</option>
                         <option value="repair">Reparación</option>

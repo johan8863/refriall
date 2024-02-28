@@ -11,6 +11,7 @@ class Item(models.Model):
     in the item_type attribute.
     """
     ITEM_TYPES = [
+        ('revision', 'Rev/Diag.'),
         ('product', 'Producto'),
         ('concept', 'Concepto'),
         ('repair', 'Reparación'),

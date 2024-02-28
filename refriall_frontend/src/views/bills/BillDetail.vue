@@ -95,6 +95,7 @@
 
                     <div class="col-md-4">
                         <span class="d-block fw-bold">Desglose de importes</span>
+                        <span class="d-block">Rev/Diag.: {{ paginatedBill.get_total_amount_revision }}</span>
                         <span class="d-block">Productos: {{ paginatedBill.get_total_amount_product }}</span>
                         <span class="d-block">Conceptos: {{ paginatedBill.get_total_amount_concept }}</span>
                         <span class="d-block">Reparación: {{ paginatedBill.get_total_amount_repair }}</span>
