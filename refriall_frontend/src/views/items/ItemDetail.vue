@@ -27,7 +27,7 @@
             <hr>
             <p>Código: {{ item.code }}</p>
 
-            <p v-if="item.item_type === 'product'">Tipo: Producto</p>
+            <p v-if="item.item_type === 'part'">Tipo: Parte</p>
             <p v-if="item.item_type === 'concept'">Tipo: Concepto</p>
             <p v-if="item.item_type === 'repair'">Tipo: Reparación</p>
             <p v-if="item.item_type === 'maintenace'">Tipo: Mtto</p>

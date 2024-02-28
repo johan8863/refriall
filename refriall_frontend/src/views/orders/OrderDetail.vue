@@ -146,7 +146,7 @@
                     <div class="col-md-4">
                         <span class="d-block fw-bold">Desglose de importes</span>
                         <span class="d-block">Rev/Diag.: {{ paginatedOrder.get_total_amount_revision }}</span>
-                        <span class="d-block">Productos: {{ paginatedOrder.get_total_amount_product }}</span>
+                        <span class="d-block">Partes: {{ paginatedOrder.get_total_amount_part }}</span>
                         <span class="d-block">Conceptos: {{ paginatedOrder.get_total_amount_concept }}</span>
                         <span class="d-block">Reparación: {{ paginatedOrder.get_total_amount_repair }}</span>
                         <span class="d-block">Mtto: {{ paginatedOrder.get_total_amount_maintenace }}</span>
@@ -227,7 +227,7 @@ const order = ref({
     aproved_by: '',
     get_total_amount: 0,
     get_total_amount_revision: 0,
-    get_total_amount_product: 0,
+    get_total_amount_part: 0,
     get_total_amount_concept: 0,
     get_total_amount_repair: 0,
     get_total_amount_maintenace: 0,
@@ -279,7 +279,7 @@ const paginate = (order, itemsPerPage, start=0, pages=[]) => {
         aproved_by: order.value.aproved_by,
         get_total_amount: order.value.get_total_amount,
         get_total_amount_revision: order.value.get_total_amount_revision,
-        get_total_amount_product: order.value.get_total_amount_product,
+        get_total_amount_part: order.value.get_total_amount_part,
         get_total_amount_concept: order.value.get_total_amount_concept,
         get_total_amount_repair: order.value.get_total_amount_repair,
         get_total_amount_maintenace: order.value.get_total_amount_maintenace,

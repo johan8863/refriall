@@ -56,6 +56,15 @@ class Bill(models.Model):
         return total
     
     @property
+    def get_total_amount_revision(self):
+        """Returns the Sum of the total price of products of the orders in this Bill"""
+        total = 0
+        for order in self.get_orders:
+            total += order.get_total_amount_revision
+        
+        return total
+    
+    @property
     def get_total_amount_part(self):
         """Returns the Sum of the total price of products of the orders in this Bill"""
         total = 0
