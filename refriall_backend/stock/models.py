@@ -12,7 +12,7 @@ class Item(models.Model):
     """
     ITEM_TYPES = [
         ('revision', 'Rev/Diag.'),
-        ('product', 'Producto'),
+        ('part', 'Parte'),
         ('concept', 'Concepto'),
         ('repair', 'Reparación'),
         ('maintenace', 'Mtto'),
