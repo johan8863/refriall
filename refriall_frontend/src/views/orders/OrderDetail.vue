@@ -103,15 +103,16 @@
                         </span>
                     </div>
                     
-                    <div class="col md-2 border-bottom border-2">
+                    <div class="col-md-4 border-bottom border-2">
                         <span class="d-block">Equipo: {{ paginatedOrder.kit.name }}</span>
                         <span class="d-block">Marca: {{ paginatedOrder.kit_brand }}</span>
                         <span class="d-block">Modelo: {{ paginatedOrder.kit_model }}</span>
                         <span class="d-block">Serie: {{ paginatedOrder.kit_serial }}</span>
                     </div>
     
-                    <div class="col-md-10 border-bottom border-2">
-                        <span class="d-block">Descripción del trabajo realizado: {{ paginatedOrder.job_description }}</span>
+                    <div class="col-md-8 border-bottom border-2">
+                        <p class="d-block">Descripción del trabajo realizado: </p>
+                        <p>{{ paginatedOrder.job_description }}</p>
                     </div>
                     
                     <div class="col-md-12" style="height: 495px;">
@@ -143,37 +144,41 @@
     
                     </div>
     
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <span class="d-block fw-bold">Desglose de importes</span>
-                        <span class="d-block">Rev/Diag.: {{ paginatedOrder.get_total_amount_revision }}</span>
-                        <span class="d-block">Partes: {{ paginatedOrder.get_total_amount_part }}</span>
-                        <span class="d-block">Conceptos: {{ paginatedOrder.get_total_amount_concept }}</span>
-                        <span class="d-block">Reparación: {{ paginatedOrder.get_total_amount_repair }}</span>
-                        <span class="d-block">Mtto: {{ paginatedOrder.get_total_amount_maintenace }}</span>
-                        <span class="d-block">Instalación: {{ paginatedOrder.get_total_amount_install }}</span>
-                        <span class="d-block">Montaje/Desm: {{ paginatedOrder.get_total_amount_unmounting }}</span>
-                        <span class="d-block">Total: {{ paginatedOrder.get_total_amount }}</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span class="d-block">Rev/Diag.: {{ paginatedOrder.get_total_amount_revision }}</span>
+                                <span class="d-block">Partes: {{ paginatedOrder.get_total_amount_part }}</span>
+                                <span class="d-block">Conceptos: {{ paginatedOrder.get_total_amount_concept }}</span>
+                                <span class="d-block">Reparación: {{ paginatedOrder.get_total_amount_repair }}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="d-block">Mtto: {{ paginatedOrder.get_total_amount_maintenace }}</span>
+                                <span class="d-block">Instalación: {{ paginatedOrder.get_total_amount_install }}</span>
+                                <span class="d-block">Montaje/Desm: {{ paginatedOrder.get_total_amount_unmounting }}</span>
+                                <span class="d-block">Total: {{ paginatedOrder.get_total_amount }}</span>
+                            </div>
+                        </div>
                         
                     </div>
                     
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <span class="d-block fw-bold">Prestador</span>
                         <span class="d-block">Licencia: {{ paginatedOrder.provider.license_number }}</span>
                         <span class="d-block">{{ paginatedOrder.provider.first_name }} {{ paginatedOrder.provider.last_name }}</span>
                         <span class="d-block">No. CI: {{ paginatedOrder.provider.personal_id }}</span>
-                        <span class="d-block">Firma: </span>
-                        <span v-if="paginatedOrder.provider_signature_date" class="d-block">{{ paginatedOrder.provider_signature_date }}</span>
+                        <span class="d-block" v-if="paginatedOrder.provider_signature_date">Firma: {{ paginatedOrder.provider_signature_date }}</span>
                         <span v-else class="d-block">Fecha: </span>
     
                     </div>
                     
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <span class="d-block fw-bold">Cliente</span>
                         <span class="d-block">Cargo: {{ paginatedOrder.customer_charge }}</span>
                         <span class="d-block">Nombre: </span>
                         <span class="d-block">No. CI: {{ paginatedOrder.provider.personal_id }}</span>
-                        <span class="d-block">Firma: </span>
-                        <span v-if="paginatedOrder.customer_signature_date" class="d-block">{{ paginatedOrder.customer_signature_date }}</span>
+                        <span class="d-block" v-if="paginatedOrder.customer_signature_date">Firma: {{ paginatedOrder.customer_signature_date }}</span>
                         <span v-else class="d-block">Fecha: </span>
                     </div>
                     
