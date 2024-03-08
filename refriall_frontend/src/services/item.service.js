@@ -4,45 +4,25 @@ const urlItem = '/stock/items'
 const urlItemListPagination = '/stock/items/list/pagination'
 
 export const listItem = async (currentPage=null) => {
-    try {
-        if (currentPage) {
-            return await apiBase.get(`${urlItemListPagination}/?page=${currentPage}`);
-        } else {
-            return await apiBase.get(`${urlItem}/`);
-        }
-    } catch (error) {
-        console.log(error);
+    if (currentPage) {
+        return await apiBase.get(`${urlItemListPagination}/?page=${currentPage}`);
+    } else {
+        return await apiBase.get(`${urlItem}/`);
     }
 };
 
 export const detailItem = async (id) => {
-    try {
-        return await apiBase.get(`${urlItem}/${id}/`);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.get(`${urlItem}/${id}/`);
 };
 
 export const postItem = async (item) => {
-    try {
-        return await apiBase.post(`${urlItem}/`, item);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.post(`${urlItem}/`, item);
 };
 
 export const putItem = async (item) => {
-    try {
-        return await apiBase.put(`${urlItem}/${item.id}/`, item);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.put(`${urlItem}/${item.id}/`, item);
 };
 
 export const deleteItem = async (id) => {
-    try {
-        await apiBase.delete(`${urlItem}/${id}/`);
-    } catch (error) {
-        console.log(error);
-    }
+    await apiBase.delete(`${urlItem}/${id}/`);
 };

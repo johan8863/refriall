@@ -4,45 +4,25 @@ const urlKit ='/stock/kits';
 const urlKitListPagination ='/stock/kits/list/pagination';
 
 export const listKit = async (currentPage=null) => {
-    try {
-        if (currentPage) {
-            return await apiBase.get(`${urlKitListPagination}/?page=${currentPage}`);
-        } else {
-            return await apiBase.get(`${urlKit}/`);
-        }
-    } catch (error) {
-        console.log(error);
+    if (currentPage) {
+        return await apiBase.get(`${urlKitListPagination}/?page=${currentPage}`);
+    } else {
+        return await apiBase.get(`${urlKit}/`);
     }
 };
 
 export const detatilKit = async (id) => {
-    try {
-        return await apiBase.get(`${urlKit}/${id}/`);
-    } catch (error) {
-        console.log();
-    }
-}
+    return await apiBase.get(`${urlKit}/${id}/`);
+};
 
 export const postKit = async (kit) => {
-    try {
-        return await apiBase.post(`${urlKit}/`, kit);
-    } catch (error) {
-        console.log();
-    }
+    return await apiBase.post(`${urlKit}/`, kit);
 };
 
 export const putKit = async (kit) => {
-    try {
-        return await apiBase.put(`${urlKit}/${kit.id}/`, kit);
-    } catch (error) {
-        console.log();
-    }
+    return await apiBase.put(`${urlKit}/${kit.id}/`, kit);
 };
 
 export const deleteKit = async (id) => {
-    try {
-        await apiBase.delete(`${urlKit}/${id}/`);
-    } catch (error) {
-        console.log();
-    }
+    await apiBase.delete(`${urlKit}/${id}/`);
 };

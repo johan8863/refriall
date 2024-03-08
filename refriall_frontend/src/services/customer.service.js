@@ -5,45 +5,25 @@ const urlCustomerListPagination = '/hr/customers/list/pagination'
 const urlCustomerDetail = '/hr/customers/detail'
 
 export const listCustomer = async (currentPage=null) => {
-    try {
-        if (currentPage) {
-            return await apiBase.get(`${urlCustomerListPagination}/?page=${currentPage}`);
-        } else {
-            return await apiBase.get(`${urlCustomer}/`);
-        }
-    } catch (error) {
-        console.log(error);
+    if (currentPage) {
+        return await apiBase.get(`${urlCustomerListPagination}/?page=${currentPage}`);
+    } else {
+        return await apiBase.get(`${urlCustomer}/`);
     }
 };
 
 export const detailCustomer = async (customer) => {
-    try {
-        return await apiBase.get(`${urlCustomerDetail}/${customer}/`);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.get(`${urlCustomerDetail}/${customer}/`);
 };
 
 export const postCustomer = async (customer) => {
-    try {
-        return await apiBase.post(`${urlCustomer}/`, customer);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.post(`${urlCustomer}/`, customer);
 };
 
 export const putCustomer = async (customer) => {
-    try {
-        return await apiBase.put(`${urlCustomer}/${customer.id}/`, customer);
-    } catch (error) {
-        console.log(error);
-    }
+    return await apiBase.put(`${urlCustomer}/${customer.id}/`, customer);
 };
 
 export const deleteCustomer = async (customer) => {
-    try {
-        await apiBase.delete(`${urlCustomer}/${customer}/`);
-    } catch (error) {
-        console.log(error);
-    }
+    await apiBase.delete(`${urlCustomer}/${customer}/`);
 };
