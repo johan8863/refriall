@@ -3,6 +3,9 @@
 from pathlib import Path
 import os
 
+# third
+from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -11,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -75,11 +78,11 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('MARIADB_DATABASE'),
-        'USER': os.getenv('MARIADB_USER'),
-        'PASSWORD': os.getenv('MARIADB_ROOT_PASSWORD'),
-        'HOST': os.getenv('MARIADB_HOST'),
-        'PORT': os.getenv('MARIADB_PORT'),
+        'NAME': config('MARIADB_DATABASE'),
+        'USER': config('MARIADB_USER'),
+        'PASSWORD': config('MARIADB_ROOT_PASSWORD'),
+        'HOST': config('MARIADB_HOST'),
+        'PORT': config('MARIADB_PORT'),
         'OPTIONS': {
             'init_command': 'SET sql_mode="STRICT_TRANS_TABLES"'
         },

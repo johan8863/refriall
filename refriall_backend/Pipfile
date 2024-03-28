@@ -8,6 +8,7 @@ django = "==4.2"
 djangorestframework = "*"
 mysqlclient = "*"
 django-cors-headers = "*"
+python-decouple = "*"
 
 [dev-packages]
 
