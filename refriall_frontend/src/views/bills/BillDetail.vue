@@ -96,7 +96,7 @@
                     <div class="col-md-4">
                         <span class="d-block fw-bold">Desglose de importes</span>
                         <span class="d-block">Rev/Diag.: {{ paginatedBill.get_total_amount_revision }}</span>
-                        <span class="d-block">Partes: {{ paginatedBill.get_total_amount_part }}</span>
+                        <span class="d-block">Partes: {{ paginatedBill.get_total_amount_prod }}</span>
                         <span class="d-block">Conceptos: {{ paginatedBill.get_total_amount_concept }}</span>
                         <span class="d-block">Reparación: {{ paginatedBill.get_total_amount_repair }}</span>
                         <span class="d-block">Mtto: {{ paginatedBill.get_total_amount_maintenace }}</span>
@@ -159,7 +159,7 @@ const bill = ref({
     customer_signature_date: '',
     get_orders: [],
     get_total_amount: '',
-    get_total_amount_part: '',
+    get_total_amount_prod: '',
     get_total_amount_concept: '',
     get_total_amount_repair: '',
     get_total_amount_maintenace: '',
@@ -184,7 +184,7 @@ const billToPaginate = ref({
     customer_signature_date: '',
     items: [],
     get_total_amount: '',
-    get_total_amount_part: '',
+    get_total_amount_prod: '',
     get_total_amount_concept: '',
     get_total_amount_repair: '',
     get_total_amount_maintenace: '',
@@ -226,7 +226,7 @@ const prepareBillToPaginate = (billToPaginate, bill) => {
     billToPaginate.value.provider_signature_date = bill.value.provider_signature_date
     billToPaginate.value.customer_signature_date = bill.value.customer_signature_date
     billToPaginate.value.get_total_amount = bill.value.get_total_amount
-    billToPaginate.value.get_total_amount_part = bill.value.get_total_amount_part
+    billToPaginate.value.get_total_amount_prod = bill.value.get_total_amount_prod
     billToPaginate.value.get_total_amount_concept = bill.value.get_total_amount_concept
     billToPaginate.value.get_total_amount_repair = bill.value.get_total_amount_repair
     billToPaginate.value.get_total_amount_maintenace = bill.value.get_total_amount_maintenace
@@ -256,7 +256,7 @@ const paginate = (bill, itemsPerPage, start=0, pages=[]) => {
         customer_signature_date: bill.value.customer_signature_date,
         items: bill.value.items.slice(start, end),
         get_total_amount: bill.value.get_total_amount,
-        get_total_amount_part: bill.value.get_total_amount_part,
+        get_total_amount_prod: bill.value.get_total_amount_prod,
         get_total_amount_concept: bill.value.get_total_amount_concept,
         get_total_amount_repair: bill.value.get_total_amount_repair,
         get_total_amount_maintenace: bill.value.get_total_amount_maintenace,

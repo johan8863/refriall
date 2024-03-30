@@ -65,11 +65,11 @@ class Bill(models.Model):
         return total
     
     @property
-    def get_total_amount_part(self):
+    def get_total_amount_prod(self):
         """Returns the Sum of the total price of products of the orders in this Bill"""
         total = 0
         for order in self.get_orders:
-            total += order.get_total_amount_part
+            total += order.get_total_amount_prod
         
         return total
     
@@ -212,13 +212,13 @@ class Order(models.Model):
         return round(total_amount_revision, 2) if total_amount_revision is not None else 0
     
     @property
-    def get_total_amount_part(self):
+    def get_total_amount_prod(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
-        total_amount_part = self.itemtime_set.filter(item__item_type='part').aggregate(
+        total_amount_prod = self.itemtime_set.filter(item__item_type='prod').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
-        return round(total_amount_part, 2) if total_amount_part is not None else 0
+        return round(total_amount_prod, 2) if total_amount_prod is not None else 0
     
     @property
     def get_total_amount_concept(self):
