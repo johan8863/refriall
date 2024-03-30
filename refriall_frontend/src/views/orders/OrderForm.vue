@@ -27,67 +27,89 @@
               
                 <!-- customer control -->
                 <div class="col-md-3 mb-2">
+                  <div class="row g-1">
                     <label for="customer" class="form-label">Cliente</label>
-                    <select
-                      autofocus
-                      id="customer"
-                      class="form-select"
-                      v-model.trim="order.customer"
-                      :disabled="order.id">
-                      <option
-                          v-for="customer in customers"
-                          :key="customer.id"
-                          :value="customer.id">{{ customer.name }}</option>
-                        </select>
+                    <div class="col-md-11">
+                      <select
+                        autofocus
+                        id="customer"
+                        class="form-select"
+                        v-model.trim="order.customer"
+                        :disabled="order.id">
+                        <option
+                            v-for="customer in customers"
+                            :key="customer.id"
+                            :value="customer.id">{{ customer.name }}</option>
+                      </select>
                         
-                    <!-- @blur="v$.customer.$touch" -->
-                    <!-- frontend errors -->
-                    <!-- <span v-if="v$.customer.$errors">
-                      <p
-                        class="form-text text-danger"
-                        v-for="error in v$.customer.$errors"
-                        :key="error.$uid">{{ error.$message }}</p>
-                    </span> -->
+                      <!-- @blur="v$.customer.$touch" -->
+                      <!-- frontend errors -->
+                      <!-- <span v-if="v$.customer.$errors">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in v$.customer.$errors"
+                          :key="error.$uid">{{ error.$message }}</p>
+                      </span> -->
 
-                    <!-- backend errors -->
-                    <span v-if="orderBackendErrors.customer">
-                      <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in orderBackendErrors.customer"
-                        :key="i">{{ error }}</p>
-                    </span>
+                      <!-- backend errors -->
+                      <span v-if="orderBackendErrors.customer">
+                        <p
+                          class="form-text text-danger"
+                          v-for="(error, i) in orderBackendErrors.customer"
+                          :key="i">{{ error }}</p>
+                      </span>
+                    </div>
+                    
+                    <div class="col-md-1">
+                      <button
+                        class="btn btn-sm btn-danger"
+                        @click="clearCustomer()">X</button>
+                    </div>
+
+                  </div>
                 </div>
 
                 <!-- customer_dependency control -->
                 <div class="col-md-3 mb-2">
+                  <div class="row g-1">
                     <label for="customer_dependency" class="form-label">Dependencia</label>
-                    <select
-                      id="customer_dependency"
-                      class="form-select"
-                      v-model.trim="order.customer_dependency"
-                      :disabled="order.id">
-                      <option
-                      v-for="dependency in dependencies"
-                      :key="dependency.id"
-                      :value="dependency.id">{{ dependency.name }}</option>
-                    </select>
+                    <div class="col-md-11">
+                      <select
+                        id="customer_dependency"
+                        class="form-select"
+                        v-model.trim="order.customer_dependency"
+                        :disabled="order.id">
+                        <option
+                        v-for="dependency in dependencies"
+                        :key="dependency.id"
+                        :value="dependency.id">{{ dependency.name }}</option>
+                      </select>
 
-                    <!-- @blur="v$.customer_dependency.$touch" -->
-                    <!-- frontend errors -->
-                    <!-- <span v-if="v$.customer_dependency.$errors">
-                      <p
-                        class="form-text text-danger"
-                        v-for="error in v$.customer_dependency.$errors"
-                        :key="error.$uid">{{ error.$message }}</p>
-                    </span> -->
+                      <!-- @blur="v$.customer_dependency.$touch" -->
+                      <!-- frontend errors -->
+                      <!-- <span v-if="v$.customer_dependency.$errors">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in v$.customer_dependency.$errors"
+                          :key="error.$uid">{{ error.$message }}</p>
+                      </span> -->
 
-                    <!-- backend errors -->
-                    <span v-if="orderBackendErrors.customer_dependency">
-                      <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in orderBackendErrors.customer_dependency"
-                        :key="i">{{ error }}</p>
-                    </span>
+                      <!-- backend errors -->
+                      <span v-if="orderBackendErrors.customer_dependency">
+                        <p
+                          class="form-text text-danger"
+                          v-for="(error, i) in orderBackendErrors.customer_dependency"
+                          :key="i">{{ error }}</p>
+                      </span>
+                    </div>
+                    <div class="col-md-1">
+                      <button
+                        class="btn btn-sm btn-danger"
+                        @click="clearCustomerDependency()">X</button>
+                    </div>
+                    
+                  </div>
+                    
                 </div>
 
                 <!-- symptom control -->
@@ -750,5 +772,12 @@ const updateOrder = async (order) => {
   }
 }
 
+const clearCustomer = () => {
+  order.value.customer = '';
+}
+
+const clearCustomerDependency = () => {
+  order.value.customer_dependency = '';
+}
 
 </script>
