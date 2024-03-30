@@ -33,7 +33,7 @@
                       <select
                         autofocus
                         id="customer"
-                        class="form-select"
+                        class="form-select form-select-sm"
                         v-model.trim="order.customer"
                         :disabled="order.id">
                         <option
@@ -76,7 +76,7 @@
                     <div class="col-md-11">
                       <select
                         id="customer_dependency"
-                        class="form-select"
+                        class="form-select form-select-sm"
                         v-model.trim="order.customer_dependency"
                         :disabled="order.id">
                         <option
