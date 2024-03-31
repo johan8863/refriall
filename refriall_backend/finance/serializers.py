@@ -202,7 +202,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class BillSerializerForReadOnly(serializers.ModelSerializer):
     customer = CustomerSerializer()
-    customer_dependency = CustomerDependencySerializer()
     provider = ProviderSerializer()
     get_orders = OrderSerializerForReadOnly(many=True)
 
@@ -211,7 +210,6 @@ class BillSerializerForReadOnly(serializers.ModelSerializer):
         fields = [
             "id",
             "customer",
-            "customer_dependency",
             "folio",
             "provider",
             "provider_signature_date",
@@ -243,7 +241,6 @@ class BillSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "customer",
-            "customer_dependency",
             "folio",
             "provider",
             "provider_signature_date",
@@ -297,7 +294,6 @@ class BillSerializerDetailUpdate(serializers.ModelSerializer):
         fields = [
             "id",
             "customer",
-            "customer_dependency",
             "folio",
             "provider",
             "provider_signature_date",
