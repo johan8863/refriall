@@ -20,7 +20,7 @@
 
                     <div v-if="bills.length > 0">
 
-                        <div id="tableContainer" style="height: 460px;">
+                        <div id="tableContainer">
 
                             <table class="table">
                                 <thead>
@@ -49,7 +49,7 @@
                         </div>
                         
                         <!-- buttons -->
-                        <div>
+                        <div class="mb-4">
                             <button
                               v-if="showPrevButton"
                               class="btn btn-sm btn-primary"
