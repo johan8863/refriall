@@ -24,20 +24,24 @@
                             <table class="table">
                                 <thead>
                                     <tr>
+                                        <th scope="col">Folio</th>
                                         <th scope="col">Cliente</th>
                                         <th scope="col">Importe</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="order in orders" :key="order.id">
+                                        <td>
+                                            <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.folio }}</router-link>
+                                        </td>
                                         <td v-if="order.customer">
-                                            <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.customer.name }}</router-link>
+                                            {{ order.customer.name }}
                                         </td>
                                         <td v-if="order.customer_dependency">
-                                            <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.customer_dependency.name }}</router-link>
+                                            {{ order.customer_dependency.name }}
                                         </td>
                                         <td>
-                                            <router-link :to="{name: 'orders_detail', params: {id: order.id}}">{{ order.get_total_amount.toFixed(2) }}</router-link>
+                                            {{ order.get_total_amount.toFixed(2) }}
                                         </td>
                                     </tr>
                                 </tbody>
