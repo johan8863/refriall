@@ -417,7 +417,6 @@ const bill = ref({
 const billBackendErrors = ref({
     non_field_errors: [],
     customer: '',
-    customer_dependency: '',
     folio: '',
     provider: '',
     provider_signature_date: '',

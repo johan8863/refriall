@@ -36,11 +36,8 @@
                                         <td>
                                             <router-link :to="{name: 'bills_detail', params: {id: bill.id}}">{{ bill.folio }}</router-link>
                                         </td>
-                                        <td v-if="bill.customer">
+                                        <td>
                                             {{ bill.customer.name }}
-                                        </td>
-                                        <td v-if="bill.customer_dependency">
-                                            {{ bill.customer_dependency.name }}
                                         </td>
                                         <td>
                                             {{ bill.get_total_amount.toFixed(2) }}
