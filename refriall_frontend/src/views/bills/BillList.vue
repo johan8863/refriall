@@ -25,6 +25,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
+                                        <th scope="col">Folio</th>
                                         <th scope="col">Cliente</th>
                                         <th scope="col">Importe</th>
                                     </tr>
@@ -32,14 +33,17 @@
                                 <tbody>
                                     
                                     <tr v-for="bill in bills" :key="bill.id">
+                                        <td>
+                                            <router-link :to="{name: 'bills_detail', params: {id: bill.id}}">{{ bill.folio }}</router-link>
+                                        </td>
                                         <td v-if="bill.customer">
-                                            <router-link :to="{name: 'bills_detail', params: {id: bill.id}}">{{ bill.customer.name }}</router-link>
+                                            {{ bill.customer.name }}
                                         </td>
                                         <td v-if="bill.customer_dependency">
-                                            <router-link :to="{name: 'bills_detail', params: {id: bill.id}}">{{ bill.customer_dependency.name }}</router-link>
+                                            {{ bill.customer_dependency.name }}
                                         </td>
                                         <td>
-                                            <router-link :to="{name: 'bills_detail', params: {id: bill.id}}">{{ bill.get_total_amount.toFixed(2) }}</router-link>
+                                            {{ bill.get_total_amount.toFixed(2) }}
                                         </td>
                                     </tr>
                                 </tbody>
