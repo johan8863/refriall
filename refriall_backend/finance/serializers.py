@@ -215,6 +215,7 @@ class BillSerializerForReadOnly(serializers.ModelSerializer):
             "provider_signature_date",
             "customer_signature_date",
             "get_orders",
+            "get_orders_folio",
             "get_total_amount",
             "get_total_amount_revision",
             "get_total_amount_prod",

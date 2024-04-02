@@ -65,7 +65,7 @@
                         <span class="d-block">Folio: {{ paginatedBill.folio }}</span>
                     </div>
 
-                    <div class="col-md-12" style="height: 676px;">
+                    <div class="col-md-12" style="height: 640px;">
                         <table class="table">
     
                             <thead>
@@ -91,8 +91,18 @@
                             </tbody>
 
                         </table>
-                    </div>
 
+                    </div>
+                    
+                    <div class="col-md-12">
+                        <p>
+                            Órdenes asociadas:
+                            <span v-for="order of paginatedBill.get_orders_folio" :key="order.folio">
+                                {{ order.folio }}, 
+                            </span>
+                        </p>
+                    </div>
+                    
                     <div class="col-md-4">
                         <span class="d-block fw-bold">Desglose de importes</span>
                         <span class="d-block">Rev/Diag.: {{ paginatedBill.get_total_amount_revision }}</span>
@@ -158,6 +168,7 @@ const bill = ref({
     provider_signature_date: '',
     customer_signature_date: '',
     get_orders: [],
+    get_orders_folio: [],
     get_total_amount: '',
     get_total_amount_prod: '',
     get_total_amount_concept: '',
@@ -183,6 +194,7 @@ const billToPaginate = ref({
     provider_signature_date: '',
     customer_signature_date: '',
     items: [],
+    get_orders_folio: [],
     get_total_amount: '',
     get_total_amount_prod: '',
     get_total_amount_concept: '',
@@ -208,13 +220,14 @@ onMounted(async () => {
     const resp = await detailBill(route.params.id);
     bill.value = resp.data;
 
-
     prepareBillToPaginate(billToPaginate, bill);
 
     paginatedBills.value = paginate(billToPaginate, 11);
 });
 
 const prepareBillToPaginate = (billToPaginate, bill) => {
+    // fill the billToPaginate items attrs with all the items from
+    // all the orders of the current bill
     for (const order of bill.value.get_orders) {
         billToPaginate.value.items = billToPaginate.value.items.concat(order.itemtime_set)
     }
@@ -226,6 +239,7 @@ const prepareBillToPaginate = (billToPaginate, bill) => {
     billToPaginate.value.provider_signature_date = bill.value.provider_signature_date
     billToPaginate.value.customer_signature_date = bill.value.customer_signature_date
     billToPaginate.value.get_total_amount = bill.value.get_total_amount
+    billToPaginate.value.get_orders_folio = bill.value.get_orders_folio
     billToPaginate.value.get_total_amount_prod = bill.value.get_total_amount_prod
     billToPaginate.value.get_total_amount_concept = bill.value.get_total_amount_concept
     billToPaginate.value.get_total_amount_repair = bill.value.get_total_amount_repair
@@ -255,6 +269,7 @@ const paginate = (bill, itemsPerPage, start=0, pages=[]) => {
         provider_signature_date: bill.value.provider_signature_date,
         customer_signature_date: bill.value.customer_signature_date,
         items: bill.value.items.slice(start, end),
+        get_orders_folio: bill.value.get_orders_folio,
         get_total_amount: bill.value.get_total_amount,
         get_total_amount_prod: bill.value.get_total_amount_prod,
         get_total_amount_concept: bill.value.get_total_amount_concept,

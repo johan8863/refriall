@@ -46,6 +46,10 @@ class Bill(models.Model):
         return self.orders.all()
     
     @property
+    def get_orders_folio(self):
+        return self.get_orders.values('folio')
+    
+    @property
     def get_total_amount(self):
         """Returns the Sum of the total price of the orders in this Bill"""
         total = 0
