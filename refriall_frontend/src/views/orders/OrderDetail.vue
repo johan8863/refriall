@@ -115,18 +115,18 @@
                         <p>{{ paginatedOrder.job_description }}</p>
                     </div>
                     
-                    <div class="col-md-12" style="height: 495px;">
+                    <div class="col-md-12" style="height: 563px;">
     
-                        <table class="table">
+                        <table class="table table-sm">
     
                             <thead>
                                 <tr>
                                     <th>Código</th>
                                     <th>Artículo o Servicio</th>
-                                    <th>U/M</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio</th>
-                                    <th>Importe</th>
+                                    <th class="text-center">U/M</th>
+                                    <th class="text-center">Cantidad</th>
+                                    <th class="text-end">Precio</th>
+                                    <th class="text-end">Importe</th>
                                 </tr>
                             </thead>
     
@@ -134,12 +134,27 @@
                                 <tr v-for="itemtime in paginatedOrder.itemtime_set" :key="itemtime.id">
                                     <td>{{ itemtime.item.code }}</td>
                                     <td>{{ itemtime.item.name }}</td>
-                                    <td>{{ itemtime.item.get_measurement }}</td>
-                                    <td>{{ itemtime.times }}</td>
-                                    <td>{{ itemtime.item.price }}</td>
-                                    <td>{{ itemtime.item.price * itemtime.times }}</td>
+                                    <td class="text-center">{{ itemtime.item.get_measurement }}</td>
+                                    <td class="text-center">{{ itemtime.times }}</td>
+                                    <td class="text-end">{{ itemtime.item.price }}</td>
+                                    <td class="text-end">{{ itemtime.item.price * itemtime.times }}</td>
                                 </tr>
                             </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <td>
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-end">
+                                        <strong>{{paginatedOrder.get_total_amount}}</strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
     
                     </div>
@@ -246,7 +261,7 @@ onMounted(async () => {
     const resp = await detailOrder(route.params.id);
     order.value = resp.data;
 
-    paginatedOrders.value = paginate(order, 11);
+    paginatedOrders.value = paginate(order, 15);
 });
 
 const paginate = (order, itemsPerPage, start=0, pages=[]) => {
