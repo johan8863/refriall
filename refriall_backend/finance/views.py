@@ -66,7 +66,7 @@ class OrderList(APIView):
     def get(self, request, format=None):
         orders = Order.objects.all()
         serializer = OrderSerializerForReadOnly(orders, many=True)
-        return self.get_paginated_response(serializer.data)
+        return Response(serializer.data)
 
 
 class OrderDetail(APIView):
