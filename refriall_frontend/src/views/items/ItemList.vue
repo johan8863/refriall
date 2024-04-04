@@ -25,12 +25,16 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">Nombre</th>
+                                        <th scope="col">Precio</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="item in items" :key="item.id">
                                         <td>
                                             <RouterLink :to="{name: 'items_detail', params: {id: item.id}}">{{ item.name }}</RouterLink>
+                                        </td>
+                                        <td>
+                                            {{ item.price }}
                                         </td>
                                     </tr>
                                 </tbody>
