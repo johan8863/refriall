@@ -136,8 +136,8 @@
                                     <td>{{ itemtime.item.name }}</td>
                                     <td class="text-center">{{ itemtime.item.get_measurement }}</td>
                                     <td class="text-center">{{ itemtime.times }}</td>
-                                    <td class="text-end">{{ itemtime.item.price }}</td>
-                                    <td class="text-end">{{ itemtime.item.price * itemtime.times }}</td>
+                                    <td class="text-end">{{ itemtime.item.price.toFixed(2) }}</td>
+                                    <td class="text-end">{{ (itemtime.item.price * itemtime.times).toFixed(2) }}</td>
                                 </tr>
                             </tbody>
 
