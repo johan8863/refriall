@@ -238,7 +238,7 @@ onMounted(async () => {
 
     prepareBillToPaginate(billToPaginate, bill);
 
-    paginatedBills.value = paginate(billToPaginate, 11);
+    paginatedBills.value = paginate(billToPaginate, 17);
 });
 
 const prepareBillToPaginate = (billToPaginate, bill) => {
