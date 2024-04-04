@@ -66,16 +66,16 @@
                     </div>
 
                     <div class="col-md-12" style="height: 640px;">
-                        <table class="table">
+                        <table class="table table-sm">
     
                             <thead>
                                 <tr>
                                     <th>Código</th>
                                     <th>Artículo o Servicio</th>
-                                    <th>U/M</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio</th>
-                                    <th>Importe</th>
+                                    <th class="text-center">U/M</th>
+                                    <th class="text-center">Cantidad</th>
+                                    <th class="text-end">Precio</th>
+                                    <th class="text-end">Importe</th>
                                 </tr>
                             </thead>
 
@@ -83,12 +83,27 @@
                                 <tr v-for="item in paginatedBill.items" :key="item.id">
                                     <td>{{ item.item.code }}</td>
                                     <td>{{ item.item.name }}</td>
-                                    <td>{{ item.item.get_measurement }}</td>
-                                    <td>{{ item.times }}</td>
-                                    <td>{{ item.item.price.toFixed(2) }}</td>
-                                    <td>{{ (item.item.price * item.times).toFixed(2) }}</td>
+                                    <td class="text-center">{{ item.item.get_measurement }}</td>
+                                    <td class="text-center">{{ item.times }}</td>
+                                    <td class="text-end">{{ item.item.price.toFixed(2) }}</td>
+                                    <td class="text-end">{{ (item.item.price * item.times).toFixed(2) }}</td>
                                 </tr>
                             </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <td>
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-end">
+                                        <strong>{{paginatedBill.get_total_amount.toFixed(2)}}</strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
 
                         </table>
 
@@ -105,14 +120,13 @@
                     
                     <div class="col-md-4">
                         <span class="d-block fw-bold">Desglose de importes</span>
-                        <span class="d-block">Rev/Diag.: {{ paginatedBill.get_total_amount_revision }}</span>
-                        <span class="d-block">Partes: {{ paginatedBill.get_total_amount_prod }}</span>
-                        <span class="d-block">Conceptos: {{ paginatedBill.get_total_amount_concept }}</span>
-                        <span class="d-block">Reparación: {{ paginatedBill.get_total_amount_repair }}</span>
-                        <span class="d-block">Mtto: {{ paginatedBill.get_total_amount_maintenace }}</span>
-                        <span class="d-block">Instalación: {{ paginatedBill.get_total_amount_install }}</span>
-                        <span class="d-block">Montaje/Desm: {{ paginatedBill.get_total_amount_unmounting }}</span>
-                        <span class="d-block">Total: {{ paginatedBill.get_total_amount }}</span>
+                        <span class="d-block">Rev/Diag.: {{ paginatedBill.get_total_amount_revision.toFixed(2) }}</span>
+                        <span class="d-block">Partes: {{ paginatedBill.get_total_amount_prod.toFixed(2) }}</span>
+                        <span class="d-block">Conceptos: {{ paginatedBill.get_total_amount_concept.toFixed(2) }}</span>
+                        <span class="d-block">Reparación: {{ paginatedBill.get_total_amount_repair.toFixed(2) }}</span>
+                        <span class="d-block">Mtto: {{ paginatedBill.get_total_amount_maintenace.toFixed(2) }}</span>
+                        <span class="d-block">Instalación: {{ paginatedBill.get_total_amount_install.toFixed(2) }}</span>
+                        <span class="d-block">Montaje/Desm: {{ paginatedBill.get_total_amount_unmounting.toFixed(2) }}</span>
                         
                     </div>
                     
@@ -170,6 +184,7 @@ const bill = ref({
     get_orders: [],
     get_orders_folio: [],
     get_total_amount: '',
+    get_total_amount_revision: '',
     get_total_amount_prod: '',
     get_total_amount_concept: '',
     get_total_amount_repair: '',
@@ -196,6 +211,7 @@ const billToPaginate = ref({
     items: [],
     get_orders_folio: [],
     get_total_amount: '',
+    get_total_amount_revision: '',
     get_total_amount_prod: '',
     get_total_amount_concept: '',
     get_total_amount_repair: '',
@@ -238,8 +254,9 @@ const prepareBillToPaginate = (billToPaginate, bill) => {
     billToPaginate.value.provider = bill.value.provider
     billToPaginate.value.provider_signature_date = bill.value.provider_signature_date
     billToPaginate.value.customer_signature_date = bill.value.customer_signature_date
-    billToPaginate.value.get_total_amount = bill.value.get_total_amount
     billToPaginate.value.get_orders_folio = bill.value.get_orders_folio
+    billToPaginate.value.get_total_amount = bill.value.get_total_amount
+    billToPaginate.value.get_total_amount_revision = bill.value.get_total_amount_revision
     billToPaginate.value.get_total_amount_prod = bill.value.get_total_amount_prod
     billToPaginate.value.get_total_amount_concept = bill.value.get_total_amount_concept
     billToPaginate.value.get_total_amount_repair = bill.value.get_total_amount_repair
@@ -271,6 +288,7 @@ const paginate = (bill, itemsPerPage, start=0, pages=[]) => {
         items: bill.value.items.slice(start, end),
         get_orders_folio: bill.value.get_orders_folio,
         get_total_amount: bill.value.get_total_amount,
+        get_total_amount_revision: bill.value.get_total_amount_revision,
         get_total_amount_prod: bill.value.get_total_amount_prod,
         get_total_amount_concept: bill.value.get_total_amount_concept,
         get_total_amount_repair: bill.value.get_total_amount_repair,

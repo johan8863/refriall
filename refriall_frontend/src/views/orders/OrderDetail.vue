@@ -151,7 +151,7 @@
                                     <td></td>
                                     <td></td>
                                     <td class="text-end">
-                                        <strong>{{paginatedOrder.get_total_amount}}</strong>
+                                        <strong>{{paginatedOrder.get_total_amount.toFixed(2)}}</strong>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -163,16 +163,15 @@
                         <span class="d-block fw-bold">Desglose de importes</span>
                         <div class="row">
                             <div class="col-md-6">
-                                <span class="d-block">Rev/Diag.: {{ paginatedOrder.get_total_amount_revision }}</span>
-                                <span class="d-block">Partes: {{ paginatedOrder.get_total_amount_prod }}</span>
-                                <span class="d-block">Conceptos: {{ paginatedOrder.get_total_amount_concept }}</span>
-                                <span class="d-block">Reparación: {{ paginatedOrder.get_total_amount_repair }}</span>
+                                <span class="d-block">Rev/Diag.: {{ paginatedOrder.get_total_amount_revision.toFixed(2) }}</span>
+                                <span class="d-block">Partes: {{ paginatedOrder.get_total_amount_prod.toFixed(2) }}</span>
+                                <span class="d-block">Conceptos: {{ paginatedOrder.get_total_amount_concept.toFixed(2) }}</span>
+                                <span class="d-block">Reparación: {{ paginatedOrder.get_total_amount_repair.toFixed(2) }}</span>
                             </div>
                             <div class="col-md-6">
-                                <span class="d-block">Mtto: {{ paginatedOrder.get_total_amount_maintenace }}</span>
-                                <span class="d-block">Instalación: {{ paginatedOrder.get_total_amount_install }}</span>
-                                <span class="d-block">Montaje/Desm: {{ paginatedOrder.get_total_amount_unmounting }}</span>
-                                <span class="d-block">Total: {{ paginatedOrder.get_total_amount }}</span>
+                                <span class="d-block">Mtto: {{ paginatedOrder.get_total_amount_maintenace.toFixed(2) }}</span>
+                                <span class="d-block">Instalación: {{ paginatedOrder.get_total_amount_install.toFixed(2) }}</span>
+                                <span class="d-block">Montaje/Desm: {{ paginatedOrder.get_total_amount_unmounting.toFixed(2) }}</span>
                             </div>
                         </div>
                         
