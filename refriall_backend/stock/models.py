@@ -37,7 +37,7 @@ class Item(models.Model):
         null=True,
         blank=True
     )
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.FloatField('Precio')
 
 
     class Meta:
