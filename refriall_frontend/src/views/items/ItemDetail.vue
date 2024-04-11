@@ -39,7 +39,7 @@
             <p v-if="item.measurement === 'kg'">U/M: Kilogramos</p>
             <p v-if="item.measurement === 'lts'">U/M: Litros</p>
 
-            <p>Precio: {{ item.price }}</p>
+            <p>Precio: {{ item.price.toFixed(2) }}</p>
         </div>
 
     </div> <!-- end row -->

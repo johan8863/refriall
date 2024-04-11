@@ -34,7 +34,7 @@
                                             <RouterLink :to="{name: 'items_detail', params: {id: item.id}}">{{ item.name }}</RouterLink>
                                         </td>
                                         <td>
-                                            {{ item.price }}
+                                            {{ item.price.toFixed(2) }}
                                         </td>
                                     </tr>
                                 </tbody>
