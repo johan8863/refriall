@@ -15,23 +15,35 @@
         <!-- main content -->
         <div class="col-md-10">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-8">
 
                     <div v-if="items.length > 0">
 
-                        <div id="tableContainer" style="height: 460px;">
+                        <div>
 
                             <table class="table">
                                 <thead>
                                     <tr>
+                                        <th scope="col">Código</th>
                                         <th scope="col">Nombre</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col">U/M</th>
                                         <th scope="col">Precio</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="item in items" :key="item.id">
                                         <td>
-                                            <RouterLink :to="{name: 'items_detail', params: {id: item.id}}">{{ item.name }}</RouterLink>
+                                            <RouterLink :to="{name: 'items_detail', params: {id: item.id}}">{{ item.code }}</RouterLink>
+                                        </td>
+                                        <td>
+                                            {{ item.name }}
+                                        </td>
+                                        <td>
+                                            {{ item.item_type }}
+                                        </td>
+                                        <td>
+                                            {{ item.measurement }}
                                         </td>
                                         <td>
                                             {{ item.price.toFixed(2) }}
