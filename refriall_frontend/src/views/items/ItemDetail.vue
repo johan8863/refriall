@@ -26,19 +26,8 @@
             <h3>Artículo: <small>{{ item.name }}</small></h3>
             <hr>
             <p>Código: {{ item.code }}</p>
-
-            <p v-if="item.item_type === 'prod'">Tipo: Producto</p>
-            <p v-if="item.item_type === 'concept'">Tipo: Concepto</p>
-            <p v-if="item.item_type === 'repair'">Tipo: Reparación</p>
-            <p v-if="item.item_type === 'maintenace'">Tipo: Mtto</p>
-            <p v-if="item.item_type === 'install'">Tipo: Instal/Mont</p>
-            <p v-if="item.item_type === 'unmounting'">Tipo: Desmontaje</p>
-
-            <p v-if="item.measurement === 'u'">U/M: Uno</p>
-            <p v-if="item.measurement === 'm'">U/M: Metros</p>
-            <p v-if="item.measurement === 'kg'">U/M: Kilogramos</p>
-            <p v-if="item.measurement === 'lts'">U/M: Litros</p>
-
+            <p>Código: {{ item.get_item_type }}</p>
+            <p>Código: {{ item.get_measurement }}</p>
             <p>Precio: {{ item.price.toFixed(2) }}</p>
         </div>
 
@@ -56,8 +45,8 @@ const route = useRoute();
 const item = ref({
     code: '',
     name: '',
-    item_type: '',
-    measurement: '',
+    get_item_type: '',
+    get_measurement: '',
     price: 0,
 });
 

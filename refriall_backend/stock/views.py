@@ -1,12 +1,16 @@
 """stock views"""
 
+# django
+from django.http import Http404
+
 # third
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
 
 # local
 from .models import Item, Kit
-from .serializers import ItemSerializer, KitSerializer
+from .serializers import ItemSerializer, ItemSerializerForReadOnly, KitSerializer
 from . import paginators
 
 
@@ -19,8 +23,21 @@ class ItemListPagination(APIView, paginators.ItemPagination):
     def get(self, request, format=None):
         items = Item.objects.all()
         results = self.paginate_queryset(items, request, view=self)
-        serializer = ItemSerializer(results, many=True)
+        serializer = ItemSerializerForReadOnly(results, many=True)
         return self.get_paginated_response(serializer.data)
+
+
+class ItemDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Item.objects.get(pk=pk)
+        except Item.DoesNotExist:
+            raise Http404
+        
+    def get(self, request, pk, format=None):
+        item = self.get_object(pk=pk)
+        serializer = ItemSerializerForReadOnly(item)
+        return Response(serializer.data)
 
 
 class KitViewSet(viewsets.ModelViewSet):

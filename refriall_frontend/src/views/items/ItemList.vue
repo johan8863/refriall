@@ -40,10 +40,10 @@
                                             {{ item.name }}
                                         </td>
                                         <td>
-                                            {{ item.item_type }}
+                                            {{ item.get_item_type }}
                                         </td>
                                         <td>
-                                            {{ item.measurement }}
+                                            {{ item.get_measurement }}
                                         </td>
                                         <td>
                                             {{ item.price.toFixed(2) }}

@@ -2,6 +2,7 @@ import apiBase from "./base.service";
 
 const urlItem = '/stock/items'
 const urlItemListPagination = '/stock/items/list/pagination'
+const urlItemDetail = '/stock/items/detail'
 
 export const listItem = async (currentPage=null) => {
     if (currentPage) {
@@ -12,7 +13,7 @@ export const listItem = async (currentPage=null) => {
 };
 
 export const detailItem = async (id) => {
-    return await apiBase.get(`${urlItem}/${id}/`);
+    return await apiBase.get(`${urlItemDetail}/${id}/`);
 };
 
 export const postItem = async (item) => {
