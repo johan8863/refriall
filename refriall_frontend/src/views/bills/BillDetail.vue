@@ -145,7 +145,7 @@
                         <span class="d-block fw-bold">Cliente</span>
                         <span class="d-block">Cargo: {{ paginatedBill.customer_charge }}</span>
                         <span class="d-block">Nombre: </span>
-                        <span class="d-block">No. CI: {{ paginatedBill.provider.personal_id }}</span>
+                        <span class="d-block">No. CI: {{ paginatedBill.customer_personal_id }}</span>
                         <span class="d-block">Firma: </span>
                         <span v-if="paginatedBill.customer_signature_date" class="d-block">{{ paginatedBill.customer_signature_date }}</span>
                         <span v-else class="d-block">Fecha: </span>
