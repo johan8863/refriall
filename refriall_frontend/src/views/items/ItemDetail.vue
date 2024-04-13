@@ -58,7 +58,7 @@ const item = ref({
     name: '',
     item_type: '',
     measurement: '',
-    price: '',
+    price: 0,
 });
 
 onMounted(async () => {
