@@ -12,6 +12,10 @@ export const listItem = async (currentPage=null) => {
     }
 };
 
+export const getItem = async(id) => {
+    return await apiBase.get(`${urlItem}/${id}/`)
+}
+
 export const detailItem = async (id) => {
     return await apiBase.get(`${urlItemDetail}/${id}/`);
 };

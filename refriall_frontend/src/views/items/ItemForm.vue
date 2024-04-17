@@ -171,7 +171,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, minValue, helpers } from "@vuelidate/validators";
 
 // local
-import { postItem, putItem, detailItem } from "../../services/item.service";
+import { postItem, putItem, getItem } from "../../services/item.service";
 
 // item object to be created or updated
 const item = ref({
@@ -179,7 +179,7 @@ const item = ref({
     name: '',
     item_type: '',
     measurement: '',
-    price: '',
+    price: 0,
 });
 
 // item errors messages object to catch
@@ -223,7 +223,7 @@ const v$ = useVuelidate(rules, item);
 onMounted(async () => {
     const id = route.params.id;
     if (id) {
-        const { data } = await detailItem(id);
+        const { data } = await getItem(id);
         item.value = data;
     }
 });
