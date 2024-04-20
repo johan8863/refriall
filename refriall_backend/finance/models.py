@@ -276,7 +276,7 @@ class Order(models.Model):
 
 class ItemTime(models.Model):
     """Class to register how many items go in an order"""
-    item_order = models.ForeignKey(ItemOrder, on_delete=models.PROTECT, verbose_name="Artículo", null=True, blank=True)
+    item = models.ForeignKey(ItemOrder, on_delete=models.PROTECT, verbose_name="Artículo", null=True, blank=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
     times = models.FloatField('Cantidad', default=1)
 
