@@ -16,7 +16,7 @@ class ItemTimeSerializerForReadOnly(serializers.ModelSerializer):
         model = ItemTime
         fields = [
             "id",
-            "item",
+            "item_order",
             "times",
         ]
 
