@@ -493,6 +493,7 @@
                     v-model="order.provider_signature_date"
                     id="provider_signature_date"
                     class="form-control"
+                    :disabled="order.id"
                     @blur="v$.provider_signature_date.$touch">
 
                   <!-- frontend errors -->

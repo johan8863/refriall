@@ -79,6 +79,7 @@
                       name="provider_signature_date"
                       id="provider_signature_date"
                       class="form-control"
+                      :disabled="bill.id"
                       v-model.trim="bill.provider_signature_date">
                       <!-- backend errors -->
                       <span v-if="billBackendErrors.provider_signature_date">

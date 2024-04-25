@@ -20,7 +20,7 @@ class Bill(models.Model):
         verbose_name='Prestador'
     )
     provider_signature_date = models.DateField('Firma del proveedor')
-    customer_signature_date = models.DateField('Firma del cliente')
+    customer_signature_date = models.DateField('Firma del cliente', null=True)
 
     # General but not required information
     check_number = models.CharField('Nro. de Cheque', max_length=35, null=True, blank=True)
@@ -170,7 +170,7 @@ class Order(models.Model):
         null=True,
         verbose_name='Prestador'
     )
-    provider_signature_date = models.DateField('Firma del proveedor', null=True)
+    provider_signature_date = models.DateField('Firma del proveedor')
     customer_signature_date = models.DateField('Firma del cliente', null=True)
 
     # General but not required information
