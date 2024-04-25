@@ -170,7 +170,7 @@ class Order(models.Model):
         null=True,
         verbose_name='Prestador'
     )
-    provider_signature_date = models.DateField('Firma del proveedor', null=True)
+    provider_signature_date = models.DateField('Firma del proveedor')
     customer_signature_date = models.DateField('Firma del cliente', null=True)
 
     # General but not required information
@@ -184,7 +184,7 @@ class Order(models.Model):
     aproved_by = models.CharField('Aprobado por', max_length=35, null=True, blank=True)
 
     class Meta:
-        ordering = ['provider_signature_date']
+        # ordering = ['provider_signature_date']
         verbose_name = 'Orden de Servicio'
         verbose_name_plural = 'Órdenes de Servicio'
     
