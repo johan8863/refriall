@@ -5,7 +5,7 @@ from django.db import models
 
 # local
 from hr.models import Customer, CustomerDependency, Provider
-from stock.models import ItemOrder, Kit
+from stock.models import Item, Kit
 
 
 class Bill(models.Model):
@@ -158,7 +158,7 @@ class Order(models.Model):
     kit_serial = models.CharField('No. de serie o Inv.', max_length=20)
     job_description = models.TextField('Descripción del trabajo realizado', blank=True, null=True)
     items = models.ManyToManyField(
-        ItemOrder,
+        Item,
         through='ItemTime',
         verbose_name='Artículo o Servicio',
         editable=False,
@@ -171,7 +171,7 @@ class Order(models.Model):
         verbose_name='Prestador'
     )
     provider_signature_date = models.DateField('Firma del proveedor')
-    customer_signature_date = models.DateField('Firma del cliente', null=True)
+    customer_signature_date = models.DateField('Firma del cliente', blank=True, null=True)
 
     # General but not required information
     check_number = models.CharField('Nro. de Cheque', max_length=35, null=True, blank=True)
@@ -276,7 +276,7 @@ class Order(models.Model):
 
 class ItemTime(models.Model):
     """Class to register how many items go in an order"""
-    item = models.ForeignKey(ItemOrder, on_delete=models.PROTECT, verbose_name="Artículo", null=True, blank=True)
+    item = models.ForeignKey(Item, on_delete=models.PROTECT, verbose_name="Artículo", null=True, blank=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
     times = models.FloatField('Cantidad', default=1)
 
