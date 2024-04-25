@@ -477,6 +477,18 @@ onMounted(async () => {
 const createBill = async (bill) => {
     try {
         if (await v$.value.$validate) {
+
+            if (bill.customer_signature_date === "") {
+                try {
+                    const {customer_signature_date, ...rest} = bill;
+                    const { data } = await postBill(rest);
+                    router.push({name: 'bills_detail', params: {id: data.id}})
+                } catch (error) {
+                    billBackendErrors.value = error.response.data
+                    console.log(billBackendErrors.value);
+                }
+            }
+
             const { data } = await postBill(bill);
             router.push({name: 'bills_detail', params: {id: data.id}})
         }
@@ -488,6 +500,18 @@ const createBill = async (bill) => {
 const updateBill = async (bill) => {
     try {
         if (await v$.value.$validate) {
+
+            if (bill.customer_signature_date === "") {
+                try {
+                    const {customer_signature_date, ...rest} = bill;
+                    const { data } = await putBill(rest);
+                    router.push({name: 'bills_detail', params: {id: data.id}})
+                } catch (error) {
+                    billBackendErrors.value = error.response.data
+                    console.log(billBackendErrors.value);
+                }
+            }
+
             const { data } = await putBill(bill);
             router.push({name: 'bills_detail', params: {id: data.id}})
         }
