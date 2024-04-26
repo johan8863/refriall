@@ -519,8 +519,7 @@
                     type="date"
                     v-model="order.customer_signature_date"
                     id="customer_signature_date"
-                    class="form-control"
-                    @blur="v$.customer_signature_date.$touch">
+                    class="form-control">
 
                   <!-- backend errors -->
                   <span v-if="orderBackendErrors.customer_signature_date">
@@ -744,6 +743,7 @@ const createOrder = async (order) => {
         if (order.customer_signature_date === "") {
           try {
             const {customer_signature_date, ...rest} = order;
+            console.log(rest);
             const { data } = await postOrder(rest);
             router.push({name: 'orders_detail', params: {id: data.id}});
           } catch (error) {

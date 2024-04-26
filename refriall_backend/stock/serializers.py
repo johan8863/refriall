@@ -4,7 +4,7 @@
 from rest_framework import serializers
 
 # local
-from .models import Item, Kit
+from .models import Item, ItemOrder, Kit
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -39,6 +39,19 @@ class ItemSerializer(serializers.ModelSerializer):
 class ItemSerializerForReadOnly(serializers.ModelSerializer):
     class Meta:
         model = Item
+        fields = [
+            "id",
+            "code",
+            "name",
+            "get_item_type",
+            "get_measurement",
+            "price",
+        ]
+
+
+class ItemOrderSerializerDetail(serializers.ModelSerializer):
+    class Meta:
+        model = ItemOrder
         fields = [
             "id",
             "code",

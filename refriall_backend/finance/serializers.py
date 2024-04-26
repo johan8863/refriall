@@ -4,13 +4,26 @@
 from rest_framework import serializers
 
 # local
-from .models import Bill, Order, ItemTime
+from .models import Bill, Order, ItemTime, ItemTimeOrder
 from hr.serializers import CustomerSerializer, CustomerDependencySerializer, ProviderSerializer
-from stock.serializers import ItemSerializer, ItemSerializerForReadOnly, KitSerializer
+from stock.serializers import ItemSerializer, ItemOrderSerializerDetail, ItemSerializerForReadOnly, KitSerializer
+from stock.models import ItemOrder
 
 
 class ItemTimeSerializerForReadOnly(serializers.ModelSerializer):
     item = ItemSerializerForReadOnly()
+
+    class Meta:
+        model = ItemTime
+        fields = [
+            "id",
+            "item",
+            "times",
+        ]
+
+
+class ItemTimeOrderSerializerDetail(serializers.ModelSerializer):
+    item = ItemOrderSerializerDetail()
 
     class Meta:
         model = ItemTime
@@ -75,6 +88,18 @@ class ItemTimeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItemTime
+        fields = [
+            "id",
+            "item",
+            "order",
+            "times",
+        ]
+
+
+class ItemOrderTimeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ItemTimeOrder
         fields = [
             "id",
             "item",
@@ -154,6 +179,16 @@ class OrderSerializer(serializers.ModelSerializer):
         # create the Order object from the rest of validated_data
         order = Order.objects.create(**validated_data)
         for itemtime in itemtime_set:
+            item_object = itemtime['item']
+            item_order = ItemOrder.objects.create(
+                code = item_object.code,
+                name = item_object.name,
+                item_type = item_object.item_type,
+                measurement = item_object.measurement,
+                price = item_object.price,
+            )
+            times = itemtime['times']
+            ItemTimeOrder.objects.create(order=order, item=item_order, times=times)
             # create the relationship ItemTime - Order per itemtime "item" in the list
             ItemTime.objects.create(order=order, **itemtime)
         return order

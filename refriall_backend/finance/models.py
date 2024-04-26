@@ -1,11 +1,12 @@
 """finance models"""
 
 # django
+from typing import Any
 from django.db import models
 
 # local
 from hr.models import Customer, CustomerDependency, Provider
-from stock.models import Item, Kit
+from stock.models import Item, ItemOrder, Kit
 
 
 class Bill(models.Model):
@@ -164,6 +165,13 @@ class Order(models.Model):
         editable=False,
         blank=True
     )
+    items_order = models.ManyToManyField(
+        ItemOrder,
+        through='ItemTimeOrder',
+        verbose_name='Artículo o Servicio',
+        editable=False,
+        blank=True
+    )
     provider = models.ForeignKey(
         Provider,
         on_delete=models.PROTECT,
@@ -195,6 +203,9 @@ class Order(models.Model):
         else:
             return self.customer_dependency.name
     
+    def delete(self, *args, **kwargs):
+        self.items_order.all().delete()
+        super().delete(*args, **kwargs)
     
     @property
     def get_total_amount(self):
@@ -273,7 +284,6 @@ class Order(models.Model):
         return self.get_support_display()
     
 
-
 class ItemTime(models.Model):
     """Class to register how many items go in an order"""
     item = models.ForeignKey(Item, on_delete=models.PROTECT, verbose_name="Artículo", null=True, blank=True)
@@ -291,3 +301,21 @@ class ItemTime(models.Model):
     def get_sub_total(self):
         """Multiplies the price of the item to the times attribute"""
         return self.item.price * self.times
+
+
+class ItemTimeOrder(models.Model):
+    """
+    Class to register how many items go in an order, it'll be related with the ItemOrder model
+    to isolate the price updating
+    """
+    item = models.ForeignKey(ItemOrder, on_delete=models.CASCADE, verbose_name="Artículo", null=True, blank=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
+    times = models.FloatField('Cantidad', default=1)
+
+    class Meta:
+        verbose_name = 'Cantidad de Artículo'
+        verbose_name_plural = 'Cantidades de Artículo'
+    
+    def __str__(self):
+        """Returns  the string object representation"""
+        return f'{self.item.name} - {self.order.customer.name}'
