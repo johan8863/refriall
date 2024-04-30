@@ -59,7 +59,17 @@
                       type="text"
                       class="form-control"
                       id="folio"
-                      v-model.trim="bill.folio">
+                      v-model.trim="bill.folio"
+                      @blur="v$.folio.$touch">
+
+                    <!-- frontend errors -->
+                    <span v-if="v$.folio.$errors">
+                        <p
+                        class="form-text text-danger"
+                        v-for="error in v$.folio.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                       <!-- backend errors -->
                       <span v-if="billBackendErrors.folio">
                         <p
@@ -80,7 +90,17 @@
                       id="provider_signature_date"
                       class="form-control"
                       :disabled="bill.id"
-                      v-model.trim="bill.provider_signature_date">
+                      v-model.trim="bill.provider_signature_date"
+                      @blur="v$.provider_signature_date.$touch">
+
+                    <!-- frontend errors -->
+                    <span v-if="v$.provider_signature_date.$errors">
+                        <p
+                        class="form-text text-danger"
+                        v-for="error in v$.provider_signature_date.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                       <!-- backend errors -->
                       <span v-if="billBackendErrors.provider_signature_date">
                         <p
@@ -100,7 +120,17 @@
                       name="customer_signature_date"
                       id="customer_signature_date"
                       class="form-control"
-                      v-model.trim="bill.customer_signature_date">
+                      v-model.trim="bill.customer_signature_date"
+                      @blur="v$.customer_signature_date.$touch">
+
+                    <!-- frontend errors -->
+                    <span v-if="v$.customer_signature_date.$errors">
+                        <p
+                        class="form-text text-danger"
+                        v-for="error in v$.customer_signature_date.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    </span>
+
                       <!-- backend errors -->
                       <span v-if="billBackendErrors.customer_signature_date">
                         <p
@@ -446,7 +476,13 @@ const rules = {
     },
     folio: {
         required: helpers.withMessage('El folio es requerido', required)
-    }
+    },
+    provider_signature_date: {
+        required: helpers.withMessage('La firma del prestador es requerida.', required)
+    },
+    customer_signature_date: {
+        required: helpers.withMessage('La firma del cliente es requerida.', required)
+    },
 }
 
 // vuelidate object
@@ -476,47 +512,25 @@ onMounted(async () => {
 
 const createBill = async (bill) => {
     try {
-        if (await v$.value.$validate) {
-
-            if (bill.customer_signature_date === "") {
-                try {
-                    const {customer_signature_date, ...rest} = bill;
-                    const { data } = await postBill(rest);
-                    router.push({name: 'bills_detail', params: {id: data.id}})
-                } catch (error) {
-                    billBackendErrors.value = error.response.data
-                    console.log(billBackendErrors.value);
-                }
-            }
-
+        if (await v$.value.$validate()) {
             const { data } = await postBill(bill);
             router.push({name: 'bills_detail', params: {id: data.id}})
         }
     } catch (error) {
         billBackendErrors.value = error.response.data
+        console.log(billBackendErrors.value);
     }
 }
 
 const updateBill = async (bill) => {
     try {
-        if (await v$.value.$validate) {
-
-            if (bill.customer_signature_date === "") {
-                try {
-                    const {customer_signature_date, ...rest} = bill;
-                    const { data } = await putBill(rest);
-                    router.push({name: 'bills_detail', params: {id: data.id}})
-                } catch (error) {
-                    billBackendErrors.value = error.response.data
-                    console.log(billBackendErrors.value);
-                }
-            }
-
+        if (await v$.value.$validate()) {
             const { data } = await putBill(bill);
             router.push({name: 'bills_detail', params: {id: data.id}})
         }
     } catch (error) {
         billBackendErrors.value = error.response.data
+        console.log(billBackendErrors.value);
     }
 }
 

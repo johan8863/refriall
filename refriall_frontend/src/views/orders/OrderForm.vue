@@ -497,12 +497,12 @@
                     @blur="v$.provider_signature_date.$touch">
 
                   <!-- frontend errors -->
-                    <span v-if="v$.provider_signature_date.$errors">
-                      <p
-                        class="form-text text-danger"
-                        v-for="error in v$.provider_signature_date.$errors"
-                        :key="error.$uid">{{ error.$message }}</p>
-                    </span>
+                  <span v-if="v$.provider_signature_date.$errors">
+                    <p
+                      class="form-text text-danger"
+                      v-for="error in v$.provider_signature_date.$errors"
+                      :key="error.$uid">{{ error.$message }}</p>
+                  </span>
 
                   <!-- backend errors -->
                   <span v-if="orderBackendErrors.provider_signature_date">
@@ -520,6 +520,14 @@
                     v-model="order.customer_signature_date"
                     id="customer_signature_date"
                     class="form-control">
+                  
+                  <!-- frontend errors -->
+                  <span v-if="v$.customer_signature_date.$errors">
+                    <p
+                      class="form-text text-danger"
+                      v-for="error in v$.customer_signature_date.$errors"
+                      :key="error.$uid">{{ error.$message }}</p>
+                  </span>
 
                   <!-- backend errors -->
                   <span v-if="orderBackendErrors.customer_signature_date">
@@ -684,8 +692,11 @@ const rules = {
     required: helpers.withMessage('La serie es requerida.', required)
   },
   provider_signature_date: {
-    required: helpers.withMessage('La firma del proveedor es requerida.', required)
-  }
+    required: helpers.withMessage('La firma del prestador es requerida.', required)
+  },
+  customer_signature_date: {
+    required: helpers.withMessage('La firma del cliente es requerida.', required)
+  },
 };
 
 // vuelidate object
@@ -739,18 +750,6 @@ const createOrder = async (order) => {
     try {
       if (await v$.value.$validate()) {
         order.itemtime_set = order.itemtime_set.filter( (x) => x.item > 0)
-
-        if (order.customer_signature_date === "") {
-          try {
-            const {customer_signature_date, ...rest} = order;
-            console.log(rest);
-            const { data } = await postOrder(rest);
-            router.push({name: 'orders_detail', params: {id: data.id}});
-          } catch (error) {
-            orderBackendErrors.value = error.response.data
-            console.log(orderBackendErrors.value);
-          }
-        }
         const { data } = await postOrder(order);
         router.push({name: 'orders_detail', params: {id: data.id}});
       }
@@ -764,18 +763,6 @@ const updateOrder = async (order) => {
   try {
     if (await v$.value.$validate()) {
       order.itemtime_set = order.itemtime_set.filter( (x) => x.item > 0)
-
-      if (order.customer_signature_date === "") {
-        try {
-          const {customer_signature_date, ...rest} = order;
-          const { data } = await putOrder(rest)
-          router.push({name: 'orders_detail', params: {id: data.id}});
-        } catch (error) {
-          orderBackendErrors.value = error.response.data
-          console.log(orderBackendErrors.value);
-        }
-      }
-
       const { data } = await putOrder(order)
       router.push({name: 'orders_detail', params: {id: data.id}})
     }
