@@ -83,7 +83,7 @@
 
                 <!-- provider_signature_date control -->
                 <div class="col-md-3 mb-2">
-                    <label for="provider_signature_date">Firma del Proveedor</label>
+                    <label for="provider_signature_date">Firma del Prestador</label>
                     <input
                       type="date"
                       name="provider_signature_date"
