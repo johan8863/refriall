@@ -36,6 +36,7 @@ class ItemTimeOrderSerializerDetail(serializers.ModelSerializer):
 
 class OrderSerializerForReadOnly(serializers.ModelSerializer):
     itemtime_set = ItemTimeSerializerForReadOnly(many=True)
+    itemtimeorder_set = ItemTimeSerializerForReadOnly(many=True)
     customer = CustomerSerializer()
     customer_dependency = CustomerDependencySerializer()
     kit = KitSerializer()
@@ -62,6 +63,7 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
             "kit_serial",
             "job_description",
             "itemtime_set",
+            "itemtimeorder_set",
             "provider",
             "provider_signature_date",
             "customer_signature_date",

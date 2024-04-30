@@ -131,7 +131,7 @@
                             </thead>
     
                             <tbody>
-                                <tr v-for="itemtime in paginatedOrder.itemtime_set" :key="itemtime.id">
+                                <tr v-for="itemtime in paginatedOrder.itemtimeorder_set" :key="itemtime.id">
                                     <td>{{ itemtime.item.code }}</td>
                                     <td>{{ itemtime.item.name }}</td>
                                     <td class="text-center">{{ itemtime.item.get_measurement }}</td>
@@ -233,6 +233,7 @@ const order = ref({
     kit_serial: '',
     job_description: '',
     itemtime_set: [],
+    itemtimeorder_set: [],
     provider: 1,
     provider_signature_date: '',
     customer_signature_date: '',
@@ -264,7 +265,7 @@ onMounted(async () => {
 });
 
 const paginate = (order, itemsPerPage, start=0, pages=[]) => {
-    if (start >= order.value.itemtime_set.length) {
+    if (start >= order.value.itemtimeorder_set.length) {
         return pages;
     }
     const end = start + itemsPerPage;
@@ -284,7 +285,7 @@ const paginate = (order, itemsPerPage, start=0, pages=[]) => {
         kit_model: order.value.kit_model,
         kit_serial: order.value.kit_serial,
         job_description: order.value.job_description,
-        itemtime_set: order.value.itemtime_set.slice(start, end),
+        itemtimeorder_set: order.value.itemtimeorder_set.slice(start, end),
         provider: order.value.provider,
         provider_signature_date: order.value.provider_signature_date,
         customer_signature_date: order.value.customer_signature_date,

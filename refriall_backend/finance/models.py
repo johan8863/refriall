@@ -210,7 +210,7 @@ class Order(models.Model):
     @property
     def get_total_amount(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
-        total_amount = self.itemtime_set.all().aggregate(
+        total_amount = self.itemtimeorder_set.all().aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
@@ -219,7 +219,7 @@ class Order(models.Model):
     @property
     def get_total_amount_revision(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
-        total_amount_revision = self.itemtime_set.filter(item__item_type='revision').aggregate(
+        total_amount_revision = self.itemtimeorder_set.filter(item__item_type='revision').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
@@ -228,7 +228,7 @@ class Order(models.Model):
     @property
     def get_total_amount_prod(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
-        total_amount_prod = self.itemtime_set.filter(item__item_type='prod').aggregate(
+        total_amount_prod = self.itemtimeorder_set.filter(item__item_type='prod').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
@@ -237,7 +237,7 @@ class Order(models.Model):
     @property
     def get_total_amount_concept(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
-        total_amount_concept = self.itemtime_set.filter(item__item_type='concept').aggregate(
+        total_amount_concept = self.itemtimeorder_set.filter(item__item_type='concept').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
@@ -246,7 +246,7 @@ class Order(models.Model):
     @property
     def get_total_amount_repair(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
-        total_amount_repair = self.itemtime_set.filter(item__item_type='repair').aggregate(
+        total_amount_repair = self.itemtimeorder_set.filter(item__item_type='repair').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
@@ -255,7 +255,7 @@ class Order(models.Model):
     @property
     def get_total_amount_maintenace(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
-        total_amount_maintenace = self.itemtime_set.filter(item__item_type='maintenace').aggregate(
+        total_amount_maintenace = self.itemtimeorder_set.filter(item__item_type='maintenace').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
@@ -264,7 +264,7 @@ class Order(models.Model):
     @property
     def get_total_amount_install(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
-        total_amount_install = self.itemtime_set.filter(item__item_type='install').aggregate(
+        total_amount_install = self.itemtimeorder_set.filter(item__item_type='install').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
@@ -273,7 +273,7 @@ class Order(models.Model):
     @property
     def get_total_amount_unmounting(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
-        total_amount_unmounting = self.itemtime_set.filter(item__item_type='unmounting').aggregate(
+        total_amount_unmounting = self.itemtimeorder_set.filter(item__item_type='unmounting').aggregate(
             total=models.Sum(models.F('item__price') * models.F('times'))
         ).get('total')
 
