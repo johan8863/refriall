@@ -156,7 +156,7 @@ class Order(models.Model):
     kit = models.ForeignKey(Kit, on_delete=models.PROTECT, null=True, verbose_name="Equipo")
     kit_brand = models.CharField('Marca', max_length=20)
     kit_model = models.CharField('Modelo', max_length=20)
-    kit_serial = models.CharField('No. de serie o Inv.', max_length=20)
+    kit_serial = models.CharField('No. de serie o Inv.', max_length=30)
     job_description = models.TextField('Descripción del trabajo realizado', blank=True, null=True)
     items = models.ManyToManyField(
         Item,
