@@ -50,8 +50,8 @@
                     <div v-if="paginatedBill.customer" class="col-md-9 border-bottom border-2 mb-1">
                         <span class="d-block">{{ paginatedBill.customer.name }}</span>
                         <span class="d-block">{{ paginatedBill.customer.address }}</span>
-                        <span class="d-block">{{ paginatedBill.customer.province }}</span>
-                        <span class="d-block">{{ paginatedBill.customer.township }}</span>
+                        <span class="d-block">{{ paginatedBill.customer.bank_account_header }}</span>
+                        <span class="d-block">{{ paginatedBill.customer.bank_account }}</span>
                     </div>
 
                     <div v-if="paginatedBill.customer_dependency" class="col-md-9 border-bottom border-2 mb-1">
