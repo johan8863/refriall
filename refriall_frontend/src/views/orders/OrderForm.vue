@@ -713,7 +713,7 @@ const deleteItem = (index) => {
   order.value.itemtime_set.splice(index, 1)
 }
 
-for (let index = 0; index < 5; index++) {
+for (let index = 0; index < 12; index++) {
  createItemTime()
   
 }
