@@ -82,3 +82,11 @@ class CustomerDependency(models.Model):
     def __str__(self):
         """Returns  the string object representation"""
         return self.name
+    
+    @property
+    def get_bank_account_header(self):
+        return self.customer.bank_account_header
+    
+    @property
+    def get_bank_account(self):
+        return self.customer.bank_account

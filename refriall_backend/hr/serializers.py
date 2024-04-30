@@ -34,7 +34,9 @@ class CustomerDependencySerializer(serializers.ModelSerializer):
             "name",
             "address",
             "province",
-            "township"
+            "township",
+            "get_bank_account_header",
+            "get_bank_account",
         ]
 
 

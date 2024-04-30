@@ -57,8 +57,8 @@
                     <div v-if="paginatedOrder.customer_dependency" class="col-md-9 border-bottom border-2 mb-1">
                         <span class="d-block">{{ paginatedOrder.customer_dependency.name }}</span>
                         <span class="d-block">{{ paginatedOrder.customer_dependency.address }}</span>
-                        <span class="d-block">{{ paginatedOrder.customer_dependency.province }}</span>
-                        <span class="d-block">{{ paginatedOrder.customer_dependency.township }}</span>
+                        <span class="d-block">{{ paginatedOrder.customer_dependency.get_bank_account_header }}</span>
+                        <span class="d-block">{{ paginatedOrder.customer_dependency.get_bank_account }}</span>
                     </div>
 
                     <div class="col-md-3 border-bottom border-2 mb-1">
