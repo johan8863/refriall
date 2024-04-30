@@ -310,8 +310,11 @@ const paginate = (order, itemsPerPage, start=0, pages=[]) => {
 
 function pdf() {
     const element = document.getElementById('order-to-pdf');
+    const output_name = (order.value.customer_dependency) ? 
+                            `orden_de_servicio_${order.value.folio}_${order.value.customer_dependency.name}` : 
+                            `orden_de_servicio_${order.value.folio}_${order.value.customer.name}`;
     const opt = {
-        filename: 'orden_de_servicio'
+        filename: output_name
     }
 
     html2pdf().from(element).set(opt).save()

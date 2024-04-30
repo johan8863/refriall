@@ -310,7 +310,7 @@ const paginate = (bill, itemsPerPage, start=0, pages=[]) => {
 function pdf() {
     const element = document.getElementById('bill-to-pdf');
     const opt = {
-        filename: 'factura'
+        filename: `factura_${bill.value.folio}_${bill.value.customer.name}`
     }
 
     html2pdf().from(element).set(opt).save()
