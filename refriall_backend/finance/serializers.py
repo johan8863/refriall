@@ -112,6 +112,7 @@ class ItemOrderTimeSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     itemtime_set = ItemTimeSerializer(many=True)
+    itemtimeorder_set = ItemTimeSerializerForReadOnly(many=True)
 
     class Meta:
         model = Order
@@ -134,6 +135,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "kit_serial",
             "job_description",
             "itemtime_set",
+            "itemtimeorder_set",
             "provider",
             "provider_signature_date",
             "customer_signature_date",
@@ -229,9 +231,20 @@ class OrderSerializer(serializers.ModelSerializer):
         # itemtime updating
         new_itemtimes = validated_data.get('itemtime_set')
         instance.items.clear()
+        instance.items_order.clear()
 
         for itemtime in new_itemtimes:
+            item_object = itemtime['item']
+            item_order = ItemOrder.objects.create(
+                code = item_object.code,
+                name = item_object.name,
+                item_type = item_object.item_type,
+                measurement = item_object.measurement,
+                price = item_object.price,
+            )
+            times = itemtime['times']
             ItemTime.objects.create(order=instance, **itemtime)
+            ItemTimeOrder.objects.create(order=instance, item=item_order, times=times)
 
         instance.save()
         return instance
