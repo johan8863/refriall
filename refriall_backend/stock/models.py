@@ -80,7 +80,7 @@ class ItemOrder(models.Model):
         ('lts', 'Litros'),
     ]
 
-    code = models.CharField('Código', max_length=15, unique=True)
+    code = models.CharField('Código', max_length=15)
     name = models.CharField('Nombre', max_length=120)
     item_type = models.CharField('Tipo', max_length=11, choices=ITEM_TYPES)
     measurement = models.CharField(
