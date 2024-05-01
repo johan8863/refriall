@@ -112,7 +112,6 @@ class ItemOrderTimeSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     itemtime_set = ItemTimeSerializer(many=True)
-    itemtimeorder_set = ItemTimeSerializerForReadOnly(many=True)
 
     class Meta:
         model = Order
@@ -135,7 +134,6 @@ class OrderSerializer(serializers.ModelSerializer):
             "kit_serial",
             "job_description",
             "itemtime_set",
-            "itemtimeorder_set",
             "provider",
             "provider_signature_date",
             "customer_signature_date",
