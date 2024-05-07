@@ -159,7 +159,7 @@
     
                     </div>
     
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <span class="d-block fw-bold">Desglose de importes</span>
                         <div class="row">
                             <div class="col-md-6">
@@ -177,7 +177,7 @@
                         
                     </div>
                     
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <span class="d-block fw-bold">Prestador</span>
                         <span class="d-block">Licencia: {{ paginatedOrder.provider.license_number }}</span>
                         <span class="d-block">{{ paginatedOrder.provider.first_name }} {{ paginatedOrder.provider.last_name }}</span>
