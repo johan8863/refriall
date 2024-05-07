@@ -191,7 +191,7 @@
                         <span class="d-block fw-bold">Cliente</span>
                         <span class="d-block">Cargo: {{ paginatedOrder.customer_charge }}</span>
                         <span class="d-block">Nombre: </span>
-                        <span class="d-block">No. CI: {{ paginatedOrder.provider.personal_id }}</span>
+                        <span class="d-block">No. CI: </span>
                         <span class="d-block" v-if="paginatedOrder.customer_signature_date">Firma: {{ paginatedOrder.customer_signature_date }}</span>
                         <span v-else class="d-block">Fecha: </span>
                     </div>
