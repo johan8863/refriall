@@ -115,7 +115,7 @@
                         <p>{{ paginatedOrder.job_description }}</p>
                     </div>
                     
-                    <div class="col-md-12" style="height: 563px;">
+                    <div class="col-md-12" style="height: 550px;">
     
                         <table class="table table-sm">
     
@@ -182,9 +182,8 @@
                         <span class="d-block">Licencia: {{ paginatedOrder.provider.license_number }}</span>
                         <span class="d-block">{{ paginatedOrder.provider.first_name }} {{ paginatedOrder.provider.last_name }}</span>
                         <span class="d-block">No. CI: {{ paginatedOrder.provider.personal_id }}</span>
-                        <span class="d-block" v-if="paginatedOrder.provider_signature_date">Firma: {{ paginatedOrder.provider_signature_date }}</span>
-                        <span v-else class="d-block">Fecha: </span>
-    
+                        <span class="d-block">Firma: </span>
+                        <span class="d-block">Fecha: {{ paginatedOrder.provider_signature_date }}</span>
                     </div>
                     
                     <div class="col-md-3">
@@ -192,8 +191,8 @@
                         <span class="d-block">Cargo: {{ paginatedOrder.customer_charge }}</span>
                         <span class="d-block">Nombre: </span>
                         <span class="d-block">No. CI: </span>
-                        <span class="d-block" v-if="paginatedOrder.customer_signature_date">Firma: {{ paginatedOrder.customer_signature_date }}</span>
-                        <span v-else class="d-block">Fecha: </span>
+                        <span class="d-block">Firma: </span>
+                        <span class="d-block">Fecha: {{ paginatedOrder.customer_signature_date }}</span>
                     </div>
                     
                     <div v-if="index < paginatedOrders.length - 1" class="html2pdf__page-break"></div>
@@ -261,7 +260,7 @@ onMounted(async () => {
     const resp = await detailOrder(route.params.id);
     order.value = resp.data;
 
-    paginatedOrders.value = paginate(order, 15);
+    paginatedOrders.value = paginate(order, 14);
 });
 
 const paginate = (order, itemsPerPage, start=0, pages=[]) => {
