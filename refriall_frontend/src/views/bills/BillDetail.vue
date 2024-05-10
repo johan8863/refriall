@@ -249,7 +249,7 @@ const prepareBillToPaginate = (billToPaginate, bill) => {
     // fill the billToPaginate items attrs with all the items from
     // all the orders of the current bill
     for (const order of bill.value.get_orders) {
-        billToPaginate.value.items = billToPaginate.value.items.concat(order.itemtime_set)
+        billToPaginate.value.items = billToPaginate.value.items.concat(order.itemtimeorder_set)
     }
     
     billToPaginate.value.customer = bill.value.customer
