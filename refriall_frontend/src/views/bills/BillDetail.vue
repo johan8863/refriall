@@ -47,25 +47,29 @@
                           style="height: 100px;">
                     </div>
                     
-                    <div v-if="paginatedBill.customer" class="col-md-9 border-bottom border-2 mb-1">
+                    <div v-if="paginatedBill.customer" class="col-md-5 border-bottom border-2 mb-1">
+                        <span class="d-block fw-bold">Cliente</span>
                         <span class="d-block">{{ paginatedBill.customer.name }}</span>
                         <span class="d-block">{{ paginatedBill.customer.address }}</span>
                         <span class="d-block">{{ paginatedBill.customer.bank_account_header }}</span>
                         <span class="d-block">{{ paginatedBill.customer.bank_account }}</span>
                     </div>
 
-                    <div v-if="paginatedBill.customer_dependency" class="col-md-9 border-bottom border-2 mb-1">
-                        <span class="d-block">{{ paginatedBill.customer_dependency.name }}</span>
-                        <span class="d-block">{{ paginatedBill.customer_dependency.address }}</span>
-                        <span class="d-block">{{ paginatedBill.customer_dependency.get_bank_account_header }}</span>
-                        <span class="d-block">{{ paginatedBill.customer_dependency.get_bank_account }}</span>
+                    <div class="col-md-5 border-bottom border-2 mb-1">
+                        <span class="d-block fw-bold">Prestador</span>
+                        <span class="d-block">Código TPCP: {{ paginatedBill.provider.tcp_code }}</span>
+                        <span class="d-block">Titular de Cta: {{ paginatedBill.provider.bank_account_header }}</span>
+                        <span class="d-block">No. de cuenta TPCP: {{ paginatedBill.provider.bank_account }}</span>
+                        <span class="d-block">No. de Licencia: {{ paginatedBill.provider.license_number }}</span>
                     </div>
 
-                    <div class="col-md-3 border-bottom border-2 mb-1">
-                        <span class="d-block">Folio: {{ paginatedBill.folio }}</span>
+                    <div class="col-md-2 border-bottom border-2 mb-1">
+                        <span class="d-block">
+                            <span class="fw-bold">Folio: </span>{{ paginatedBill.folio }}
+                        </span>
                     </div>
 
-                    <div class="col-md-12" style="height: 640px;">
+                    <div class="col-md-12" style="height: 610px;">
                         <table class="table table-sm">
     
                             <thead>
@@ -238,7 +242,7 @@ onMounted(async () => {
 
     prepareBillToPaginate(billToPaginate, bill);
 
-    paginatedBills.value = paginate(billToPaginate, 17);
+    paginatedBills.value = paginate(billToPaginate, 15);
 });
 
 const prepareBillToPaginate = (billToPaginate, bill) => {
