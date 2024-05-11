@@ -10,6 +10,9 @@
                 <li class="list-group-item">
                     <router-link :to="{name: 'orders'}">Órdenes</router-link>
                 </li>
+                <li class="list-group-item">
+                    <a href="#" @click="loadData()">Recargar Datos</a>
+                </li>
             </ul>
         </div>
 
@@ -778,6 +781,21 @@ const clearCustomer = () => {
 
 const clearCustomerDependency = () => {
   order.value.customer_dependency = '';
+}
+
+const loadData = async () => {
+  // get customers
+  const respCustomers = await listCustomer();
+    customers.value = respCustomers.data;
+    // get kits
+    const respKits = await listKit();
+    kits.value = respKits.data;
+    // get items
+    const respItems = await listItem();
+    items.value = respItems.data;
+    // get dependencies
+    const respDependencies = await listCustomerDependecy();
+    dependencies.value = respDependencies.data;
 }
 
 </script>
