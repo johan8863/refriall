@@ -9,6 +9,7 @@ djangorestframework = "*"
 mysqlclient = "*"
 django-cors-headers = "*"
 python-decouple = "*"
+tzdata = "*"
 
 [dev-packages]
 
