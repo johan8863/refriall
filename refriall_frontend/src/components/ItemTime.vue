@@ -1,6 +1,7 @@
 <template>
     <div class="row mb-1">
-        <div class="col-md-8">
+        <!-- items select control -->
+        <div class="col-md-6">
             <select
                 id=""
                 class="form-select"
@@ -8,10 +9,30 @@
                 <option
                 v-for="i in items"
                 :key="i.id"
-                :value="i.id">{{ i.name }}</option>
+                :value="i.id"
+                @click="showItemSelectedProperties({measurement: i.measurement, price: i.price})">{{ i.name }}</option>
             </select>
         </div>
-        <div class="col-md-2">
+
+        <!-- measurement display -->
+        <div class="col-md-1">
+            <div v-if="itemToShowSelected">
+                <div v-if="itemToShowSelected.measurement === 'u'">Uno</div>
+                <div v-if="itemToShowSelected.measurement === 'm'">Mts</div>
+                <div v-if="itemToShowSelected.measurement === 'kg'">Kg</div>
+                <div v-if="itemToShowSelected.measurement === 'lts'">Lts</div>
+            </div>
+        </div>
+
+        <!-- price display -->
+        <div class="col-md-1">
+            <div v-if="itemToShowSelected">
+                {{ itemToShowSelected.price.toFixed(2) }}
+            </div>
+        </div>
+
+        <!-- times control -->
+        <div class="col-md-1">
             <input
                 class="form-control"
                 v-model.number="item.times"
@@ -19,15 +40,28 @@
                 min="1"
                 step="1" />
         </div>
-        <div class="col-md-2">
+
+        <!-- delete button -->
+        <div class="col-md-1">
             <button
               class="btn btn-sm btn-primary"
               @click="$emit('onDeleteItem')">-</button>
         </div>
+
+        <!-- placeholder space -->
+        <div class="col-md-2"></div>
     </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
+
+
+const itemToShowSelected = ref(null)
+
+const showItemSelectedProperties = ({measurement, price}) => {
+    itemToShowSelected.value = {measurement, price}
+}
 
 defineProps({
     items: {
