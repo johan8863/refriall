@@ -466,7 +466,7 @@
         </div>
 
         <div class="col-md-12 mb-2" style="overflow-y: auto; height: 400px">
-          <template v-for="(i, index) in order.itemtime_set" :key="i">
+          <template v-for="(i, index) in order.itemtime_set" :key="index">
             <item-time
               v-if="order.itemtime_set.length > 0"
               :items="items"
@@ -743,6 +743,8 @@ const createItemTime = (elements=12) => {
   for (let index = 0; index < elements; index++) {
     order.value.itemtime_set.push({
       item: 0,
+      measurement: "",
+      price: 0,
       times: 1
     })
   }
