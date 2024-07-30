@@ -743,8 +743,6 @@ const createItemTime = (elements=12) => {
   for (let index = 0; index < elements; index++) {
     order.value.itemtime_set.push({
       item: 0,
-      measurement: "",
-      price: 0,
       times: 1
     })
   }
