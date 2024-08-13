@@ -4,6 +4,7 @@
 # django
 refriall_backend/db.sqlite3
 refriall_backend/shell.py
+refriall_backend/static_prod/
 
 # docker
 mariadb/
