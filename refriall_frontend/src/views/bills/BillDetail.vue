@@ -205,32 +205,7 @@ const bill = ref({
     aproved_by: '',
 });
 
-const billToPaginate = ref({
-    customer: '',
-    customer_dependency: '',
-    folio: '',
-    provider: '',
-    provider_signature_date: '',
-    customer_signature_date: '',
-    items: [],
-    get_orders_folio: [],
-    get_total_amount: '',
-    get_total_amount_revision: '',
-    get_total_amount_prod: '',
-    get_total_amount_concept: '',
-    get_total_amount_repair: '',
-    get_total_amount_maintenace: '',
-    get_total_amount_install: '',
-    get_total_amount_unmounting: '',
-    check_number: '',
-    charge_aprove: '',
-    charge_check: '',
-    customer_charge: '',
-    customer_name: '',
-    customer_personal_id: '',
-    checked_by: '',
-    aproved_by: '',
-});
+const billToPaginate = ref(null);
 
 const route = useRoute();
 
@@ -248,33 +223,14 @@ onMounted(async () => {
 const prepareBillToPaginate = (billToPaginate, bill) => {
     // fill the billToPaginate items attrs with all the items from
     // all the orders of the current bill
-    for (const order of bill.value.get_orders) {
-        billToPaginate.value.items = billToPaginate.value.items.concat(order.itemtimeorder_set)
-    }
-    
-    billToPaginate.value.customer = bill.value.customer
-    billToPaginate.value.customer_dependency = bill.value.customer_dependency
-    billToPaginate.value.folio = bill.value.folio
-    billToPaginate.value.provider = bill.value.provider
-    billToPaginate.value.provider_signature_date = bill.value.provider_signature_date
-    billToPaginate.value.customer_signature_date = bill.value.customer_signature_date
-    billToPaginate.value.get_orders_folio = bill.value.get_orders_folio
-    billToPaginate.value.get_total_amount = bill.value.get_total_amount
-    billToPaginate.value.get_total_amount_revision = bill.value.get_total_amount_revision
-    billToPaginate.value.get_total_amount_prod = bill.value.get_total_amount_prod
-    billToPaginate.value.get_total_amount_concept = bill.value.get_total_amount_concept
-    billToPaginate.value.get_total_amount_repair = bill.value.get_total_amount_repair
-    billToPaginate.value.get_total_amount_maintenace = bill.value.get_total_amount_maintenace
-    billToPaginate.value.get_total_amount_install = bill.value.get_total_amount_install
-    billToPaginate.value.get_total_amount_unmounting = bill.value.get_total_amount_unmounting
-    billToPaginate.value.check_number = bill.value.check_number
-    billToPaginate.value.charge_aprove = bill.value.charge_aprove
-    billToPaginate.value.charge_check = bill.value.charge_check
-    billToPaginate.value.customer_charge = bill.value.customer_charge
-    billToPaginate.value.customer_name = bill.value.customer_name
-    billToPaginate.value.customer_personal_id = bill.value.customer_personal_id
-    billToPaginate.value.checked_by = bill.value.checked_by
-    billToPaginate.value.aproved_by = bill.value.aproved_by
+
+    // first sepparate the orders from the bill to take advamtage of the destructuring
+    const {get_orders, ...rest} = bill.value;
+    // second assign the billToPaginate object all bill attrs but the get_orders one
+    billToPaginate.value = rest;
+    // create an aitems attr to the object and fill it
+    billToPaginate.value.items = [];
+    get_orders.forEach(element => element.itemtime_set.forEach((item) => billToPaginate.value.items.push(item)));
 }
 
 const paginate = (bill, itemsPerPage, start=0, pages=[]) => {
@@ -282,32 +238,8 @@ const paginate = (bill, itemsPerPage, start=0, pages=[]) => {
         return pages;
     }
     const end = start + itemsPerPage;
-    pages.push({
-        customer: bill.value.customer,
-        customer_dependency: bill.value.customer_dependency,
-        folio: bill.value.folio,
-        provider: bill.value.provider,
-        provider_signature_date: bill.value.provider_signature_date,
-        customer_signature_date: bill.value.customer_signature_date,
-        items: bill.value.items.slice(start, end),
-        get_orders_folio: bill.value.get_orders_folio,
-        get_total_amount: bill.value.get_total_amount,
-        get_total_amount_revision: bill.value.get_total_amount_revision,
-        get_total_amount_prod: bill.value.get_total_amount_prod,
-        get_total_amount_concept: bill.value.get_total_amount_concept,
-        get_total_amount_repair: bill.value.get_total_amount_repair,
-        get_total_amount_maintenace: bill.value.get_total_amount_maintenace,
-        get_total_amount_install: bill.value.get_total_amount_install,
-        get_total_amount_unmounting: bill.value.get_total_amount_unmounting,
-        check_number: bill.value.check_number,
-        charge_aprove: bill.value.charge_aprove,
-        charge_check: bill.value.charge_check,
-        customer_charge: bill.value.customer_charge,
-        customer_name: bill.value.customer_name,
-        customer_personal_id: bill.value.customer_personal_id,
-        checked_by: bill.value.checked_by,
-        aproved_by: bill.value.aproved_by,
-    });
+    const {items, ...rest} = bill.value
+    pages.push({items: items.slice(start, end), ...rest});
     return paginate(bill, itemsPerPage, end, pages);
 }
 
