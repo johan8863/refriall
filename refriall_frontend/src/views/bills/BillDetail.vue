@@ -237,8 +237,10 @@ const paginate = (bill, itemsPerPage, start=0, pages=[]) => {
     if (start >= bill.value.items.length) {
         return pages;
     }
+    
     const end = start + itemsPerPage;
     const {items, ...rest} = bill.value
+    
     pages.push({items: items.slice(start, end), ...rest});
     return paginate(bill, itemsPerPage, end, pages);
 }
