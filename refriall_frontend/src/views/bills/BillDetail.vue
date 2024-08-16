@@ -88,7 +88,7 @@
                                     <td>{{ item.item.code }}</td>
                                     <td>{{ item.item.name }}</td>
                                     <td class="text-center">{{ item.item.get_measurement }}</td>
-                                    <td class="text-center">{{ item.times }}</td>
+                                    <td class="text-center">{{ item.times.toFixed(2) }}</td>
                                     <td class="text-end">{{ item.item.price.toFixed(2) }}</td>
                                     <td class="text-end">{{ (item.item.price * item.times).toFixed(2) }}</td>
                                 </tr>
@@ -220,17 +220,32 @@ onMounted(async () => {
     paginatedBills.value = paginate(billToPaginate, 15);
 });
 
+const mergeItemsTimes = (itemsTimes) => {
+    return Object.values(
+        itemsTimes.reduce((acc, { item: { code, get_item_type, get_measurement, name, price }, times }) => {
+            (acc[code] ??= { item: { code, get_item_type, get_measurement, name, price }, times: 0 }).times += times;
+                return acc;
+        }, {})
+    );
+};
+
 const prepareBillToPaginate = (billToPaginate, bill) => {
     // fill the billToPaginate items attrs with all the items from
     // all the orders of the current bill
 
     // first sepparate the orders from the bill to take advamtage of the destructuring
     const {get_orders, ...rest} = bill.value;
+    
     // second assign the billToPaginate object all bill attrs but the get_orders one
     billToPaginate.value = rest;
     // create an aitems attr to the object and fill it
     billToPaginate.value.items = [];
     get_orders.forEach(element => element.itemtime_set.forEach((item) => billToPaginate.value.items.push(item)));
+
+    billToPaginate.value.items = mergeItemsTimes(billToPaginate.value.items);
+    console.log(billToPaginate.value.items);
+    
+    
 }
 
 const paginate = (bill, itemsPerPage, start=0, pages=[]) => {
