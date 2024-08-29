@@ -15,16 +15,19 @@
 
         <!-- measurement display -->
         <div class="col-md-1">
-            <!-- <div v-if="itemToShowSelected">
-                <div v-if="itemToShowSelected.measurement === 'u'">Uno</div>
-                <div v-if="itemToShowSelected.measurement === 'm'">Mts</div>
-                <div v-if="itemToShowSelected.measurement === 'kg'">Kg</div>
-                <div v-if="itemToShowSelected.measurement === 'lts'">Lts</div>
-            </div> -->
+            <div v-if="selectedItem">
+                <div v-if="selectedItem.measurement === 'u'">Uno</div>
+                <div v-if="selectedItem.measurement === 'm'">Mts</div>
+                <div v-if="selectedItem.measurement === 'kg'">Kg</div>
+                <div v-if="selectedItem.measurement === 'lts'">Lts</div>
+            </div>
         </div>
 
         <!-- price display -->
         <div class="col-md-1">
+            <div v-if="selectedItem">
+                {{ selectedItem.price.toFixed(2) }}
+            </div>
         </div>
 
         <!-- times control -->
@@ -50,8 +53,9 @@
 </template>
 
 <script setup>
+import { ref, watch } from "vue";
 
-defineProps({
+const props = defineProps({
     items: {
         type: Array,
         required: true
@@ -62,6 +66,12 @@ defineProps({
     }
 })
 
+const selectedItem = ref(null)
+
 defineEmits(['onDeleteItem'])
+
+// Watching the reaction of "item" selectedItem property
+// will be assigned the matching item in the items list.
+watch(props.item, () => selectedItem.value = props.items.filter(item => props.item.item === item.id)[0])
 
 </script>
