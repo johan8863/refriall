@@ -3,11 +3,11 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Facturas</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <RouterLink :to="{name: 'bills'}">Facturas</RouterLink>
                 </li>
             </ul>
@@ -48,8 +48,9 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-// core
+// app
 import { detailBill, deleteBill } from "../../services/bill.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute();
 const router = useRouter();

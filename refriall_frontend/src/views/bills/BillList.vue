@@ -3,11 +3,11 @@
 <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Facturas</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'bills_create'}">Nueva</router-link >
                 </li>
             </ul>
@@ -77,8 +77,12 @@
 </template>
 
 <script setup>
+// vue
 import { onMounted, ref } from 'vue';
+
+// app
 import { listBillsPagination } from '../../services/bill.service';
+import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 
 const bills = ref([]);
 const currentPage = ref(1);

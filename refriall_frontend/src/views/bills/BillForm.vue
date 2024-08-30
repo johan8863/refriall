@@ -3,11 +3,11 @@
 
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Facturas</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'bills'}">Facturas</router-link>
                 </li>
             </ul>
@@ -419,12 +419,13 @@ import { RouterLink, useRoute, useRouter } from "vue-router";
 
 // third
 import { useVuelidate } from "@vuelidate/core";
+import { helpers, required } from '@vuelidate/validators';
 
-// core
+// app
 import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
 import { listCustomer } from "../../services/customer.service";
 import { getOrdersNotMatched, getOrdersFromCustomerNotMatched } from "../../services/order.service";
-import { helpers, required } from '@vuelidate/validators';
+import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 
 
 const bill = ref({
