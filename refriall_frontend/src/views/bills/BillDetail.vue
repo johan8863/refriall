@@ -243,9 +243,6 @@ const prepareBillToPaginate = (billToPaginate, bill) => {
     get_orders.forEach(element => element.itemtime_set.forEach((item) => billToPaginate.value.items.push(item)));
 
     billToPaginate.value.items = mergeItemsTimes(billToPaginate.value.items);
-    console.log(billToPaginate.value.items);
-    
-    
 }
 
 const paginate = (bill, itemsPerPage, start=0, pages=[]) => {
