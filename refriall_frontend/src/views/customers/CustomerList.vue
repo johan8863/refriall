@@ -3,11 +3,11 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Clientes</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'customers_create'}">Nuevo</router-link >
                 </li>
             </ul>
@@ -67,9 +67,13 @@
 
 <script setup>
 
+// vue
 import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
+
+// app
 import { listCustomer } from "../../services/customer.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const customers = ref([]);
 const currentPage = ref(1);

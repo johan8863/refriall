@@ -3,11 +3,11 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Clientes</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'customers'}">Clientes</router-link>
                 </li>
             </ul>
@@ -232,12 +232,14 @@
 import { RouterLink, useRouter, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
 
+// app
+import { postCustomer, putCustomer, detailCustomer } from "../../services/customer.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
 // third
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 
-// local
-import { postCustomer, putCustomer, detailCustomer } from "../../services/customer.service";
 
 // customer object to be created or updated
 const customer = ref({

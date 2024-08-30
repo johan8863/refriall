@@ -2,17 +2,17 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Clientes</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'customers'}">Clientes</router-link>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'customers_update', params: {id: customer.id}}">Editar</router-link>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'customers_confirm_delete', params: {id: customer.id}}">Eliminar</router-link>
                 </li>
             </ul>
@@ -37,9 +37,13 @@
 
 <script setup>
 
+// vue
 import { ref, onMounted } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
+
+// app
 import { deleteCustomer, detailCustomer } from "../../services/customer.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // customer object to be filled
 const customer = ref({
