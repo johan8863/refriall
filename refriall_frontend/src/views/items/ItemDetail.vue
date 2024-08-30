@@ -2,20 +2,20 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Artículos</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <RouterLink :to="{name: 'items'}">Artículos</RouterLink>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <RouterLink :to="{name: 'items_create'}">Nuevo</RouterLink >
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <RouterLink :to="{name: 'items_update', params: {id: item.id}}">Editar</RouterLink>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <RouterLink :to="{name: 'items_confirm_delete', params: {id: item.id}}">Eliminar</RouterLink>
                 </li>
             </ul>
@@ -36,9 +36,13 @@
 
 <script setup>
 
+// vue
 import { ref, onMounted } from "vue";
 import { RouterLink, useRoute } from "vue-router";
+
+// app
 import { detailItem } from "../../services/item.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 
 const route = useRoute();

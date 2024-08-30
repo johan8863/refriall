@@ -2,23 +2,23 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Facturas</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'bills'}">Facturas</router-link>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'bills_create'}">Nueva</router-link >
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'bills_update', params: {id: bill.id}}">Editar</router-link>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <a href="#"  @click="pdf()">PDF</a>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'bills_delete', params: {id: bill.id}}">Eliminar</router-link>
                 </li>
             </ul>
@@ -27,7 +27,7 @@
         <!-- main content -->
         <div class="col-md-9">
             <!-- bill info -->
-            <div  id="bill-to-pdf">
+            <div id="bill-to-pdf">
                 <!-- paginated bills -->
                 <div
                   v-for="(paginatedBill, index) of paginatedBills"
@@ -173,6 +173,7 @@ import { useRoute } from 'vue-router';
 
 // app
 import { detailBill } from '../../services/bill.service';
+import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 
 // third
 import html2pdf from "html2pdf.js";
@@ -265,5 +266,6 @@ function pdf() {
 
     html2pdf().from(element).set(opt).save()
 }
+
 
 </script>

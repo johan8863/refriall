@@ -2,8 +2,8 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Prestadores</strong>
                 </li>
                 <li class="list-group-item">
@@ -23,9 +23,13 @@
 
 <script setup>
 
+// vue
 import { RouterLink, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
+
+// app
 import { detailProvider } from "../../services/provider.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute();
 const provider = ref({
