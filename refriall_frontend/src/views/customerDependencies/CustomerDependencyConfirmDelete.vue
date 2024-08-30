@@ -3,14 +3,14 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Clientes</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'customers'}">Clientes</router-link>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'customer_dependecy_update', params: {id: dependency.id}}">Editar</router-link>
                 </li>
             </ul>
@@ -35,9 +35,13 @@
 
 <script setup>
 
+// vue
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+
+// app
 import { deleteCustomerDependency, detailCustomerDependecy } from "../../services/customerDependency.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute()
 const router = useRouter()
