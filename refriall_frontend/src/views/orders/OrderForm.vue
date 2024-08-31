@@ -39,9 +39,7 @@
                 autofocus
                 id="customer"
                 class="form-select form-select-sm"
-                v-model.trim="order.customer"
-                :disabled="order.id"
-              >
+                v-model.trim="order.customer">
                 <option v-for="customer in customers" :key="customer.id" :value="customer.id">
                   {{ customer.name }}
                 </option>
@@ -82,9 +80,7 @@
               <select
                 id="customer_dependency"
                 class="form-select form-select-sm"
-                v-model.trim="order.customer_dependency"
-                :disabled="order.id"
-              >
+                v-model.trim="order.customer_dependency">
                 <option
                   v-for="dependency in dependencies"
                   :key="dependency.id"
