@@ -2,11 +2,11 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Artículos</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <RouterLink :to="{name: 'orders'}">Órdenes</RouterLink>
                 </li>
             </ul>
@@ -26,9 +26,13 @@
 
 <script setup>
 
+// vue
 import { ref, onMounted } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
+
+// app
 import { detailOrder, deleteOrder } from '../../services/order.service'
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute();
 const router = useRouter()

@@ -3,11 +3,11 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Órdenes</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'orders_create'}">Nueva</router-link >
                 </li>
             </ul>
@@ -78,9 +78,13 @@
 
 <script setup>
 
+// vue
 import { RouterLink } from "vue-router";
 import { ref, onMounted } from "vue";
+
+// app
 import { listOrder } from "../../services/order.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const orders = ref([]);
 const currentPage = ref(1);

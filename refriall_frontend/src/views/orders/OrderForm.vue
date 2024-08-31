@@ -2,14 +2,14 @@
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
+      <ul :class="listGroup.listGroup">
+        <li :class="listGroup.listGroupItem">
           <strong>Órdenes</strong>
         </li>
-        <li class="list-group-item">
+        <li :class="listGroup.listGroupItem">
           <router-link :to="{ name: 'orders' }">Órdenes</router-link>
         </li>
-        <li class="list-group-item">
+        <li :class="listGroup.listGroupItem">
           <a href="#" @click="loadData()">Recargar Datos</a>
         </li>
       </ul>
@@ -610,13 +610,14 @@ import { ref, onMounted, computed, toRaw } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 
-// local
+// app
 import { listCustomer } from '../../services/customer.service'
 import { listKit } from '../../services/kit.service'
 import { listItem } from '../../services/item.service'
 import ItemTime from '../../components/ItemTime.vue'
 import { detailOrderUpdate, postOrder, putOrder } from '../../services/order.service'
 import { listCustomerDependecy } from '../../services/customerDependency.service'
+import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 
 // main object
 const order = ref({

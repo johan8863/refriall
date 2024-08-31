@@ -5,11 +5,11 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Prestadores</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'providers'}">Prestadores</router-link>
                 </li>
             </ul>
@@ -20,8 +20,14 @@
             <form method="post">
                 <!-- name control -->
                 <div class="mb-2">
-                    <label for="name" class="form-label">Nombre</label>
-                    <input type="text" id="name" class="form-control">
+                    <label
+                      for="name"
+                      class="form-label">Nombre</label>
+                    <input
+                      type="text"
+                      id="name"
+                      class="form-control"
+                      v-model="provider.name">
                 </div>
                 <!-- buttons -->
                 <div>
@@ -37,8 +43,12 @@
 
 <script setup>
 
-import { RouterLink } from "vue-router";
+// vue
 import { ref } from 'vue';
+import { RouterLink } from "vue-router";
+
+// app
+import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 
 const provider = ref({
     id: '',
