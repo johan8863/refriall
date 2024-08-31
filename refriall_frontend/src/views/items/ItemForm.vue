@@ -2,11 +2,11 @@
     <div class="row">
         <!-- side menu -->
         <div class="col-md-2">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
                     <strong>Artículos</strong>
                 </li>
-                <li class="list-group-item">
+                <li :class="listGroup.listGroupItem">
                     <RouterLink :to="{name: 'items'}">Artículos</RouterLink>
                 </li>
             </ul>
@@ -166,12 +166,14 @@
 import { RouterLink, useRouter, useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 
+// app
+import { postItem, putItem, getItem } from "../../services/item.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
 // third
 import { useVuelidate } from "@vuelidate/core";
 import { required, minValue, helpers } from "@vuelidate/validators";
 
-// local
-import { postItem, putItem, getItem } from "../../services/item.service";
 
 // item object to be created or updated
 const item = ref({
