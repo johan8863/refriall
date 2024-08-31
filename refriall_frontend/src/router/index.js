@@ -142,7 +142,15 @@ const router = createRouter({
     {
       path: '/orders/detail/:id', 
       name: 'orders_detail', 
-      component: () => import('../views/orders/OrderDetail.vue')
+      component: () => import('../views/orders/OrderDetail.vue'),
+    },
+    {
+      path: '/orders/detail/preorder/:id', 
+      name: 'orders_detail_pre_order', 
+      component: () => import('../views/orders/OrderDetail.vue'),
+      meta: {
+        preOrder: true
+      }
     },
     {
       path: '/orders/confirm/delete/:id', 

@@ -16,7 +16,7 @@
                     <router-link :to="{name: 'orders_update', params: {id: order.id}}">Editar</router-link>
                 </li>
                 <li :class="listGroup.listGroupItem">
-                    <a href="#" @click="pdf()">PDF</a>
+                    <a href="#" @click="pdf">PDF</a>
                 </li>
                 <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'orders_confirm_delete', params: {id: order.id}}">Eliminar</router-link>
@@ -36,7 +36,7 @@
     
                     <div
                       class="col-md-9 d-flex align-items-center justify-content-center border-bottom border-3 mb-1">
-                        <h3>Orden de Servicio</h3>
+                        <h3>{{route.meta.preOrder ? 'Prefactura' : 'Orden de Servicio'}}</h3>
                     </div>
     
                     <div class="col-md-3 border-bottom pb-1 border-3 mb-1">
@@ -315,9 +315,13 @@ const paginate = (order, itemsPerPage, start=0, pages=[]) => {
 
 function pdf() {
     const element = document.getElementById('order-to-pdf');
-    const output_name = (order.value.customer_dependency) ? 
-                            `orden_de_servicio_${order.value.folio}_${order.value.customer_dependency.name}` : 
-                            `orden_de_servicio_${order.value.folio}_${order.value.customer.name}`;
+    const output_name = (route.meta.preOrder) ? 
+                            (order.value.customer_dependency) ? 
+                                `prefactura_${order.value.folio}_${order.value.customer_dependency.name}` : 
+                                `prefactura_${order.value.folio}_${order.value.customer.name}`
+                            : (order.value.customer_dependency) ? 
+                                `orden_de_servicio_${order.value.folio}_${order.value.customer_dependency.name}` : 
+                                `orden_de_servicio_${order.value.folio}_${order.value.customer.name}`
     const opt = {
         filename: output_name
     }

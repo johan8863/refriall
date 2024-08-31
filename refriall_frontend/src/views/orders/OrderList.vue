@@ -16,7 +16,7 @@
         <!-- main content -->
         <div class="col-md-10">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div v-if="orders.length > 0">
 
                         <div id="tableContainer">
@@ -24,9 +24,10 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Folio</th>
+                                        <th scope="col">Orden</th>
                                         <th scope="col">Cliente</th>
                                         <th scope="col">Importe</th>
+                                        <th scope="col">Prefactura</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -42,6 +43,9 @@
                                         </td>
                                         <td>
                                             {{ order.get_total_amount.toFixed(2) }}
+                                        </td>
+                                        <td>
+                                            <router-link :to="{name: 'orders_detail_pre_order', params: {id: order.id}}">Detalle</router-link>
                                         </td>
                                     </tr>
                                 </tbody>
