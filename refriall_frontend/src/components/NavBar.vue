@@ -7,47 +7,47 @@
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+            <div :class="navBar.navBarCollapse" id="navbarSupportedContent">
+                <ul :class="navBar.navBarNav">
+                    <li :class="navBar.navItemDropDown">
+                        <a :class="navBar.navLinkDropDownToggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             Facturación
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul :class="navBar.navDropDownMenu">
                             <li>
-                                <RouterLink class="dropdown-item" :to="{name: 'orders'}">Órdenes</RouterLink>
+                                <RouterLink :class="navBar.navDropDownItem" :to="{name: 'orders'}">Órdenes</RouterLink>
                             </li>
                             <li>
-                                <RouterLink class="dropdown-item" :to="{name: 'bills'}">Facturas</RouterLink>
+                                <RouterLink :class="navBar.navDropDownItem" :to="{name: 'bills'}">Facturas</RouterLink>
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    <li :class="navBar.navItemDropDown">
+                        <a :class="navBar.navLinkDropDownToggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             Almacén
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul :class="navBar.navDropDownMenu">
                             <li>
-                                <RouterLink class="dropdown-item" :to="{name: 'items'}">Artículos</RouterLink>
+                                <RouterLink :class="navBar.navDropDownItem" :to="{name: 'items'}">Artículos</RouterLink>
                             </li>
                             <li>
-                                <RouterLink class="dropdown-item" :to="{name: 'kits'}">Equipos</RouterLink>
+                                <RouterLink :class="navBar.navDropDownItem" :to="{name: 'kits'}">Equipos</RouterLink>
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    <li :class="navBar.navItemDropDown">
+                        <a :class="navBar.navLinkDropDownToggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             RRHH
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul :class="navBar.navDropDownMenu">
                             <li>
-                                <RouterLink class="dropdown-item" :to="{name: 'providers'}">Prestadores</RouterLink>
+                                <RouterLink :class="navBar.navDropDownItem" :to="{name: 'providers'}">Prestadores</RouterLink>
                             </li>
                             <li>
-                                <RouterLink class="dropdown-item" :to="{name: 'customers'}">Clientes</RouterLink>
+                                <RouterLink :class="navBar.navDropDownItem" :to="{name: 'customers'}">Clientes</RouterLink>
                             </li>
                         </ul>
                     </li>
@@ -62,6 +62,8 @@
 
 <script setup>
 
+// vue
 import { RouterLink } from "vue-router";
+import { navBar } from "../assets/js/bootstrap_classes/navBar";
 
 </script>
