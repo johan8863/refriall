@@ -198,6 +198,7 @@ class OrderSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         for attr in [
             "customer", 
+            "customer_dependency", 
             "symptom", 
             "flaw", 
             "repair_description", 
