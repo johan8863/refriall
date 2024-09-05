@@ -9,6 +9,14 @@ from hr.models import Customer, CustomerDependency, Provider
 from stock.models import Item, ItemOrder, Kit
 
 
+class Currency(models.Model):
+    name = models.CharField(max_length=4)
+    description = models.CharField(max_length=22, blank=True, null=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Bill(models.Model):
     """Final document to register the business income"""
 
@@ -180,6 +188,7 @@ class Order(models.Model):
     )
     provider_signature_date = models.DateField('Firma del proveedor')
     customer_signature_date = models.DateField('Firma del cliente', blank=True, null=True)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, related_name='orders')
 
     # General but not required information
     check_number = models.CharField('Nro. de Cheque', max_length=35, null=True, blank=True)
