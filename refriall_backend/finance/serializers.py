@@ -4,10 +4,16 @@
 from rest_framework import serializers
 
 # local
-from .models import Bill, Order, ItemTime, ItemTimeOrder
+from .models import Bill, Currency, Order, ItemTime, ItemTimeOrder
 from hr.serializers import CustomerSerializer, CustomerDependencySerializer, ProviderSerializer
 from stock.serializers import ItemSerializer, ItemOrderSerializerDetail, ItemSerializerForReadOnly, KitSerializer
 from stock.models import ItemOrder
+
+
+class CurrencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Currency
+        fields = ["id", "name", "description"]
 
 
 class ItemTimeSerializerForReadOnly(serializers.ModelSerializer):
@@ -41,6 +47,7 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
     customer_dependency = CustomerDependencySerializer()
     kit = KitSerializer()
     provider = ProviderSerializer()
+    currency = CurrencySerializer()
 
     class Meta:
         model = Order
@@ -66,6 +73,7 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
             "itemtimeorder_set",
             "provider",
             "provider_signature_date",
+            "currency",
             "customer_signature_date",
             "check_number",
             "charge_aprove",
@@ -136,6 +144,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "itemtime_set",
             "provider",
             "provider_signature_date",
+            "currency",
             "customer_signature_date",
             "check_number",
             "charge_aprove",

@@ -10,9 +10,14 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 
 # local
-from .models import Order, Bill
-from .serializers import BillSerializer, BillSerializerForReadOnly, BillSerializerDetailUpdate, OrderSerializerForReadOnly, OrderSerializer
+from .models import Bill, Currency, Order
+from .serializers import BillSerializer, BillSerializerForReadOnly, BillSerializerDetailUpdate, CurrencySerializer, OrderSerializerForReadOnly, OrderSerializer
 from .paginators import BillPagination, OrderPagination
+
+
+class CurrencyViewSet(viewsets.ModelViewSet):
+    queryset = Currency.objects.all()
+    serializer_class = CurrencySerializer
 
 
 class BillListPagination(APIView, BillPagination):
