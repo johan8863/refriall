@@ -130,6 +130,11 @@ const router = createRouter({
       component: () => import ('../views/currencies/CurrencyList.vue')
     },
     {
+      path: '/currencies/detail/:id',
+      name: 'currency_detail',
+      component: () => import ('../views/currencies/CurrencyDetail.vue')
+    },
+    {
       path: '/orders',
       name: 'orders',
       component: OrderList,

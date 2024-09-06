@@ -29,7 +29,9 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="currency in currencies" :key="currency.id">
-                                        <td>{{ currency.name }}</td>
+                                        <td>
+                                            <router-link :to="{name: 'currency_detail', params: {id: currency.id}}">{{ currency.name }}</router-link>
+                                        </td>
                                         <td>{{ currency.description }}</td>
                                     </tr>
                                 </tbody>
@@ -68,6 +70,7 @@
 
 // vue
 import { ref, onMounted } from "vue";
+import { RouterLink } from "vue-router";
 
 // app
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
