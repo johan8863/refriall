@@ -125,6 +125,11 @@ const router = createRouter({
       component: () => import ('../views/customerDependencies/CustomerDependencyConfirmDelete.vue')
     },
     {
+      path: '/currencies',
+      name: 'currencies',
+      component: () => import ('../views/currencies/CurrencyList.vue')
+    },
+    {
       path: '/orders',
       name: 'orders',
       component: OrderList,

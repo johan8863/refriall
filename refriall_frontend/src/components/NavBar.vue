@@ -21,6 +21,9 @@
                             <li>
                                 <RouterLink :class="navBar.navDropDownItem" :to="{name: 'bills'}">Facturas</RouterLink>
                             </li>
+                            <li>
+                                <RouterLink :class="navBar.navDropDownItem" :to="{name: 'currencies'}">Monedas</RouterLink>
+                            </li>
                         </ul>
                     </li>
                     <li :class="navBar.navItemDropDown">
