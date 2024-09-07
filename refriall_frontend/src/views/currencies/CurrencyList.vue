@@ -7,7 +7,7 @@
                     <strong>Monedas</strong>
                 </li>
                 <li :class="listGroup.listGroupItem">
-                    <!-- <router-link :to="{name: 'bills_create'}">Nueva</router-link > -->
+                    <router-link :to="{name: 'currency_create'}">Nueva</router-link >
                 </li>
             </ul>
         </div>
@@ -37,19 +37,6 @@
                                 </tbody>
                             </table>
 
-                        </div>
-                        
-                        <!-- buttons -->
-                        <div class="mb-4">
-                            <button
-                              v-if="showPrevButton"
-                              class="btn btn-sm btn-primary"
-                              @click="loadPrevItems()">Anterior</button>
-                              
-                            <button
-                              v-if="showNextButton"
-                              class="btn btn-sm btn-primary"
-                              @click="loadNextItems()">Siguiente</button>
                         </div>
 
                     </div>
