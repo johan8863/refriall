@@ -135,6 +135,11 @@ const router = createRouter({
       component: () => import ('../views/currencies/CurrencyDetail.vue')
     },
     {
+      path: '/currencies/update/:id',
+      name: 'currency_update',
+      component: () => import ('../views/currencies/CurrencyForm.vue')
+    },
+    {
       path: '/currencies/create',
       name: 'currency_create',
       component: () => import ('../views/currencies/CurrencyForm.vue')

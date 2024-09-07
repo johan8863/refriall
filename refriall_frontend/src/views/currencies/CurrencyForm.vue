@@ -44,7 +44,7 @@
                     <button
                       type="button"
                       class="btn btn-primary btn-sm"
-                      @click="createCurrency(currency)">Guardar</button>
+                      @click="currency.id ? updateCurrency(currency) : createCurrency(currency)">{{currency.id ? 'Actualizar' : 'Guardar'}}</button>
                  </div>
             </form>
         </div>
@@ -56,26 +56,44 @@
 <script setup>
 
 // vue
-import { ref } from "vue";
-import { RouterLink, useRouter } from "vue-router";
+import { ref, onMounted } from "vue";
+import { RouterLink, useRouter, useRoute } from "vue-router";
 
 // app
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { postCurrency } from "../../services/currency.service";
+import { detailCurrency, postCurrency, putCurrency } from "../../services/currency.service";
 
 // routing habdlers
 const router = useRouter()
+const route = useRoute()
 
 const currency = ref({
     name: '',
     description: '',
 })
 
+const currenyNameUpper = (currency) => currency.name = currency.name.toUpperCase()
+
 const createCurrency = async (currency) => {
-    currency.name = currency.name.toUpperCase()
+    currenyNameUpper(currency)
     const { data } = await postCurrency(currency)
     router.push({name: 'currency_detail', params: {id: data.id}})
 
 }
+
+const updateCurrency = async (currency) => {
+    currenyNameUpper(currency)
+    const { data } = await putCurrency(currency)
+    router.push({name: 'currency_detail', params: {id: data.id}})
+
+}
+
+onMounted(async () => {
+    const id = route.params.id
+
+    if (id) {
+        currency.value = (await detailCurrency(id)).data
+    }
+})
 
 </script>

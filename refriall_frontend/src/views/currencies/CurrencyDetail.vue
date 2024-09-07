@@ -9,11 +9,15 @@
                 <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'currencies'}">Monedas</router-link>
                 </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link :to="{name: 'currency_update', params: {id: currency.id}}">Actualizar</router-link>
+                </li>
             </ul>
         </div>
         <!-- main content -->
         <div class="col-md-4">
             <h3>{{ currency.name }}</h3>
+            <p>{{ currency.description }}</p>
         </div>
 
     </div>
