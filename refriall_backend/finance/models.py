@@ -9,8 +9,12 @@ from stock.models import Item, ItemOrder, Kit
 
 
 class Currency(models.Model):
-    name = models.CharField(max_length=4)
+    name = models.CharField('Nombre', max_length=4, unique=True)
     description = models.CharField(max_length=22, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Moneda'
+        verbose_name_plural = 'Monedas'
 
     def __str__(self) -> str:
         return self.name
