@@ -37,7 +37,7 @@
                 v-model.number="item.times"
                 type="number"
                 min="1"
-                step="1" />
+                step="0.05" />
         </div>
 
         <!-- delete button -->
@@ -74,20 +74,13 @@ const selectedItem = ref(null)
 
 defineEmits(['onDeleteItem'])
 
+
+onMounted(async () => {
+    selectedItem.value = props.items.filter(item => props.item.item === item.id)[0]
+})
+
 // Watching the reaction of "item" selectedItem property
 // will be assigned the matching item in the items list.
 watch(props.item, () => selectedItem.value = props.items.filter(item => props.item.item === item.id)[0])
-
-onMounted(async () => {
-    try {
-        const itemId = props.item.item
-        const respItem = await getItem(itemId)
-        selectedItem.value = respItem.data
-    } catch (error) {
-        console.log(error.response.data);
-    }
-    
-    // selectedItem.value = respItem.data
-})
 
 </script>
