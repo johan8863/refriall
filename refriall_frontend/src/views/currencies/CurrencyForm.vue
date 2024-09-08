@@ -65,6 +65,9 @@
                       type="button"
                       class="btn btn-primary btn-sm"
                       @click="currency.id ? updateCurrency(currency) : createCurrency(currency)">{{currency.id ? 'Actualizar' : 'Guardar'}}</button>
+                    <router-link
+                      :to="{name: 'currencies'}"
+                      class="btn btn-danger btn-sm">Cancelar</router-link>
                  </div>
             </form>
         </div>
