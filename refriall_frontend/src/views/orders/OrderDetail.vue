@@ -291,42 +291,10 @@ const paginate = (order, itemsPerPage, start=0, pages=[]) => {
         return pages;
     }
     const end = start + itemsPerPage;
+    const {itemtimeorder_set, ...rest} = order.value;
     pages.push({
-        customer: order.value.customer,
-        customer_dependency: order.value.customer_dependency,
-        symptom: order.value.symptom,
-        flaw: order.value.flaw,
-        repair_description: order.value.repair_description,
-        folio: order.value.folio,
-        check_diagnosis: order.value.check_diagnosis,
-        repair: order.value.repair,
-        install: order.value.install,
-        maintenance: order.value.maintenance,
-        kit: order.value.kit,
-        kit_brand: order.value.kit_brand,
-        kit_model: order.value.kit_model,
-        kit_serial: order.value.kit_serial,
-        job_description: order.value.job_description,
-        itemtimeorder_set: order.value.itemtimeorder_set.slice(start, end),
-        provider: order.value.provider,
-        provider_signature_date: order.value.provider_signature_date,
-        customer_signature_date: order.value.customer_signature_date,
-        check_number: order.value.check_number,
-        charge_aprove: order.value.charge_aprove,
-        charge_check: order.value.charge_check,
-        customer_charge: order.value.customer_charge,
-        customer_name: order.value.customer_name,
-        customer_personal_id: order.value.customer_personal_id,
-        checked_by: order.value.checked_by,
-        aproved_by: order.value.aproved_by,
-        get_total_amount: order.value.get_total_amount,
-        get_total_amount_revision: order.value.get_total_amount_revision,
-        get_total_amount_prod: order.value.get_total_amount_prod,
-        get_total_amount_concept: order.value.get_total_amount_concept,
-        get_total_amount_repair: order.value.get_total_amount_repair,
-        get_total_amount_maintenace: order.value.get_total_amount_maintenace,
-        get_total_amount_install: order.value.get_total_amount_install,
-        get_total_amount_unmounting: order.value.get_total_amount_unmounting
+        ...rest,
+        itemtimeorder_set: itemtimeorder_set.slice(start, end),
     });
     return paginate(order, itemsPerPage, end, pages);
 }
@@ -349,7 +317,3 @@ function pdf() {
 }
 
 </script>
-
-<style lang="scss" scoped>
-
-</style>
