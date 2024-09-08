@@ -35,7 +35,7 @@
             <button
                 class="btn btn-sm btn-danger"
                 @click="delBill(bill.id)">Eliminar</button>
-            <RouterLink :to="{name: 'bills'}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+            <RouterLink :to="{name: 'bills_detail', params: {id: bill.id}}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
         </div>
 
     </div>

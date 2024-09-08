@@ -26,7 +26,7 @@
                   class="btn btn-sm btn-danger"
                   @click="delCustomer(customer.id)">Eliminar</button>
                 <RouterLink
-                  :to="{name: 'customers'}"
+                  :to="{name: 'customers_detail', params: {id: customer.id}}"
                   class="btn btn-sm btn-secondary">Cancelar</RouterLink>
             </div>
         </div>

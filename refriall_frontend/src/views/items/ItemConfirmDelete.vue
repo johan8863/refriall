@@ -18,7 +18,7 @@
             <button
               class="btn btn-sm btn-danger"
               @click="delItem(item.id)">Eliminar</button>
-            <RouterLink :to="{name: 'items'}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+            <RouterLink :to="{name: 'items_detail', params: {id: item.id}}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
         </div>
 
     </div> <!-- end row -->

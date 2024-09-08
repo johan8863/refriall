@@ -20,7 +20,7 @@
                   class="btn btn-sm btn-danger"
                   @click="delKit(kit.id)">Eliminar</button>
                 <RouterLink
-                  :to="{name: 'kits'}"
+                  :to="{name: 'kits_detail', params: {id: kit.id}}"
                   class="btn btn-sm btn-secondary">Cancelar</RouterLink>
             </div>
         </div>
