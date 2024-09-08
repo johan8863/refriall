@@ -25,20 +25,31 @@
         </div>
 
         <!-- main content -->
-        <div class="col-md-4">
-            <h3>{{ customer.name }}</h3>
-            <hr>
-            <p>{{ customer.address }}</p>
-            <p>Titular de la cuenta: {{ customer.bank_account_header }}</p>
-            <p>Buenta bancaria: {{ customer.bank_account }}</p>
+        <!-- notfound false -->
+        <div v-if="!notFound">
+            <div class="col-md-4">
+                <h3>{{ customer.name }}</h3>
+                <hr>
+                <p>{{ customer.address }}</p>
+                <p>Titular de la cuenta: {{ customer.bank_account_header }}</p>
+                <p>Buenta bancaria: {{ customer.bank_account }}</p>
+            </div>
+    
+            <div class="col-md-4">
+                <h3>Dependencias</h3>
+                <hr>
+                <div v-for="dependency of customer.get_dependencies" :key="dependency.id">
+                    <router-link :to="{name: 'customer_dependecy_detail', params: {id: dependency.id}}">{{ dependency.name }}</router-link>
+                </div>
+            </div>
+        <!-- end notFound false -->
         </div>
 
-        <div class="col-md-4">
-            <h3>Dependencias</h3>
-            <hr>
-            <div v-for="dependency of customer.get_dependencies" :key="dependency.id">
-                <router-link :to="{name: 'customer_dependecy_detail', params: {id: dependency.id}}">{{ dependency.name }}</router-link>
-            </div>
+        <!-- notFound -->
+        <div
+          v-else
+          class="col-md-6">
+            <p>{{ notFound }}</p>
         </div>
 
     </div> <!-- end row -->
@@ -70,9 +81,15 @@ const customer = ref({
     get_dependencies: [],
 });
 
+const notFound = ref(null);
+
 onMounted(async () => {
-    const resp = await detailCustomer(route.params.id);
-    customer.value = resp.data;
+    try {
+        const resp = await detailCustomer(route.params.id);
+        customer.value = resp.data;
+    } catch (error) {
+        notFound.value = 'El cliente al que trata de acceder no existe, haga click en el enlace a clientes en el menú de la izquierda para ver las clientes existentes.';
+    }
 });
 
 </script>

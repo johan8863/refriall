@@ -26,6 +26,9 @@
 
         <!-- main content -->
         <div class="col-md-9">
+            <!-- notfound false -->
+             <div v-if="!notFound">
+             
             <!-- order info -->
             <div  id="order-to-pdf">
                 <!-- paginated orders -->
@@ -196,8 +199,17 @@
                     </div>
                     
                     <div v-if="index < paginatedOrders.length - 1" class="html2pdf__page-break"></div>
-                </div>
                 <!-- end paginated orders -->
+                </div>
+            <!-- end order info -->
+            </div>
+
+            <!-- end notfound false -->
+            </div>
+            
+            <!-- notfound -->
+            <div v-else>
+                <p>{{ notFound }}</p>
             </div>
 
         </div>
@@ -259,13 +271,19 @@ const order = ref({
     get_total_amount_unmounting: 0
 });
 
+const notFound = ref(null);
+
 const paginatedOrders = ref([]);
 
 onMounted(async () => {
-    const resp = await detailOrder(route.params.id);
-    order.value = resp.data;
-
-    paginatedOrders.value = paginate(order, 14);
+    try {
+        const resp = await detailOrder(route.params.id);
+        order.value = resp.data;
+    
+        paginatedOrders.value = paginate(order, 14);
+    } catch (error) {
+        notFound.value = 'La orden a la que trata de acceder no existe, haga click en el enlace a órdenes en el menú de la izquierda para ver las órdenes existentes.'        
+    }
 });
 
 const paginate = (order, itemsPerPage, start=0, pages=[]) => {

@@ -26,140 +26,148 @@
         
         <!-- main content -->
         <div class="col-md-9">
-            <!-- bill info -->
-            <div id="bill-to-pdf">
-                <!-- paginated bills -->
-                <div
-                  v-for="(paginatedBill, index) of paginatedBills"
-                  :key="index"
-                  class="row px-3 py-1">
-
+            <!-- notFound false -->
+            <div v-if="!notFound"> 
+                <!-- bill info -->
+                <div id="bill-to-pdf">
+                    <!-- paginated bills -->
                     <div
-                        class="col-md-9 d-flex align-items-center justify-content-center border-bottom border-3 mb-1">
-                        <h3>Factura</h3>
-                    </div>
+                    v-for="(paginatedBill, index) of paginatedBills"
+                    :key="index"
+                    class="row px-3 py-1">
 
-                    <div class="col-md-3 border-bottom pb-1 border-3 mb-1">
-                        <img
-                          src="../../assets/logo.png"
-                          class="img-fluid"
-                          alt="refriall logo"
-                          style="height: 100px;">
-                    </div>
-                    
-                    <div v-if="paginatedBill.customer" class="col-md-5 border-bottom border-2 mb-1">
-                        <span class="d-block fw-bold">Cliente</span>
-                        <span class="d-block">{{ paginatedBill.customer.name }}</span>
-                        <span class="d-block">{{ paginatedBill.customer.address }}</span>
-                        <span class="d-block">{{ paginatedBill.customer.bank_account_header }}</span>
-                        <span class="d-block">{{ paginatedBill.customer.bank_account }}</span>
-                    </div>
+                        <div
+                            class="col-md-9 d-flex align-items-center justify-content-center border-bottom border-3 mb-1">
+                            <h3>Factura</h3>
+                        </div>
 
-                    <div class="col-md-5 border-bottom border-2 mb-1">
-                        <span class="d-block fw-bold">Prestador</span>
-                        <span class="d-block">Código TPCP: {{ paginatedBill.provider.tcp_code }}</span>
-                        <span class="d-block">Titular de Cta: {{ paginatedBill.provider.bank_account_header }}</span>
-                        <span class="d-block">No. de cuenta TPCP: {{ paginatedBill.provider.bank_account }}</span>
-                        <span class="d-block">No. de Licencia: {{ paginatedBill.provider.license_number }}</span>
-                    </div>
-
-                    <div class="col-md-2 border-bottom border-2 mb-1">
-                        <span class="d-block">
-                            <span class="fw-bold">Folio: </span>{{ paginatedBill.folio }}
-                        </span>
-                    </div>
-
-                    <div class="col-md-12" style="height: 610px;">
-                        <table class="table table-sm">
-    
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Artículo o Servicio</th>
-                                    <th class="text-center">U/M</th>
-                                    <th class="text-center">Cantidad</th>
-                                    <th class="text-end">Precio</th>
-                                    <th class="text-end">Importe</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr v-for="item in paginatedBill.items" :key="item.id">
-                                    <td>{{ item.item.code }}</td>
-                                    <td>{{ item.item.name }}</td>
-                                    <td class="text-center">{{ item.item.get_measurement }}</td>
-                                    <td class="text-center">{{ item.times.toFixed(2) }}</td>
-                                    <td class="text-end">{{ item.item.price.toFixed(2) }}</td>
-                                    <td class="text-end">{{ (item.item.price * item.times).toFixed(2) }}</td>
-                                </tr>
-                            </tbody>
-
-                            <tfoot>
-                                <tr>
-                                    <td>
-                                        <strong>Total</strong>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-end">
-                                        <strong>{{paginatedBill.get_total_amount.toFixed(2)}}</strong>
-                                    </td>
-                                </tr>
-                            </tfoot>
-
-                        </table>
-
-                    </div>
-                    
-                    <div class="col-md-12">
-                        <p>
-                            Órdenes asociadas:
-                            <span v-for="order of paginatedBill.get_orders_folio" :key="order.folio">
-                                {{ order.folio }}, 
-                            </span>
-                        </p>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <span class="d-block fw-bold">Desglose de importes</span>
-                        <span class="d-block">Rev/Diag.: {{ paginatedBill.get_total_amount_revision.toFixed(2) }}</span>
-                        <span class="d-block">Partes: {{ paginatedBill.get_total_amount_prod.toFixed(2) }}</span>
-                        <span class="d-block">Conceptos: {{ paginatedBill.get_total_amount_concept.toFixed(2) }}</span>
-                        <span class="d-block">Reparación: {{ paginatedBill.get_total_amount_repair.toFixed(2) }}</span>
-                        <span class="d-block">Mtto: {{ paginatedBill.get_total_amount_maintenace.toFixed(2) }}</span>
-                        <span class="d-block">Instalación: {{ paginatedBill.get_total_amount_install.toFixed(2) }}</span>
-                        <span class="d-block">Montaje/Desm: {{ paginatedBill.get_total_amount_unmounting.toFixed(2) }}</span>
+                        <div class="col-md-3 border-bottom pb-1 border-3 mb-1">
+                            <img
+                            src="../../assets/logo.png"
+                            class="img-fluid"
+                            alt="refriall logo"
+                            style="height: 100px;">
+                        </div>
                         
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <span class="d-block fw-bold">Prestador</span>
-                        <span class="d-block">Licencia: {{ paginatedBill.provider.license_number }}</span>
-                        <span class="d-block">{{ paginatedBill.provider.first_name }} {{ paginatedBill.provider.last_name }}</span>
-                        <span class="d-block">No. CI: {{ paginatedBill.provider.personal_id }}</span>
-                        <span class="d-block">Firma: </span>
-                        <span v-if="paginatedBill.provider_signature_date" class="d-block">{{ paginatedBill.provider_signature_date }}</span>
-                        <span v-else class="d-block">Fecha: </span>
-    
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <span class="d-block fw-bold">Cliente</span>
-                        <span class="d-block">Cargo: {{ paginatedBill.customer_charge }}</span>
-                        <span class="d-block">Nombre: </span>
-                        <span class="d-block">No. CI: {{ paginatedBill.customer_personal_id }}</span>
-                        <span class="d-block">Firma: </span>
-                        <span v-if="paginatedBill.customer_signature_date" class="d-block">{{ paginatedBill.customer_signature_date }}</span>
-                        <span v-else class="d-block">Fecha: </span>
-                    </div>
-                    
-                    <div v-if="index < paginatedBills.length - 1" class="html2pdf__page-break"></div>
+                        <div v-if="paginatedBill.customer" class="col-md-5 border-bottom border-2 mb-1">
+                            <span class="d-block fw-bold">Cliente</span>
+                            <span class="d-block">{{ paginatedBill.customer.name }}</span>
+                            <span class="d-block">{{ paginatedBill.customer.address }}</span>
+                            <span class="d-block">{{ paginatedBill.customer.bank_account_header }}</span>
+                            <span class="d-block">{{ paginatedBill.customer.bank_account }}</span>
+                        </div>
 
-                </div> <!-- end paginated bills -->
+                        <div class="col-md-5 border-bottom border-2 mb-1">
+                            <span class="d-block fw-bold">Prestador</span>
+                            <span class="d-block">Código TPCP: {{ paginatedBill.provider.tcp_code }}</span>
+                            <span class="d-block">Titular de Cta: {{ paginatedBill.provider.bank_account_header }}</span>
+                            <span class="d-block">No. de cuenta TPCP: {{ paginatedBill.provider.bank_account }}</span>
+                            <span class="d-block">No. de Licencia: {{ paginatedBill.provider.license_number }}</span>
+                        </div>
 
-            </div> <!-- end bill info -->
+                        <div class="col-md-2 border-bottom border-2 mb-1">
+                            <span class="d-block">
+                                <span class="fw-bold">Folio: </span>{{ paginatedBill.folio }}
+                            </span>
+                        </div>
+
+                        <div class="col-md-12" style="height: 610px;">
+                            <table class="table table-sm">
+        
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Artículo o Servicio</th>
+                                        <th class="text-center">U/M</th>
+                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-end">Precio</th>
+                                        <th class="text-end">Importe</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr v-for="item in paginatedBill.items" :key="item.id">
+                                        <td>{{ item.item.code }}</td>
+                                        <td>{{ item.item.name }}</td>
+                                        <td class="text-center">{{ item.item.get_measurement }}</td>
+                                        <td class="text-center">{{ item.times.toFixed(2) }}</td>
+                                        <td class="text-end">{{ item.item.price.toFixed(2) }}</td>
+                                        <td class="text-end">{{ (item.item.price * item.times).toFixed(2) }}</td>
+                                    </tr>
+                                </tbody>
+
+                                <tfoot>
+                                    <tr>
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-end">
+                                            <strong>{{paginatedBill.get_total_amount.toFixed(2)}}</strong>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
+
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <p>
+                                Órdenes asociadas:
+                                <span v-for="order of paginatedBill.get_orders_folio" :key="order.folio">
+                                    {{ order.folio }}, 
+                                </span>
+                            </p>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <span class="d-block fw-bold">Desglose de importes</span>
+                            <span class="d-block">Rev/Diag.: {{ paginatedBill.get_total_amount_revision.toFixed(2) }}</span>
+                            <span class="d-block">Partes: {{ paginatedBill.get_total_amount_prod.toFixed(2) }}</span>
+                            <span class="d-block">Conceptos: {{ paginatedBill.get_total_amount_concept.toFixed(2) }}</span>
+                            <span class="d-block">Reparación: {{ paginatedBill.get_total_amount_repair.toFixed(2) }}</span>
+                            <span class="d-block">Mtto: {{ paginatedBill.get_total_amount_maintenace.toFixed(2) }}</span>
+                            <span class="d-block">Instalación: {{ paginatedBill.get_total_amount_install.toFixed(2) }}</span>
+                            <span class="d-block">Montaje/Desm: {{ paginatedBill.get_total_amount_unmounting.toFixed(2) }}</span>
+                            
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <span class="d-block fw-bold">Prestador</span>
+                            <span class="d-block">Licencia: {{ paginatedBill.provider.license_number }}</span>
+                            <span class="d-block">{{ paginatedBill.provider.first_name }} {{ paginatedBill.provider.last_name }}</span>
+                            <span class="d-block">No. CI: {{ paginatedBill.provider.personal_id }}</span>
+                            <span class="d-block">Firma: </span>
+                            <span v-if="paginatedBill.provider_signature_date" class="d-block">{{ paginatedBill.provider_signature_date }}</span>
+                            <span v-else class="d-block">Fecha: </span>
+        
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <span class="d-block fw-bold">Cliente</span>
+                            <span class="d-block">Cargo: {{ paginatedBill.customer_charge }}</span>
+                            <span class="d-block">Nombre: </span>
+                            <span class="d-block">No. CI: {{ paginatedBill.customer_personal_id }}</span>
+                            <span class="d-block">Firma: </span>
+                            <span v-if="paginatedBill.customer_signature_date" class="d-block">{{ paginatedBill.customer_signature_date }}</span>
+                            <span v-else class="d-block">Fecha: </span>
+                        </div>
+                        
+                        <div v-if="index < paginatedBills.length - 1" class="html2pdf__page-break"></div>
+
+                    </div> <!-- end paginated bills -->
+
+                </div> <!-- end bill info -->
+
+            </div> <!-- end notFound false -->
+            <!-- notFound -->
+            <div v-else>
+                <p>{{ notFound }}</p>
+            </div> <!-- end notFound false -->
 
         </div> <!-- end main content -->
         
@@ -206,6 +214,8 @@ const bill = ref({
     aproved_by: '',
 });
 
+const notFound = ref(null);
+
 const billToPaginate = ref(null);
 
 const route = useRoute();
@@ -213,12 +223,16 @@ const route = useRoute();
 const paginatedBills = ref([]);
 
 onMounted(async () => {
-    const resp = await detailBill(route.params.id);
-    bill.value = resp.data;
-
-    prepareBillToPaginate(billToPaginate, bill);
-
-    paginatedBills.value = paginate(billToPaginate, 15);
+    try {
+        const resp = await detailBill(route.params.id);
+        bill.value = resp.data;
+    
+        prepareBillToPaginate(billToPaginate, bill);
+    
+        paginatedBills.value = paginate(billToPaginate, 15);
+    } catch (error) {
+        notFound.value = 'La factura a la que trata de acceder no existe, haga click en el enlace a facturas en el menú de la izquierda para ver las facturas existentes.'
+    }
 });
 
 const mergeItemsTimes = (itemsTimes) => {
