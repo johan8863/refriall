@@ -778,9 +778,7 @@ onMounted(async () => {
   // get dependencies
   const respDependencies = await listCustomerDependecy()
   dependencies.value = respDependencies.data
-  // create initial empty objects for itemtime
-  createItemTime()
-
+  
   const id = route.params.id
   if (id) {
     const { data } = await detailOrderUpdate(id)
@@ -791,6 +789,9 @@ onMounted(async () => {
         times: itemTime.times
       }
     })
+  } else {
+    // create initial empty objects for itemtime
+    createItemTime()
   }
 })
 
