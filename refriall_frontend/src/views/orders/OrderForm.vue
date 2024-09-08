@@ -265,7 +265,20 @@
             </p>
           </span>
         </div>
-        <div class="col-md-3"></div>
+        <!-- currency control -->
+        <div class="col-md-3">
+          <label for="currency" class="form-label">Moneda</label>
+          <select
+            name="currency"
+            id="currency"
+            class="form-select form-select-sm"
+            v-model.number="order.currency">
+            <option
+              v-for="currency in currencies"
+              :key="currency.id"
+              :value="currency.id">{{ currency.name }}</option>            
+          </select>
+        </div>
 
         <!-- check_diagnosis control -->
         <div class="col-md-2 mb-2">
@@ -614,10 +627,12 @@ import ItemTime from '../../components/ItemTime.vue'
 import { detailOrderUpdate, postOrder, putOrder } from '../../services/order.service'
 import { listCustomerDependecy } from '../../services/customerDependency.service'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import { listCurrencies } from '../../services/currency.service'
 
 // main object
 const order = ref({
   customer: '',
+  currency: '',
   customer_dependency: '',
   symptom: '',
   flaw: '',
@@ -652,6 +667,7 @@ const customers = ref([])
 const dependencies = ref([])
 const kits = ref([])
 const items = ref([])
+const currencies = ref([]);
 
 // routing objects
 const router = useRouter()
@@ -703,6 +719,7 @@ const v$ = useVuelidate(rules, order)
 // order object to be filled with backend errors
 const orderBackendErrors = ref({
   customer: [],
+  currency: [],
   customer_dependency: [],
   symptom: [],
   flaw: [],
@@ -766,18 +783,7 @@ const deleteItem = (index) => {
 
 // on mounted cycle
 onMounted(async () => {
-  // get customers
-  const respCustomers = await listCustomer()
-  customers.value = respCustomers.data
-  // get kits
-  const respKits = await listKit()
-  kits.value = respKits.data
-  // get items
-  const respItems = await listItem()
-  items.value = respItems.data
-  // get dependencies
-  const respDependencies = await listCustomerDependecy()
-  dependencies.value = respDependencies.data
+  loadData()
   
   const id = route.params.id
   if (id) {
@@ -842,5 +848,8 @@ const loadData = async () => {
   // get dependencies
   const respDependencies = await listCustomerDependecy()
   dependencies.value = respDependencies.data
+  // get currencies
+  const respCurrencies = await listCurrencies()
+  currencies.value = respCurrencies.data;
 }
 </script>
