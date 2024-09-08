@@ -12,6 +12,9 @@
                 <li :class="listGroup.listGroupItem">
                     <router-link :to="{name: 'currency_update', params: {id: currency.id}}">Actualizar</router-link>
                 </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link :to="{name: 'currency_delete', params: {id: currency.id}}">Eliminar</router-link>
+                </li>
             </ul>
         </div>
         <!-- main content -->

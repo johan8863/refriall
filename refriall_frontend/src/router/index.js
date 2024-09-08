@@ -140,6 +140,11 @@ const router = createRouter({
       component: () => import ('../views/currencies/CurrencyForm.vue')
     },
     {
+      path: '/currencies/delete/:id',
+      name: 'currency_delete',
+      component: () => import ('../views/currencies/CurrencyConfirmDelete.vue')
+    },
+    {
       path: '/currencies/create',
       name: 'currency_create',
       component: () => import ('../views/currencies/CurrencyForm.vue')
