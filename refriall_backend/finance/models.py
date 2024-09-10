@@ -33,6 +33,7 @@ class Bill(models.Model):
     )
     provider_signature_date = models.DateField('Firma del proveedor')
     customer_signature_date = models.DateField('Firma del cliente', null=True)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, related_name="bills")
 
     # General but not required information
     check_number = models.CharField('Nro. de Cheque', max_length=35, null=True, blank=True)
