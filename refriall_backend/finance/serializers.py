@@ -263,12 +263,14 @@ class BillSerializerForReadOnly(serializers.ModelSerializer):
     customer = CustomerSerializer()
     provider = ProviderSerializer()
     get_orders = OrderSerializerForReadOnly(many=True)
+    currency = CurrencySerializer()
 
     class Meta:
         model = Bill
         fields = [
             "id",
             "customer",
+            "currency",
             "folio",
             "provider",
             "provider_signature_date",
@@ -301,6 +303,7 @@ class BillSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "customer",
+            "currency",
             "folio",
             "provider",
             "provider_signature_date",
@@ -327,23 +330,6 @@ class BillSerializer(serializers.ModelSerializer):
                 'orders': 'Debe seleccionar al menos una orden'
             })
         return super().validate(attrs)
-
-    # def match_orders(self, orders):
-    #     for order in orders:
-    #         order.matched = True
-    #         order.save()
-    
-    # def create(self, validated_data):
-    #     orders = validated_data.pop('orders')
-    #     self.match_orders(orders)
-    #     validated_data['orders'] = orders
-    #     return super().create(validated_data)
-    
-    # def update(self, instance, validated_data):
-    #     orders = validated_data.pop('orders')
-    #     self.match_orders(orders)
-    #     validated_data['orders'] = orders
-    #     return super().update(instance, validated_data)
 
 
 class BillSerializerDetailUpdate(serializers.ModelSerializer):
