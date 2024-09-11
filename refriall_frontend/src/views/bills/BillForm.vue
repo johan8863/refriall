@@ -26,6 +26,23 @@
                       {{ error }}</p>
                 </span>
 
+                <!-- currency control -->
+                <div class="col-md-3 mb-2">
+                    <label for="currency">Moneda</label>
+                    <select
+                      name="currency"
+                      id="currency"
+                      class="form-select"
+                      autofocus
+                      @change="ordersFromCustomer"
+                      v-model="bill.currency">
+                      <option
+                        v-for="currency in currencies"
+                        :key="currency.id"
+                        :value="currency.id">{{ currency.name }}</option>
+                    </select>
+                </div>
+
                 <!-- customer control -->
                 <div class="col-md-3 mb-2">
                     <label for="customer">Cliente</label>
@@ -33,7 +50,7 @@
                       name="customer"
                       id="customer"
                       class="form-select"
-                      autofocus
+                      :disabled="!bill.currency"
                       @change="ordersFromCustomer"
                       v-model="bill.customer">
                         <option
@@ -79,6 +96,7 @@
                         </p>
                       </span>
                 </div>
+                <div class="col-md-3 mb-2"></div>
 
                 <!-- provider_signature_date control -->
                 <div class="col-md-3 mb-2">
@@ -423,12 +441,14 @@ import { helpers, required } from '@vuelidate/validators';
 // app
 import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
 import { listCustomer } from "../../services/customer.service";
-import { getOrdersNotMatched, getOrdersFromCustomerNotMatched } from "../../services/order.service";
+import { getOrdersFromCustomerNotMatched } from "../../services/order.service";
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
+import { listCurrencies } from '../../services/currency.service';
 
 
 const bill = ref({
     customer: '',
+    currency: '',
     folio: '',
     provider: 1,
     provider_signature_date: '',
@@ -448,6 +468,7 @@ const bill = ref({
 const billBackendErrors = ref({
     non_field_errors: [],
     customer: '',
+    currency: '',
     folio: '',
     provider: '',
     provider_signature_date: '',
@@ -465,6 +486,7 @@ const billBackendErrors = ref({
 
 const customers = ref([]);
 const orders = ref([]);
+const currencies = ref([]);
 
 // routes consts
 const router = useRouter();
@@ -492,8 +514,9 @@ onMounted(async () => {
     // get customers
     const respCustomers = await listCustomer();
     customers.value = respCustomers.data;
-    // para eliminar un attributo de un objeto
-    // const {...rest, get_orders} = bill.value
+    // get currencies
+    const respCurrencies = await listCurrencies();
+    currencies.value = respCurrencies.data;
     
     const id = route.params.id;
     if (id) {
@@ -501,13 +524,14 @@ onMounted(async () => {
         bill.value = data;
         bill.value.orders = bill.value.get_orders.map(item => item.id)
         // get the orders that havent been related to a bill yet and display them to be selected
-        const ordersNotMatched = (await getOrdersFromCustomerNotMatched(bill.value.customer)).data;
+        const ordersNotMatched = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
         bill.value.get_orders.push(...ordersNotMatched);
-    } else {
-      // get orders to create a bill
-      const respOrders = await getOrdersNotMatched();
-      orders.value = respOrders.data;
-    }
+    } 
+    // else {
+    //   // get orders to create a bill
+    //   const respOrders = await getOrdersNotMatched();
+    //   orders.value = respOrders.data;
+    // }
 });
 
 const createBill = async (bill) => {
@@ -536,7 +560,7 @@ const updateBill = async (bill) => {
 
 const ordersFromCustomer = async (event) => {
     try {
-        orders.value = (await getOrdersFromCustomerNotMatched(event.target.value)).data;
+        orders.value = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
     } catch (error) {
         console.log(error.response.data);
     }

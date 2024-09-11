@@ -36,9 +36,9 @@ export const deleteOrder = async (id) => {
     await apiBase.delete(`${urlOrderPost}/${id}/`);
 };
 
-export const getOrdersFromCustomerNotMatched = async (id) => {
+export const getOrdersFromCustomerNotMatched = async (id, currency) => {
     // consumes the endpoints that retrieves all order given a Customer ID and matched attr = false
-    return await apiBase.get(`${urlFromCustomerNotMatched}/${id}`);
+    return await apiBase.get(`${urlFromCustomerNotMatched}/${id}/${currency}/`);
 };
 
 export const getOrdersFromCustomer = async (id) => {

@@ -340,6 +340,7 @@ class BillSerializerDetailUpdate(serializers.ModelSerializer):
         fields = [
             "id",
             "customer",
+            "currency",
             "folio",
             "provider",
             "provider_signature_date",
