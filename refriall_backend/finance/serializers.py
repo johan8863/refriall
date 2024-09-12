@@ -373,15 +373,3 @@ class BillSerializerDetailUpdate(serializers.ModelSerializer):
         for order in orders:
             order.matched = True
             order.save()
-    
-    # def create(self, validated_data):
-    #     orders = validated_data.pop('orders')
-    #     self.match_orders(orders)
-    #     validated_data['orders'] = orders
-    #     return super().create(validated_data)
-    
-    # def update(self, instance, validated_data):
-    #     orders = validated_data.pop('orders')
-    #     self.match_orders(orders)
-    #     validated_data['orders'] = orders
-    #     return super().update(instance, validated_data)
