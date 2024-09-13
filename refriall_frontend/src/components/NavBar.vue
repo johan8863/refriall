@@ -70,11 +70,3 @@ import { navBar } from "../assets/js/bootstrap_classes/navBar";
         </div>
     </nav>
 </template>
-
-<script setup>
-
-// vue
-import { RouterLink } from "vue-router";
-import { navBar } from "../assets/js/bootstrap_classes/navBar";
-
-</script>
