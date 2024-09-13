@@ -718,12 +718,37 @@ const loadData = async () => {
           <div class="col-md-1">Precio</div>
         </div>
 
-        <div class="col-md-12 mb-2" style="overflow-y: auto; height: 400px">
-          <template v-for="(i, index) in order.itemtime_set" :key="index">
+        <!-- 
+          if no order.id means the order its being created,
+          therefore the state management is being done via the list indexes 
+        -->
+        <div
+          v-if="!order.id"
+          class="col-md-12 mb-2"
+          style="overflow-y: auto; height: 400px">
+          <template v-for="(item, index) in order.itemtime_set" :key="index">
             <item-time
               v-if="order.itemtime_set.length > 0"
               :items="items"
-              :item="i"
+              :item="item"
+              @on-delete-item="deleteItem(index)"
+            />
+          </template>
+        </div>
+
+        <!-- 
+          if order.id means the order its being updated,
+          therefore the state management is being done via the itemtimes objects ids 
+        -->
+        <div
+          v-else
+          class="col-md-12 mb-2"
+          style="overflow-y: auto; height: 400px">
+          <template v-for="(item, index) in order.itemtime_set" :key="index">
+            <item-time
+              v-if="order.itemtime_set.length > 0"
+              :items="items"
+              :item="item"
               @on-delete-item="deleteItem(index)"
             />
           </template>
