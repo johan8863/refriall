@@ -613,7 +613,7 @@
 <script setup>
 // vue
 import { RouterLink, useRouter, useRoute } from 'vue-router'
-import { ref, onMounted, computed, toRaw } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 // third
 import { useVuelidate } from '@vuelidate/core'
@@ -770,7 +770,7 @@ const total = computed(() => {
     .filter((itemtime) => itemtime.item !== 0)
     .reduce((count, itemtime) => {
       const itemfiltered = items.value.filter((itf) => itf.id === itemtime.item)
-      const itemRaw = toRaw(itemfiltered[0])
+      const itemRaw = itemfiltered[0]
       return count + itemRaw.price * itemtime.times
     }, 0)
 })
