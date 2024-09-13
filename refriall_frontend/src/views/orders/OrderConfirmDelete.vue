@@ -1,29 +1,3 @@
-<template>
-    <div class="row">
-        <!-- side menu -->
-        <div class="col-md-2">
-            <ul :class="listGroup.listGroup">
-                <li :class="listGroup.listGroupItem">
-                    <strong>Artículos</strong>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <RouterLink :to="{name: 'orders'}">Órdenes</RouterLink>
-                </li>
-            </ul>
-        </div>
-
-        <!-- main content -->
-        <div class="col-md-6">
-            <p>Está seguro que desea eliminar la orden?</p>
-            <button
-              class="btn btn-sm btn-danger"
-              @click="delOrder(order.id)">Eliminar</button>
-            <RouterLink :to="{name: 'orders'}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
-        </div>
-
-    </div> <!-- end row -->
-</template>
-
 <script setup>
 
 // vue
@@ -83,6 +57,28 @@ const delOrder = async (id) => {
 
 </script>
 
-<style lang="scss" scoped>
+<template>
+    <div class="row">
+        <!-- side menu -->
+        <div class="col-md-2">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
+                    <strong>Artículos</strong>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <RouterLink :to="{name: 'orders'}">Órdenes</RouterLink>
+                </li>
+            </ul>
+        </div>
 
-</style>
+        <!-- main content -->
+        <div class="col-md-6">
+            <p>Está seguro que desea eliminar la orden?</p>
+            <button
+              class="btn btn-sm btn-danger"
+              @click="delOrder(order.id)">Eliminar</button>
+            <RouterLink :to="{name: 'orders'}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+        </div>
+
+    </div> <!-- end row -->
+</template>

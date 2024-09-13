@@ -1,3 +1,50 @@
+<script setup>
+
+// vue
+import { onMounted, ref } from "vue";
+import { RouterLink } from "vue-router";
+
+// app
+import { listKit } from "../../services/kit.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+const kits = ref([]);
+const currentPage = ref(1);
+const showNextButton = ref(false);
+const showPrevButton = ref(false);
+
+const getKits = async () => {
+    const resp = (await listKit(currentPage.value)).data;
+    
+    showNextButton.value = false;
+    if (resp.next) {
+        showNextButton.value = true;
+    }
+    
+    showPrevButton.value = false;
+    if (resp.previous) {
+        showPrevButton.value = true;
+    }
+
+    kits.value = resp.results;
+};
+
+const loadNextItems = () => {
+    currentPage.value += 1;
+    getKits()
+}
+
+const loadPrevItems = () => {
+    currentPage.value -= 1;
+    getKits()
+}
+
+onMounted(async () => {
+    getKits();
+});
+
+</script>
+
 <template>
 
     <div class="row">
@@ -64,50 +111,3 @@
     </div>
 
 </template>
-
-<script setup>
-
-// vue
-import { onMounted, ref } from "vue";
-import { RouterLink } from "vue-router";
-
-// app
-import { listKit } from "../../services/kit.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-const kits = ref([]);
-const currentPage = ref(1);
-const showNextButton = ref(false);
-const showPrevButton = ref(false);
-
-const getKits = async () => {
-    const resp = (await listKit(currentPage.value)).data;
-    
-    showNextButton.value = false;
-    if (resp.next) {
-        showNextButton.value = true;
-    }
-    
-    showPrevButton.value = false;
-    if (resp.previous) {
-        showPrevButton.value = true;
-    }
-
-    kits.value = resp.results;
-};
-
-const loadNextItems = () => {
-    currentPage.value += 1;
-    getKits()
-}
-
-const loadPrevItems = () => {
-    currentPage.value -= 1;
-    getKits()
-}
-
-onMounted(async () => {
-    getKits();
-});
-
-</script>

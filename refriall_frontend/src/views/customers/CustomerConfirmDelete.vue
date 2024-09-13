@@ -1,40 +1,3 @@
-<template>
-    <div class="row">
-        <!-- side menu -->
-        <div class="col-md-2">
-            <ul :class="listGroup.listGroup">
-                <li :class="listGroup.listGroupItem">
-                    <strong>Clientes</strong>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link :to="{name: 'customers'}">Clientes</router-link>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link :to="{name: 'customers_update', params: {id: customer.id}}">Editar</router-link>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link :to="{name: 'customers_confirm_delete', params: {id: customer.id}}">Eliminar</router-link>
-                </li>
-            </ul>
-        </div>
-
-        <!-- main content -->
-        <div class="col-md-4">
-            <p>Está seguro que desea eliminar el cliente: {{ customer.name }}?</p>
-            <div>
-                <button
-                  class="btn btn-sm btn-danger"
-                  @click="delCustomer(customer.id)">Eliminar</button>
-                <RouterLink
-                  :to="{name: 'customers_detail', params: {id: customer.id}}"
-                  class="btn btn-sm btn-secondary">Cancelar</RouterLink>
-            </div>
-        </div>
-
-    </div> <!-- end row -->
-
-</template>
-
 <script setup>
 
 // vue
@@ -77,6 +40,39 @@ const delCustomer = async (id) => {
 
 </script>
 
-<style lang="scss" scoped>
+<template>
+    <div class="row">
+        <!-- side menu -->
+        <div class="col-md-2">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
+                    <strong>Clientes</strong>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link :to="{name: 'customers'}">Clientes</router-link>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link :to="{name: 'customers_update', params: {id: customer.id}}">Editar</router-link>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link :to="{name: 'customers_confirm_delete', params: {id: customer.id}}">Eliminar</router-link>
+                </li>
+            </ul>
+        </div>
 
-</style>
+        <!-- main content -->
+        <div class="col-md-4">
+            <p>Está seguro que desea eliminar el cliente: {{ customer.name }}?</p>
+            <div>
+                <button
+                  class="btn btn-sm btn-danger"
+                  @click="delCustomer(customer.id)">Eliminar</button>
+                <RouterLink
+                  :to="{name: 'customers_detail', params: {id: customer.id}}"
+                  class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+            </div>
+        </div>
+
+    </div> <!-- end row -->
+
+</template>

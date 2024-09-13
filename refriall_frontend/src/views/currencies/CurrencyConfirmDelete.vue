@@ -1,35 +1,3 @@
-<template>
-    <div class="row">
-        <!-- side menu -->
-        <div class="col-md-2">
-            <ul :class="listGroup.listGroup">
-                <li :class="listGroup.listGroupItem">
-                    <strong>Monedas</strong>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link :to="{name: 'currencies'}">Monedas</router-link>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link :to="{name: 'currency_update', params: {id: currency.id}}">Actualizar</router-link>
-                </li>
-            </ul>
-        </div>
-        <!-- main content -->
-        <div class="col-md-4">
-            <div>
-                <p>Está seguro que desea eliminar la moneda: {{ currency.name }}</p>
-                <button
-                  class="btn btn-sm btn-danger"
-                  @click="delCurrency(currency.id)">Eliminar</button>
-                <RouterLink
-                  :to="{name: 'currency_detail', params: {id: currency.id}}"
-                  class="btn btn-sm btn-secondary">Cancelar</RouterLink>
-            </div>
-        </div>
-
-    </div>
-</template>
-
 <script setup>
 // vue
 import { onMounted, ref } from "vue";
@@ -66,3 +34,35 @@ onMounted(async () => {
 
 
 </script>
+
+<template>
+    <div class="row">
+        <!-- side menu -->
+        <div class="col-md-2">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
+                    <strong>Monedas</strong>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link :to="{name: 'currencies'}">Monedas</router-link>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link :to="{name: 'currency_update', params: {id: currency.id}}">Actualizar</router-link>
+                </li>
+            </ul>
+        </div>
+        <!-- main content -->
+        <div class="col-md-4">
+            <div>
+                <p>Está seguro que desea eliminar la moneda: {{ currency.name }}</p>
+                <button
+                  class="btn btn-sm btn-danger"
+                  @click="delCurrency(currency.id)">Eliminar</button>
+                <RouterLink
+                  :to="{name: 'currency_detail', params: {id: currency.id}}"
+                  class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+            </div>
+        </div>
+
+    </div>
+</template>

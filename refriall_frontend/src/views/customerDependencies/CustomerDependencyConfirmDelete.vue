@@ -1,38 +1,3 @@
-<template>
-
-    <div class="row">
-        <!-- side menu -->
-        <div class="col-md-2">
-            <ul :class="listGroup.listGroup">
-                <li :class="listGroup.listGroupItem">
-                    <strong>Clientes</strong>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link :to="{name: 'customers'}">Clientes</router-link>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link :to="{name: 'customer_dependecy_update', params: {id: dependency.id}}">Editar</router-link>
-                </li>
-            </ul>
-        </div>
-
-        <!-- main content -->
-        <div class="col-md-4">
-            <p>Está seguro que desea eliminar la dependencia: {{ dependency.name }}?</p>
-            <div>
-                <button
-                  class="btn btn-sm btn-danger"
-                  @click="delDependency(dependency.id)">Eliminar</button>
-                <RouterLink
-                  :to="{name: 'customer_dependecy_detail', params: {id: dependency.id}}"
-                  class="btn btn-sm btn-secondary">Cancelar</RouterLink>
-            </div>
-        </div>
-
-    </div>
-
-</template>
-
 <script setup>
 
 // vue
@@ -73,3 +38,38 @@ const delDependency = async (id) => {
 }
 
 </script>
+
+<template>
+
+    <div class="row">
+        <!-- side menu -->
+        <div class="col-md-2">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
+                    <strong>Clientes</strong>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link :to="{name: 'customers'}">Clientes</router-link>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link :to="{name: 'customer_dependecy_update', params: {id: dependency.id}}">Editar</router-link>
+                </li>
+            </ul>
+        </div>
+
+        <!-- main content -->
+        <div class="col-md-4">
+            <p>Está seguro que desea eliminar la dependencia: {{ dependency.name }}?</p>
+            <div>
+                <button
+                  class="btn btn-sm btn-danger"
+                  @click="delDependency(dependency.id)">Eliminar</button>
+                <RouterLink
+                  :to="{name: 'customer_dependecy_detail', params: {id: dependency.id}}"
+                  class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+            </div>
+        </div>
+
+    </div>
+
+</template>

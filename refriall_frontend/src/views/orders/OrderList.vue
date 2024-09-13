@@ -1,3 +1,50 @@
+<script setup>
+
+// vue
+import { RouterLink } from "vue-router";
+import { ref, onMounted } from "vue";
+
+// app
+import { listOrder } from "../../services/order.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+const orders = ref([]);
+const currentPage = ref(1);
+const showNextButton = ref(false);
+const showPrevButton = ref(false);
+
+const getOrders = async () => {
+    const resp = (await listOrder(currentPage.value)).data;
+    
+    showNextButton.value = false;
+    if (resp.next) {
+        showNextButton.value = true;
+    }
+    
+    showPrevButton.value = false;
+    if (resp.previous) {
+        showPrevButton.value = true;
+    }
+
+    orders.value = resp.results;
+};
+
+const loadNextItems = () => {
+    currentPage.value += 1;
+    getOrders()
+}
+
+const loadPrevItems = () => {
+    currentPage.value -= 1;
+    getOrders()
+}
+
+onMounted(async () => {
+    getOrders()
+});
+
+</script>
+
 <template>
 
     <div class="row">
@@ -79,50 +126,3 @@
     </div>
 
 </template>
-
-<script setup>
-
-// vue
-import { RouterLink } from "vue-router";
-import { ref, onMounted } from "vue";
-
-// app
-import { listOrder } from "../../services/order.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-const orders = ref([]);
-const currentPage = ref(1);
-const showNextButton = ref(false);
-const showPrevButton = ref(false);
-
-const getOrders = async () => {
-    const resp = (await listOrder(currentPage.value)).data;
-    
-    showNextButton.value = false;
-    if (resp.next) {
-        showNextButton.value = true;
-    }
-    
-    showPrevButton.value = false;
-    if (resp.previous) {
-        showPrevButton.value = true;
-    }
-
-    orders.value = resp.results;
-};
-
-const loadNextItems = () => {
-    currentPage.value += 1;
-    getOrders()
-}
-
-const loadPrevItems = () => {
-    currentPage.value -= 1;
-    getOrders()
-}
-
-onMounted(async () => {
-    getOrders()
-});
-
-</script>

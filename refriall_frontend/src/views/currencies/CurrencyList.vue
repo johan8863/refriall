@@ -1,3 +1,25 @@
+<script setup>
+
+// vue
+import { ref, onMounted } from "vue";
+import { RouterLink } from "vue-router";
+
+// app
+import listGroup from '../../assets/js/bootstrap_classes/listGroup';
+import { listCurrencies } from "../../services/currency.service";
+
+const currencies = ref([])
+
+const getCurrencies = async () => {
+    currencies.value = (await listCurrencies()).data
+}
+
+onMounted(async () => {
+    getCurrencies()
+})
+
+</script>
+
 <template>
     <div class="row">
         <!-- side menu -->
@@ -52,25 +74,3 @@
 
     </div>
 </template>
-
-<script setup>
-
-// vue
-import { ref, onMounted } from "vue";
-import { RouterLink } from "vue-router";
-
-// app
-import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { listCurrencies } from "../../services/currency.service";
-
-const currencies = ref([])
-
-const getCurrencies = async () => {
-    currencies.value = (await listCurrencies()).data
-}
-
-onMounted(async () => {
-    getCurrencies()
-})
-
-</script>

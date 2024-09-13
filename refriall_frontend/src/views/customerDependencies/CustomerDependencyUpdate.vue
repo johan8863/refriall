@@ -1,3 +1,77 @@
+<script setup>
+
+// vue
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+// app
+import { detailCustomerDependecy, putCustomerDependcy } from "../../services/customerDependency.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+// third
+import { useVuelidate } from "@vuelidate/core";
+import { required, helpers } from "@vuelidate/validators";
+
+const route = useRoute();
+const router = useRouter();
+
+const dependency = ref({
+    customer: '',
+    name: '',
+    address: '',
+    province: '',
+    township: '',
+});
+
+const dependencyErrors = ref({
+    customer: [],
+    name: [],
+    address: [],
+    province: [],
+    township: [],
+});
+
+const rules = {
+    name: {
+        required: helpers.withMessage('El nombre es requerido.', required)
+    },
+    address: {
+        required: helpers.withMessage('La dirección es requerida.', required)
+    },
+    province: {
+        required: helpers.withMessage('La provincia es requerida.', required)
+    },
+    township: {
+        required: helpers.withMessage('El municipio es requerido.', required)
+    }
+}
+
+// vuelidate object
+const v$ = useVuelidate(rules, dependency);
+
+onMounted(async () => {
+    const resp = await detailCustomerDependecy(route.params.id);
+    dependency.value = resp.data;
+});
+
+const updateDependency = async (dependency) => {
+    try {
+        if (await v$.value.$validate) {
+            const { data } = await putCustomerDependcy(dependency);
+            router.push({
+                name: 'customers_detail',
+                params: {
+                    id: data.customer
+                }
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+</script>
+
 <template>
     <div class="row">
         <!-- side menu -->
@@ -125,81 +199,3 @@
         </div>
     </div>
 </template>
-
-<script setup>
-
-// vue
-import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-
-// app
-import { detailCustomerDependecy, putCustomerDependcy } from "../../services/customerDependency.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-// third
-import { useVuelidate } from "@vuelidate/core";
-import { required, helpers } from "@vuelidate/validators";
-
-const route = useRoute();
-const router = useRouter();
-
-const dependency = ref({
-    customer: '',
-    name: '',
-    address: '',
-    province: '',
-    township: '',
-});
-
-const dependencyErrors = ref({
-    customer: [],
-    name: [],
-    address: [],
-    province: [],
-    township: [],
-});
-
-const rules = {
-    name: {
-        required: helpers.withMessage('El nombre es requerido.', required)
-    },
-    address: {
-        required: helpers.withMessage('La dirección es requerida.', required)
-    },
-    province: {
-        required: helpers.withMessage('La provincia es requerida.', required)
-    },
-    township: {
-        required: helpers.withMessage('El municipio es requerido.', required)
-    }
-}
-
-// vuelidate object
-const v$ = useVuelidate(rules, dependency);
-
-onMounted(async () => {
-    const resp = await detailCustomerDependecy(route.params.id);
-    dependency.value = resp.data;
-});
-
-const updateDependency = async (dependency) => {
-    try {
-        if (await v$.value.$validate) {
-            const { data } = await putCustomerDependcy(dependency);
-            router.push({
-                name: 'customers_detail',
-                params: {
-                    id: data.customer
-                }
-            });
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-
-
-
-</script>

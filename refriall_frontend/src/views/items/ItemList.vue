@@ -1,3 +1,51 @@
+<script setup>
+
+// vue
+import { onMounted, ref } from "vue";
+import { RouterLink } from "vue-router";
+
+// app
+import { listItem } from "../../services/item.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+const items = ref([]);
+const currentPage = ref(1);
+const showNextButton = ref(false);
+const showPrevButton = ref(false);
+
+const getItems = async () => {
+    const resp = (await listItem(currentPage.value)).data;
+    
+    showNextButton.value = false;
+    if (resp.next) {
+        showNextButton.value = true;
+    }
+    
+    showPrevButton.value = false;
+    if (resp.previous) {
+        showPrevButton.value = true;
+    }
+
+    items.value = resp.results;
+};
+
+const loadNextItems = () => {
+    currentPage.value += 1;
+    getItems()
+}
+
+const loadPrevItems = () => {
+    currentPage.value -= 1;
+    getItems()
+}
+
+
+onMounted(async () => {
+    getItems()
+});
+
+</script>
+
 <template>
     <div class="row">
         <!-- side menu -->
@@ -79,55 +127,3 @@
 
     </div> <!-- end row -->
 </template>
-
-<script setup>
-
-// vue
-import { onMounted, ref } from "vue";
-import { RouterLink } from "vue-router";
-
-// app
-import { listItem } from "../../services/item.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-const items = ref([]);
-const currentPage = ref(1);
-const showNextButton = ref(false);
-const showPrevButton = ref(false);
-
-const getItems = async () => {
-    const resp = (await listItem(currentPage.value)).data;
-    
-    showNextButton.value = false;
-    if (resp.next) {
-        showNextButton.value = true;
-    }
-    
-    showPrevButton.value = false;
-    if (resp.previous) {
-        showPrevButton.value = true;
-    }
-
-    items.value = resp.results;
-};
-
-const loadNextItems = () => {
-    currentPage.value += 1;
-    getItems()
-}
-
-const loadPrevItems = () => {
-    currentPage.value -= 1;
-    getItems()
-}
-
-
-onMounted(async () => {
-    getItems()
-});
-
-</script>
-
-<style lang="scss" scoped>
-
-</style>

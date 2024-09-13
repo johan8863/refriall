@@ -1,3 +1,112 @@
+<script setup>
+// vue
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+// app
+import { detailBill } from '../../services/bill.service';
+import listGroup from '../../assets/js/bootstrap_classes/listGroup';
+
+// third
+import html2pdf from "html2pdf.js";
+
+
+const bill = ref({
+    customer: '',
+    customer_dependency: '',
+    folio: '',
+    provider: '',
+    provider_signature_date: '',
+    customer_signature_date: '',
+    get_orders: [],
+    get_orders_folio: [],
+    get_total_amount: '',
+    get_total_amount_revision: '',
+    get_total_amount_prod: '',
+    get_total_amount_concept: '',
+    get_total_amount_repair: '',
+    get_total_amount_maintenace: '',
+    get_total_amount_install: '',
+    get_total_amount_unmounting: '',
+    check_number: '',
+    charge_aprove: '',
+    charge_check: '',
+    customer_charge: '',
+    customer_name: '',
+    customer_personal_id: '',
+    checked_by: '',
+    aproved_by: '',
+});
+
+const notFound = ref(null);
+
+const billToPaginate = ref(null);
+
+const route = useRoute();
+
+const paginatedBills = ref([]);
+
+onMounted(async () => {
+    try {
+        const resp = await detailBill(route.params.id);
+        bill.value = resp.data;
+    
+        prepareBillToPaginate(billToPaginate, bill);
+    
+        paginatedBills.value = paginate(billToPaginate, 15);
+    } catch (error) {
+        notFound.value = 'La factura a la que trata de acceder no existe, haga click en el enlace a facturas en el menú de la izquierda para ver las facturas existentes.'
+    }
+});
+
+const mergeItemsTimes = (itemsTimes) => {
+    return Object.values(
+        itemsTimes.reduce((acc, { item: { code, get_item_type, get_measurement, name, price }, times }) => {
+            (acc[code] ??= { item: { code, get_item_type, get_measurement, name, price }, times: 0 }).times += times;
+                return acc;
+        }, {})
+    );
+};
+
+const prepareBillToPaginate = (billToPaginate, bill) => {
+    // fill the billToPaginate items attrs with all the items from
+    // all the orders of the current bill
+
+    // first sepparate the orders from the bill to take advamtage of the destructuring
+    const {get_orders, ...rest} = bill.value;
+    
+    // second assign the billToPaginate object all bill attrs but the get_orders one
+    billToPaginate.value = rest;
+    // create an aitems attr to the object and fill it
+    billToPaginate.value.items = [];
+    get_orders.forEach(element => element.itemtime_set.forEach((item) => billToPaginate.value.items.push(item)));
+
+    billToPaginate.value.items = mergeItemsTimes(billToPaginate.value.items);
+}
+
+const paginate = (bill, itemsPerPage, start=0, pages=[]) => {
+    if (start >= bill.value.items.length) {
+        return pages;
+    }
+    
+    const end = start + itemsPerPage;
+    const {items, ...rest} = bill.value
+    
+    pages.push({items: items.slice(start, end), ...rest});
+    return paginate(bill, itemsPerPage, end, pages);
+}
+
+function pdf() {
+    const element = document.getElementById('bill-to-pdf');
+    const opt = {
+        filename: `factura_${bill.value.folio}_${bill.value.customer.name}`
+    }
+
+    html2pdf().from(element).set(opt).save()
+}
+
+</script>
+
 <template>
     <div class="row">
         <!-- side menu -->
@@ -173,113 +282,3 @@
         
     </div>
 </template>
-
-<script setup>
-// vue
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-
-// app
-import { detailBill } from '../../services/bill.service';
-import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-
-// third
-import html2pdf from "html2pdf.js";
-
-
-const bill = ref({
-    customer: '',
-    customer_dependency: '',
-    folio: '',
-    provider: '',
-    provider_signature_date: '',
-    customer_signature_date: '',
-    get_orders: [],
-    get_orders_folio: [],
-    get_total_amount: '',
-    get_total_amount_revision: '',
-    get_total_amount_prod: '',
-    get_total_amount_concept: '',
-    get_total_amount_repair: '',
-    get_total_amount_maintenace: '',
-    get_total_amount_install: '',
-    get_total_amount_unmounting: '',
-    check_number: '',
-    charge_aprove: '',
-    charge_check: '',
-    customer_charge: '',
-    customer_name: '',
-    customer_personal_id: '',
-    checked_by: '',
-    aproved_by: '',
-});
-
-const notFound = ref(null);
-
-const billToPaginate = ref(null);
-
-const route = useRoute();
-
-const paginatedBills = ref([]);
-
-onMounted(async () => {
-    try {
-        const resp = await detailBill(route.params.id);
-        bill.value = resp.data;
-    
-        prepareBillToPaginate(billToPaginate, bill);
-    
-        paginatedBills.value = paginate(billToPaginate, 15);
-    } catch (error) {
-        notFound.value = 'La factura a la que trata de acceder no existe, haga click en el enlace a facturas en el menú de la izquierda para ver las facturas existentes.'
-    }
-});
-
-const mergeItemsTimes = (itemsTimes) => {
-    return Object.values(
-        itemsTimes.reduce((acc, { item: { code, get_item_type, get_measurement, name, price }, times }) => {
-            (acc[code] ??= { item: { code, get_item_type, get_measurement, name, price }, times: 0 }).times += times;
-                return acc;
-        }, {})
-    );
-};
-
-const prepareBillToPaginate = (billToPaginate, bill) => {
-    // fill the billToPaginate items attrs with all the items from
-    // all the orders of the current bill
-
-    // first sepparate the orders from the bill to take advamtage of the destructuring
-    const {get_orders, ...rest} = bill.value;
-    
-    // second assign the billToPaginate object all bill attrs but the get_orders one
-    billToPaginate.value = rest;
-    // create an aitems attr to the object and fill it
-    billToPaginate.value.items = [];
-    get_orders.forEach(element => element.itemtime_set.forEach((item) => billToPaginate.value.items.push(item)));
-
-    billToPaginate.value.items = mergeItemsTimes(billToPaginate.value.items);
-}
-
-const paginate = (bill, itemsPerPage, start=0, pages=[]) => {
-    if (start >= bill.value.items.length) {
-        return pages;
-    }
-    
-    const end = start + itemsPerPage;
-    const {items, ...rest} = bill.value
-    
-    pages.push({items: items.slice(start, end), ...rest});
-    return paginate(bill, itemsPerPage, end, pages);
-}
-
-function pdf() {
-    const element = document.getElementById('bill-to-pdf');
-    const opt = {
-        filename: `factura_${bill.value.folio}_${bill.value.customer.name}`
-    }
-
-    html2pdf().from(element).set(opt).save()
-}
-
-
-</script>

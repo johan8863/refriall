@@ -1,3 +1,50 @@
+<script setup>
+// vue
+import { onMounted, ref } from 'vue';
+
+// app
+import { listBillsPagination } from '../../services/bill.service';
+import listGroup from '../../assets/js/bootstrap_classes/listGroup';
+
+const bills = ref([]);
+const currentPage = ref(1);
+const showNextButton = ref(false);
+const showPrevButton = ref(false);
+
+const getBills = async () => {
+    const resp = (await listBillsPagination(currentPage.value)).data;
+    
+    showNextButton.value = false;
+    if (resp.next) {
+        showNextButton.value = true;
+    }
+    
+    showPrevButton.value = false;
+    if (resp.previous) {
+        showPrevButton.value = true;
+    }
+
+    bills.value = resp.results;
+};
+
+const loadNextItems = () => {
+    currentPage.value += 1;
+    getBills()
+}
+
+const loadPrevItems = () => {
+    currentPage.value -= 1;
+    getBills()
+}
+
+
+onMounted(async () => {
+    getBills()
+});
+
+
+</script>
+
 <template>
 
 <div class="row">
@@ -75,50 +122,3 @@
 </div>
 
 </template>
-
-<script setup>
-// vue
-import { onMounted, ref } from 'vue';
-
-// app
-import { listBillsPagination } from '../../services/bill.service';
-import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-
-const bills = ref([]);
-const currentPage = ref(1);
-const showNextButton = ref(false);
-const showPrevButton = ref(false);
-
-const getBills = async () => {
-    const resp = (await listBillsPagination(currentPage.value)).data;
-    
-    showNextButton.value = false;
-    if (resp.next) {
-        showNextButton.value = true;
-    }
-    
-    showPrevButton.value = false;
-    if (resp.previous) {
-        showPrevButton.value = true;
-    }
-
-    bills.value = resp.results;
-};
-
-const loadNextItems = () => {
-    currentPage.value += 1;
-    getBills()
-}
-
-const loadPrevItems = () => {
-    currentPage.value -= 1;
-    getBills()
-}
-
-
-onMounted(async () => {
-    getBills()
-});
-
-
-</script>

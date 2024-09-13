@@ -1,3 +1,100 @@
+<script setup>
+// vue
+import { RouterLink, useRouter, useRoute } from "vue-router";
+import { ref, onMounted } from "vue";
+
+// app
+import { postItem, putItem, getItem } from "../../services/item.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+// third
+import { useVuelidate } from "@vuelidate/core";
+import { required, minValue, helpers } from "@vuelidate/validators";
+
+
+// item object to be created or updated
+const item = ref({
+    code: '',
+    name: '',
+    item_type: '',
+    measurement: '',
+    price: 0,
+});
+
+// item errors messages object to catch
+// errors from the django rest api
+const itemErrors = ref({
+    code: [],
+    name: [],
+    item_type: [],
+    measurement: [],
+    price: [],
+});
+
+// router tools to redirect and get routes params
+const router = useRouter();
+const route = useRoute();
+
+// vuelidate rules
+const rules = {
+    code: {
+        required: helpers.withMessage('El código es requerido.', required)
+    },
+    name: {
+        required: helpers.withMessage('El nombre es requerido.', required)
+    },
+    item_type: {
+        required: helpers.withMessage('El tipo es requerido.', required)
+    },
+    measurement: {
+        required: helpers.withMessage('La unidad de medida es requierida.', required)
+    },
+    price: {
+        required: helpers.withMessage('El precio es requerido.', required),
+        minValue: helpers.withMessage('El valor mínimo es 0.01', minValue(0.01))
+    },
+};
+
+// vuelidate object
+const v$ = useVuelidate(rules, item);
+
+// onMounted cycle to get an item object if editing intended
+onMounted(async () => {
+    const id = route.params.id;
+    if (id) {
+        const { data } = await getItem(id);
+        item.value = data;
+    }
+});
+
+// create item function
+const createItem = async (item) => {
+    try {
+        if (await v$.value.$validate()) {
+            const { data } = await postItem(item);
+            router.push({name: 'items_detail', params: {id: data.id}});
+        }
+    } catch (error) {
+        itemErrors.value = error.response.data;
+    }
+};
+
+// update item function
+const updateItem = async (item) => {
+    try {
+        if (await v$.value.$validate()) {
+            const { data } = await putItem(item);
+            router.push({name: 'items_detail', params: {id: data.id}});
+        }
+    } catch (error) {
+        itemErrors.value = error.response.data;
+        console.log(error.response.data);
+    }
+        
+};
+
+</script>
+
 <template>
     <div class="row">
         <!-- side menu -->
@@ -160,104 +257,3 @@
 
     </div> <!-- end row -->
 </template>
-
-<script setup>
-// vue
-import { RouterLink, useRouter, useRoute } from "vue-router";
-import { ref, onMounted } from "vue";
-
-// app
-import { postItem, putItem, getItem } from "../../services/item.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-// third
-import { useVuelidate } from "@vuelidate/core";
-import { required, minValue, helpers } from "@vuelidate/validators";
-
-
-// item object to be created or updated
-const item = ref({
-    code: '',
-    name: '',
-    item_type: '',
-    measurement: '',
-    price: 0,
-});
-
-// item errors messages object to catch
-// errors from the django rest api
-const itemErrors = ref({
-    code: [],
-    name: [],
-    item_type: [],
-    measurement: [],
-    price: [],
-});
-
-// router tools to redirect and get routes params
-const router = useRouter();
-const route = useRoute();
-
-// vuelidate rules
-const rules = {
-    code: {
-        required: helpers.withMessage('El código es requerido.', required)
-    },
-    name: {
-        required: helpers.withMessage('El nombre es requerido.', required)
-    },
-    item_type: {
-        required: helpers.withMessage('El tipo es requerido.', required)
-    },
-    measurement: {
-        required: helpers.withMessage('La unidad de medida es requierida.', required)
-    },
-    price: {
-        required: helpers.withMessage('El precio es requerido.', required),
-        minValue: helpers.withMessage('El valor mínimo es 0.01', minValue(0.01))
-    },
-};
-
-// vuelidate object
-const v$ = useVuelidate(rules, item);
-
-// onMounted cycle to get an item object if editing intended
-onMounted(async () => {
-    const id = route.params.id;
-    if (id) {
-        const { data } = await getItem(id);
-        item.value = data;
-    }
-});
-
-// create item function
-const createItem = async (item) => {
-    try {
-        if (await v$.value.$validate()) {
-            const { data } = await postItem(item);
-            router.push({name: 'items_detail', params: {id: data.id}});
-        }
-    } catch (error) {
-        itemErrors.value = error.response.data;
-    }
-};
-
-// update item function
-const updateItem = async (item) => {
-    try {
-        if (await v$.value.$validate()) {
-            const { data } = await putItem(item);
-            router.push({name: 'items_detail', params: {id: data.id}});
-        }
-    } catch (error) {
-        itemErrors.value = error.response.data;
-        console.log(error.response.data);
-    }
-        
-};
-
-</script>
-
-<style lang="scss" scoped>
-
-</style>

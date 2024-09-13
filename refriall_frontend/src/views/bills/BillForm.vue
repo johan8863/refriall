@@ -1,3 +1,156 @@
+<script setup>
+// vue
+import { onMounted, ref } from 'vue';
+import { RouterLink, useRoute, useRouter } from "vue-router";
+
+// third
+import { useVuelidate } from "@vuelidate/core";
+import { helpers, required } from '@vuelidate/validators';
+
+// app
+import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
+import { listCustomer } from "../../services/customer.service";
+import { getOrdersFromCustomerNotMatched } from "../../services/order.service";
+import listGroup from '../../assets/js/bootstrap_classes/listGroup';
+import { listCurrencies } from '../../services/currency.service';
+
+
+const bill = ref({
+    customer: '',
+    currency: '',
+    folio: '',
+    provider: 1,
+    provider_signature_date: '',
+    customer_signature_date: '',
+    orders: [],
+    get_orders: [],
+    check_number: '',
+    charge_aprove: '',
+    charge_check: '',
+    customer_charge: '',
+    customer_name: '',
+    customer_personal_id: '',
+    checked_by: '',
+    aproved_by: '' ,
+});
+
+const billBackendErrors = ref({
+    non_field_errors: [],
+    customer: '',
+    currency: '',
+    folio: '',
+    provider: '',
+    provider_signature_date: '',
+    customer_signature_date: '',
+    orders: [],
+    check_number: '',
+    charge_aprove: '',
+    charge_check: '',
+    customer_charge: '',
+    customer_name: '',
+    customer_personal_id: '',
+    checked_by: '',
+    aproved_by: '' ,
+});
+
+const customers = ref([]);
+const orders = ref([]);
+const currencies = ref([]);
+
+// routes consts
+const router = useRouter();
+const route = useRoute();
+
+const rules = {
+    customer: {
+        required: helpers.withMessage('El cliente es requerido', required)
+    },
+    folio: {
+        required: helpers.withMessage('El folio es requerido', required)
+    },
+    provider_signature_date: {
+        required: helpers.withMessage('La firma del prestador es requerida.', required)
+    },
+    customer_signature_date: {
+        required: helpers.withMessage('La firma del cliente es requerida.', required)
+    },
+}
+
+// vuelidate object
+const v$ = useVuelidate(rules, bill);
+
+onMounted(async () => {
+    // get customers
+    const respCustomers = await listCustomer();
+    customers.value = respCustomers.data;
+    // get currencies
+    const respCurrencies = await listCurrencies();
+    currencies.value = respCurrencies.data;
+    
+    const id = route.params.id;
+    if (id) {
+        const { data } = await detailBillUpdate(id);
+        bill.value = data;
+        bill.value.orders = bill.value.get_orders.map(item => item.id)
+        // get the orders that havent been related to a bill yet and display them to be selected
+        const ordersNotMatched = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
+        bill.value.get_orders.push(...ordersNotMatched);
+    } 
+    // else {
+    //   // get orders to create a bill
+    //   const respOrders = await getOrdersNotMatched();
+    //   orders.value = respOrders.data;
+    // }
+});
+
+const createBill = async (bill) => {
+    try {
+        if (await v$.value.$validate()) {
+            const { data } = await postBill(bill);
+            router.push({name: 'bills_detail', params: {id: data.id}})
+        }
+    } catch (error) {
+        billBackendErrors.value = error.response.data
+        console.log(billBackendErrors.value);
+    }
+}
+
+const updateBill = async (bill) => {
+    try {
+        if (await v$.value.$validate()) {
+            const { data } = await putBill(bill);
+            router.push({name: 'bills_detail', params: {id: data.id}})
+        }
+    } catch (error) {
+        billBackendErrors.value = error.response.data
+        console.log(billBackendErrors.value);
+    }
+}
+
+const ordersFromCustomer = async (event) => {
+    try {
+        orders.value = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
+    } catch (error) {
+        console.log(error.response.data);
+    }
+}
+
+const pushAllOrders = (event) => {
+    if (event.target.checked) {
+        if (bill.value.id) {
+            const ordersPush = bill.value.get_orders.map(item => item.id)
+            bill.value.orders = ordersPush
+        } else {
+            const ordersPush = orders.value.map(item => item.id)
+            bill.value.orders = ordersPush
+        }
+    } else {
+        bill.value.orders = []
+    }
+};
+
+</script>
+
 <template>
     <div class="row">
 
@@ -428,156 +581,3 @@
 
     </div>
 </template>
-
-<script setup>
-// vue
-import { onMounted, ref } from 'vue';
-import { RouterLink, useRoute, useRouter } from "vue-router";
-
-// third
-import { useVuelidate } from "@vuelidate/core";
-import { helpers, required } from '@vuelidate/validators';
-
-// app
-import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
-import { listCustomer } from "../../services/customer.service";
-import { getOrdersFromCustomerNotMatched } from "../../services/order.service";
-import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { listCurrencies } from '../../services/currency.service';
-
-
-const bill = ref({
-    customer: '',
-    currency: '',
-    folio: '',
-    provider: 1,
-    provider_signature_date: '',
-    customer_signature_date: '',
-    orders: [],
-    get_orders: [],
-    check_number: '',
-    charge_aprove: '',
-    charge_check: '',
-    customer_charge: '',
-    customer_name: '',
-    customer_personal_id: '',
-    checked_by: '',
-    aproved_by: '' ,
-});
-
-const billBackendErrors = ref({
-    non_field_errors: [],
-    customer: '',
-    currency: '',
-    folio: '',
-    provider: '',
-    provider_signature_date: '',
-    customer_signature_date: '',
-    orders: [],
-    check_number: '',
-    charge_aprove: '',
-    charge_check: '',
-    customer_charge: '',
-    customer_name: '',
-    customer_personal_id: '',
-    checked_by: '',
-    aproved_by: '' ,
-});
-
-const customers = ref([]);
-const orders = ref([]);
-const currencies = ref([]);
-
-// routes consts
-const router = useRouter();
-const route = useRoute();
-
-const rules = {
-    customer: {
-        required: helpers.withMessage('El cliente es requerido', required)
-    },
-    folio: {
-        required: helpers.withMessage('El folio es requerido', required)
-    },
-    provider_signature_date: {
-        required: helpers.withMessage('La firma del prestador es requerida.', required)
-    },
-    customer_signature_date: {
-        required: helpers.withMessage('La firma del cliente es requerida.', required)
-    },
-}
-
-// vuelidate object
-const v$ = useVuelidate(rules, bill);
-
-onMounted(async () => {
-    // get customers
-    const respCustomers = await listCustomer();
-    customers.value = respCustomers.data;
-    // get currencies
-    const respCurrencies = await listCurrencies();
-    currencies.value = respCurrencies.data;
-    
-    const id = route.params.id;
-    if (id) {
-        const { data } = await detailBillUpdate(id);
-        bill.value = data;
-        bill.value.orders = bill.value.get_orders.map(item => item.id)
-        // get the orders that havent been related to a bill yet and display them to be selected
-        const ordersNotMatched = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
-        bill.value.get_orders.push(...ordersNotMatched);
-    } 
-    // else {
-    //   // get orders to create a bill
-    //   const respOrders = await getOrdersNotMatched();
-    //   orders.value = respOrders.data;
-    // }
-});
-
-const createBill = async (bill) => {
-    try {
-        if (await v$.value.$validate()) {
-            const { data } = await postBill(bill);
-            router.push({name: 'bills_detail', params: {id: data.id}})
-        }
-    } catch (error) {
-        billBackendErrors.value = error.response.data
-        console.log(billBackendErrors.value);
-    }
-}
-
-const updateBill = async (bill) => {
-    try {
-        if (await v$.value.$validate()) {
-            const { data } = await putBill(bill);
-            router.push({name: 'bills_detail', params: {id: data.id}})
-        }
-    } catch (error) {
-        billBackendErrors.value = error.response.data
-        console.log(billBackendErrors.value);
-    }
-}
-
-const ordersFromCustomer = async (event) => {
-    try {
-        orders.value = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
-    } catch (error) {
-        console.log(error.response.data);
-    }
-}
-
-const pushAllOrders = (event) => {
-    if (event.target.checked) {
-        if (bill.value.id) {
-            const ordersPush = bill.value.get_orders.map(item => item.id)
-            bill.value.orders = ordersPush
-        } else {
-            const ordersPush = orders.value.map(item => item.id)
-            bill.value.orders = ordersPush
-        }
-    } else {
-        bill.value.orders = []
-    }
-};
-
-</script>

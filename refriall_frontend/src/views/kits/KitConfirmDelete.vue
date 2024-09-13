@@ -1,33 +1,3 @@
-<template>
-    <div class="row">
-        <!-- side menu -->
-        <div class="col-md-2">
-            <ul :class="listGroup.listGroup">
-                <li :class="listGroup.listGroupItem">
-                    <strong>Equipos</strong>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link :to="{ name: 'kits' }">Equipos</router-link>
-                </li>
-            </ul>
-        </div>
-
-        <!-- main content -->
-        <div class="col-md-4">
-            <div>
-                <p>Está seguro que desea eliminar el equipo: {{ kit.name }}</p>
-                <button
-                  class="btn btn-sm btn-danger"
-                  @click="delKit(kit.id)">Eliminar</button>
-                <RouterLink
-                  :to="{name: 'kits_detail', params: {id: kit.id}}"
-                  class="btn btn-sm btn-secondary">Cancelar</RouterLink>
-            </div>
-        </div>
-
-    </div> <!-- end row -->
-</template>
-
 <script setup>
 // vue
 import { onMounted, ref } from "vue";
@@ -66,4 +36,32 @@ const delKit = async (id) => {
 
 </script>
 
-<style lang="scss" scoped></style>
+<template>
+    <div class="row">
+        <!-- side menu -->
+        <div class="col-md-2">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
+                    <strong>Equipos</strong>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link :to="{ name: 'kits' }">Equipos</router-link>
+                </li>
+            </ul>
+        </div>
+
+        <!-- main content -->
+        <div class="col-md-4">
+            <div>
+                <p>Está seguro que desea eliminar el equipo: {{ kit.name }}</p>
+                <button
+                  class="btn btn-sm btn-danger"
+                  @click="delKit(kit.id)">Eliminar</button>
+                <RouterLink
+                  :to="{name: 'kits_detail', params: {id: kit.id}}"
+                  class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+            </div>
+        </div>
+
+    </div> <!-- end row -->
+</template>

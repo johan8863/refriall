@@ -1,3 +1,247 @@
+<script setup>
+// vue
+import { RouterLink, useRouter, useRoute } from 'vue-router'
+import { ref, onMounted, computed } from 'vue'
+
+// third
+import { useVuelidate } from '@vuelidate/core'
+import { required, helpers } from '@vuelidate/validators'
+
+// app
+import { listCustomer } from '../../services/customer.service'
+import { listKit } from '../../services/kit.service'
+import { listItem } from '../../services/item.service'
+import ItemTime from '../../components/ItemTime.vue'
+import { detailOrderUpdate, postOrder, putOrder } from '../../services/order.service'
+import { listCustomerDependecy } from '../../services/customerDependency.service'
+import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import { listCurrencies } from '../../services/currency.service'
+
+// main object
+const order = ref({
+  customer: '',
+  currency: '',
+  customer_dependency: '',
+  symptom: '',
+  flaw: '',
+  repair_description: '',
+  folio: '',
+  check_diagnosis: false,
+  repair: false,
+  install: false,
+  maintenance: false,
+  support: '',
+  kit: '',
+  kit_brand: '',
+  kit_model: '',
+  kit_serial: '',
+  job_description: '',
+  itemtime_set: [],
+  provider: 1,
+  provider_signature_date: '',
+  customer_signature_date: '',
+  check_number: '',
+  charge_aprove: '',
+  charge_check: '',
+  customer_charge: '',
+  customer_name: '',
+  customer_personal_id: '',
+  checked_by: '',
+  aproved_by: ''
+})
+
+// secondary backend objects
+const customers = ref([])
+const dependencies = ref([])
+const kits = ref([])
+const items = ref([])
+const currencies = ref([]);
+
+// routing objects
+const router = useRouter()
+const route = useRoute()
+
+// validation rules
+const rules = {
+  // customer: {
+  //   required: helpers.withMessage('El cliente es requerido.', required)
+  // },
+  symptom: {
+    required: helpers.withMessage('El síntoma es requerido.', required)
+  },
+  flaw: {
+    required: helpers.withMessage('La falla es requerida.', required)
+  },
+  repair_description: {
+    required: helpers.withMessage('La descripción es requerida.', required)
+  },
+  folio: {
+    required: helpers.withMessage('El folio es requerido.', required)
+  },
+  support: {
+    required: helpers.withMessage('La atención es requerida.', required)
+  },
+  kit: {
+    required: helpers.withMessage('El equipo es requerido.', required)
+  },
+  kit_brand: {
+    required: helpers.withMessage('La marca es requerida.', required)
+  },
+  kit_model: {
+    required: helpers.withMessage('El modelo es requerido.', required)
+  },
+  kit_serial: {
+    required: helpers.withMessage('La serie es requerida.', required)
+  },
+  provider_signature_date: {
+    required: helpers.withMessage('La firma del prestador es requerida.', required)
+  },
+  customer_signature_date: {
+    required: helpers.withMessage('La firma del cliente es requerida.', required)
+  }
+}
+
+// vuelidate object
+const v$ = useVuelidate(rules, order)
+
+// order object to be filled with backend errors
+const orderBackendErrors = ref({
+  customer: [],
+  currency: [],
+  customer_dependency: [],
+  symptom: [],
+  flaw: [],
+  repair_description: [],
+  folio: [],
+  check_diagnosis: [],
+  repair: [],
+  install: [],
+  maintenance: [],
+  support: [],
+  kit: [],
+  kit_brand: [],
+  kit_model: [],
+  kit_serial: [],
+  job_description: [],
+  itemtime_set: [],
+  provider: [],
+  provider_signature_date: [],
+  customer_signature_date: [],
+  check_number: [],
+  charge_aprove: [],
+  charge_check: [],
+  customer_charge: [],
+  customer_name: [],
+  customer_personal_id: [],
+  checked_by: [],
+  aproved_by: [],
+  non_field_errors: []
+})
+
+// preparation of the itemtime_set order property
+const createItemTime = (elements=12) => {
+  // create 12 elements by default to iterate in the create initial form
+  // the binding to the "Add item" button can be called with a lesser value
+  for (let index = 0; index < elements; index++) {
+    order.value.itemtime_set.push({
+      item: 0,
+      times: 1
+    })
+  }
+}
+
+
+// computed property to calculate value of the order
+// as its being added items
+const total = computed(() => {
+  return order.value.itemtime_set
+    .filter((itemtime) => itemtime.item !== 0)
+    .reduce((count, itemtime) => {
+      const itemfiltered = items.value.filter((itf) => itf.id === itemtime.item)
+      const itemRaw = itemfiltered[0]
+      return count + itemRaw.price * itemtime.times
+    }, 0)
+})
+
+// delete an item from the form by removing it
+// from the order object
+const deleteItem = (index) => {
+  order.value.itemtime_set.splice(index, 1)
+}
+
+// on mounted cycle
+onMounted(async () => {
+  loadData()
+  
+  const id = route.params.id
+  if (id) {
+    const { data } = await detailOrderUpdate(id)
+    order.value = data
+    order.value.itemtime_set = order.value.itemtime_set.map((itemTime) => {
+      return {
+        item: itemTime.item,
+        times: itemTime.times
+      }
+    })
+  } else {
+    // create initial empty objects for itemtime
+    createItemTime()
+  }
+})
+
+const createOrder = async (order) => {
+  try {
+    if (await v$.value.$validate()) {
+      order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
+      const { data } = await postOrder(order)
+      router.push({ name: 'orders_detail', params: { id: data.id } })
+    }
+  } catch (error) {
+    orderBackendErrors.value = error.response.data
+    console.log(orderBackendErrors.value)
+  }
+}
+
+const updateOrder = async (order) => {
+  try {
+    if (await v$.value.$validate()) {
+      order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
+      const { data } = await putOrder(order)
+      router.push({ name: 'orders_detail', params: { id: data.id } })
+    }
+  } catch (error) {
+    orderBackendErrors.value = error.response.data
+    console.log(orderBackendErrors.value.itemtime_set)
+  }
+}
+
+const clearCustomer = () => {
+  order.value.customer = ''
+}
+
+const clearCustomerDependency = () => {
+  order.value.customer_dependency = ''
+}
+
+const loadData = async () => {
+  // get customers
+  const respCustomers = await listCustomer()
+  customers.value = respCustomers.data
+  // get kits
+  const respKits = await listKit()
+  kits.value = respKits.data
+  // get items
+  const respItems = await listItem()
+  items.value = respItems.data
+  // get dependencies
+  const respDependencies = await listCustomerDependecy()
+  dependencies.value = respDependencies.data
+  // get currencies
+  const respCurrencies = await listCurrencies()
+  currencies.value = respCurrencies.data;
+}
+</script>
+
 <template>
   <div class="row">
     <!-- side menu -->
@@ -609,247 +853,3 @@
   </div>
   <!-- end row -->
 </template>
-
-<script setup>
-// vue
-import { RouterLink, useRouter, useRoute } from 'vue-router'
-import { ref, onMounted, computed } from 'vue'
-
-// third
-import { useVuelidate } from '@vuelidate/core'
-import { required, helpers } from '@vuelidate/validators'
-
-// app
-import { listCustomer } from '../../services/customer.service'
-import { listKit } from '../../services/kit.service'
-import { listItem } from '../../services/item.service'
-import ItemTime from '../../components/ItemTime.vue'
-import { detailOrderUpdate, postOrder, putOrder } from '../../services/order.service'
-import { listCustomerDependecy } from '../../services/customerDependency.service'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
-import { listCurrencies } from '../../services/currency.service'
-
-// main object
-const order = ref({
-  customer: '',
-  currency: '',
-  customer_dependency: '',
-  symptom: '',
-  flaw: '',
-  repair_description: '',
-  folio: '',
-  check_diagnosis: false,
-  repair: false,
-  install: false,
-  maintenance: false,
-  support: '',
-  kit: '',
-  kit_brand: '',
-  kit_model: '',
-  kit_serial: '',
-  job_description: '',
-  itemtime_set: [],
-  provider: 1,
-  provider_signature_date: '',
-  customer_signature_date: '',
-  check_number: '',
-  charge_aprove: '',
-  charge_check: '',
-  customer_charge: '',
-  customer_name: '',
-  customer_personal_id: '',
-  checked_by: '',
-  aproved_by: ''
-})
-
-// secondary backend objects
-const customers = ref([])
-const dependencies = ref([])
-const kits = ref([])
-const items = ref([])
-const currencies = ref([]);
-
-// routing objects
-const router = useRouter()
-const route = useRoute()
-
-// validation rules
-const rules = {
-  // customer: {
-  //   required: helpers.withMessage('El cliente es requerido.', required)
-  // },
-  symptom: {
-    required: helpers.withMessage('El síntoma es requerido.', required)
-  },
-  flaw: {
-    required: helpers.withMessage('La falla es requerida.', required)
-  },
-  repair_description: {
-    required: helpers.withMessage('La descripción es requerida.', required)
-  },
-  folio: {
-    required: helpers.withMessage('El folio es requerido.', required)
-  },
-  support: {
-    required: helpers.withMessage('La atención es requerida.', required)
-  },
-  kit: {
-    required: helpers.withMessage('El equipo es requerido.', required)
-  },
-  kit_brand: {
-    required: helpers.withMessage('La marca es requerida.', required)
-  },
-  kit_model: {
-    required: helpers.withMessage('El modelo es requerido.', required)
-  },
-  kit_serial: {
-    required: helpers.withMessage('La serie es requerida.', required)
-  },
-  provider_signature_date: {
-    required: helpers.withMessage('La firma del prestador es requerida.', required)
-  },
-  customer_signature_date: {
-    required: helpers.withMessage('La firma del cliente es requerida.', required)
-  }
-}
-
-// vuelidate object
-const v$ = useVuelidate(rules, order)
-
-// order object to be filled with backend errors
-const orderBackendErrors = ref({
-  customer: [],
-  currency: [],
-  customer_dependency: [],
-  symptom: [],
-  flaw: [],
-  repair_description: [],
-  folio: [],
-  check_diagnosis: [],
-  repair: [],
-  install: [],
-  maintenance: [],
-  support: [],
-  kit: [],
-  kit_brand: [],
-  kit_model: [],
-  kit_serial: [],
-  job_description: [],
-  itemtime_set: [],
-  provider: [],
-  provider_signature_date: [],
-  customer_signature_date: [],
-  check_number: [],
-  charge_aprove: [],
-  charge_check: [],
-  customer_charge: [],
-  customer_name: [],
-  customer_personal_id: [],
-  checked_by: [],
-  aproved_by: [],
-  non_field_errors: []
-})
-
-// preparation of the itemtime_set order property
-const createItemTime = (elements=12) => {
-  // create 12 elements by default to iterate in the create initial form
-  // the binding to the "Add item" button can be called with a lesser value
-  for (let index = 0; index < elements; index++) {
-    order.value.itemtime_set.push({
-      item: 0,
-      times: 1
-    })
-  }
-}
-
-
-// computed property to calculate value of the order
-// as its being added items
-const total = computed(() => {
-  return order.value.itemtime_set
-    .filter((itemtime) => itemtime.item !== 0)
-    .reduce((count, itemtime) => {
-      const itemfiltered = items.value.filter((itf) => itf.id === itemtime.item)
-      const itemRaw = itemfiltered[0]
-      return count + itemRaw.price * itemtime.times
-    }, 0)
-})
-
-// delete an item from the form by removing it
-// from the order object
-const deleteItem = (index) => {
-  order.value.itemtime_set.splice(index, 1)
-}
-
-// on mounted cycle
-onMounted(async () => {
-  loadData()
-  
-  const id = route.params.id
-  if (id) {
-    const { data } = await detailOrderUpdate(id)
-    order.value = data
-    order.value.itemtime_set = order.value.itemtime_set.map((itemTime) => {
-      return {
-        item: itemTime.item,
-        times: itemTime.times
-      }
-    })
-  } else {
-    // create initial empty objects for itemtime
-    createItemTime()
-  }
-})
-
-const createOrder = async (order) => {
-  try {
-    if (await v$.value.$validate()) {
-      order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
-      const { data } = await postOrder(order)
-      router.push({ name: 'orders_detail', params: { id: data.id } })
-    }
-  } catch (error) {
-    orderBackendErrors.value = error.response.data
-    console.log(orderBackendErrors.value)
-  }
-}
-
-const updateOrder = async (order) => {
-  try {
-    if (await v$.value.$validate()) {
-      order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
-      const { data } = await putOrder(order)
-      router.push({ name: 'orders_detail', params: { id: data.id } })
-    }
-  } catch (error) {
-    orderBackendErrors.value = error.response.data
-    console.log(orderBackendErrors.value.itemtime_set)
-  }
-}
-
-const clearCustomer = () => {
-  order.value.customer = ''
-}
-
-const clearCustomerDependency = () => {
-  order.value.customer_dependency = ''
-}
-
-const loadData = async () => {
-  // get customers
-  const respCustomers = await listCustomer()
-  customers.value = respCustomers.data
-  // get kits
-  const respKits = await listKit()
-  kits.value = respKits.data
-  // get items
-  const respItems = await listItem()
-  items.value = respItems.data
-  // get dependencies
-  const respDependencies = await listCustomerDependecy()
-  dependencies.value = respDependencies.data
-  // get currencies
-  const respCurrencies = await listCurrencies()
-  currencies.value = respCurrencies.data;
-}
-</script>

@@ -1,3 +1,122 @@
+<script setup>
+// vue
+import { RouterLink, useRouter, useRoute } from "vue-router";
+import { ref, onMounted } from 'vue';
+
+// app
+import { postCustomer, putCustomer, detailCustomer } from "../../services/customer.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+// third
+import { useVuelidate } from "@vuelidate/core";
+import { required, helpers } from "@vuelidate/validators";
+
+
+// customer object to be created or updated
+const customer = ref({
+    customer_type: 'es',
+    name: '',
+    address: '',
+    province: '',
+    township: '',
+    code: '',
+    client_nit: '',
+    bank_account_header: '',
+    bank_account: '',
+});
+
+// customer object to be created or updated
+const customerErrors = ref({
+    customer_type: [],
+    name: [],
+    address: [],
+    province: [],
+    township: [],
+    code: [],
+    client_nit: [],
+    bank_account_header: [],
+    bank_account: [],
+});
+
+// router tools to redirect and get route params
+const router = useRouter();
+const route = useRoute();
+
+// vuelidate rules
+const rules = {
+    customer_type: {
+        required: helpers.withMessage('Seleccione el tipo de cliente.', required)
+    },
+    name: {
+        required: helpers.withMessage('El nombre es requerido.', required)
+    },
+    address: {
+        required: helpers.withMessage('La dirección es requerida.', required)
+    },
+    province: {
+        required: helpers.withMessage('La provincia es requerida.', required)
+    },
+    township: {
+        required: helpers.withMessage('El municipio es requerido.', required)
+    },
+    code: {
+        required: helpers.withMessage('El código es requerido.', required)
+    },
+    bank_account_header: {
+        required: helpers.withMessage('El titular de la cuenta es requerido.', required)
+    },
+    bank_account: {
+        required: helpers.withMessage('La cuenta bancaria es requerida.', required)
+    },
+}
+
+// vuelidate object
+const v$ = useVuelidate(rules, customer);
+
+// create customer function
+const createCustomer = async (customer) => {
+    try {
+        if (await v$.value.$validate()) {
+            // if front validations run, insert a customer 
+            // and redirect to its detail view
+            const { data } = await postCustomer(customer);
+            router.push({name: 'customers_detail', params: {id: data.id}});
+        }
+    } catch (error) {
+        // in case of backend exceptions, fill the corresponding ones in the 
+        // customerErrors object
+        customerErrors.value = error.response.data
+    }
+};
+
+// update customer function
+const updateCustomer = async (customer) => {
+    try {
+        if (await v$.value.$validate()) {
+            // if front validations run, update a customer 
+            // and redirect to its detail view
+            const { data } = await putCustomer(customer);
+            router.push({name: 'customers_detail', params: {id: data.id}});
+        }
+    } catch (error) {
+        // in case of backend exceptions, fill the corresponding ones in the 
+        // customerErrors object
+        customerErrors.value = error.response.data
+    }
+};
+
+// onMounted cycle to get the customer object 
+// if editing intended
+onMounted(async () => {
+    const id = route.params.id;
+    if (id) {
+        const { data } = await detailCustomer(id);
+        customer.value = data;
+    }
+});
+
+</script>
+
 <template>
 
     <div class="row">
@@ -226,122 +345,3 @@
     </div> <!-- end row -->
 
 </template>
-
-<script setup>
-// vue
-import { RouterLink, useRouter, useRoute } from "vue-router";
-import { ref, onMounted } from 'vue';
-
-// app
-import { postCustomer, putCustomer, detailCustomer } from "../../services/customer.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-// third
-import { useVuelidate } from "@vuelidate/core";
-import { required, helpers } from "@vuelidate/validators";
-
-
-// customer object to be created or updated
-const customer = ref({
-    customer_type: 'es',
-    name: '',
-    address: '',
-    province: '',
-    township: '',
-    code: '',
-    client_nit: '',
-    bank_account_header: '',
-    bank_account: '',
-});
-
-// customer object to be created or updated
-const customerErrors = ref({
-    customer_type: [],
-    name: [],
-    address: [],
-    province: [],
-    township: [],
-    code: [],
-    client_nit: [],
-    bank_account_header: [],
-    bank_account: [],
-});
-
-// router tools to redirect and get route params
-const router = useRouter();
-const route = useRoute();
-
-// vuelidate rules
-const rules = {
-    customer_type: {
-        required: helpers.withMessage('Seleccione el tipo de cliente.', required)
-    },
-    name: {
-        required: helpers.withMessage('El nombre es requerido.', required)
-    },
-    address: {
-        required: helpers.withMessage('La dirección es requerida.', required)
-    },
-    province: {
-        required: helpers.withMessage('La provincia es requerida.', required)
-    },
-    township: {
-        required: helpers.withMessage('El municipio es requerido.', required)
-    },
-    code: {
-        required: helpers.withMessage('El código es requerido.', required)
-    },
-    bank_account_header: {
-        required: helpers.withMessage('El titular de la cuenta es requerido.', required)
-    },
-    bank_account: {
-        required: helpers.withMessage('La cuenta bancaria es requerida.', required)
-    },
-}
-
-// vuelidate object
-const v$ = useVuelidate(rules, customer);
-
-// create customer function
-const createCustomer = async (customer) => {
-    try {
-        if (await v$.value.$validate()) {
-            // if front validations run, insert a customer 
-            // and redirect to its detail view
-            const { data } = await postCustomer(customer);
-            router.push({name: 'customers_detail', params: {id: data.id}});
-        }
-    } catch (error) {
-        // in case of backend exceptions, fill the corresponding ones in the 
-        // customerErrors object
-        customerErrors.value = error.response.data
-    }
-};
-
-// update customer function
-const updateCustomer = async (customer) => {
-    try {
-        if (await v$.value.$validate()) {
-            // if front validations run, update a customer 
-            // and redirect to its detail view
-            const { data } = await putCustomer(customer);
-            router.push({name: 'customers_detail', params: {id: data.id}});
-        }
-    } catch (error) {
-        // in case of backend exceptions, fill the corresponding ones in the 
-        // customerErrors object
-        customerErrors.value = error.response.data
-    }
-};
-
-// onMounted cycle to get the customer object 
-// if editing intended
-onMounted(async () => {
-    const id = route.params.id;
-    if (id) {
-        const { data } = await detailCustomer(id);
-        customer.value = data;
-    }
-});
-
-</script>

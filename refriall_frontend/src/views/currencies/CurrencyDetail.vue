@@ -1,3 +1,33 @@
+<script setup>
+
+// vue
+import { ref, onMounted } from "vue";
+import { RouterLink, useRoute } from "vue-router";
+
+// app
+import { detailCurrency } from "../../services/currency.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+const currency = ref({
+    name: '',
+    description: '',
+});
+
+const notFound = ref(null);
+
+const route = useRoute();
+
+onMounted(async () => {
+    try {
+        const response = await detailCurrency(route.params.id);
+        currency.value = response.data
+    } catch (error) {
+        notFound.value = "La moneda a la que trata de acceder no existe, haga click en el enlace a monedas en el menú de la izquierda para ver las monedas existentes.";
+    }
+});
+
+</script>
+
 <template>
     <div class="row">
         <!-- side menu -->
@@ -34,33 +64,3 @@
 
     </div>
 </template>
-
-<script setup>
-
-// vue
-import { ref, onMounted } from "vue";
-import { RouterLink, useRoute } from "vue-router";
-
-// app
-import { detailCurrency } from "../../services/currency.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-const currency = ref({
-    name: '',
-    description: '',
-});
-
-const notFound = ref(null);
-
-const route = useRoute();
-
-onMounted(async () => {
-    try {
-        const response = await detailCurrency(route.params.id);
-        currency.value = response.data
-    } catch (error) {
-        notFound.value = "La moneda a la que trata de acceder no existe, haga click en el enlace a monedas en el menú de la izquierda para ver las monedas existentes.";
-    }
-});
-
-</script>

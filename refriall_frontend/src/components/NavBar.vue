@@ -1,3 +1,11 @@
+<script setup>
+
+// vue
+import { RouterLink } from "vue-router";
+import { navBar } from "../assets/js/bootstrap_classes/navBar";
+
+</script>
+
 <template>
     <nav class="navbar navbar-expand-lg bg-lightblue">
         <div class="container-fluid">

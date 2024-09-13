@@ -1,29 +1,3 @@
-<template>
-    <div class="row">
-        <!-- side menu -->
-        <div class="col-md-2">
-            <ul :class="listGroup.listGroup">
-                <li :class="listGroup.listGroupItem">
-                    <strong>Artículos</strong>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <RouterLink :to="{name: 'items'}">Artículos</RouterLink>
-                </li>
-            </ul>
-        </div>
-
-        <!-- main content -->
-        <div class="col-md-6">
-            <p>Está seguro que desea eliminar el artículo: {{ item.name }}?</p>
-            <button
-              class="btn btn-sm btn-danger"
-              @click="delItem(item.id)">Eliminar</button>
-            <RouterLink :to="{name: 'items_detail', params: {id: item.id}}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
-        </div>
-
-    </div> <!-- end row -->
-</template>
-
 <script setup>
 
 import { ref, onMounted } from "vue";
@@ -63,3 +37,29 @@ const delItem = async (id) => {
 <style lang="scss" scoped>
 
 </style>
+
+<template>
+    <div class="row">
+        <!-- side menu -->
+        <div class="col-md-2">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
+                    <strong>Artículos</strong>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <RouterLink :to="{name: 'items'}">Artículos</RouterLink>
+                </li>
+            </ul>
+        </div>
+
+        <!-- main content -->
+        <div class="col-md-6">
+            <p>Está seguro que desea eliminar el artículo: {{ item.name }}?</p>
+            <button
+              class="btn btn-sm btn-danger"
+              @click="delItem(item.id)">Eliminar</button>
+            <RouterLink :to="{name: 'items_detail', params: {id: item.id}}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+        </div>
+
+    </div> <!-- end row -->
+</template>

@@ -1,3 +1,41 @@
+<script setup>
+
+// vue
+import { ref, onMounted } from "vue";
+import { RouterLink, useRoute } from "vue-router";
+
+// app
+import { detailCustomer } from "../../services/customer.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+
+const route = useRoute();
+const customer = ref({
+    customer_type: '',
+    name: '',
+    address: '',
+    province: '',
+    township: '',
+    code: '',
+    client_nit: '',
+    bank_account_header: '',
+    bank_account: '',
+    get_dependencies: [],
+});
+
+const notFound = ref(null);
+
+onMounted(async () => {
+    try {
+        const resp = await detailCustomer(route.params.id);
+        customer.value = resp.data;
+    } catch (error) {
+        notFound.value = 'El cliente al que trata de acceder no existe, haga click en el enlace a clientes en el menú de la izquierda para ver las clientes existentes.';
+    }
+});
+
+</script>
+
 <template>
     <div class="row">
         <!-- side menu -->
@@ -55,45 +93,3 @@
     </div> <!-- end row -->
 
 </template>
-
-<script setup>
-
-// vue
-import { ref, onMounted } from "vue";
-import { RouterLink, useRoute } from "vue-router";
-
-// app
-import { detailCustomer } from "../../services/customer.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-
-const route = useRoute();
-const customer = ref({
-    customer_type: '',
-    name: '',
-    address: '',
-    province: '',
-    township: '',
-    code: '',
-    client_nit: '',
-    bank_account_header: '',
-    bank_account: '',
-    get_dependencies: [],
-});
-
-const notFound = ref(null);
-
-onMounted(async () => {
-    try {
-        const resp = await detailCustomer(route.params.id);
-        customer.value = resp.data;
-    } catch (error) {
-        notFound.value = 'El cliente al que trata de acceder no existe, haga click en el enlace a clientes en el menú de la izquierda para ver las clientes existentes.';
-    }
-});
-
-</script>
-
-<style lang="scss" scoped>
-
-</style>

@@ -1,3 +1,40 @@
+<script setup>
+// vue
+import { onMounted, ref } from "vue";
+import { RouterLink, useRoute } from "vue-router";
+
+// app
+import { detatilKit } from "../../services/kit.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+
+// kit object
+const kit = ref({
+    name: ''
+});
+
+// router utilities to redirect the view and catch route params
+const route = useRoute();
+
+const notFound = ref(null);
+
+
+// loading the kit object
+onMounted(async () => {
+    try {
+        const resp = await detatilKit(route.params.id);
+        kit.value = resp.data;
+    } catch (error) {
+        notFound.value = 'El equipo al que trata de acceder no existe, haga click en el enlace a equipos en el menú de la izquierda para ver las equipos existentes.';
+    }
+});
+
+</script>
+
+<style lang="scss" scoped>
+
+</style>
+
 <template>
     <div class="row">
         <!-- side menu -->
@@ -38,40 +75,3 @@
 
 
 </template>
-
-<script setup>
-// vue
-import { onMounted, ref } from "vue";
-import { RouterLink, useRoute } from "vue-router";
-
-// app
-import { detatilKit } from "../../services/kit.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-
-// kit object
-const kit = ref({
-    name: ''
-});
-
-// router utilities to redirect the view and catch route params
-const route = useRoute();
-
-const notFound = ref(null);
-
-
-// loading the kit object
-onMounted(async () => {
-    try {
-        const resp = await detatilKit(route.params.id);
-        kit.value = resp.data;
-    } catch (error) {
-        notFound.value = 'El equipo al que trata de acceder no existe, haga click en el enlace a equipos en el menú de la izquierda para ver las equipos existentes.';
-    }
-});
-
-</script>
-
-<style lang="scss" scoped>
-
-</style>

@@ -1,3 +1,51 @@
+<script setup>
+
+// vue
+import { ref, onMounted } from "vue";
+import { RouterLink } from "vue-router";
+
+// app
+import { listCustomer } from "../../services/customer.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+const customers = ref([]);
+const currentPage = ref(1);
+const showNextButton = ref(false);
+const showPrevButton = ref(false);
+
+const getCustomers = async () => {
+    const resp = (await listCustomer(currentPage.value)).data;
+    
+    showNextButton.value = false;
+    if (resp.next) {
+        showNextButton.value = true;
+    }
+    
+    showPrevButton.value = false;
+    if (resp.previous) {
+        showPrevButton.value = true;
+    }
+
+    customers.value = resp.results;
+};
+
+const loadNextItems = () => {
+    currentPage.value += 1;
+    getCustomers()
+}
+
+const loadPrevItems = () => {
+    currentPage.value -= 1;
+    getCustomers()
+}
+
+
+onMounted(async () => {
+    getCustomers()
+});
+
+</script>
+
 <template>
 
     <div class="row">
@@ -64,50 +112,3 @@
     </div>
 
 </template>
-
-<script setup>
-
-// vue
-import { ref, onMounted } from "vue";
-import { RouterLink } from "vue-router";
-
-// app
-import { listCustomer } from "../../services/customer.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-const customers = ref([]);
-const currentPage = ref(1);
-const showNextButton = ref(false);
-const showPrevButton = ref(false);
-
-const getCustomers = async () => {
-    const resp = (await listCustomer(currentPage.value)).data;
-    
-    showNextButton.value = false;
-    if (resp.next) {
-        showNextButton.value = true;
-    }
-    
-    showPrevButton.value = false;
-    if (resp.previous) {
-        showPrevButton.value = true;
-    }
-
-    customers.value = resp.results;
-};
-
-const loadNextItems = () => {
-    currentPage.value += 1;
-    getCustomers()
-}
-
-const loadPrevItems = () => {
-    currentPage.value -= 1;
-    getCustomers()
-}
-
-
-onMounted(async () => {
-    getCustomers()
-});
-</script>

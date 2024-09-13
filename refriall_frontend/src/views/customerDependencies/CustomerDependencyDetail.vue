@@ -1,3 +1,37 @@
+<script setup>
+
+// vue
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+
+// app
+import { detailCustomerDependecy } from '../../services/customerDependency.service';
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+const route = useRoute();
+const dependency = ref({
+    customer: 0,
+    name: '',
+    address: '',
+    province: '',
+    township: '',
+});
+
+const notFound = ref(null);
+
+onMounted(async () => {
+    try {
+        const response = await detailCustomerDependecy(route.params.id);
+        dependency.value = response.data;
+
+        
+    } catch (error) {
+        notFound.value = 'La dependencia a la que trata de acceder no existe, haga click en el enlace a dependencias en el menú de la izquierda para ver las dependencias existentes.';
+    }
+});
+
+</script>
+
 <template>
     <div class="row">
         <!-- side menu -->
@@ -42,37 +76,3 @@
         
     </div>
 </template>
-
-<script setup>
-
-// vue
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-
-// app
-import { detailCustomerDependecy } from '../../services/customerDependency.service';
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-const route = useRoute();
-const dependency = ref({
-    customer: 0,
-    name: '',
-    address: '',
-    province: '',
-    township: '',
-});
-
-const notFound = ref(null);
-
-onMounted(async () => {
-    try {
-        const response = await detailCustomerDependecy(route.params.id);
-        dependency.value = response.data;
-
-        
-    } catch (error) {
-        notFound.value = 'La dependencia a la que trata de acceder no existe, haga click en el enlace a dependencias en el menú de la izquierda para ver las dependencias existentes.';
-    }
-});
-
-</script>

@@ -1,3 +1,36 @@
+<script setup>
+
+// vue
+import { ref, onMounted } from "vue";
+import { RouterLink, useRoute } from "vue-router";
+
+// app
+import { detailItem } from "../../services/item.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+
+const route = useRoute();
+const item = ref({
+    code: '',
+    name: '',
+    get_item_type: '',
+    get_measurement: '',
+    price: 0,
+});
+
+const notFound = ref(null);
+
+onMounted(async () => {
+    try {
+        const resp = await detailItem(route.params.id);
+        item.value = resp.data;
+    } catch (error) {
+        notFound.value = 'El artículo al que trata de acceder no existe, haga click en el enlace a artículos en el menú de la izquierda para ver las artículos existentes.';
+    }
+});
+
+</script>
+
 <template>
     <div class="row">
         <!-- side menu -->
@@ -41,40 +74,3 @@
 
     </div> <!-- end row -->
 </template>
-
-<script setup>
-
-// vue
-import { ref, onMounted } from "vue";
-import { RouterLink, useRoute } from "vue-router";
-
-// app
-import { detailItem } from "../../services/item.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-
-const route = useRoute();
-const item = ref({
-    code: '',
-    name: '',
-    get_item_type: '',
-    get_measurement: '',
-    price: 0,
-});
-
-const notFound = ref(null);
-
-onMounted(async () => {
-    try {
-        const resp = await detailItem(route.params.id);
-        item.value = resp.data;
-    } catch (error) {
-        notFound.value = 'El artículo al que trata de acceder no existe, haga click en el enlace a artículos en el menú de la izquierda para ver las artículos existentes.';
-    }
-});
-
-</script>
-
-<style lang="scss" scoped>
-
-</style>

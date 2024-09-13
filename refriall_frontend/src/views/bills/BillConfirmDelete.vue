@@ -1,47 +1,3 @@
-<template>
-
-    <div class="row">
-        <!-- side menu -->
-        <div class="col-md-2">
-            <ul :class="listGroup.listGroup">
-                <li :class="listGroup.listGroupItem">
-                    <strong>Facturas</strong>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <RouterLink :to="{name: 'bills'}">Facturas</RouterLink>
-                </li>
-            </ul>
-        </div>
-
-        <!-- main content -->
-        <div class="col-md-6">
-            <p>Está seguro que desea eliminar la siguiente factura?</p>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Folio</th>
-                        <th>Cliente</th>
-                        <th>Importe total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ bill.folio }}</td>
-                        <td>{{ bill.customer.name }}</td>
-                        <td>{{ bill.get_total_amount }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <button
-                class="btn btn-sm btn-danger"
-                @click="delBill(bill.id)">Eliminar</button>
-            <RouterLink :to="{name: 'bills_detail', params: {id: bill.id}}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
-        </div>
-
-    </div>
-
-</template>
-
 <script setup>
 
 // vue
@@ -91,3 +47,47 @@ const delBill = async (id) => {
 
 
 </script>
+
+<template>
+
+    <div class="row">
+        <!-- side menu -->
+        <div class="col-md-2">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
+                    <strong>Facturas</strong>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <RouterLink :to="{name: 'bills'}">Facturas</RouterLink>
+                </li>
+            </ul>
+        </div>
+
+        <!-- main content -->
+        <div class="col-md-6">
+            <p>Está seguro que desea eliminar la siguiente factura?</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Folio</th>
+                        <th>Cliente</th>
+                        <th>Importe total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ bill.folio }}</td>
+                        <td>{{ bill.customer.name }}</td>
+                        <td>{{ bill.get_total_amount }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button
+                class="btn btn-sm btn-danger"
+                @click="delBill(bill.id)">Eliminar</button>
+            <RouterLink :to="{name: 'bills_detail', params: {id: bill.id}}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+        </div>
+
+    </div>
+
+</template>

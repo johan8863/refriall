@@ -1,3 +1,103 @@
+<script setup>
+
+// vue
+import { RouterLink, useRoute } from "vue-router";
+import { ref, onMounted } from 'vue';
+
+// app
+import { detailOrder } from "../../services/order.service";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+// third
+import html2pdf from "html2pdf.js";
+
+const route = useRoute();
+const order = ref({
+    customer: '',
+    customer_dependency: '',
+    symptom: '',
+    flaw: '',
+    repair_description: '',
+    folio: '',
+    check_diagnosis: false,
+    repair: false,
+    install: false,
+    maintenance: false,
+    kit: '',
+    kit_brand: '',
+    kit_model: '',
+    kit_serial: '',
+    job_description: '',
+    itemtime_set: [],
+    itemtimeorder_set: [],
+    provider: 1,
+    provider_signature_date: '',
+    customer_signature_date: '',
+    check_number: '',
+    charge_aprove: '',
+    charge_check: '',
+    customer_charge: '',
+    customer_name: '',
+    customer_personal_id: '',
+    checked_by: '',
+    aproved_by: '',
+    get_total_amount: 0,
+    get_total_amount_revision: 0,
+    get_total_amount_prod: 0,
+    get_total_amount_concept: 0,
+    get_total_amount_repair: 0,
+    get_total_amount_maintenace: 0,
+    get_total_amount_install: 0,
+    get_total_amount_unmounting: 0
+});
+
+const notFound = ref(null);
+
+const paginatedOrders = ref([]);
+
+onMounted(async () => {
+    try {
+        const resp = await detailOrder(route.params.id);
+        order.value = resp.data;
+    
+        paginatedOrders.value = paginate(order, 14);
+    } catch (error) {
+        notFound.value = 'La orden a la que trata de acceder no existe, haga click en el enlace a órdenes en el menú de la izquierda para ver las órdenes existentes.'        
+    }
+});
+
+const paginate = (order, itemsPerPage, start=0, pages=[]) => {
+    if (start >= order.value.itemtimeorder_set.length) {
+        return pages;
+    }
+    const end = start + itemsPerPage;
+    const {itemtimeorder_set, ...rest} = order.value;
+    pages.push({
+        ...rest,
+        itemtimeorder_set: itemtimeorder_set.slice(start, end),
+    });
+    return paginate(order, itemsPerPage, end, pages);
+}
+
+function pdf() {
+    const element = document.getElementById('order-to-pdf');
+    const output_name = (route.meta.preOrder) ? 
+                            (order.value.customer_dependency) ? 
+                                `prefactura_${order.value.folio}_${order.value.customer_dependency.name}` : 
+                                `prefactura_${order.value.folio}_${order.value.customer.name}`
+                            : (order.value.customer_dependency) ? 
+                                `orden_de_servicio_${order.value.folio}_${order.value.customer_dependency.name}` : 
+                                `orden_de_servicio_${order.value.folio}_${order.value.customer.name}`
+    const opt = {
+        filename: output_name
+    }
+
+    html2pdf().from(element).set(opt).save()
+    // html2pdf(element);
+}
+
+</script>
+
 <template>
     <div class="row">
         <!-- side menu -->
@@ -217,103 +317,3 @@
     </div> <!-- end row -->
 
 </template>
-
-<script setup>
-
-// vue
-import { RouterLink, useRoute } from "vue-router";
-import { ref, onMounted } from 'vue';
-
-// app
-import { detailOrder } from "../../services/order.service";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-// third
-import html2pdf from "html2pdf.js";
-
-const route = useRoute();
-const order = ref({
-    customer: '',
-    customer_dependency: '',
-    symptom: '',
-    flaw: '',
-    repair_description: '',
-    folio: '',
-    check_diagnosis: false,
-    repair: false,
-    install: false,
-    maintenance: false,
-    kit: '',
-    kit_brand: '',
-    kit_model: '',
-    kit_serial: '',
-    job_description: '',
-    itemtime_set: [],
-    itemtimeorder_set: [],
-    provider: 1,
-    provider_signature_date: '',
-    customer_signature_date: '',
-    check_number: '',
-    charge_aprove: '',
-    charge_check: '',
-    customer_charge: '',
-    customer_name: '',
-    customer_personal_id: '',
-    checked_by: '',
-    aproved_by: '',
-    get_total_amount: 0,
-    get_total_amount_revision: 0,
-    get_total_amount_prod: 0,
-    get_total_amount_concept: 0,
-    get_total_amount_repair: 0,
-    get_total_amount_maintenace: 0,
-    get_total_amount_install: 0,
-    get_total_amount_unmounting: 0
-});
-
-const notFound = ref(null);
-
-const paginatedOrders = ref([]);
-
-onMounted(async () => {
-    try {
-        const resp = await detailOrder(route.params.id);
-        order.value = resp.data;
-    
-        paginatedOrders.value = paginate(order, 14);
-    } catch (error) {
-        notFound.value = 'La orden a la que trata de acceder no existe, haga click en el enlace a órdenes en el menú de la izquierda para ver las órdenes existentes.'        
-    }
-});
-
-const paginate = (order, itemsPerPage, start=0, pages=[]) => {
-    if (start >= order.value.itemtimeorder_set.length) {
-        return pages;
-    }
-    const end = start + itemsPerPage;
-    const {itemtimeorder_set, ...rest} = order.value;
-    pages.push({
-        ...rest,
-        itemtimeorder_set: itemtimeorder_set.slice(start, end),
-    });
-    return paginate(order, itemsPerPage, end, pages);
-}
-
-function pdf() {
-    const element = document.getElementById('order-to-pdf');
-    const output_name = (route.meta.preOrder) ? 
-                            (order.value.customer_dependency) ? 
-                                `prefactura_${order.value.folio}_${order.value.customer_dependency.name}` : 
-                                `prefactura_${order.value.folio}_${order.value.customer.name}`
-                            : (order.value.customer_dependency) ? 
-                                `orden_de_servicio_${order.value.folio}_${order.value.customer_dependency.name}` : 
-                                `orden_de_servicio_${order.value.folio}_${order.value.customer.name}`
-    const opt = {
-        filename: output_name
-    }
-
-    html2pdf().from(element).set(opt).save()
-    // html2pdf(element);
-}
-
-</script>

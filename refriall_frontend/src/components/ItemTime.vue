@@ -1,3 +1,36 @@
+<script setup>
+// vue
+import { ref, onMounted, watch } from "vue";
+
+// app
+import { getItem } from "../services/item.service";
+
+const props = defineProps({
+    items: {
+        type: Array,
+        required: true
+    },
+    item: {
+        type: Object,
+        required: true
+    }
+})
+
+const selectedItem = ref(null)
+
+defineEmits(['onDeleteItem'])
+
+
+onMounted(async () => {
+    selectedItem.value = props.items.filter(item => props.item.item === item.id)[0]
+})
+
+// Watching the reaction of "item" selectedItem property
+// will be assigned the matching item in the items list.
+watch(props.item, () => selectedItem.value = props.items.filter(item => props.item.item === item.id)[0])
+
+</script>
+
 <template>
     <div class="row mb-1">
         <!-- items select control -->
@@ -52,35 +85,3 @@
     </div>
 </template>
 
-<script setup>
-// vue
-import { ref, onMounted, watch } from "vue";
-
-// app
-import { getItem } from "../services/item.service";
-
-const props = defineProps({
-    items: {
-        type: Array,
-        required: true
-    },
-    item: {
-        type: Object,
-        required: true
-    }
-})
-
-const selectedItem = ref(null)
-
-defineEmits(['onDeleteItem'])
-
-
-onMounted(async () => {
-    selectedItem.value = props.items.filter(item => props.item.item === item.id)[0]
-})
-
-// Watching the reaction of "item" selectedItem property
-// will be assigned the matching item in the items list.
-watch(props.item, () => selectedItem.value = props.items.filter(item => props.item.item === item.id)[0])
-
-</script>
