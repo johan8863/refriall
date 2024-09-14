@@ -64,7 +64,7 @@ onMounted(async () => {
 
         <!-- main content -->
         <!-- notfound false -->
-        <div v-if="!notFound">
+        <template v-if="!notFound">
             <div class="col-md-4">
                 <h3>{{ customer.name }}</h3>
                 <hr>
@@ -81,14 +81,16 @@ onMounted(async () => {
                 </div>
             </div>
         <!-- end notFound false -->
-        </div>
+        </template>
 
         <!-- notFound -->
-        <div
-          v-else
-          class="col-md-6">
-            <p>{{ notFound }}</p>
-        </div>
+        <template
+          v-else>
+          <div
+            class="col-md-6">
+              <p>{{ notFound }}</p>
+          </div>
+        </template>
 
     </div> <!-- end row -->
 

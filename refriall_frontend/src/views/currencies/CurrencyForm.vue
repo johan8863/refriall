@@ -107,10 +107,7 @@ onMounted(async () => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- form -->
-            <form
-              class="row"
-              method="post"
-              @submit.prevent>
+            <form @submit.prevent class="row">
                 <!-- name control -->
                 <div class="col-md-6 mb-2">
                     <label for="name" class="form-label">Nombre</label>
@@ -153,10 +150,16 @@ onMounted(async () => {
                 </div>
                 <!-- buttons -->
                  <div>
+                    <!-- 
+                        the order in the ternary operator is due to the fact that 
+                        this form is more often used to create than to update 
+                    -->
                     <button
-                      type="button"
+                      type="submit"
                       class="btn btn-primary btn-sm"
-                      @click="currency.id ? updateCurrency(currency) : createCurrency(currency)">{{currency.id ? 'Actualizar' : 'Guardar'}}</button>
+                      @click="!currency.id ? createCurrency(currency) : updateCurrency(currency)">
+                        {{!currency.id ? 'Guardar' : 'Actualizar'}}
+                    </button>
                     <router-link
                       :to="{name: 'currencies'}"
                       class="btn btn-danger btn-sm">Cancelar</router-link>

@@ -572,7 +572,16 @@ const pushAllOrders = (event) => {
 
                 <!-- buttons -->
                 <div class="mb-5">
-                    <button class="btn btn-sm btn-primary" @click="bill.id? updateBill(bill) : createBill(bill)">{{bill.id? 'Actualizar' : 'Guardar'}}</button>
+                    <!-- 
+                        the order in the ternary operator is due to the fact that 
+                        this form is more often used to create than to update 
+                    -->
+                    <button
+                      type="submit"
+                      class="btn btn-sm btn-primary"
+                      @click="!bill.id ? createBill(bill) : updateBill(bill)">
+                        {{ !bill.id? 'Guardar' : 'Actualizar' }}
+                    </button>
                     <RouterLink :to="{name: 'bills'}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
                 </div>
 

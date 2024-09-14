@@ -105,7 +105,7 @@ onMounted(async () => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- form -->
-            <form method="post" @submit.prevent>
+            <form @submit.prevent>
                 <span v-if="kitErrors.non_field_errors">
                     <p
                         class="form-text text-danger"
@@ -131,16 +131,22 @@ onMounted(async () => {
                     <span v-if="kitErrors.name">
                         <p
                           class="form-text text-danger"
-                          v-for="(error, i) in kitErrors.name"
-                          :key="i">{{ error }}</p>
+                          v-for="(error, index) in kitErrors.name"
+                          :key="index">{{ error }}</p>
                     </span>
                 </div>
                 <!-- buttons -->
                 <div>
+                    <!-- 
+                        the order in the ternary operator is due to the fact that 
+                        this form is more often used to create than to update 
+                    -->
                     <button
-                      type="button"
-                      @click="kit.id ? updateKit(kit) : createKit(kit)"
-                      class="btn btn-sm btn-primary">{{kit.id ? 'Actualizar' : 'Guardar'}}</button>
+                      type="submit"
+                      @click="!kit.id ? createKit(kit) : updateKit(kit)"
+                      class="btn btn-sm btn-primary">
+                        {{ !kit.id ? 'Guardar' : 'Actualizar' }}
+                    </button>
                       <router-link :to="{name: 'kits'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
                 </div>
             </form>

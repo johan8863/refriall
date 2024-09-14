@@ -112,7 +112,7 @@ const updateItem = async (item) => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- form -->
-            <form method="post" @submit.prevent>
+            <form @submit.prevent>
                 <span v-if="itemErrors.non_field_errors">
                     <p
                         class="form-text text-danger"
@@ -247,9 +247,16 @@ const updateItem = async (item) => {
                 </div>
                 <!-- buttons -->
                 <div>
+                    <!-- 
+                        the order in the ternary operator is due to the fact that 
+                        this form is more often used to create than to update 
+                    -->
                     <button
+                      type="submit"
                       class="btn btn-sm btn-primary"
-                      @click="item.id ? updateItem(item) : createItem(item)">{{ item.id ? 'Actualizar' : 'Guardar' }}</button>
+                      @click="!item.id ? createItem(item) : updateItem(item)">
+                        {{ !item.id ? 'Guardar' : 'Actualizar' }}</button>
+
                       <router-link :to="{name: 'items'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
                 </div>
             </form>

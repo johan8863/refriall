@@ -141,7 +141,7 @@ onMounted(async () => {
                     v-for="(error, i) in customerErrors.non_field_errors"
                     :key="i">{{ error.$message }}</p>
             </span>
-            <form method="post" @submit.prevent>
+            <form @submit.prevent>
                 <!-- customer_type control -->
                 <div class="mb-2">
                     <label for="customer_type" class="form-label">Tipo</label>
@@ -334,9 +334,16 @@ onMounted(async () => {
                 </div>
                 <!-- buttons -->
                 <div>
+                    <!-- 
+                        the order in the ternary operator is due to the fact that 
+                        this form is more often used to create than to update 
+                    -->
                     <button
+                      type="submit"
                       class="btn btn-sm btn-primary"
-                      @click="customer.id ? updateCustomer(customer) : createCustomer(customer)">{{ customer.id ? 'Actualizar' : 'Guardar' }}</button>
+                      @click="!customer.id ? createCustomer(customer) : updateCustomer(customer)">
+                        {{ !customer.id ? 'Guardar' : 'Actualizar' }}
+                    </button>
                     <router-link :to="{name: 'customers'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
                 </div>
             </form>

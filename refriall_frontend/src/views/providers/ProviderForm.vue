@@ -17,7 +17,7 @@
 
         <!-- main content -->
         <div class="col-md-4">
-            <form method="post">
+            <form @submit.prevent>
                 <!-- name control -->
                 <div class="mb-2">
                     <label

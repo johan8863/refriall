@@ -863,11 +863,10 @@ const loadData = async () => {
         <!-- buttons -->
         <div class="mb-4">
           <button
-            @click="order.id ? updateOrder(order) : createOrder(order)"
-            type="button"
+            type="submit"
             class="btn btn-sm btn-primary"
-          >
-            Guardar
+            @click="order.id ? updateOrder(order) : createOrder(order)">
+              {{ !order.id ? 'Guardar' : 'Actualizar'}}
           </button>
           <router-link :to="{ name: 'orders' }" class="btn btn-sm btn-secondary"
             >Cancelar</router-link
