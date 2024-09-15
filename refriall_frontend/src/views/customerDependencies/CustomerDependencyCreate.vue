@@ -85,7 +85,7 @@ const createDependency = async (dependency) => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- form -->
-            <form @submit.prevent>
+            <form @submit.prevent="createDependency(dependency)">
                 <span v-if="dependencyErrors.non_field_errors">
                     <p
                         class="form-text text-danger"
@@ -189,8 +189,7 @@ const createDependency = async (dependency) => {
                 <div class="mb-2">
                     <button
                         type="submit"
-                        class="btn btn-sm btn-primary"
-                        @click="createDependency(dependency)">Guardar</button>
+                        class="btn btn-sm btn-primary">Guardar</button>
                 </div>
             </form>
         </div>

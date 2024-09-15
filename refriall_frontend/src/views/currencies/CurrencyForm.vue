@@ -107,7 +107,9 @@ onMounted(async () => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- form -->
-            <form @submit.prevent class="row">
+            <form
+              @submit.prevent="!currency.id ? createCurrency(currency) : updateCurrency(currency)"
+              class="row">
                 <!-- name control -->
                 <div class="col-md-6 mb-2">
                     <label for="name" class="form-label">Nombre</label>
@@ -156,8 +158,7 @@ onMounted(async () => {
                     -->
                     <button
                       type="submit"
-                      class="btn btn-primary btn-sm"
-                      @click="!currency.id ? createCurrency(currency) : updateCurrency(currency)">
+                      class="btn btn-primary btn-sm">
                         {{!currency.id ? 'Guardar' : 'Actualizar'}}
                     </button>
                     <router-link

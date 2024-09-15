@@ -105,7 +105,7 @@ onMounted(async () => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- form -->
-            <form @submit.prevent>
+            <form @submit.prevent="!kit.id ? createKit(kit) : updateKit(kit)">
                 <span v-if="kitErrors.non_field_errors">
                     <p
                         class="form-text text-danger"
@@ -143,7 +143,6 @@ onMounted(async () => {
                     -->
                     <button
                       type="submit"
-                      @click="!kit.id ? createKit(kit) : updateKit(kit)"
                       class="btn btn-sm btn-primary">
                         {{ !kit.id ? 'Guardar' : 'Actualizar' }}
                     </button>

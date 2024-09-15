@@ -89,7 +89,7 @@ const updateDependency = async (dependency) => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- form -->
-            <form @submit.prevent>
+            <form @submit.prevent="updateDependency(dependency)">
                 <span v-if="dependencyErrors.non_field_errors">
                     <p
                         class="form-text text-danger"
@@ -193,8 +193,7 @@ const updateDependency = async (dependency) => {
                 <div class="mb-2">
                     <button
                         type="submit"
-                        class="btn btn-sm btn-primary"
-                        @click="updateDependency(dependency)">Guardar</button>
+                        class="btn btn-sm btn-primary">Guardar</button>
                 </div>
             </form>
         </div>

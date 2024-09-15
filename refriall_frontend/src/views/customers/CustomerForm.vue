@@ -141,7 +141,7 @@ onMounted(async () => {
                     v-for="(error, i) in customerErrors.non_field_errors"
                     :key="i">{{ error.$message }}</p>
             </span>
-            <form @submit.prevent>
+            <form @submit.prevent="!customer.id ? createCustomer(customer) : updateCustomer(customer)">
                 <!-- customer_type control -->
                 <div class="mb-2">
                     <label for="customer_type" class="form-label">Tipo</label>
@@ -340,8 +340,7 @@ onMounted(async () => {
                     -->
                     <button
                       type="submit"
-                      class="btn btn-sm btn-primary"
-                      @click="!customer.id ? createCustomer(customer) : updateCustomer(customer)">
+                      class="btn btn-sm btn-primary">
                         {{ !customer.id ? 'Guardar' : 'Actualizar' }}
                     </button>
                     <router-link :to="{name: 'customers'}" class="btn btn-sm btn-secondary">Cancelar</router-link>

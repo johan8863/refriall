@@ -112,7 +112,7 @@ const updateItem = async (item) => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- form -->
-            <form @submit.prevent>
+            <form @submit.prevent="!item.id ? createItem(item) : updateItem(item)">
                 <span v-if="itemErrors.non_field_errors">
                     <p
                         class="form-text text-danger"
@@ -253,8 +253,7 @@ const updateItem = async (item) => {
                     -->
                     <button
                       type="submit"
-                      class="btn btn-sm btn-primary"
-                      @click="!item.id ? createItem(item) : updateItem(item)">
+                      class="btn btn-sm btn-primary">
                         {{ !item.id ? 'Guardar' : 'Actualizar' }}</button>
 
                       <router-link :to="{name: 'items'}" class="btn btn-sm btn-secondary">Cancelar</router-link>

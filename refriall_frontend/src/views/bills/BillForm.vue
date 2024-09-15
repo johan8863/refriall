@@ -169,7 +169,7 @@ const pushAllOrders = (event) => {
         <!-- main content -->
         <div class="col-md-9">
             <!-- form -->
-            <form @submit.prevent class="row">
+            <form @submit.prevent="!bill.id ? createBill(bill) : updateBill(bill)" class="row">
                 <!-- backend errors from non_field_errors dictionary -->
                 <span v-if="billBackendErrors.non_field_errors">
                     <p
@@ -578,14 +578,15 @@ const pushAllOrders = (event) => {
                     -->
                     <button
                       type="submit"
-                      class="btn btn-sm btn-primary"
-                      @click="!bill.id ? createBill(bill) : updateBill(bill)">
+                      class="btn btn-sm btn-primary">
                         {{ !bill.id? 'Guardar' : 'Actualizar' }}
                     </button>
                     <RouterLink :to="{name: 'bills'}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+                    
                 </div>
 
             </form>
+
         </div>
 
     </div>
