@@ -339,7 +339,7 @@ onMounted(async () => {
                                       name=""
                                       id=""
                                       class="form-check"
-                                      @input="pushAllOrders">
+                                      @change="pushAllOrders">
                                 </th>
                                 <th>Folio</th>
                                 <th>Cliente</th>
