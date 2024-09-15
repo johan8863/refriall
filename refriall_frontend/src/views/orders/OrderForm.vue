@@ -528,6 +528,12 @@ const loadData = async () => {
               :key="currency.id"
               :value="currency.id">{{ currency.name }}</option>            
           </select>
+          <!-- backend errors -->
+          <span v-if="orderBackendErrors.currency">
+            <p class="form-text text-danger" v-for="(error, i) in orderBackendErrors.currency" :key="i">
+              {{ error }}
+            </p>
+          </span>
         </div>
 
         <!-- check_diagnosis control -->
