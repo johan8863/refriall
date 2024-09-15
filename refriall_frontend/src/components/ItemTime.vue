@@ -40,9 +40,9 @@ watch(props.item, () => selectedItem.value = props.items.filter(item => props.it
                 class="form-select"
                 v-model="item.item">
                 <option
-                v-for="i in items"
-                :key="i.id"
-                :value="i.id">{{ i.name }}</option>
+                    v-for="i in items"
+                    :key="i.id"
+                    :value="i.id">{{ i.name }}</option>
             </select>
         </div>
 
@@ -76,6 +76,7 @@ watch(props.item, () => selectedItem.value = props.items.filter(item => props.it
         <!-- delete button -->
         <div class="col-md-1">
             <button
+              type="button"
               class="btn btn-sm btn-primary"
               @click="$emit('onDeleteItem')">-</button>
         </div>
