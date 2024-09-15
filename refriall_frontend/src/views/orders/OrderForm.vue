@@ -311,7 +311,10 @@ const loadData = async () => {
             </div>
 
             <div class="col-md-1">
-              <button class="btn btn-sm btn-danger" @click="clearCustomer()">X</button>
+              <button
+                type="button"
+                class="btn btn-sm btn-danger"
+                @click="clearCustomer()">X</button>
             </div>
           </div>
         </div>
@@ -355,7 +358,10 @@ const loadData = async () => {
               </span>
             </div>
             <div class="col-md-1">
-              <button class="btn btn-sm btn-danger" @click="clearCustomerDependency()">X</button>
+              <button
+                type="button"
+                class="btn btn-sm btn-danger"
+                @click="clearCustomerDependency()">X</button>
             </div>
           </div>
         </div>
