@@ -69,8 +69,8 @@ watch(props.item, () => selectedItem.value = props.items.filter(item => props.it
                 class="form-control"
                 v-model.number="item.times"
                 type="number"
-                min="1"
-                step="0.05" />
+                min="0.01"
+                step="any" />
         </div>
 
         <!-- delete button -->

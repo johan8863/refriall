@@ -262,7 +262,7 @@ const loadData = async () => {
     <!-- main content -->
     <div class="col-md-10">
       <!-- form -->
-      <form @submit.prevent class="row">
+      <form @submit.prevent="order.id ? updateOrder(order) : createOrder(order)" class="row">
         <!-- backend errors -->
         <span v-if="orderBackendErrors.non_field_errors">
           <p
@@ -715,7 +715,10 @@ const loadData = async () => {
         <!-- items_times control -->
         <div class="row">
           <div class="col-md-12 mb-2">
-            <button class="btn btn-sm btn-primary" @click="createItemTime(1)">Agregar artículo</button>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary"
+              @click="createItemTime(1)">Agregar artículo</button>
           </div>
 
           <div class="col-md-6">Artículo o Servicio</div>
@@ -870,8 +873,7 @@ const loadData = async () => {
         <div class="mb-4">
           <button
             type="submit"
-            class="btn btn-sm btn-primary"
-            @click="order.id ? updateOrder(order) : createOrder(order)">
+            class="btn btn-sm btn-primary">
               {{ !order.id ? 'Guardar' : 'Actualizar'}}
           </button>
           <router-link :to="{ name: 'orders' }" class="btn btn-sm btn-secondary"
