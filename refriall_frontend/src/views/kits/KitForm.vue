@@ -17,6 +17,7 @@ const kit = ref({
     name: ''
 });
 
+
 // kit object to catch error messages from
 // django rest api
 const kitErrors = ref({
@@ -24,10 +25,14 @@ const kitErrors = ref({
     detail: [],
 });
 
-// router utilities to redirect after forms submisions
-// and to get the id of the object in case of editing intended
+
+// router utilities and handlers
 const router = useRouter();
 const route = useRoute();
+
+const goToKits = () => router.push({name: 'kits'})
+const goToKitDetail = () => router.push({name: 'kits_detail', params: {id: kit.value.id}})
+const goBack = () => !kit.value.id ? goToKits() : goToKitDetail()
 
 // rules to manage front validations
 const rules = {
@@ -36,8 +41,10 @@ const rules = {
     }
 };
 
+
 // vuelidate object
 const v$ = useVuelidate(rules, kit);
+
 
 // create kit object function
 const createKit = async (kit) => {
@@ -55,6 +62,7 @@ const createKit = async (kit) => {
     }
 };
 
+
 const updateKit = async (kit) => {
     try {
         // if front validations run,
@@ -69,6 +77,7 @@ const updateKit = async (kit) => {
         kitErrors.value = error.response.data;
     }
 };
+
 
 onMounted(async () => {
     try {
@@ -146,7 +155,10 @@ onMounted(async () => {
                       class="btn btn-sm btn-primary">
                         {{ !kit.id ? 'Guardar' : 'Actualizar' }}
                     </button>
-                      <router-link :to="{name: 'kits'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-secondary"
+                      @click="goBack">Cancelar</button>
                 </div>
             </form>
         </div>

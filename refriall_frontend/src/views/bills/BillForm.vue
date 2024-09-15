@@ -34,6 +34,7 @@ const bill = ref({
     aproved_by: '' ,
 });
 
+
 const billBackendErrors = ref({
     non_field_errors: [],
     customer: '',
@@ -53,14 +54,22 @@ const billBackendErrors = ref({
     aproved_by: '' ,
 });
 
+
 const customers = ref([]);
 const orders = ref([]);
 const currencies = ref([]);
 
-// routes consts
+
+// routes utilities and handlers
 const router = useRouter();
 const route = useRoute();
 
+const goToBills = () => router.push({name: 'bills'})
+const goToBillDetail = () => router.push({name: 'bills_detail', params: {id: bill.value.id}})
+const goBack = () => !bill.value.id ? goToBills() : goToBillDetail()
+
+
+// vuelidate rules
 const rules = {
     customer: {
         required: helpers.withMessage('El cliente es requerido', required)
@@ -76,8 +85,60 @@ const rules = {
     },
 }
 
+
 // vuelidate object
 const v$ = useVuelidate(rules, bill);
+
+
+const createBill = async (bill) => {
+    try {
+        if (await v$.value.$validate()) {
+            const { data } = await postBill(bill);
+            router.push({name: 'bills_detail', params: {id: data.id}})
+        }
+    } catch (error) {
+        billBackendErrors.value = error.response.data
+        console.log(billBackendErrors.value);
+    }
+}
+
+
+const updateBill = async (bill) => {
+    try {
+        if (await v$.value.$validate()) {
+            const { data } = await putBill(bill);
+            router.push({name: 'bills_detail', params: {id: data.id}})
+        }
+    } catch (error) {
+        billBackendErrors.value = error.response.data
+        console.log(billBackendErrors.value);
+    }
+}
+
+
+const ordersFromCustomer = async (event) => {
+    try {
+        orders.value = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
+    } catch (error) {
+        console.log(error.response.data);
+    }
+}
+
+
+const pushAllOrders = (event) => {
+    if (event.target.checked) {
+        if (bill.value.id) {
+            const ordersPush = bill.value.get_orders.map(item => item.id)
+            bill.value.orders = ordersPush
+        } else {
+            const ordersPush = orders.value.map(item => item.id)
+            bill.value.orders = ordersPush
+        }
+    } else {
+        bill.value.orders = []
+    }
+};
+
 
 onMounted(async () => {
     // get customers
@@ -102,52 +163,6 @@ onMounted(async () => {
     //   orders.value = respOrders.data;
     // }
 });
-
-const createBill = async (bill) => {
-    try {
-        if (await v$.value.$validate()) {
-            const { data } = await postBill(bill);
-            router.push({name: 'bills_detail', params: {id: data.id}})
-        }
-    } catch (error) {
-        billBackendErrors.value = error.response.data
-        console.log(billBackendErrors.value);
-    }
-}
-
-const updateBill = async (bill) => {
-    try {
-        if (await v$.value.$validate()) {
-            const { data } = await putBill(bill);
-            router.push({name: 'bills_detail', params: {id: data.id}})
-        }
-    } catch (error) {
-        billBackendErrors.value = error.response.data
-        console.log(billBackendErrors.value);
-    }
-}
-
-const ordersFromCustomer = async (event) => {
-    try {
-        orders.value = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
-    } catch (error) {
-        console.log(error.response.data);
-    }
-}
-
-const pushAllOrders = (event) => {
-    if (event.target.checked) {
-        if (bill.value.id) {
-            const ordersPush = bill.value.get_orders.map(item => item.id)
-            bill.value.orders = ordersPush
-        } else {
-            const ordersPush = orders.value.map(item => item.id)
-            bill.value.orders = ordersPush
-        }
-    } else {
-        bill.value.orders = []
-    }
-};
 
 </script>
 
@@ -581,7 +596,10 @@ const pushAllOrders = (event) => {
                       class="btn btn-sm btn-primary">
                         {{ !bill.id? 'Guardar' : 'Actualizar' }}
                     </button>
-                    <RouterLink :to="{name: 'bills'}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-secondary"
+                      @click="goBack">Cancelar</button>
                     
                 </div>
 

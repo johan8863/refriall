@@ -12,9 +12,15 @@ import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 
-const route = useRoute();
-const router = useRouter();
 
+// router utilities and handlers
+const router = useRouter();
+const route = useRoute();
+
+const goToCustomerDependecyDetail = () => router.push({name: 'customer_dependecy_detail', params: {id: dependency.value.id}});
+
+
+// dependecy object
 const dependency = ref({
     customer: '',
     name: '',
@@ -23,6 +29,7 @@ const dependency = ref({
     township: '',
 });
 
+
 const dependencyErrors = ref({
     customer: [],
     name: [],
@@ -30,6 +37,7 @@ const dependencyErrors = ref({
     province: [],
     township: [],
 });
+
 
 const rules = {
     name: {
@@ -46,13 +54,10 @@ const rules = {
     }
 }
 
+
 // vuelidate object
 const v$ = useVuelidate(rules, dependency);
 
-onMounted(async () => {
-    const resp = await detailCustomerDependecy(route.params.id);
-    dependency.value = resp.data;
-});
 
 const updateDependency = async (dependency) => {
     try {
@@ -69,6 +74,13 @@ const updateDependency = async (dependency) => {
         console.log(error);
     }
 }
+
+
+// onMounted cycle
+onMounted(async () => {
+    const resp = await detailCustomerDependecy(route.params.id);
+    dependency.value = resp.data;
+});
 
 </script>
 
@@ -194,6 +206,10 @@ const updateDependency = async (dependency) => {
                     <button
                         type="submit"
                         class="btn btn-sm btn-primary">Guardar</button>
+                <button
+                    type="button"
+                    class="btn btn-sm btn-secondary"
+                    @click="goToCustomerDependecyDetail">Cancelar</button>
                 </div>
             </form>
         </div>

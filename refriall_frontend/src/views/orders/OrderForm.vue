@@ -48,18 +48,25 @@ const order = ref({
   customer_personal_id: '',
   checked_by: '',
   aproved_by: ''
-})
+});
+
 
 // secondary backend objects
-const customers = ref([])
-const dependencies = ref([])
-const kits = ref([])
-const items = ref([])
+const customers = ref([]);
+const dependencies = ref([]);
+const kits = ref([]);
+const items = ref([]);
 const currencies = ref([]);
 
-// routing objects
-const router = useRouter()
-const route = useRoute()
+
+// router utilities and handlers
+const router = useRouter();
+const route = useRoute();
+
+const goToOrders = () => router.push({name: 'orders'})
+const goToOrderDetail = () => router.push({name: 'orders_detail', params: {id: order.value.id}})
+const goBack = () => !order.value.id ? goToOrders() : goToOrderDetail()
+
 
 // validation rules
 const rules = {
@@ -99,10 +106,12 @@ const rules = {
   customer_signature_date: {
     required: helpers.withMessage('La firma del cliente es requerida.', required)
   }
-}
+};
+
 
 // vuelidate object
-const v$ = useVuelidate(rules, order)
+const v$ = useVuelidate(rules, order);
+
 
 // order object to be filled with backend errors
 const orderBackendErrors = ref({
@@ -136,7 +145,8 @@ const orderBackendErrors = ref({
   checked_by: [],
   aproved_by: [],
   non_field_errors: []
-})
+});
+
 
 // preparation of the itemtime_set order property
 const createItemTime = (elements=12) => {
@@ -148,7 +158,7 @@ const createItemTime = (elements=12) => {
       times: 1
     })
   }
-}
+};
 
 
 // computed property to calculate value of the order
@@ -161,13 +171,72 @@ const total = computed(() => {
       const itemRaw = itemfiltered[0]
       return count + itemRaw.price * itemtime.times
     }, 0)
-})
+});
+
 
 // delete an item from the form by removing it
 // from the order object
 const deleteItem = (index) => {
   order.value.itemtime_set.splice(index, 1)
-}
+};
+
+
+const createOrder = async (order) => {
+  try {
+    if (await v$.value.$validate()) {
+      order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
+      const { data } = await postOrder(order)
+      router.push({ name: 'orders_detail', params: { id: data.id } })
+    }
+  } catch (error) {
+    orderBackendErrors.value = error.response.data
+    console.log(orderBackendErrors.value)
+  }
+};
+
+
+const updateOrder = async (order) => {
+  try {
+    if (await v$.value.$validate()) {
+      order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
+      const { data } = await putOrder(order)
+      router.push({ name: 'orders_detail', params: { id: data.id } })
+    }
+  } catch (error) {
+    orderBackendErrors.value = error.response.data
+    console.log(orderBackendErrors.value.itemtime_set)
+  }
+};
+
+
+const clearCustomer = () => {
+  order.value.customer = ''
+};
+
+
+const clearCustomerDependency = () => {
+  order.value.customer_dependency = ''
+};
+
+
+const loadData = async () => {
+  // get customers
+  const respCustomers = await listCustomer()
+  customers.value = respCustomers.data
+  // get kits
+  const respKits = await listKit()
+  kits.value = respKits.data
+  // get items
+  const respItems = await listItem()
+  items.value = respItems.data
+  // get dependencies
+  const respDependencies = await listCustomerDependecy()
+  dependencies.value = respDependencies.data
+  // get currencies
+  const respCurrencies = await listCurrencies()
+  currencies.value = respCurrencies.data;
+};
+
 
 // on mounted cycle
 onMounted(async () => {
@@ -187,59 +256,8 @@ onMounted(async () => {
     // create initial empty objects for itemtime
     createItemTime()
   }
-})
+});
 
-const createOrder = async (order) => {
-  try {
-    if (await v$.value.$validate()) {
-      order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
-      const { data } = await postOrder(order)
-      router.push({ name: 'orders_detail', params: { id: data.id } })
-    }
-  } catch (error) {
-    orderBackendErrors.value = error.response.data
-    console.log(orderBackendErrors.value)
-  }
-}
-
-const updateOrder = async (order) => {
-  try {
-    if (await v$.value.$validate()) {
-      order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
-      const { data } = await putOrder(order)
-      router.push({ name: 'orders_detail', params: { id: data.id } })
-    }
-  } catch (error) {
-    orderBackendErrors.value = error.response.data
-    console.log(orderBackendErrors.value.itemtime_set)
-  }
-}
-
-const clearCustomer = () => {
-  order.value.customer = ''
-}
-
-const clearCustomerDependency = () => {
-  order.value.customer_dependency = ''
-}
-
-const loadData = async () => {
-  // get customers
-  const respCustomers = await listCustomer()
-  customers.value = respCustomers.data
-  // get kits
-  const respKits = await listKit()
-  kits.value = respKits.data
-  // get items
-  const respItems = await listItem()
-  items.value = respItems.data
-  // get dependencies
-  const respDependencies = await listCustomerDependecy()
-  dependencies.value = respDependencies.data
-  // get currencies
-  const respCurrencies = await listCurrencies()
-  currencies.value = respCurrencies.data;
-}
 </script>
 
 <template>
@@ -882,9 +900,10 @@ const loadData = async () => {
             class="btn btn-sm btn-primary">
               {{ !order.id ? 'Guardar' : 'Actualizar'}}
           </button>
-          <router-link :to="{ name: 'orders' }" class="btn btn-sm btn-secondary"
-            >Cancelar</router-link
-          >
+          <button
+            type="button"
+            class="btn btn-sm btn-secondary"
+            @click="goBack">Cancelar</button>
         </div>
       </form>
     </div>

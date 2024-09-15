@@ -25,6 +25,7 @@ const customer = ref({
     bank_account: '',
 });
 
+
 // customer object to be created or updated
 const customerErrors = ref({
     customer_type: [],
@@ -38,9 +39,16 @@ const customerErrors = ref({
     bank_account: [],
 });
 
-// router tools to redirect and get route params
+
+// router utilities and handlers
 const router = useRouter();
 const route = useRoute();
+
+
+const goToCustomers = () => router.push({name: 'customers'})
+const goToCustomerDetail = () => router.push({name: 'customers_detail', params: {id: customer.value.id}})
+const goBack = () => !customer.value.id ? goToCustomers() : goToCustomerDetail()
+
 
 // vuelidate rules
 const rules = {
@@ -70,6 +78,7 @@ const rules = {
     },
 }
 
+
 // vuelidate object
 const v$ = useVuelidate(rules, customer);
 
@@ -89,6 +98,7 @@ const createCustomer = async (customer) => {
     }
 };
 
+
 // update customer function
 const updateCustomer = async (customer) => {
     try {
@@ -104,6 +114,7 @@ const updateCustomer = async (customer) => {
         customerErrors.value = error.response.data
     }
 };
+
 
 // onMounted cycle to get the customer object 
 // if editing intended
@@ -343,7 +354,10 @@ onMounted(async () => {
                       class="btn btn-sm btn-primary">
                         {{ !customer.id ? 'Guardar' : 'Actualizar' }}
                     </button>
-                    <router-link :to="{name: 'customers'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-secondary"
+                      @click="goBack">Cancelar</button>
                 </div>
             </form>
         </div>

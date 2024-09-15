@@ -12,10 +12,15 @@ import { required, helpers } from "@vuelidate/validators";
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 import { detailCurrency, postCurrency, putCurrency } from "../../services/currency.service";
 
-// router utilities to redirect after forms submisions
-// and to get the id of the object in case of editing intended
+// router utilities and handlers
 const router = useRouter();
 const route = useRoute();
+
+
+const goToCurrencies = () => router.push({name: 'currencies'})
+const goToCurrencyDetail = () => router.push({name: 'currency_detail', params: {id: currency.value.id}})
+const goBack = () => !currency.value.id ? goToCurrencies() : goToCurrencyDetail()
+
 
 // currency object for post and put requests
 const currency = ref({
@@ -23,11 +28,13 @@ const currency = ref({
     description: '',
 });
 
+
 // currency object to store backend errors
 const currencyBackendErrors = ref({
     name: [],
     description: [],
 });
+
 
 // rules to manage front validations
 const rules = {
@@ -36,11 +43,14 @@ const rules = {
     }
 };
 
+
 // vuelidate object
 const v$ = useVuelidate(rules, currency);
 
+
 // helper function to always set to upper case the name of the currency
 const currenyNameUpper = (currency) => currency.name = currency.name.toUpperCase();
+
 
 // create kit object function
 const createCurrency = async (currency) => {
@@ -58,6 +68,7 @@ const createCurrency = async (currency) => {
     }
 };
 
+
 // update kit object function
 const updateCurrency = async (currency) => {
     try {
@@ -73,6 +84,7 @@ const updateCurrency = async (currency) => {
         currencyBackendErrors.value = error.response.data;
     }
 };
+
 
 // onMounted life cycle
 onMounted(async () => {
@@ -161,9 +173,10 @@ onMounted(async () => {
                       class="btn btn-primary btn-sm">
                         {{!currency.id ? 'Guardar' : 'Actualizar'}}
                     </button>
-                    <router-link
-                      :to="{name: 'currencies'}"
-                      class="btn btn-danger btn-sm">Cancelar</router-link>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-secondary"
+                      @click="goBack">Cancelar</button>
                  </div>
             </form>
         </div>

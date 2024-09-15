@@ -21,6 +21,7 @@ const item = ref({
     price: 0,
 });
 
+
 // item errors messages object to catch
 // errors from the django rest api
 const itemErrors = ref({
@@ -31,9 +32,14 @@ const itemErrors = ref({
     price: [],
 });
 
-// router tools to redirect and get routes params
+// router utilities and handlers
 const router = useRouter();
 const route = useRoute();
+
+const goToItems = () => router.push({name: 'items'})
+const goToItemDetail = () => router.push({name: 'items_detail', params: {id: item.value.id}})
+const goBack = () => !item.value.id ? goToItems() : goToItemDetail()
+
 
 // vuelidate rules
 const rules = {
@@ -55,17 +61,10 @@ const rules = {
     },
 };
 
+
 // vuelidate object
 const v$ = useVuelidate(rules, item);
 
-// onMounted cycle to get an item object if editing intended
-onMounted(async () => {
-    const id = route.params.id;
-    if (id) {
-        const { data } = await getItem(id);
-        item.value = data;
-    }
-});
 
 // create item function
 const createItem = async (item) => {
@@ -78,6 +77,7 @@ const createItem = async (item) => {
         itemErrors.value = error.response.data;
     }
 };
+
 
 // update item function
 const updateItem = async (item) => {
@@ -92,6 +92,16 @@ const updateItem = async (item) => {
     }
         
 };
+
+
+// onMounted cycle to get an item object if editing intended
+onMounted(async () => {
+    const id = route.params.id;
+    if (id) {
+        const { data } = await getItem(id);
+        item.value = data;
+    }
+});
 
 </script>
 
@@ -255,8 +265,11 @@ const updateItem = async (item) => {
                       type="submit"
                       class="btn btn-sm btn-primary">
                         {{ !item.id ? 'Guardar' : 'Actualizar' }}</button>
-
-                      <router-link :to="{name: 'items'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
+                    
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-secondary"
+                      @click="goBack">Cancelar</button>
                 </div>
             </form>
         </div>

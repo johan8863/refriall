@@ -12,8 +12,12 @@ import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 
-const route = useRoute();
+// router utilities and handlers
 const router = useRouter();
+const route = useRoute();
+
+const goToCustomers = () => router.push({name: 'customers'});
+
 
 const dependency = ref({
     customer: '',
@@ -190,6 +194,10 @@ const createDependency = async (dependency) => {
                     <button
                         type="submit"
                         class="btn btn-sm btn-primary">Guardar</button>
+                <button
+                    type="button"
+                    class="btn btn-sm btn-secondary"
+                    @click="goToCustomers">Cancelar</button>
                 </div>
             </form>
         </div>
