@@ -16,7 +16,7 @@ import { detailOrderUpdate, postOrder, putOrder } from '../../services/order.ser
 import { listCustomerDependecy } from '../../services/customerDependency.service'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { listCurrencies } from '../../services/currency.service'
-import { useOrderTotalComputed } from '../../composables/OrderComposable'
+import { useCreateOrder, useOrderTotalComputed, useUpdateOrder } from '../../composables/OrderComposable'
 
 // main object
 const order = ref({
@@ -174,42 +174,9 @@ const deleteItem = (index) => {
 };
 
 
-const createOrder = async (order) => {
-  try {
-    if (await v$.value.$validate()) {
-      order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
-      const { data } = await postOrder(order)
-      router.push({ name: 'orders_detail', params: { id: data.id } })
-    }
-  } catch (error) {
-    console.error("General erro", error)
-    if (error.response) {
-      orderBackendErrors.value = error.response.data
-    } else {
-      orderBackendErrors.value = { message: "Error inesperado, consulte al desarrollador" }
-    }
-    console.log(orderBackendErrors.value)
-  }
-};
+const { createOrder } = useCreateOrder()
 
-
-const updateOrder = async (order) => {
-  try {
-    if (await v$.value.$validate()) {
-      order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
-      const { data } = await putOrder(order)
-      router.push({ name: 'orders_detail', params: { id: data.id } })
-    }
-  } catch (error) {
-    console.error("General erro", error)
-    if (error.response) {
-      orderBackendErrors.value = error.response.data
-    } else {
-      orderBackendErrors.value = { message: "Error inesperado, consulte al desarrollador" }
-    }
-    console.log(orderBackendErrors.value)
-  }
-};
+const { updateOrder } = useUpdateOrder()
 
 
 const clearCustomer = () => {
@@ -283,7 +250,7 @@ onMounted(async () => {
     <!-- main content -->
     <div class="col-md-10">
       <!-- form -->
-      <form @submit.prevent="order.id ? updateOrder(order) : createOrder(order)" class="row">
+      <form @submit.prevent="order.id ? updateOrder(order, v$, orderBackendErrors, router) : createOrder(order, v$, orderBackendErrors, router)" class="row">
         <!-- backend errors -->
         <span v-if="orderBackendErrors.non_field_errors">
           <p
