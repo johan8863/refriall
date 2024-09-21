@@ -182,7 +182,12 @@ const createOrder = async (order) => {
       router.push({ name: 'orders_detail', params: { id: data.id } })
     }
   } catch (error) {
-    orderBackendErrors.value = error.response.data
+    console.error("General erro", error)
+    if (error.response) {
+      orderBackendErrors.value = error.response.data
+    } else {
+      orderBackendErrors.value = { message: "Error inesperado, consulte al desarrollador" }
+    }
     console.log(orderBackendErrors.value)
   }
 };
@@ -196,8 +201,13 @@ const updateOrder = async (order) => {
       router.push({ name: 'orders_detail', params: { id: data.id } })
     }
   } catch (error) {
-    orderBackendErrors.value = error.response.data
-    console.log(orderBackendErrors.value.itemtime_set)
+    console.error("General erro", error)
+    if (error.response) {
+      orderBackendErrors.value = error.response.data
+    } else {
+      orderBackendErrors.value = { message: "Error inesperado, consulte al desarrollador" }
+    }
+    console.log(orderBackendErrors.value)
   }
 };
 
@@ -282,6 +292,12 @@ onMounted(async () => {
             :key="i"
           >
             {{ error }}
+          </p>
+        </span>
+        <span v-if="orderBackendErrors">
+          <p
+            class="form-text text-danger">
+            {{ orderBackendErrors }}
           </p>
         </span>
 
