@@ -16,6 +16,7 @@ import { detailOrderUpdate, postOrder, putOrder } from '../../services/order.ser
 import { listCustomerDependecy } from '../../services/customerDependency.service'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { listCurrencies } from '../../services/currency.service'
+import { useOrderTotalComputed } from '../../composables/OrderComposable'
 
 // main object
 const order = ref({
@@ -163,15 +164,17 @@ const createItemTime = (elements=12) => {
 
 // computed property to calculate value of the order
 // as its being added items
-const total = computed(() => {
-  return order.value.itemtime_set
-    .filter((itemtime) => itemtime.item !== 0)
-    .reduce((count, itemtime) => {
-      const itemfiltered = items.value.filter((itf) => itf.id === itemtime.item)
-      const itemRaw = itemfiltered[0]
-      return count + itemRaw.price * itemtime.times
-    }, 0)
-});
+// const total = computed(() => {
+//   return order.value.itemtime_set
+//     .filter((itemtime) => itemtime.item !== 0)
+//     .reduce((count, itemtime) => {
+//       const itemfiltered = items.value.filter((itf) => itf.id === itemtime.item)
+//       const itemRaw = itemfiltered[0]
+//       return count + itemRaw.price * itemtime.times
+//     }, 0)
+// });
+
+const { orderTotalComputed } = useOrderTotalComputed(order, items)
 
 
 // delete an item from the form by removing it
@@ -890,7 +893,7 @@ onMounted(async () => {
 
         <div class="col-md-3">
           <label for="total" class="form-label">Importe Total</label>
-          <p id="total">{{ total.toFixed(2) }}</p>
+          <p id="total">{{ orderTotalComputed.toFixed(2) }}</p>
         </div>
 
         <!-- buttons -->
