@@ -162,18 +162,8 @@ const createItemTime = (elements=12) => {
 };
 
 
-// computed property to calculate value of the order
+// computed composable property to calculate value of the order
 // as its being added items
-// const total = computed(() => {
-//   return order.value.itemtime_set
-//     .filter((itemtime) => itemtime.item !== 0)
-//     .reduce((count, itemtime) => {
-//       const itemfiltered = items.value.filter((itf) => itf.id === itemtime.item)
-//       const itemRaw = itemfiltered[0]
-//       return count + itemRaw.price * itemtime.times
-//     }, 0)
-// });
-
 const { orderTotalComputed } = useOrderTotalComputed(order, items)
 
 
