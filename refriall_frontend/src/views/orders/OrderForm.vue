@@ -294,10 +294,10 @@ onMounted(async () => {
             {{ error }}
           </p>
         </span>
-        <span v-if="orderBackendErrors">
+        <span v-if="orderBackendErrors.message">
           <p
             class="form-text text-danger">
-            {{ orderBackendErrors }}
+            {{ orderBackendErrors.message }}
           </p>
         </span>
 
