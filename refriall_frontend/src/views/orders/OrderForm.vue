@@ -178,6 +178,12 @@ const { createOrder } = useCreateOrder()
 
 const { updateOrder } = useUpdateOrder()
 
+const onSubmit = () => {
+  order.value.id ?
+    updateOrder(order.value, v$.value, orderBackendErrors.value, router) :
+    createOrder(order.value, v$.value, orderBackendErrors.value, router)
+}
+
 
 const clearCustomer = () => {
   order.value.customer = ''
@@ -250,7 +256,7 @@ onMounted(async () => {
     <!-- main content -->
     <div class="col-md-10">
       <!-- form -->
-      <form @submit.prevent="order.id ? updateOrder(order, v$, orderBackendErrors, router) : createOrder(order, v$, orderBackendErrors, router)" class="row">
+      <form @submit.prevent="onSubmit" class="row">
         <!-- backend errors -->
         <span v-if="orderBackendErrors.non_field_errors">
           <p
