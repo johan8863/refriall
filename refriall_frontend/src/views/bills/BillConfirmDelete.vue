@@ -29,6 +29,28 @@ const bill = ref({
     aproved_by: '' ,
 });
 
+
+
+const billBackendErrors = ref({
+    non_field_errors: [],
+    customer: '',
+    currency: '',
+    folio: '',
+    provider: '',
+    provider_signature_date: '',
+    customer_signature_date: '',
+    orders: [],
+    check_number: '',
+    charge_aprove: '',
+    charge_check: '',
+    customer_charge: '',
+    customer_name: '',
+    customer_personal_id: '',
+    checked_by: '',
+    aproved_by: '' ,
+});
+
+
 onMounted(async () => {
     const resp = await detailBill(route.params.id);
     bill.value = resp.data;
@@ -40,8 +62,12 @@ const delBill = async (id) => {
         await deleteBill(id);
         router.push({name: 'bills'});
     } catch (error) {
-        // in case of backend errors, log to the console... for now
-        console.log(error.response.data);   
+        console.error('General error', error)
+        if (error.response) {
+            billBackendErrors.value = error.response.data
+        } else {
+            billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
     }
 };
 
@@ -65,6 +91,21 @@ const delBill = async (id) => {
 
         <!-- main content -->
         <div class="col-md-6">
+        <!-- backend errors from non_field_errors dictionary -->
+        <span v-if="billBackendErrors.non_field_errors">
+                <p
+                    class="form-text text-danger"
+                    v-for="(error, index) in billBackendErrors.non_field_errors"
+                    :key="index">
+                    {{ error }}</p>
+            </span>
+            <!-- backend general errors -->
+            <span v-if="billBackendErrors.message">
+                <p
+                    class="form-text text-danger">
+                    {{ billBackendErrors.message }}</p>
+            </span>
+
             <p>Está seguro que desea eliminar la siguiente factura?</p>
             <table class="table">
                 <thead>

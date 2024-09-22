@@ -97,8 +97,12 @@ const createBill = async (bill) => {
             router.push({name: 'bills_detail', params: {id: data.id}})
         }
     } catch (error) {
-        billBackendErrors.value = error.response.data
-        console.log(billBackendErrors.value);
+        console.error('General error', error)
+        if (error.response) {
+            billBackendErrors.value = error.response.data
+        } else {
+            billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
     }
 }
 
@@ -110,8 +114,12 @@ const updateBill = async (bill) => {
             router.push({name: 'bills_detail', params: {id: data.id}})
         }
     } catch (error) {
-        billBackendErrors.value = error.response.data
-        console.log(billBackendErrors.value);
+        console.error('General error', error)
+        if (error.response) {
+            billBackendErrors.value = error.response.data
+        } else {
+            billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
     }
 }
 
@@ -124,7 +132,13 @@ const ordersFromCustomer = async () => {
             orders.value = []
         }
     } catch (error) {
-        console.log(error.response.data);
+        console.error('General erro', error)
+        if (error.response) {
+            billBackendErrors.value = error.response.data
+        } else {
+            billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
+        console.log(billBackendErrors.value)
     }
 }
 
@@ -196,6 +210,12 @@ onMounted(async () => {
                       v-for="(error, index) in billBackendErrors.non_field_errors"
                       :key="index">
                       {{ error }}</p>
+                </span>
+                <!-- backend general errors -->
+                <span v-if="billBackendErrors.message">
+                    <p
+                      class="form-text text-danger">
+                      {{ billBackendErrors.message }}</p>
                 </span>
 
                 <!-- currency control -->

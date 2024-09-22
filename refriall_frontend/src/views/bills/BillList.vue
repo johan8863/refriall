@@ -10,21 +10,33 @@ const bills = ref([]);
 const currentPage = ref(1);
 const showNextButton = ref(false);
 const showPrevButton = ref(false);
+const billBackendErrors = ref(null)
 
 const getBills = async () => {
-    const resp = (await listBillsPagination(currentPage.value)).data;
+
+    try {
+        const resp = (await listBillsPagination(currentPage.value)).data;
+        
+        showNextButton.value = false;
+        if (resp.next) {
+            showNextButton.value = true;
+        }
+        
+        showPrevButton.value = false;
+        if (resp.previous) {
+            showPrevButton.value = true;
+        }
     
-    showNextButton.value = false;
-    if (resp.next) {
-        showNextButton.value = true;
-    }
-    
-    showPrevButton.value = false;
-    if (resp.previous) {
-        showPrevButton.value = true;
+        bills.value = resp.results;
+    } catch (error) {
+        console.error('General error', error)
+        if (error.response) {
+            billBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`
+        } else {
+            billBackendErrors.value = 'Error inesperado, consulte al desarrollador'
+        }
     }
 
-    bills.value = resp.results;
 };
 
 const loadNextItems = () => {
@@ -64,7 +76,13 @@ onMounted(async () => {
         <div class="col-md-10">
             <div class="row">
                 <div class="col-md-4">
-
+                    <!-- backend general errors -->
+                    <span v-if="billBackendErrors">
+                        <p
+                            class="form-text text-danger">
+                            {{ billBackendErrors }}</p>
+                    </span>
+                    
                     <div v-if="bills.length > 0">
 
                         <div id="tableContainer">

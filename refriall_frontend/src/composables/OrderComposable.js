@@ -48,7 +48,7 @@ export const useCreateOrder = () => {
         router.push({ name: 'orders_detail', params: { id: data.id } })
       }
     } catch (error) {
-      console.error('General erro', error)
+      console.error('General error', error)
       if (error.response) {
         orderBackendErrors.value = error.response.data
       } else {
