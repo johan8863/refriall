@@ -13,7 +13,7 @@ const currency = ref({
     description: '',
 });
 
-const notFound = ref(null);
+const currencyBackenderror = ref(null);
 
 const route = useRoute();
 
@@ -22,7 +22,12 @@ onMounted(async () => {
         const response = await detailCurrency(route.params.id);
         currency.value = response.data
     } catch (error) {
-        notFound.value = "La moneda a la que trata de acceder no existe, haga click en el enlace a monedas en el menú de la izquierda para ver las monedas existentes.";
+        console.error('General error', error)
+        if (error.response) {
+            currencyBackenderror.value = `${error.response.data.detail} - ${error.response.status}`
+        } else {
+            currencyBackenderror.value = 'Error inesperado, consulte al desarrollador'
+        }
     }
 });
 
@@ -49,17 +54,14 @@ onMounted(async () => {
         </div>
         <!-- main content -->
         <div class="col-md-4">
-            <!-- notFound false -->
-            <div v-if="!notFound"> 
-                <h3>{{ currency.name }}</h3>
-                <p>{{ currency.description }}</p>
-            <!-- end notFound false -->
-            </div>
-            <!-- notFound -->
-            <div v-else>
-                <p>{{ notFound }}</p>
-            <!-- end notFound -->
-            </div>
+            <!-- backend general errors -->
+            <span v-if="currencyBackenderror">
+                <p
+                    class="form-text text-danger">
+                    {{ currencyBackenderror }}</p>
+            </span>
+            <h3>{{ currency.name }}</h3>
+            <p>{{ currency.description }}</p>
         </div>
 
     </div>

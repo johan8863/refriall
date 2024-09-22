@@ -10,8 +10,19 @@ import { listCurrencies } from "../../services/currency.service";
 
 const currencies = ref([])
 
+const currencyBackenderror = ref(null);
+
 const getCurrencies = async () => {
-    currencies.value = (await listCurrencies()).data
+    try {
+        currencies.value = (await listCurrencies()).data
+    } catch (error) {
+        console.error('General error: ', error);
+        if (error.response) {
+            currencyBackenderror.value = error.response.data
+        } else {
+            currencyBackenderror.value = { message: `Error inesperado: ${error}` }
+        }
+    }
 }
 
 onMounted(async () => {

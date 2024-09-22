@@ -11,8 +11,14 @@ import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 const route = useRoute();
 const router = useRouter();
 
-// currency objects meant to be deleted
+// currency object meant to be deleted
 const currency = ref({
+    name: '',
+    description: '',
+});
+
+// currency objectto store backend errors
+const currencyBackenderror = ref({
     name: '',
     description: '',
 });
@@ -23,6 +29,12 @@ const delCurrency = async (id) => {
         await deleteCurrency(id);
         router.push({name: 'currencies'});
     } catch (error) {
+        console.error('General error: ', error)
+        if (error.response) {
+            currencyBackenderror.value = error.response.data
+        } else {
+            currencyBackenderror.value = { message: `Error inesperado, ${error}` }
+        }
         // in case of backend errors, log to the console... for now
         console.log(error);
     }
@@ -53,6 +65,20 @@ onMounted(async () => {
         </div>
         <!-- main content -->
         <div class="col-md-4">
+            <!-- backend errors from non_field_errors dictionary -->
+            <span v-if="billBackendErrors.non_field_errors">
+                    <p
+                      class="form-text text-danger"
+                      v-for="(error, index) in billBackendErrors.non_field_errors"
+                      :key="index">
+                      {{ error }}</p>
+                </span>
+                <!-- backend general errors -->
+                <span v-if="billBackendErrors.message">
+                    <p
+                      class="form-text text-danger">
+                      {{ billBackendErrors.message }}</p>
+                </span>
             <div>
                 <p>Está seguro que desea eliminar la moneda: {{ currency.name }}</p>
                 <button
