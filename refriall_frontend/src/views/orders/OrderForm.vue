@@ -1,7 +1,7 @@
 <script setup>
 // vue
 import { RouterLink, useRouter, useRoute } from 'vue-router'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 
 // third
 import { useVuelidate } from '@vuelidate/core'
@@ -12,7 +12,7 @@ import { listCustomer } from '../../services/customer.service'
 import { listKit } from '../../services/kit.service'
 import { listItem } from '../../services/item.service'
 import ItemTime from '../../components/ItemTime.vue'
-import { detailOrderUpdate, postOrder, putOrder } from '../../services/order.service'
+import { detailOrderUpdate } from '../../services/order.service'
 import { listCustomerDependecy } from '../../services/customerDependency.service'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { listCurrencies } from '../../services/currency.service'
