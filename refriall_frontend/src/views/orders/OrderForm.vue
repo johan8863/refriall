@@ -289,16 +289,6 @@ onMounted(async () => {
                 </option>
               </select>
 
-              <!-- @blur="v$.customer.$touch" -->
-              <!-- frontend errors -->
-              <!-- <span v-if="v$.customer.$errors">
-                        <p
-                          class="form-text text-danger"
-                          v-for="error in v$.customer.$errors"
-                          :key="error.$uid">{{ error.$message }}</p>
-                      </span> -->
-
-              <!-- backend errors -->
               <span v-if="orderBackendErrors.customer">
                 <p
                   class="form-text text-danger"
