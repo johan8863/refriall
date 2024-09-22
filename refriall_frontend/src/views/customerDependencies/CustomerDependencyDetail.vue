@@ -17,7 +17,7 @@ const dependency = ref({
     township: '',
 });
 
-const notFound = ref(null);
+const billBackendErrors = ref(null);
 
 onMounted(async () => {
     try {
@@ -26,7 +26,12 @@ onMounted(async () => {
 
         
     } catch (error) {
-        notFound.value = 'La dependencia a la que trata de acceder no existe, haga click en el enlace a dependencias en el menú de la izquierda para ver las dependencias existentes.';
+        console.error('General error', error)
+        if (error.response) {
+            billBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`
+        } else {
+            billBackendErrors.value = 'Error inesperado, consulte al desarrollador'
+        }
     }
 });
 
@@ -57,20 +62,20 @@ onMounted(async () => {
 
         <!-- main content -->
         <div class="col-md-4">
-            <!-- notFound false -->
-            <div v-if="!notFound"> 
-                <h3>{{ dependency.name }}</h3>
-                <hr>
-                <p>{{ dependency.name }}</p>
-                <p>{{ dependency.address }}</p>
-                <p>{{ dependency.province }}</p>
-                <p>{{ dependency.township }}</p>
+            <!-- backend general errors -->
+            <span v-if="billBackendErrors">
+                <p
+                    class="form-text text-danger">
+                    {{ billBackendErrors }}</p>
+            </span>
+
+            <h3>{{ dependency.name }}</h3>
+            <hr>
+            <p>{{ dependency.name }}</p>
+            <p>{{ dependency.address }}</p>
+            <p>{{ dependency.province }}</p>
+            <p>{{ dependency.township }}</p>
             <!-- end notFound false -->
-            </div>
-            <!-- notFound -->
-            <div v-else>
-                <p>{{ notFound }}</p>
-            </div>
         </div>
 
         

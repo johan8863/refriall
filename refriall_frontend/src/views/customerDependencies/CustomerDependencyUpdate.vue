@@ -71,7 +71,12 @@ const updateDependency = async (dependency) => {
             });
         }
     } catch (error) {
-        console.log(error);
+        console.error('General error', error)
+        if (error.response) {
+            dependencyErrors.value = error.response.data
+        } else {
+            dependencyErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
     }
 }
 
@@ -100,6 +105,20 @@ onMounted(async () => {
 
         <!-- main content -->
         <div class="col-md-4">
+            <!-- backend errors from non_field_errors dictionary -->
+            <span v-if="dependencyErrors.non_field_errors">
+                <p
+                    class="form-text text-danger"
+                    v-for="(error, index) in dependencyErrors.non_field_errors"
+                    :key="index">
+                    {{ error }}</p>
+            </span>
+            <!-- backend general errors -->
+            <span v-if="dependencyErrors.message">
+                <p
+                    class="form-text text-danger">
+                    {{ dependencyErrors.message }}</p>
+            </span>
             <!-- form -->
             <form @submit.prevent="updateDependency(dependency)">
                 <span v-if="dependencyErrors.non_field_errors">

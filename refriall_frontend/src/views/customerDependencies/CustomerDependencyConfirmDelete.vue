@@ -18,9 +18,21 @@ const dependency = ref({
     township: '',
 });
 
+const dependencyErrors = ref(null);
+
+
 onMounted(async () => {
-    const resp = await detailCustomerDependecy(route.params.id);
-    dependency.value = resp.data;
+    try {
+        const resp = await detailCustomerDependecy(route.params.id);
+        dependency.value = resp.data;
+    } catch (error) {
+        console.error('General error', error)
+        if (error.response) {
+            dependencyErrors.value = `${error.response.data.detail} - ${error.response.status}`
+        } else {
+            dependencyErrors.value = 'Error inesperado, consulte al desarrollador'
+        }
+    }
 });
 
 const delDependency = async (id) => {
@@ -59,6 +71,12 @@ const delDependency = async (id) => {
 
         <!-- main content -->
         <div class="col-md-4">
+            <!-- backend general errors -->
+            <span v-if="dependencyErrors">
+                <p
+                    class="form-text text-danger">
+                    {{ dependencyErrors }}</p>
+            </span>
             <p>Está seguro que desea eliminar la dependencia: {{ dependency.name }}?</p>
             <div>
                 <button
