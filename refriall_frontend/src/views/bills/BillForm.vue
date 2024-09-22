@@ -116,9 +116,13 @@ const updateBill = async (bill) => {
 }
 
 
-const ordersFromCustomer = async (event) => {
+const ordersFromCustomer = async () => {
     try {
-        orders.value = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
+        if (bill.value.currency && bill.value.customer) {
+            orders.value = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
+        } else {
+            orders.value = []
+        }
     } catch (error) {
         console.log(error.response.data);
     }
