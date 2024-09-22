@@ -7,6 +7,7 @@ import { ref, onMounted } from 'vue';
 // app
 import { detailOrder } from "../../services/order.service";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+import { useOrderPaginate } from "../../composables/OrderComposable";
 
 // third
 import html2pdf from "html2pdf.js";
@@ -62,22 +63,13 @@ onMounted(async () => {
     
         paginatedOrders.value = paginate(order, 14);
     } catch (error) {
+        console.error("General error: ", error)
         notFound.value = 'La orden a la que trata de acceder no existe, haga click en el enlace a órdenes en el menú de la izquierda para ver las órdenes existentes.'        
     }
 });
 
-const paginate = (order, itemsPerPage, start=0, pages=[]) => {
-    if (start >= order.value.itemtimeorder_set.length) {
-        return pages;
-    }
-    const end = start + itemsPerPage;
-    const {itemtimeorder_set, ...rest} = order.value;
-    pages.push({
-        ...rest,
-        itemtimeorder_set: itemtimeorder_set.slice(start, end),
-    });
-    return paginate(order, itemsPerPage, end, pages);
-}
+const { paginate } = useOrderPaginate()
+
 
 function pdf() {
     const element = document.getElementById('order-to-pdf');

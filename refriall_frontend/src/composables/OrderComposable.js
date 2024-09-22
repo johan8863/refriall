@@ -73,7 +73,7 @@ export const useDelOrder = () => {
         errorMessage = `${error.response.data} - ${error.response.status}`
         // Handle different status codes
         if (error.response.status === 404) {
-            errorMessage = 'Orden no encontrada.'
+          errorMessage = 'Orden no encontrada.'
         } else if (error.response.status === 400) {
           console.log('Bad request: ' + error.response.data.error)
         }
@@ -87,4 +87,21 @@ export const useDelOrder = () => {
     }
   }
   return { delOrder }
+}
+
+export const useOrderPaginate = () => {
+  const paginate = (order, itemsPerPage, start = 0, pages = []) => {
+    if (start >= order.value.itemtimeorder_set.length) {
+      return pages
+    }
+    const end = start + itemsPerPage
+    const { itemtimeorder_set, ...rest } = order.value
+    pages.push({
+      ...rest,
+      itemtimeorder_set: itemtimeorder_set.slice(start, end)
+    })
+    return paginate(order, itemsPerPage, end, pages)
+  }
+
+  return { paginate }
 }
