@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 
-import { detailOrderUpdate, postOrder, putOrder } from '../services/order.service'
+import { deleteOrder, postOrder, putOrder } from '../services/order.service'
 
 // to export a comuted as a composable, define the function
 // that'll return the composable object
@@ -58,4 +58,33 @@ export const useCreateOrder = () => {
     }
   }
   return { createOrder }
+}
+
+export const useDelOrder = () => {
+  const delOrder = async (id, router, errorMessage) => {
+    try {
+      await deleteOrder(id)
+      router.push({ name: 'orders' })
+    } catch (error) {
+      if (error.response) {
+        // The request was made, and the server responded with a status code
+        console.log('Error status:', error.response.status)
+        console.log('Error data:', error.response.data)
+        errorMessage = `${error.response.data} - ${error.response.status}`
+        // Handle different status codes
+        if (error.response.status === 404) {
+            errorMessage = 'Orden no encontrada.'
+        } else if (error.response.status === 400) {
+          console.log('Bad request: ' + error.response.data.error)
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log('No response received:', error.request)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error:', error.message)
+      }
+    }
+  }
+  return { delOrder }
 }

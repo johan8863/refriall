@@ -7,6 +7,7 @@ import { RouterLink, useRoute, useRouter } from "vue-router";
 // app
 import { detailOrder, deleteOrder } from '../../services/order.service'
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+import { useDelOrder } from "../../composables/OrderComposable";
 
 const route = useRoute();
 const router = useRouter()
@@ -39,21 +40,16 @@ const order = ref({
     aproved_by: ''
 });
 
+
+
 onMounted(async () => {
     const resp = await detailOrder(route.params.id);
     order.value = resp.data;
 });
 
-// delete the item object
-const delOrder = async (id) => {
-    try {
-        await deleteOrder(id);
-        router.push({name: 'orders'});
-    } catch (error) {
-        // in case of backend errors, log to the console... for now
-        console.log(error.response.data);     
-    }
-};
+const errorMessage = ref(null)
+
+const { delOrder } = useDelOrder()
 
 </script>
 
@@ -74,9 +70,12 @@ const delOrder = async (id) => {
         <!-- main content -->
         <div class="col-md-6">
             <p>Está seguro que desea eliminar la orden?</p>
+            <span
+              v-if="errorMessage"
+              class="form-text text-danger">{{ errorMessage }}</span>
             <button
               class="btn btn-sm btn-danger"
-              @click="delOrder(order.id)">Eliminar</button>
+              @click="delOrder(order.id, router, errorMessage)">Eliminar</button>
             <RouterLink :to="{name: 'orders'}" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
         </div>
 
