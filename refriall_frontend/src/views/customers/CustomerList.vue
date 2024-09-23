@@ -12,21 +12,31 @@ const customers = ref([]);
 const currentPage = ref(1);
 const showNextButton = ref(false);
 const showPrevButton = ref(false);
+const customerBackendErrors = ref(null)
 
 const getCustomers = async () => {
-    const resp = (await listCustomer(currentPage.value)).data;
+    try {
+        const resp = (await listCustomer(currentPage.value)).data;
+        
+        showNextButton.value = false;
+        if (resp.next) {
+            showNextButton.value = true;
+        }
+        
+        showPrevButton.value = false;
+        if (resp.previous) {
+            showPrevButton.value = true;
+        }
     
-    showNextButton.value = false;
-    if (resp.next) {
-        showNextButton.value = true;
+        customers.value = resp.results;
+    } catch (error) {
+        console.error('General error', error)
+        if (error.response) {
+            customerBackendErrors.value = `${error.response.data} - ${error.response.status}`
+        } else {
+            customerBackendErrors.value = 'Error inesperado, consulte al desarrollador'
+        }
     }
-    
-    showPrevButton.value = false;
-    if (resp.previous) {
-        showPrevButton.value = true;
-    }
-
-    customers.value = resp.results;
 };
 
 const loadNextItems = () => {
@@ -65,6 +75,12 @@ onMounted(async () => {
         <div class="col-md-10">
             <div class="row">
                 <div class="col-md-4">
+                    <!-- backend general errors -->
+                    <span v-if="customerBackendErrors">
+                        <p
+                            class="form-text text-danger">
+                            {{ customerBackendErrors }}</p>
+                    </span>
 
                     <div v-if="customers.length > 0">
 

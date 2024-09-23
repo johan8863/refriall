@@ -93,18 +93,18 @@ const delBill = async (id) => {
         <div class="col-md-6">
         <!-- backend errors from non_field_errors dictionary -->
         <span v-if="billBackendErrors.non_field_errors">
-                <p
-                    class="form-text text-danger"
-                    v-for="(error, index) in billBackendErrors.non_field_errors"
-                    :key="index">
-                    {{ error }}</p>
-            </span>
-            <!-- backend general errors -->
-            <span v-if="billBackendErrors.message">
-                <p
-                    class="form-text text-danger">
-                    {{ billBackendErrors.message }}</p>
-            </span>
+            <p
+                class="form-text text-danger"
+                v-for="(error, index) in billBackendErrors.non_field_errors"
+                :key="index">
+                {{ error }}</p>
+        </span>
+        <!-- backend general errors -->
+        <span v-if="billBackendErrors.message">
+            <p
+                class="form-text text-danger">
+                {{ billBackendErrors.message }}</p>
+        </span>
 
             <p>Está seguro que desea eliminar la siguiente factura?</p>
             <table class="table">

@@ -94,7 +94,12 @@ const createCustomer = async (customer) => {
     } catch (error) {
         // in case of backend exceptions, fill the corresponding ones in the 
         // customerErrors object
-        customerErrors.value = error.response.data
+        console.error('General error', error)
+        if (error.response) {
+            customerErrors.value = error.response.data
+        } else {
+            customerErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
     }
 };
 
@@ -111,7 +116,12 @@ const updateCustomer = async (customer) => {
     } catch (error) {
         // in case of backend exceptions, fill the corresponding ones in the 
         // customerErrors object
-        customerErrors.value = error.response.data
+        console.error('General error', error)
+        if (error.response) {
+            customerErrors.value = error.response.data
+        } else {
+            customerErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
     }
 };
 
@@ -146,12 +156,20 @@ onMounted(async () => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- form -->
+            <!-- backend errors from non_field_errors dictionary -->
             <span v-if="customerErrors.non_field_errors">
-                <p
-                    class="form-text text-danger"
-                    v-for="(error, i) in customerErrors.non_field_errors"
-                    :key="i">{{ error.$message }}</p>
-            </span>
+                    <p
+                      class="form-text text-danger"
+                      v-for="(error, index) in customerErrors.non_field_errors"
+                      :key="index">
+                      {{ error }}</p>
+                </span>
+                <!-- backend general errors -->
+                <span v-if="customerErrors.message">
+                    <p
+                      class="form-text text-danger">
+                      {{ customerErrors.message }}</p>
+                </span>
             <form @submit.prevent="!customer.id ? createCustomer(customer) : updateCustomer(customer)">
                 <!-- customer_type control -->
                 <div class="mb-2">

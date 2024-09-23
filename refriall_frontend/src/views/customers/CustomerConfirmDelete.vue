@@ -21,6 +21,18 @@ const customer = ref({
     bank_account: '',
 });
 
+const customerBackendErrors = ref({
+    customer_type: '',
+    name: '',
+    address: '',
+    province: '',
+    township: '',
+    code: '',
+    client_nit: '',
+    bank_account_header: '',
+    bank_account: '',
+});
+
 const router = useRouter();
 const route = useRoute();
 
@@ -34,7 +46,12 @@ const delCustomer = async (id) => {
         await deleteCustomer(id);
         router.push({name: 'customers'});
     } catch (error) {
-        console.log(error.response.data);
+        console.error('General error', error)
+        if (error.response) {
+            customerBackendErrors.value = error.response.data
+        } else {
+            customerBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
     }
 };
 
@@ -62,6 +79,19 @@ const delCustomer = async (id) => {
 
         <!-- main content -->
         <div class="col-md-4">
+            <span v-if="customerBackendErrors.non_field_errors">
+                <p
+                    class="form-text text-danger"
+                    v-for="(error, index) in customerBackendErrors.non_field_errors"
+                    :key="index">
+                    {{ error }}</p>
+            </span>
+            <!-- backend general errors -->
+            <span v-if="customerBackendErrors.message">
+                <p
+                    class="form-text text-danger">
+                    {{ customerBackendErrors.message }}</p>
+            </span>
             <p>Está seguro que desea eliminar el cliente: {{ customer.name }}?</p>
             <div>
                 <button
