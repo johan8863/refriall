@@ -12,21 +12,32 @@ const orders = ref([]);
 const currentPage = ref(1);
 const showNextButton = ref(false);
 const showPrevButton = ref(false);
+const orderBackendErrors = ref(null)
 
 const getOrders = async () => {
-    const resp = (await listOrder(currentPage.value)).data;
+    try {
+        const resp = (await listOrder(currentPage.value)).data;
+        
+        showNextButton.value = false;
+        if (resp.next) {
+            showNextButton.value = true;
+        }
+        
+        showPrevButton.value = false;
+        if (resp.previous) {
+            showPrevButton.value = true;
+        }
     
-    showNextButton.value = false;
-    if (resp.next) {
-        showNextButton.value = true;
+        orders.value = resp.results;
+        
+    } catch (error) {
+        console.error('General error', error)
+        if (error.response) {
+            orderBackendErrors.value = `${error.response.data} - ${error.response.status}`
+        } else {
+            orderBackendErrors.value = 'Error inesperado, consulte al desarrollador'
+        }
     }
-    
-    showPrevButton.value = false;
-    if (resp.previous) {
-        showPrevButton.value = true;
-    }
-
-    orders.value = resp.results;
 };
 
 const loadNextItems = () => {
@@ -64,6 +75,9 @@ onMounted(async () => {
         <div class="col-md-10">
             <div class="row">
                 <div class="col-md-6">
+                    <div v-if="orderBackendErrors">
+                        <span class="form-text text-danger">{{ orderBackendErrors }}</span>
+                    </div>
                     <div v-if="orders.length > 0">
 
                         <div id="tableContainer">

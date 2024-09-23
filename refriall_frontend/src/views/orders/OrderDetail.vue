@@ -52,7 +52,8 @@ const order = ref({
     get_total_amount_unmounting: 0
 });
 
-const notFound = ref(null);
+const orderBackendErrors = ref(null)
+
 
 const paginatedOrders = ref([]);
 
@@ -64,7 +65,11 @@ onMounted(async () => {
         paginatedOrders.value = paginate(order, 14);
     } catch (error) {
         console.error("General error: ", error)
-        notFound.value = 'La orden a la que trata de acceder no existe, haga click en el enlace a órdenes en el menú de la izquierda para ver las órdenes existentes.'        
+        if (error.response) {
+            orderBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`
+        } else {
+            orderBackendErrors.value = 'Error inesperado, consulte al desarrollador'
+        }
     }
 });
 
@@ -118,9 +123,11 @@ function pdf() {
 
         <!-- main content -->
         <div class="col-md-9">
-            <!-- notfound false -->
-             <div v-if="!notFound">
-             
+            <div v-if="orderBackendErrors">
+                <span class="form-text text-danger">
+                    {{ orderBackendErrors }}
+                </span>
+            </div>
             <!-- order info -->
             <div  id="order-to-pdf">
                 <!-- paginated orders -->
@@ -294,14 +301,6 @@ function pdf() {
                 <!-- end paginated orders -->
                 </div>
             <!-- end order info -->
-            </div>
-
-            <!-- end notfound false -->
-            </div>
-            
-            <!-- notfound -->
-            <div v-else>
-                <p>{{ notFound }}</p>
             </div>
 
         </div>

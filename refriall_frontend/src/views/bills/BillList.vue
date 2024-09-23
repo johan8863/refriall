@@ -31,7 +31,7 @@ const getBills = async () => {
     } catch (error) {
         console.error('General error', error)
         if (error.response) {
-            billBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`
+            billBackendErrors.value = `${error.response.data} - ${error.response.status}`
         } else {
             billBackendErrors.value = 'Error inesperado, consulte al desarrollador'
         }
