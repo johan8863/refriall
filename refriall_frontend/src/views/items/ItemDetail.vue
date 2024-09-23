@@ -18,6 +18,8 @@ const item = ref({
     price: 0,
 });
 
+const itemBackendErrors = ref(null)
+
 const notFound = ref(null);
 
 onMounted(async () => {
@@ -25,7 +27,12 @@ onMounted(async () => {
         const resp = await detailItem(route.params.id);
         item.value = resp.data;
     } catch (error) {
-        notFound.value = 'El artículo al que trata de acceder no existe, haga click en el enlace a artículos en el menú de la izquierda para ver las artículos existentes.';
+        console.error('General error', error)
+        if (error.response) {
+            itemBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`
+        } else {
+            itemBackendErrors.value = 'Error inesperado, consulte al desarrollador'
+        }
     }
 });
 
@@ -56,20 +63,19 @@ onMounted(async () => {
 
         <!-- main content -->
         <div class="col-md-6">
-            <!-- notfound false -->
-            <div v-if="!notFound">
-                <h3>Artículo: <small>{{ item.name }}</small></h3>
-                <hr>
-                <p>Código: {{ item.code }}</p>
-                <p>Código: {{ item.get_item_type }}</p>
-                <p>Código: {{ item.get_measurement }}</p>
-                <p>Precio: {{ item.price.toFixed(2) }}</p>
-            <!-- end notfound false -->
-            </div>
-            <!-- notfound -->
-            <div v-else>
-                <p>{{ notFound }}</p>
-            </div>
+            <!-- backend general errors -->
+            <span v-if="itemBackendErrors">
+                <p
+                    class="form-text text-danger">
+                    {{ itemBackendErrors }}</p>
+            </span>
+
+            <h3>Artículo: <small>{{ item.name }}</small></h3>
+            <hr>
+            <p>Código: {{ item.code }}</p>
+            <p>Código: {{ item.get_item_type }}</p>
+            <p>Código: {{ item.get_measurement }}</p>
+            <p>Precio: {{ item.price.toFixed(2) }}</p>
         </div>
 
     </div> <!-- end row -->

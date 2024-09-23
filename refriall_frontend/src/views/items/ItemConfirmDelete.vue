@@ -16,6 +16,14 @@ const item = ref({
     price: '',
 });
 
+const itemBackendErrors = ref({
+    code: '',
+    name: '',
+    item_type: '',
+    measurement: '',
+    price: '',
+});
+
 onMounted(async () => {
     const resp = await detailItem(route.params.id);
     item.value = resp.data;
@@ -27,8 +35,12 @@ const delItem = async (id) => {
         await deleteItem(id);
         router.push({name: 'items'});
     } catch (error) {
-        // in case of backend errors, log to the console... for now
-        console.log(error.response.data);     
+        console.error('General error', error)
+        if (error.response) {
+            itemBackendErrors.value = error.response.data
+        } else {
+            itemBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
     }
 };
 
@@ -54,6 +66,20 @@ const delItem = async (id) => {
 
         <!-- main content -->
         <div class="col-md-6">
+            <!-- backend errors from non_field_errors dictionary -->
+            <span v-if="itemBackendErrors.non_field_errors">
+                <p
+                    class="form-text text-danger"
+                    v-for="(error, index) in itemBackendErrors.non_field_errors"
+                    :key="index">
+                    {{ error }}</p>
+            </span>
+            <!-- backend general errors -->
+            <span v-if="itemBackendErrors.message">
+                <p
+                    class="form-text text-danger">
+                    {{ itemBackendErrors.message }}</p>
+            </span>
             <p>Está seguro que desea eliminar el artículo: {{ item.name }}?</p>
             <button
               class="btn btn-sm btn-danger"

@@ -74,7 +74,13 @@ const createItem = async (item) => {
             router.push({name: 'items_detail', params: {id: data.id}});
         }
     } catch (error) {
-        itemErrors.value = error.response.data;
+        console.error('General erro', error)
+        if (error.response) {
+            itemErrors.value = error.response.data
+        } else {
+            itemErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
+        console.log(itemErrors.value)
     }
 };
 
@@ -87,8 +93,13 @@ const updateItem = async (item) => {
             router.push({name: 'items_detail', params: {id: data.id}});
         }
     } catch (error) {
-        itemErrors.value = error.response.data;
-        console.log(error.response.data);
+        console.error('General erro', error)
+        if (error.response) {
+            itemErrors.value = error.response.data
+        } else {
+            itemErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
+        console.log(itemErrors.value)
     }
         
 };
@@ -121,6 +132,20 @@ onMounted(async () => {
 
         <!-- main content -->
         <div class="col-md-4">
+            <!-- backend errors from non_field_errors dictionary -->
+            <span v-if="itemErrors.non_field_errors">
+                <p
+                    class="form-text text-danger"
+                    v-for="(error, index) in itemErrors.non_field_errors"
+                    :key="index">
+                    {{ error }}</p>
+            </span>
+            <!-- backend general errors -->
+            <span v-if="itemErrors.message">
+                <p
+                    class="form-text text-danger">
+                    {{ itemErrors.message }}</p>
+            </span>
             <!-- form -->
             <form @submit.prevent="!item.id ? createItem(item) : updateItem(item)">
                 <span v-if="itemErrors.non_field_errors">
