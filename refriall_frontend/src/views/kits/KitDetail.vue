@@ -13,10 +13,13 @@ const kit = ref({
     name: ''
 });
 
+// kit object errors
+const kitErrors = ref({
+    name: ''
+});
+
 // router utilities to redirect the view and catch route params
 const route = useRoute();
-
-const notFound = ref(null);
 
 
 // loading the kit object
@@ -25,7 +28,12 @@ onMounted(async () => {
         const resp = await detatilKit(route.params.id);
         kit.value = resp.data;
     } catch (error) {
-        notFound.value = 'El equipo al que trata de acceder no existe, haga click en el enlace a equipos en el menú de la izquierda para ver las equipos existentes.';
+        console.error('General error', error)
+        if (error.response) {
+            kitErrors.value = `${error.response.data.detail} - ${error.response.status}`
+        } else {
+            kitErrors.value = 'Error inesperado, consulte al desarrollador'
+        }
     }
 });
 
@@ -60,15 +68,13 @@ onMounted(async () => {
 
         <!-- main content -->
         <div class="col-md-4">
-            <!-- notFound false -->
-            <div v-if="!notFound">
-                <h3>{{ kit.name }}</h3>
-            <!-- end notFound false -->
-            </div>
-            <!-- notFound -->
-            <div v-else>
-                <p>{{ notFound }}</p>
-            </div>
+            <!-- backend general errors -->
+            <span v-if="kitErrors">
+                <p
+                    class="form-text text-danger">
+                    {{ kitErrors }}</p>
+            </span>
+            <h3>{{ kit.name }}</h3>
         </div>
 
     </div> <!-- end row -->

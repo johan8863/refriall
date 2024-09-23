@@ -12,6 +12,10 @@ const kit = ref({
     name: ''
 });
 
+const kitErrors = ref({
+    name: ''
+});
+
 
 // router utilities to redirect the view and catch route params
 const route = useRoute();
@@ -29,8 +33,12 @@ const delKit = async (id) => {
         await deleteKit(id);
         router.push({name: 'kits'});
     } catch (error) {
-        // in case of backend errors, log to the console... for now
-        console.log(error);
+        console.error('General error', error)
+        if (error.response) {
+            kitErrors.value = error.response.data
+        } else {
+            kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
     }
 };
 
@@ -52,6 +60,20 @@ const delKit = async (id) => {
 
         <!-- main content -->
         <div class="col-md-4">
+            <!-- backend errors from non_field_errors dictionary -->
+            <span v-if="kitErrors.non_field_errors">
+                <p
+                    class="form-text text-danger"
+                    v-for="(error, index) in kitErrors.non_field_errors"
+                    :key="index">
+                    {{ error }}</p>
+            </span>
+            <!-- backend general errors -->
+            <span v-if="kitErrors.message">
+                <p
+                    class="form-text text-danger">
+                    {{ kitErrors.message }}</p>
+            </span>
             <div>
                 <p>Está seguro que desea eliminar el equipo: {{ kit.name }}</p>
                 <button

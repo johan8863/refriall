@@ -58,7 +58,12 @@ const createKit = async (kit) => {
     } catch (error) {
         // in case of backend errors, assign the errors dictionary
         // to the kit errors object
-        kitErrors.value = error.response.data;
+        console.error('General error', error)
+        if (error.response) {
+            kitErrors.value = error.response.data
+        } else {
+            kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
     }
 };
 
@@ -74,7 +79,12 @@ const updateKit = async (kit) => {
     } catch (error) {
         // in case of backend errors, assign the errors dictionary
         // to the kit errors object
-        kitErrors.value = error.response.data;
+        console.error('General error', error)
+        if (error.response) {
+            kitErrors.value = error.response.data
+        } else {
+            kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
     }
 };
 
@@ -113,6 +123,20 @@ onMounted(async () => {
 
         <!-- main content -->
         <div class="col-md-4">
+            <!-- backend errors from non_field_errors dictionary -->
+            <span v-if="kitErrors.non_field_errors">
+                <p
+                    class="form-text text-danger"
+                    v-for="(error, index) in kitErrors.non_field_errors"
+                    :key="index">
+                    {{ error }}</p>
+            </span>
+            <!-- backend general errors -->
+            <span v-if="kitErrors.message">
+                <p
+                    class="form-text text-danger">
+                    {{ kitErrors.message }}</p>
+            </span>
             <!-- form -->
             <form @submit.prevent="!kit.id ? createKit(kit) : updateKit(kit)">
                 <span v-if="kitErrors.non_field_errors">
