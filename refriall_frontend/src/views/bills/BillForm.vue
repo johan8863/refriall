@@ -382,7 +382,11 @@ onMounted(async () => {
                                       v-model="bill.orders"
                                       :value="order.id">
                                 </td>
-                                <td>{{ order.folio }}</td>
+                                <td>
+                                    <router-link
+                                      :to="{ name: 'orders_detail', params: { id: order.id } }"
+                                      target="_blank">{{ order.folio }}</router-link>
+                                </td>
                                 <td v-if="order.customer">{{ order.customer.name }}</td>
                                 <td v-else>-</td>
                                 <td v-if="order.customer_dependency">{{ order.customer_dependency.name }}</td>
@@ -436,7 +440,9 @@ onMounted(async () => {
                                       :value="order.id"
                                       >
                                 </td>
-                                <td>{{ order.folio }}</td>
+                                <td><router-link
+                                      :to="{ name: 'orders_detail', params: { id: order.id } }"
+                                      target="_blank">{{ order.folio }}</router-link></td>
                                 <td v-if="order.customer">{{ order.customer.name }}</td>
                                 <td v-else>-</td>
                                 <td v-if="order.customer_dependency">{{ order.customer_dependency.name }}</td>
