@@ -3,6 +3,7 @@ import apiBase from "./base.service";
 const urlCustomer = '/hr/customers'
 const urlCustomerListPagination = '/hr/customers/list/pagination'
 const urlCustomerDetail = '/hr/customers/detail'
+const urlCustomerOrderNoBill = '/hr/customers/orders/nobill'
 
 export const listCustomer = async (currentPage=null) => {
     if (currentPage) {
@@ -11,6 +12,8 @@ export const listCustomer = async (currentPage=null) => {
         return await apiBase.get(`${urlCustomer}/`);
     }
 };
+
+export const listCustomerOrdersNoBill = async () => await apiBase.get(`${urlCustomerOrderNoBill}/`)
 
 export const detailCustomer = async (customer) => {
     return await apiBase.get(`${urlCustomerDetail}/${customer}/`);

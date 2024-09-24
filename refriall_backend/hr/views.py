@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from .models import Customer, Provider, CustomerDependency
 from .serializers import CustomerSerializer, CustomerSerializerDetail, ProviderSerializer, CustomerDependencySerializer
 from .paginators import CustomerPagination, ProviderPagination
+from finance.models import Order
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
@@ -37,6 +38,15 @@ class CustomerDetail(APIView):
     def get(self, request, pk, format=None):
         customer = self.get_object(pk=pk)
         serializer = CustomerSerializerDetail(customer)
+        return Response(serializer.data)
+
+
+class CustomerOrderNoBill(APIView):
+    def get(self, request, format=None):
+        orders_without_bill = Order.objects.filter(bill__isnull=True)
+        unique_customers = orders_without_bill.values('customer').distinct()
+        customers = Customer.objects.filter(id__in=unique_customers)
+        serializer = CustomerSerializer(customers, many=True)
         return Response(serializer.data)
 
 

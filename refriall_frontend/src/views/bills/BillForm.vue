@@ -9,7 +9,7 @@ import { helpers, required } from '@vuelidate/validators';
 
 // app
 import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
-import { listCustomer } from "../../services/customer.service";
+import { listCustomerOrdersNoBill } from "../../services/customer.service";
 import { getOrdersFromCustomerNotMatched } from "../../services/order.service";
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 import { listCurrencies } from '../../services/currency.service';
@@ -159,12 +159,12 @@ const pushAllOrders = (event) => {
 
 
 onMounted(async () => {
-    // get customers
-    const respCustomers = await listCustomer();
-    customers.value = respCustomers.data;
     // get currencies
     const respCurrencies = await listCurrencies();
     currencies.value = respCurrencies.data;
+    // get customers
+    const respCustomers = await listCustomerOrdersNoBill();
+    customers.value = respCustomers.data;
     
     const id = route.params.id;
     if (id) {
