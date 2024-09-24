@@ -201,6 +201,10 @@ onMounted(async () => {
 
         <!-- main content -->
         <div class="col-md-9">
+            <template v-if="customers.length === 0">
+                <span class="text-danger">No hay órdenes libres para asociar.</span>
+            </template>
+
             <!-- form -->
             <form @submit.prevent="!bill.id ? createBill(bill) : updateBill(bill)" class="row">
                 <!-- backend errors from non_field_errors dictionary -->
@@ -632,9 +636,9 @@ onMounted(async () => {
                       @click="goBack">Cancelar</button>
                     
                 </div>
-
+            <!-- end form -->
             </form>
-
+        <!-- end main content -->
         </div>
 
     </div>
