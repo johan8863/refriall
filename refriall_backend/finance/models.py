@@ -2,6 +2,7 @@
 
 # django
 from django.db import models
+from django.db.models import F, Sum
 
 # local
 from hr.models import Customer, CustomerDependency, Provider
@@ -65,11 +66,14 @@ class Bill(models.Model):
     @property
     def get_total_amount(self):
         """Returns the Sum of the total price of the orders in this Bill"""
-        total = 0
-        for order in self.get_orders:
-            total += order.get_total_amount
+        # total = 0
+        # for order in self.get_orders:
+        #     total += order.get_total_amount
+        total_amount = self.get_orders.aggregate(
+            total = Sum(F("itemtimeorder__item__price") * F("itemtimeorder__times"))
+        ).get("total", 0)
         
-        return total
+        return round(total_amount, 2)
     
     @property
     def get_total_amount_revision(self):
@@ -224,7 +228,7 @@ class Order(models.Model):
     def get_total_amount(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         total_amount = self.itemtimeorder_set.all().aggregate(
-            total=models.Sum(models.F('item__price') * models.F('times'))
+            total=models.Sum(F('item__price') * F('times'))
         ).get('total')
 
         return round(total_amount, 2) if total_amount is not None else 0
@@ -233,7 +237,7 @@ class Order(models.Model):
     def get_total_amount_revision(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         total_amount_revision = self.itemtimeorder_set.filter(item__item_type='revision').aggregate(
-            total=models.Sum(models.F('item__price') * models.F('times'))
+            total=Sum(F('item__price') * F('times'))
         ).get('total')
 
         return round(total_amount_revision, 2) if total_amount_revision is not None else 0
@@ -242,7 +246,7 @@ class Order(models.Model):
     def get_total_amount_prod(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         total_amount_prod = self.itemtimeorder_set.filter(item__item_type='prod').aggregate(
-            total=models.Sum(models.F('item__price') * models.F('times'))
+            total=Sum(F('item__price') * F('times'))
         ).get('total')
 
         return round(total_amount_prod, 2) if total_amount_prod is not None else 0
@@ -251,7 +255,7 @@ class Order(models.Model):
     def get_total_amount_concept(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         total_amount_concept = self.itemtimeorder_set.filter(item__item_type='concept').aggregate(
-            total=models.Sum(models.F('item__price') * models.F('times'))
+            total=Sum(F('item__price') * F('times'))
         ).get('total')
 
         return round(total_amount_concept, 2) if total_amount_concept is not None else 0
@@ -260,7 +264,7 @@ class Order(models.Model):
     def get_total_amount_repair(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         total_amount_repair = self.itemtimeorder_set.filter(item__item_type='repair').aggregate(
-            total=models.Sum(models.F('item__price') * models.F('times'))
+            total=Sum(F('item__price') * F('times'))
         ).get('total')
 
         return round(total_amount_repair, 2) if total_amount_repair is not None else 0
@@ -269,7 +273,7 @@ class Order(models.Model):
     def get_total_amount_maintenace(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         total_amount_maintenace = self.itemtimeorder_set.filter(item__item_type='maintenace').aggregate(
-            total=models.Sum(models.F('item__price') * models.F('times'))
+            total=Sum(F('item__price') * F('times'))
         ).get('total')
 
         return round(total_amount_maintenace, 2) if total_amount_maintenace is not None else 0
@@ -278,7 +282,7 @@ class Order(models.Model):
     def get_total_amount_install(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         total_amount_install = self.itemtimeorder_set.filter(item__item_type='install').aggregate(
-            total=models.Sum(models.F('item__price') * models.F('times'))
+            total=Sum(F('item__price') * F('times'))
         ).get('total')
 
         return round(total_amount_install, 2) if total_amount_install is not None else 0
@@ -287,7 +291,7 @@ class Order(models.Model):
     def get_total_amount_unmounting(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
         total_amount_unmounting = self.itemtimeorder_set.filter(item__item_type='unmounting').aggregate(
-            total=models.Sum(models.F('item__price') * models.F('times'))
+            total=Sum(F('item__price') * F('times'))
         ).get('total')
 
         return round(total_amount_unmounting, 2) if total_amount_unmounting is not None else 0
