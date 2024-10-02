@@ -66,9 +66,6 @@ class Bill(models.Model):
     @property
     def get_total_amount(self):
         """Returns the Sum of the total price of the orders in this Bill"""
-        # total = 0
-        # for order in self.get_orders:
-        #     total += order.get_total_amount
         total_amount = self.get_orders.aggregate(
             total = Sum(F("itemtimeorder__item__price") * F("itemtimeorder__times"))
         ).get("total", 0)
