@@ -70,79 +70,127 @@ class Bill(models.Model):
             total = Sum(F("itemtimeorder__item__price") * F("itemtimeorder__times"))
         ).get("total", 0)
         
-        return round(total_amount, 2)
+        return round(total_amount, 2) if total_amount is not None else 0
     
     @property
     def get_total_amount_revision(self):
         """Returns the Sum of the total price of products of the orders in this Bill"""
-        total = 0
-        for order in self.get_orders:
-            total += order.get_total_amount_revision
-        
-        return total
+        orders_ids = self.get_orders.values("id")
+        itemstimes_revision = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="revision")
+
+        if itemstimes_revision.count() > 0:
+            total_revision = itemstimes_revision.aggregate(
+                total_sum_revision = Sum(
+                    F("item__price") * F("times")
+                )
+            ).get("total_sum_revision", 0)
+
+            return round(total_revision, 2)
+        else:
+            return 0
     
     @property
     def get_total_amount_prod(self):
         """Returns the Sum of the total price of products of the orders in this Bill"""
-        total = 0
-        for order in self.get_orders:
-            total += order.get_total_amount_prod
-        
-        return total
-    
-    @property
-    def get_total_amount_product(self):
-        """Returns the Sum of the total price of products of the orders in this Bill"""
-        total = 0
-        for order in self.get_orders:
-            total += order.get_total_amount_product
-        
-        return total
+        orders_ids = self.get_orders.values("id")
+        itemstimes_prod = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="prod")
+
+        if itemstimes_prod.count() > 0:
+            total_prod = itemstimes_prod.aggregate(
+                total_sum_prod = Sum(
+                    F("item__price") * F("times")
+                )
+            ).get("total_sum_prod", 0)
+
+            return round(total_prod, 2)
+        else:
+            return 0
+
     
     @property
     def get_total_amount_concept(self):
         """Returns the Sum of the total price of concepts of the orders in this Bill"""
-        total = 0
-        for order in self.get_orders:
-            total += order.get_total_amount_concept
-        
-        return total
+        orders_ids = self.get_orders.values("id")
+        itemstimes_concept = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="concept")
+
+        if itemstimes_concept.count() > 0:
+            total_concept = itemstimes_concept.aggregate(
+                total_sum_concept = Sum(
+                    F("item__price") * F("times")
+                )
+            ).get("total_sum_concept", 0)
+
+            return round(total_concept, 2)
+        else:
+            return 0
     
     @property
     def get_total_amount_repair(self):
         """Returns the Sum of the total price of repairs of the orders in this Bill"""
-        total = 0
-        for order in self.get_orders:
-            total += order.get_total_amount_repair
-        
-        return total
+        orders_ids = self.get_orders.values("id")
+        itemstimes_repair = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="repair")
+
+        if itemstimes_repair.count() > 0:
+            total_repair = itemstimes_repair.aggregate(
+                total_sum_repair = Sum(
+                    F("item__price") * F("times")
+                )
+            ).get("total_sum_repair", 0)
+
+            return round(total_repair, 2)
+        else:
+            return 0
     
     @property
     def get_total_amount_maintenace(self):
         """Returns the Sum of the total price of maintenance of the orders in this Bill"""
-        total = 0
-        for order in self.get_orders:
-            total += order.get_total_amount_maintenace
-        
-        return total
+        orders_ids = self.get_orders.values("id")
+        itemstimes_maintenace = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="maintenace")
+
+        if itemstimes_maintenace.count() > 0:
+            total_maintenace = itemstimes_maintenace.aggregate(
+                total_sum_maintenace = Sum(
+                    F("item__price") * F("times")
+                )
+            ).get("total_sum_maintenace", 0)
+
+            return round(total_maintenace, 2)
+        else:
+            return 0
     
     @property
     def get_total_amount_install(self):
         """Returns the Sum of the total price of installs of the orders in this Bill"""
-        total = 0
-        for order in self.get_orders:
-            total += order.get_total_amount_install
+        orders_ids = self.get_orders.values("id")
+        itemstimes_install = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="install")
         
-        return total
+        if itemstimes_install.count() > 0:
+            total_install = itemstimes_install.aggregate(
+                total_sum_install = Sum(
+                    F("item__price") * F("times")
+                )
+            ).get("total_sum_install", 0)
+
+            return round(total_install, 2)
+        else:
+            return 0
     
     @property
     def get_total_amount_unmounting(self):
         """Returns the Sum of the total price of unmounting of the orders in this Bill"""
-        total = 0
-        for order in self.get_orders:
-            total += order.get_total_amount_unmounting
-        
-        return total
+        orders_ids = self.get_orders.values("id")
+        itemstimes_unmounting = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="unmounting")
+
+        if itemstimes_unmounting.count() > 0:
+            total_unmounting = itemstimes_unmounting.aggregate(
+                total_sum_unmounting = Sum(
+                    F("item__price") * F("times")
+                )
+            ).get("total_sum_unmounting", 0)
+
+            return round(total_unmounting, 2)
+        else:
+            return 0
 
 
 class Order(models.Model):
