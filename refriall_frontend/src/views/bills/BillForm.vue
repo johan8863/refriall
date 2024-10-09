@@ -123,6 +123,12 @@ const updateBill = async (bill) => {
     }
 }
 
+const chargeCustomersNoBill = async () => {
+    const respCustomers = await listCustomerOrdersNoBill(currency.value);
+    customers.value = respCustomers.data;
+    orders.value = []
+
+}
 
 const ordersFromCustomer = async () => {
     try {
@@ -162,9 +168,6 @@ onMounted(async () => {
     // get currencies
     const respCurrencies = await listCurrencies();
     currencies.value = respCurrencies.data;
-    // get customers
-    const respCustomers = await listCustomerOrdersNoBill();
-    customers.value = respCustomers.data;
     
     const id = route.params.id;
     if (id) {
@@ -175,11 +178,6 @@ onMounted(async () => {
         const ordersNotMatched = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
         bill.value.get_orders.push(...ordersNotMatched);
     } 
-    // else {
-    //   // get orders to create a bill
-    //   const respOrders = await getOrdersNotMatched();
-    //   orders.value = respOrders.data;
-    // }
 });
 
 </script>
@@ -201,7 +199,7 @@ onMounted(async () => {
 
         <!-- main content -->
         <div class="col-md-9">
-            <template v-if="customers.length === 0">
+            <template v-if="bill.currency && customers.length === 0">
                 <span class="text-danger">No hay órdenes libres para asociar.</span>
             </template>
 
@@ -230,7 +228,7 @@ onMounted(async () => {
                       id="currency"
                       class="form-select"
                       autofocus
-                      @change="ordersFromCustomer"
+                      @change="chargeCustomersNoBill"
                       v-model="bill.currency">
                       <option
                         v-for="currency in currencies"
@@ -246,7 +244,7 @@ onMounted(async () => {
                       name="customer"
                       id="customer"
                       class="form-select"
-                      :disabled="!bill.currency"
+                      :disabled="!bill.currency || (bill.currency && customers.length === 0)"
                       @change="ordersFromCustomer"
                       v-model="bill.customer">
                         <option

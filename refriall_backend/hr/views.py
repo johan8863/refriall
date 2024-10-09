@@ -41,9 +41,10 @@ class CustomerDetail(APIView):
         return Response(serializer.data)
 
 
-class CustomerOrderNoBill(APIView):
-    def get(self, request, format=None):
-        orders_without_bill = Order.objects.filter(bill__isnull=True)
+class CustomerOrderCurrencyNoBill(APIView):
+    """Return all customers with orders without bills with the received currency"""
+    def get(self, request, currency, format=None):
+        orders_without_bill = Order.objects.filter(bill__isnull=True, currency=currency)
         unique_customers = orders_without_bill.values('customer').distinct()
         customers = Customer.objects.filter(id__in=unique_customers)
         serializer = CustomerSerializer(customers, many=True)

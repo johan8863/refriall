@@ -13,7 +13,7 @@ export const listCustomer = async (currentPage=null) => {
     }
 };
 
-export const listCustomerOrdersNoBill = async () => await apiBase.get(`${urlCustomerOrderNoBill}/`)
+export const listCustomerOrdersNoBill = async (currency) => await apiBase.get(`${urlCustomerOrderNoBill}/${currency}/`)
 
 export const detailCustomer = async (customer) => {
     return await apiBase.get(`${urlCustomerDetail}/${customer}/`);
