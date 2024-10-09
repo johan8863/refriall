@@ -2,6 +2,7 @@
 
 # django
 from django.http import Http404
+from django.db.models import Q
 
 # third
 from rest_framework import viewsets
@@ -46,7 +47,8 @@ class CustomerOrderCurrencyNoBill(APIView):
     def get(self, request, currency, format=None):
         orders_without_bill = Order.objects.filter(bill__isnull=True, currency=currency)
         unique_customers = orders_without_bill.values('customer').distinct()
-        customers = Customer.objects.filter(id__in=unique_customers)
+        unique_customer_dependencies = orders_without_bill.values('customer_dependency').distinct()
+        customers = Customer.objects.filter(Q(id__in=unique_customers) | Q(dependencies__in=unique_customer_dependencies)).distinct()
         serializer = CustomerSerializer(customers, many=True)
         return Response(serializer.data)
 
