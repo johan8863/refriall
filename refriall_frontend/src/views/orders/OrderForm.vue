@@ -73,6 +73,7 @@ const customerOrDependency = () =>
   ( order.value.customer && !order.value.customer_dependency ) || 
   ( !order.value.customer && order.value.customer_dependency )
 
+const minimalItems = () => order.value.itemtime_set.length > 0
 
 // validation rules
 const rules = {
@@ -111,6 +112,9 @@ const rules = {
   },
   customer_signature_date: {
     required: helpers.withMessage('La firma del cliente es requerida.', required)
+  },
+  itemtime_set: {
+    minimalItems: helpers.withMessage('Debe seleccionar al menos un artículo.', minimalItems)
   }
 };
 
@@ -735,7 +739,12 @@ onMounted(async () => {
           <div class="col-md-1">U/M</div>
           <div class="col-md-1">Precio</div>
         </div>
-
+        <!-- frontend errors -->
+        <span v-if="v$.itemtime_set.$errors">
+          <p class="form-text text-danger" v-for="error in v$.itemtime_set.$errors" :key="error.$uid">
+            {{ error.$message }}
+          </p>
+        </span>
         <!-- 
           if no order.id means the order its being created,
           therefore the state management is being done via the list indexes 

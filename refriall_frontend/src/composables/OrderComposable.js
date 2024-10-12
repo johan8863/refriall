@@ -42,8 +42,8 @@ export const useUpdateOrder = () => {
 export const useCreateOrder = () => {
   const createOrder = async (order, v$, orderBackendErrors, router) => {
     try {
+      order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
       if (await v$.$validate()) {
-        order.itemtime_set = order.itemtime_set.filter((x) => x.item > 0)
         const { data } = await postOrder(order)
         router.push({ name: 'orders_detail', params: { id: data.id } })
       }
