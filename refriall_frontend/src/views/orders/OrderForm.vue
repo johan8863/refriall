@@ -68,12 +68,17 @@ const goToOrders = () => router.push({name: 'orders'})
 const goToOrderDetail = () => router.push({name: 'orders_detail', params: {id: order.value.id}})
 const goBack = () => !order.value.id ? goToOrders() : goToOrderDetail()
 
+// customs rules
+const customerOrDependency = () => 
+  ( order.value.customer && !order.value.customer_dependency ) || 
+  ( !order.value.customer && order.value.customer_dependency )
+
 
 // validation rules
 const rules = {
-  // customer: {
-  //   required: helpers.withMessage('El cliente es requerido.', required)
-  // },
+  customer: {
+    customerOrDependency: helpers.withMessage('Debe seleccionar un cliente o una dependencia, no ambos.', customerOrDependency),
+  },
   symptom: {
     required: helpers.withMessage('El síntoma es requerido.', required)
   },
@@ -283,11 +288,19 @@ onMounted(async () => {
                 autofocus
                 id="customer"
                 class="form-select form-select-sm"
-                v-model.trim="order.customer">
+                v-model.trim="order.customer"
+                @blur="v$.customer.$touch">
                 <option v-for="customer in customers" :key="customer.id" :value="customer.id">
                   {{ customer.name }}
                 </option>
               </select>
+
+              <!-- frontend errors -->
+              <span v-if="v$.customer.$errors">
+                <p class="form-text text-danger" v-for="error in v$.customer.$errors" :key="error.$uid">
+                  {{ error.$message }}
+                </p>
+              </span>
 
               <span v-if="orderBackendErrors.customer">
                 <p
