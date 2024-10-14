@@ -16,7 +16,8 @@ import { detailOrderUpdate } from '../../services/order.service'
 import { listCustomerDependecy } from '../../services/customerDependency.service'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { listCurrencies } from '../../services/currency.service'
-import { useCreateOrder, useOrderTotalComputed, useUpdateOrder } from '../../composables/OrderComposable'
+import { useOrderTotalComputed } from '../../composables/OrderComposable'
+import { postOrder, putOrder } from '../../services/order.service'
 
 // main object
 const order = ref({
@@ -183,16 +184,44 @@ const deleteItem = (index) => {
 };
 
 
-const { createOrder } = useCreateOrder()
+const onSubmit = () => order.value.id ? updateOrder(order) : createOrder(order)
 
-const { updateOrder } = useUpdateOrder()
-
-const onSubmit = () => {
-  order.value.id ?
-    updateOrder(order.value, v$.value, orderBackendErrors.value, router) :
-    createOrder(order.value, v$.value, orderBackendErrors.value, router)
+const updateOrder = async (order) => {
+  try {
+    if (await v$.value.$validate()) {
+      order.value.itemtime_set = order.value.itemtime_set.filter((x) => x.item > 0)
+      const { data } = await putOrder(order.value)
+      router.push({ name: 'orders_detail', params: { id: data.id } })
+    }
+  } catch (error) {
+    console.error('General erro', error)
+    if (error.response) {
+      orderBackendErrors.value = error.response.data
+    } else {
+      orderBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+    }
+    console.log(orderBackendErrors.value)
+  }
 }
 
+const createOrder = async (order) => {
+  try {
+    order.value.itemtime_set = order.value.itemtime_set.filter((x) => x.item > 0)
+    if (await v$.value.$validate()) {
+      const { data } = await postOrder(order.value)
+      router.push({ name: 'orders_detail', params: { id: data.id } })
+    }
+  } catch (error) {
+    console.error('General error', error)
+    if (error.response) {
+      orderBackendErrors.value = error.response.data
+      console.log('orderBackendErrors', orderBackendErrors.value);
+    } else {
+      orderBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+    }
+    console.log(orderBackendErrors.value)
+  }
+}
 
 const clearCustomer = () => {
   order.value.customer = ''

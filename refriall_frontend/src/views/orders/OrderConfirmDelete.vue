@@ -7,7 +7,6 @@ import { RouterLink, useRoute, useRouter } from "vue-router";
 // app
 import { detailOrder, deleteOrder } from '../../services/order.service'
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-import { useDelOrder } from "../../composables/OrderComposable";
 
 const route = useRoute();
 const router = useRouter()
@@ -49,7 +48,31 @@ onMounted(async () => {
 
 const errorMessage = ref(null)
 
-const { delOrder } = useDelOrder()
+const delOrder = async (id) => {
+    try {
+      await deleteOrder(id)
+      router.push({ name: 'orders' })
+    } catch (error) {
+      if (error.response) {
+        // The request was made, and the server responded with a status code
+        console.log('Error status:', error.response.status)
+        console.log('Error data:', error.response.data)
+        errorMessage = `${error.response.data} - ${error.response.status}`
+        // Handle different status codes
+        if (error.response.status === 404) {
+          errorMessage = 'Orden no encontrada.'
+        } else if (error.response.status === 400) {
+          console.log('Bad request: ' + error.response.data.error)
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log('No response received:', error.request)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error:', error.message)
+      }
+    }
+  }
 
 </script>
 
