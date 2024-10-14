@@ -31,8 +31,11 @@ onMounted(async () => {
         console.error('General error', error)
         if (error.response) {
             kitErrors.value = `${error.response.data.detail} - ${error.response.status}`
+            console.log('response', kitErrors.value);
+            
         } else {
             kitErrors.value = 'Error inesperado, consulte al desarrollador'
+            console.log('else', kitErrors.value);
         }
     }
 });
@@ -69,10 +72,10 @@ onMounted(async () => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- backend general errors -->
-            <span v-if="kitErrors">
+            <span v-if="kitErrors.name">
                 <p
                     class="form-text text-danger">
-                    {{ kitErrors }}</p>
+                    {{ kitErrors.name }}</p>
             </span>
             <h3>{{ kit.name }}</h3>
         </div>
