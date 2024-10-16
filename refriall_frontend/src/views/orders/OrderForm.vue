@@ -76,6 +76,13 @@ const customerOrDependency = () =>
 
 const minimalItems = () => order.value.itemtime_set.length > 0
 
+const atLeastOneModality = () => 
+  order.value.check_diagnosis ||
+  order.value.repair ||
+  order.value.install ||
+  order.value.maintenance 
+
+
 // validation rules
 const rules = {
   customer: {
@@ -98,6 +105,9 @@ const rules = {
   },
   currency: {
     required: helpers.withMessage('La moneda es requerida.', required)
+  },
+  check_diagnosis: {
+    atLeastOneModality: helpers.withMessage('Debe seleccionar al menos una modalidad.', atLeastOneModality)
   },
   kit: {
     required: helpers.withMessage('El equipo es requerido.', required)
@@ -575,8 +585,14 @@ onMounted(async () => {
             type="checkbox"
             id="check_diagnosis"
             class="form-check"
-            v-model.trim="order.check_diagnosis"
-          />
+            v-model.trim="order.check_diagnosis"/>
+            <!-- frontend validations -->
+            <p
+              class="form-text text-danger"
+              v-for="error in v$.check_diagnosis.$errors"
+              :key="error.$uid">
+              {{ error.$message }}
+            </p>
         </div>
 
         <!-- repair control -->
