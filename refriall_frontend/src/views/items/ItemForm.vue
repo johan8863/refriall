@@ -163,18 +163,18 @@ onMounted(async () => {
                       class="form-control"
                       v-model.trim="item.code"
                       @blur="v$.code.$touch">
-                      <span v-if="v$.code.$error">
-                        <p
-                          class="form-text text-danger"
-                          v-for="error in v$.code.$errors"
-                          :key="error.$uid">{{ error.$message }}</p>
-                      </span>
-                      <span v-if="itemErrors.code">
-                        <p
-                          class="form-text text-danger"
-                          v-for="(error, i) in itemErrors.code"
-                          :key="i">{{ error }}</p>
-                      </span>
+                    <!-- frontend validations -->
+                    <p
+                        class="form-text text-danger"
+                        v-for="error in v$.code.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    <!-- backend validations -->
+                    <span v-if="itemErrors.code">
+                      <p
+                        class="form-text text-danger"
+                        v-for="(error, i) in itemErrors.code"
+                        :key="i">{{ error }}</p>
+                    </span>
                 </div>
                 <!-- name control -->
                 <div class="mb-2">
@@ -185,12 +185,12 @@ onMounted(async () => {
                       class="form-control"
                       v-model.trim="item.name"
                       @blur="v$.name.$touch">
-                      <span v-if="v$.name.$error">
-                        <p
-                          class="form-text text-danger"
-                          v-for="error in v$.name.$errors"
-                          :key="error.$uid">{{ error.$message }}</p>
-                    </span>
+                    <!-- frontend validations -->
+                    <p
+                        class="form-text text-danger"
+                        v-for="error in v$.name.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    <!-- backend validations -->
                     <span v-if="itemErrors.name">
                         <p
                           class="form-text text-danger"
@@ -214,12 +214,12 @@ onMounted(async () => {
                         <option value="install">Instal/Mont</option>
                         <option value="unmounting">Desmontaje</option>
                     </select>
-                    <span v-if="v$.item_type.$error">
-                        <p
-                          class="form-text text-danger"
-                          v-for="error in v$.item_type.$errors"
-                          :key="error.$uid">{{ error.$message }}</p>
-                    </span>
+                    <!-- frontend validations -->
+                    <p
+                        class="form-text text-danger"
+                        v-for="error in v$.item_type.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    <!-- backend validations -->
                     <span v-if="itemErrors.item_type">
                         <p
                           class="form-text text-danger"
@@ -243,12 +243,12 @@ onMounted(async () => {
                             <option value="lts">Litros</option>
                         </template>
                     </select>
-                    <span v-if="v$.measurement.$error">
-                        <p
-                          class="form-text text-danger"
-                          v-for="error in v$.measurement.$errors"
-                          :key="error.$uid">{{ error.$message }}</p>
-                    </span>
+                    <!-- frontend validations -->
+                    <p
+                        class="form-text text-danger"
+                        v-for="error in v$.measurement.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    <!-- backend validations -->
                     <span v-if="itemErrors.measurement">
                         <p
                           class="form-text text-danger"
@@ -266,12 +266,12 @@ onMounted(async () => {
                       class="form-control"
                       v-model.trim="item.price"
                       @blur="v$.price.$touch">
-                      <span v-if="v$.price.$error">
-                        <p
-                          class="form-text text-danger"
-                          v-for="error in v$.price.$errors"
-                          :key="error.$uid">{{ error.$message }}</p>
-                    </span>
+                    <!-- frontend validations -->
+                    <p
+                        class="form-text text-danger"
+                        v-for="error in v$.price.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    <!-- backend validations -->
                     <span v-if="itemErrors.price">
                         <p
                           class="form-text text-danger"
