@@ -68,14 +68,22 @@ const goToBills = () => router.push({name: 'bills'})
 const goToBillDetail = () => router.push({name: 'bills_detail', params: {id: bill.value.id}})
 const goBack = () => !bill.value.id ? goToBills() : goToBillDetail()
 
+// custom rules
+const atLeastOneOrder = () => bill.value.orders.length > 0
 
 // vuelidate rules
 const rules = {
     customer: {
-        required: helpers.withMessage('El cliente es requerido', required)
+        required: helpers.withMessage('El cliente es requerido.', required)
+    },
+    currency: {
+        required: helpers.withMessage('La moneda es requerida.', required)
     },
     folio: {
-        required: helpers.withMessage('El folio es requerido', required)
+        required: helpers.withMessage('El folio es requerido.', required)
+    },
+    orders: {
+        atLeastOneOrder: helpers.withMessage('Tiene que seleccionar al menos una orden.', atLeastOneOrder)
     },
     provider_signature_date: {
         required: helpers.withMessage('La firma del prestador es requerida.', required)
@@ -84,7 +92,6 @@ const rules = {
         required: helpers.withMessage('La firma del cliente es requerida.', required)
     },
 }
-
 
 // vuelidate object
 const v$ = useVuelidate(rules, bill);
@@ -124,9 +131,10 @@ const updateBill = async (bill) => {
 }
 
 const chargeCustomersNoBill = async () => {
-    const respCustomers = await listCustomerOrdersNoBill(currency.value);
-    customers.value = respCustomers.data;
+    bill.value.customer = ""
     orders.value = []
+    const respCustomers = await listCustomerOrdersNoBill(bill.value.currency);
+    customers.value = respCustomers.data;
 
 }
 
@@ -229,12 +237,28 @@ onMounted(async () => {
                       class="form-select"
                       autofocus
                       @change="chargeCustomersNoBill"
-                      v-model="bill.currency">
+                      v-model="bill.currency"
+                      @blur="v$.currency.$touch">
                       <option
                         v-for="currency in currencies"
                         :key="currency.id"
                         :value="currency.id">{{ currency.name }}</option>
                     </select>
+                    <!-- frontend validations -->
+                    <p
+                      class="form-text text-danger"
+                      v-for="error in v$.currency.$errors"
+                      :key="error.$uid">
+                        {{ error.$message }}
+                    </p>
+                    <!-- backend validations -->
+                    <span v-if="billBackendErrors.currency">
+                        <p
+                          class="form-text text-danger"
+                          v-for="error in billBackendErrors.currency">
+                            {{ error }}
+                        </p>
+                    </span>
                 </div>
 
                 <!-- customer control -->
@@ -402,9 +426,10 @@ onMounted(async () => {
                         </p>
                     </span>
                 </div>
+
                 <!-- orders control create -->
                 <div v-else class="col-md-12">
-
+                    
                     <table class="table">
 
                         <thead>
@@ -458,7 +483,12 @@ onMounted(async () => {
                         </p>
                     </span>
                 </div>
-
+                <!-- frontend validations -->
+                <span v-if="bill.customer">
+                    <p class="form-text text-danger" v-for="error in v$.orders.$errors" :key="error.$uid">
+                        {{ error.$message }}
+                    </p>
+                </span>
                 <!-- check_number control -->
                 <div class="col-md-3 mb-2">
                     <label for="check_number">Nro. de Cheque</label>
