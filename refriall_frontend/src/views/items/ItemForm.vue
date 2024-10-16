@@ -264,7 +264,6 @@ onMounted(async () => {
                       id="price"
                       step="0.01"
                       class="form-control"
-                      min="0.01"
                       v-model.trim="item.price"
                       @blur="v$.price.$touch">
                       <span v-if="v$.price.$error">
