@@ -39,7 +39,7 @@ const currencyBackendErrors = ref({
 // rules to manage front validations
 const rules = {
     name: {
-        required: helpers.withMessage('El nombre es requierido.', required)
+        required: helpers.withMessage('El nombre es requerido.', required)
     }
 };
 
@@ -156,12 +156,12 @@ onMounted(async () => {
                     id="name"
                     v-model.trim="currency.name"
                     @blur="v$.name.$touch">
-                    <span v-if="v$.name.$error">
-                        <p
-                          class="form-text text-danger"
-                          v-for="error in v$.name.$errors"
-                          :key="error.$uid">{{ error.$message }}</p>
-                    </span>
+                    <!-- frontend errors -->
+                    <p
+                        class="form-text text-danger"
+                        v-for="error in v$.name.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    <!-- backend errors -->
                     <span v-if="currencyBackendErrors.name">
                         <p
                           class="form-text text-danger"
