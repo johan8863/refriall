@@ -155,12 +155,12 @@ onMounted(async () => {
                       class="form-control"
                       v-model.trim="kit.name"
                       @blur="v$.name.$touch">
-                    <span v-if="v$.name.$error">
-                        <p
-                          class="form-text text-danger"
-                          v-for="error in v$.name.$errors"
-                          :key="error.$uid">{{ error.$message }}</p>
-                    </span>
+                    <!-- frontend validations -->
+                    <p
+                        class="form-text text-danger"
+                        v-for="error in v$.name.$errors"
+                        :key="error.$uid">{{ error.$message }}</p>
+                    <!-- backend validations -->
                     <span v-if="kitErrors.name">
                         <p
                           class="form-text text-danger"
