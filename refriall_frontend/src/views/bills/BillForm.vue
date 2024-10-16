@@ -272,15 +272,13 @@ onMounted(async () => {
                       v-model.trim="bill.folio"
                       @blur="v$.folio.$touch">
 
-                    <!-- frontend errors -->
-                    <span v-if="v$.folio.$errors">
-                        <p
+                    <!-- frontend validations -->
+                    <p
                         class="form-text text-danger"
                         v-for="error in v$.folio.$errors"
                         :key="error.$uid">{{ error.$message }}</p>
-                    </span>
 
-                      <!-- backend errors -->
+                      <!-- backend validations -->
                       <span v-if="billBackendErrors.folio">
                         <p
                           v-for="(error, index) in billBackendErrors.folio"
@@ -304,23 +302,21 @@ onMounted(async () => {
                       v-model.trim="bill.provider_signature_date"
                       @blur="v$.provider_signature_date.$touch">
 
-                    <!-- frontend errors -->
-                    <span v-if="v$.provider_signature_date.$errors">
-                        <p
-                        class="form-text text-danger"
-                        v-for="error in v$.provider_signature_date.$errors"
-                        :key="error.$uid">{{ error.$message }}</p>
-                    </span>
+                    <!-- frontend validations -->
+                    <p
+                      class="form-text text-danger"
+                      v-for="error in v$.provider_signature_date.$errors"
+                      :key="error.$uid">{{ error.$message }}</p>
 
-                      <!-- backend errors -->
-                      <span v-if="billBackendErrors.provider_signature_date">
-                        <p
-                          v-for="(error, index) in billBackendErrors.provider_signature_date"
-                          :key="index"
-                          class="form-text text-danger">
-                            {{ error }}
-                        </p>
-                      </span>
+                    <!-- backend validations -->
+                    <span v-if="billBackendErrors.provider_signature_date">
+                    <p
+                        v-for="(error, index) in billBackendErrors.provider_signature_date"
+                        :key="index"
+                        class="form-text text-danger">
+                        {{ error }}
+                    </p>
+                    </span>
                 </div>
 
                 <!-- customer_signature_date control -->
@@ -334,26 +330,24 @@ onMounted(async () => {
                       v-model.trim="bill.customer_signature_date"
                       @blur="v$.customer_signature_date.$touch">
 
-                    <!-- frontend errors -->
-                    <span v-if="v$.customer_signature_date.$errors">
-                        <p
-                        class="form-text text-danger"
-                        v-for="error in v$.customer_signature_date.$errors"
-                        :key="error.$uid">{{ error.$message }}</p>
-                    </span>
+                    <!-- frontend validations -->
+                    <p
+                      class="form-text text-danger"
+                      v-for="error in v$.customer_signature_date.$errors"
+                      :key="error.$uid">{{ error.$message }}</p>
 
-                      <!-- backend errors -->
-                      <span v-if="billBackendErrors.customer_signature_date">
-                        <p
-                          v-for="(error, index) in billBackendErrors.customer_signature_date"
-                          :key="index"
-                          class="form-text text-danger">
-                            {{ error }}
-                        </p>
-                      </span>
+                    <!-- backend validations -->
+                    <span v-if="billBackendErrors.customer_signature_date">
+                    <p
+                        v-for="(error, index) in billBackendErrors.customer_signature_date"
+                        :key="index"
+                        class="form-text text-danger">
+                        {{ error }}
+                    </p>
+                    </span>
                 </div>
 
-                <!-- orders control -->
+                <!-- orders control update -->
                 <div v-if="bill.id" class="col-md-12">
                     <table class="table">
 
@@ -398,7 +392,7 @@ onMounted(async () => {
                         </tbody>
 
                     </table>
-                    <!-- backend errors -->
+                    <!-- backend validations -->
                     <span v-if="billBackendErrors.orders">
                         <p
                             v-for="(error, index) in billBackendErrors.orders"
@@ -408,7 +402,7 @@ onMounted(async () => {
                         </p>
                     </span>
                 </div>
-                <!-- orders control -->
+                <!-- orders control create -->
                 <div v-else class="col-md-12">
 
                     <table class="table">
@@ -454,7 +448,7 @@ onMounted(async () => {
                         </tbody>
 
                     </table>
-                    <!-- backend errors -->
+                    <!-- backend validations -->
                     <span v-if="billBackendErrors.orders">
                         <p
                             v-for="(error, index) in billBackendErrors.orders"
@@ -473,7 +467,7 @@ onMounted(async () => {
                       class="form-control"
                       id="check_number"
                       v-model.trim="bill.check_number">
-                      <!-- backend errors -->
+                      <!-- backend validations -->
                       <span v-if="billBackendErrors.check_number">
                         <p
                           v-for="(error, index) in billBackendErrors.check_number"
@@ -492,7 +486,7 @@ onMounted(async () => {
                       class="form-control"
                       id="charge_aprove"
                       v-model.trim="bill.charge_aprove">
-                      <!-- backend errors -->
+                      <!-- backend validations -->
                       <span v-if="billBackendErrors.charge_aprove">
                         <p
                           v-for="(error, index) in billBackendErrors.charge_aprove"
@@ -511,7 +505,7 @@ onMounted(async () => {
                       class="form-control"
                       id="charge_check"
                       v-model.trim="bill.charge_check">
-                      <!-- backend errors -->
+                      <!-- backend validations -->
                       <span v-if="billBackendErrors.charge_check">
                         <p
                           v-for="(error, index) in billBackendErrors.charge_check"
@@ -530,7 +524,7 @@ onMounted(async () => {
                       class="form-control"
                       id="customer_charge"
                       v-model.trim="bill.customer_charge">
-                      <!-- backend errors -->
+                      <!-- backend validations -->
                       <span v-if="billBackendErrors.customer_charge">
                         <p
                           v-for="(error, index) in billBackendErrors.customer_charge"
@@ -549,7 +543,7 @@ onMounted(async () => {
                         class="form-control"
                         id="customer_name"
                         v-model.trim="bill.customer_name">
-                        <!-- backend errors -->
+                        <!-- backend validations -->
                         <span v-if="billBackendErrors.customer_name">
                             <p
                             v-for="(error, index) in billBackendErrors.customer_name"
@@ -568,7 +562,7 @@ onMounted(async () => {
                       class="form-control"
                       id="customer_personal_id"
                       v-model.trim="bill.customer_personal_id">
-                      <!-- backend errors -->
+                      <!-- backend validations -->
                       <span v-if="billBackendErrors.customer_personal_id">
                         <p
                         v-for="(error, index) in billBackendErrors.customer_personal_id"
@@ -587,7 +581,7 @@ onMounted(async () => {
                         class="form-control"
                         id="checked_by"
                         v-model.trim="bill.checked_by">
-                        <!-- backend errors -->
+                        <!-- backend validations -->
                         <span v-if="billBackendErrors.checked_by">
                             <p
                             v-for="(error, index) in billBackendErrors.checked_by"
@@ -606,7 +600,7 @@ onMounted(async () => {
                       class="form-control"
                       id="aproved_by"
                       v-model.trim="bill.aproved_by">
-                      <!-- backend errors -->
+                      <!-- backend validations -->
                       <span v-if="billBackendErrors.aproved_by">
                         <p
                           v-for="(error, index) in billBackendErrors.aproved_by"
