@@ -23,8 +23,11 @@ class Item(models.Model):
     MEASUREMENTS = [
         ('u', 'Uno'),
         ('m', 'Mts'),
-        ('kg', 'Kgs'),
+        ('kg', 'Kg'),
         ('lts', 'Lts'),
+        ('gl', 'Gl'),
+        ('tr', 'Tr'),
+        ('pqt', 'Pqt'),
     ]
 
     code = models.CharField('Código', max_length=15, unique=True)
@@ -76,8 +79,11 @@ class ItemOrder(models.Model):
     MEASUREMENTS = [
         ('u', 'Uno'),
         ('m', 'Mts'),
-        ('kg', 'Kgs'),
+        ('kg', 'Kg'),
         ('lts', 'Lts'),
+        ('gl', 'Gl'),
+        ('tr', 'Tr'),
+        ('pqt', 'Pqt'),
     ]
 
     code = models.CharField('Código', max_length=15)
