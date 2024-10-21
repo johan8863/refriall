@@ -53,7 +53,7 @@ onMounted(async () => {
     
         prepareBillToPaginate(billToPaginate, bill);
     
-        paginatedBills.value = paginate(billToPaginate, 15);
+        paginatedBills.value = paginate(billToPaginate, 12);
     } catch (error) {
         console.error('General error', error)
         if (error.response) {
@@ -189,7 +189,7 @@ function pdf() {
                         </span>
                     </div>
 
-                    <div class="col-md-12" style="height: 610px;">
+                    <div class="col-md-12" style="height: 575px;">
                         <table class="table table-sm">
     
                             <thead>

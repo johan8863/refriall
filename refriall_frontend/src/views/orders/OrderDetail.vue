@@ -62,7 +62,7 @@ onMounted(async () => {
         const resp = await detailOrder(route.params.id);
         order.value = resp.data;
     
-        paginatedOrders.value = paginate(order, 14);
+        paginatedOrders.value = paginate(order, 12);
     } catch (error) {
         console.error("General error: ", error)
         if (error.response) {
