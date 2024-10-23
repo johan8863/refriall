@@ -241,6 +241,9 @@ onMounted(async () => {
                             <option value="m">Metros</option>
                             <option value="kg">Kilogramos</option>
                             <option value="lts">Litros</option>
+                            <option value="gl">Galones</option>
+                            <option value="tr">Tiras</option>
+                            <option value="pqt">Paquetes</option>
                         </template>
                     </select>
                     <!-- frontend validations -->

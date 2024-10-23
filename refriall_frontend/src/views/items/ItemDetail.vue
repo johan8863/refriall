@@ -73,8 +73,8 @@ onMounted(async () => {
             <h3>Artículo: <small>{{ item.name }}</small></h3>
             <hr>
             <p>Código: {{ item.code }}</p>
-            <p>Código: {{ item.get_item_type }}</p>
-            <p>Código: {{ item.get_measurement }}</p>
+            <p>Tipo: {{ item.get_item_type }}</p>
+            <p>U/M: {{ item.get_measurement }}</p>
             <p>Precio: {{ item.price.toFixed(2) }}</p>
         </div>
 
