@@ -8,7 +8,7 @@ from django.test import TestCase
 from .models import Kit
 
 
-class KitModelTest(TestCase):
+class KitModelTests(TestCase):
     """Class used to test Kit CRUD and validation operations"""
 
     def setUp(self):
