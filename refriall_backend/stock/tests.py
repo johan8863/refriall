@@ -143,4 +143,4 @@ class KitAPITests(APITestCase):
         Kit.objects.create(**self.test_kit)
         response = self.client.post(self.list_url, self.test_kit, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['name'][0], 'Ya existe Equipo con este Nombre.')
+        self.assertIn('Ya existe Equipo con este Nombre.', response.data['name'])
