@@ -1,4 +1,4 @@
-"""stock test module"""
+"""stock test module for Kit model and corresponding operations"""
 
 # django
 from django.db.utils import IntegrityError
@@ -17,7 +17,7 @@ class KitModelTests(TestCase):
     """Class used to test Kit CRUD and validation operations"""
 
     def setUp(self):
-        """Initial fixtures for these, tests"""
+        """Initial fixtures for these tests"""
         self.test_kit = Kit.objects.create(name="Split")
     
 
@@ -78,7 +78,7 @@ class KitAPITests(APITestCase):
     """Class to test the Kit api rest operations and validations"""
 
     def setUp(self):
-        """Initial fixtures for these, tests"""
+        """Initial fixtures for these tests"""
         self.base_url = 'kits'
         self.list_url = reverse(self.base_url + '-list')
         self.test_kit = {
