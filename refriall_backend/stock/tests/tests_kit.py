@@ -24,7 +24,7 @@ class KitModelTests(TestCase):
     def test_create_kit(self):
         """
         When creating a Kit object, first, it must be a Kit instance, second the amount
-        of books must be increased by one.
+        of kits must be increased by one.
         """
 
         kit_count_before = Kit.objects.count()
