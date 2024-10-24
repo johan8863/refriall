@@ -10,7 +10,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 # local
-from .models import Kit
+from ..models import Kit
 
 
 class KitModelTests(TestCase):
