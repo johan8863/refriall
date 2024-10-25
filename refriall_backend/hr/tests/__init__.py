@@ -1,0 +1,1 @@
+from .tests_customer import CustomerModelTests, CustomerAPITests

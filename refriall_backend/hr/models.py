@@ -44,7 +44,7 @@ class Customer(models.Model):
     ]
 
     customer_type = models.CharField('Tipo', max_length=2, choices=CLIENT_TYPE)
-    name = models.CharField('Nombre', max_length=150)
+    name = models.CharField('Nombre', max_length=150, unique=True)
     address = models.TextField('Dirección')
     province = models.CharField('Provincia', max_length=20)
     township = models.CharField('Municipio', max_length=50)
@@ -69,7 +69,7 @@ class Customer(models.Model):
 
 class CustomerDependency(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name="dependencies")
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, unique=True)
     address = models.TextField()
     province = models.CharField('Provincia', max_length=20)
     township = models.CharField('Municipio', max_length=50)
