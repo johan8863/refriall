@@ -1,4 +1,6 @@
 """stock test module for Kit model and corresponding operations"""
+# rest_framework
+from ..serializers import KitSerializer
 
 # local
 from ..models import Kit
@@ -48,7 +50,7 @@ class KitAPITests(ModelApiTest):
         self.read_object(Kit, 'name', name='Oven')
     
     def test_update_kit(self):
-        self.update_object(Kit, 'name', 'Oven', name='Refrigerator')
+        self.update_object(Kit, KitSerializer, 'name', 'Oven', name='Refrigetator')
     
     def test_delete_kit(self):
         self.delete_object(Kit, **self.test_kit)
