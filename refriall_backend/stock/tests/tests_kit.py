@@ -1,15 +1,10 @@
 """stock test module for Kit model and corresponding operations"""
-
-# django
-from django.urls import reverse
-
 # rest_framework
-from rest_framework import status
-from rest_framework.test import APITestCase
+from ..serializers import KitSerializer
 
 # local
 from ..models import Kit
-from project.tests.base import ModelTest, ModelApiTest, create_object_helper, get_object_helper
+from project.tests.base import ModelTest, ModelApiTest, create_object_helper
 
 
 class KitModelTests(ModelTest):
@@ -55,7 +50,7 @@ class KitAPITests(ModelApiTest):
         self.read_object(Kit, 'name', name='Oven')
     
     def test_update_kit(self):
-        self.update_object(Kit, 'name', name='Refrigerator')
+        self.update_object(Kit, KitSerializer, 'name', 'Oven', name='Refrigetator')
     
     def test_delete_kit(self):
         self.delete_object(Kit, **self.test_kit)

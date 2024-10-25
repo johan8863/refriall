@@ -28,7 +28,7 @@ def get_object_helper(class_name, **kwargs):
         print(generic_exception)
 
 class ModelTest(TestCase):
-    """Class used to test Kit CRUD and validation operations"""
+    """Class used to test model CRUD and validation operations"""
 
     # CRUD Tests
     def create_object(self, class_name, **kwargs):
@@ -131,15 +131,16 @@ class ModelApiTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[test_attr], created_object.__getattribute__(test_attr))
     
-    def update_object(self, class_name, test_attr, **kwargs):
+    def update_object(self, class_name, serializer_class, test_attr, test_value, **kwargs):
         """
         After of updating an object, a status code 200 response must be given and
         the new object attrs must match the provided ones.
         """
         # inputs
         created_object = create_object_helper(class_name, **kwargs)
-        updated_kit_data = { test_attr: 'Oven' }
-        response = self.client.put(self.get_url(created_object.id), updated_kit_data, format='json')
+        setattr(created_object, test_attr, test_value)
+        object_serialized_data = serializer_class(created_object).data
+        response = self.client.put(self.get_url(created_object.id), object_serialized_data, format='json')
         updated_object = get_object_helper(class_name, id=created_object.id)
         # assertions
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -165,9 +166,19 @@ class ModelApiTest(APITestCase):
         Trying to create a duplicated object name must return a status code 400.
         """
         # inputs
+
+        # When trying to create an object with an attr that already exists,
+        # the response will have a status code of 400 but also an error message 
+        # in the key with the same name as the duplicated attr.
         create_object_helper(class_name, **test_object)
         response = self.client.post(self.list_url, test_object, format='json')
-        keys = test_object.keys()
+        # extracting keys
+        test_object_keys = test_object.keys()
+        response_keys = response.data.keys()
+        # turning the keys into sets to test that the response key is a subset
+        # of the object keys
+        test_object_keys_set = set(test_object_keys)
+        response_keys_set = set(response_keys)
         # assertions
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertCountEqual(list(response.data), list(keys))
+        self.assertTrue(response_keys_set.issubset(test_object_keys_set))
