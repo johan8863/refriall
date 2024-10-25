@@ -119,13 +119,13 @@ class ModelApiTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(object_count_after, object_count_before + 1)
 
-    def read_object(self, class_name, test_attr, **kwargs):
+    def read_object(self, class_name, test_attr, test_object):
         """
         Retrieving an object must give a 200 status code 
         response and match the source attributes.
         """
         # inputs
-        created_object = create_object_helper(class_name, **kwargs)
+        created_object = create_object_helper(class_name, **test_object)
         response = self.client.get(self.get_url(created_object.id), format='json')
         # assertions
         self.assertEqual(response.status_code, status.HTTP_200_OK)
