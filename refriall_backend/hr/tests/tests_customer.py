@@ -102,9 +102,9 @@ class CustomerAPITests(ModelApiTest):
             self.test_customer
         )
     
-#     def test_delete_customer(self):
-#         self.delete_object(Customer, **self.test_customer)
+    def test_delete_customer(self):
+        self.delete_object(Customer, **self.test_customer)
     
-#     # Validation tests.
-#     def test_create_duplicate_customer(self):
-#         self.create_duplicate_object(Customer, self.test_customer)
+    # Validation tests.
+    def test_create_duplicate_customer(self):
+        self.create_duplicate_object(Customer, self.test_customer)
