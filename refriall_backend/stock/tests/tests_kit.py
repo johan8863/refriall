@@ -1,15 +1,8 @@
 """stock test module for Kit model and corresponding operations"""
 
-# django
-from django.urls import reverse
-
-# rest_framework
-from rest_framework import status
-from rest_framework.test import APITestCase
-
 # local
 from ..models import Kit
-from project.tests.base import ModelTest, ModelApiTest, create_object_helper, get_object_helper
+from project.tests.base import ModelTest, ModelApiTest, create_object_helper
 
 
 class KitModelTests(ModelTest):
