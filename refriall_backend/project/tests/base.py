@@ -131,13 +131,13 @@ class ModelApiTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[test_attr], created_object.__getattribute__(test_attr))
     
-    def update_object(self, class_name, serializer_class, test_attr, test_value, **kwargs):
+    def update_object(self, class_name, serializer_class, test_attr, test_value, test_object):
         """
         After of updating an object, a status code 200 response must be given and
         the new object attrs must match the provided ones.
         """
         # inputs
-        created_object = create_object_helper(class_name, **kwargs)
+        created_object = create_object_helper(class_name, **test_object)
         setattr(created_object, test_attr, test_value)
         object_serialized_data = serializer_class(created_object).data
         response = self.client.put(self.get_url(created_object.id), object_serialized_data, format='json')

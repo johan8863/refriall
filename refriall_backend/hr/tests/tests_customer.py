@@ -93,18 +93,14 @@ class CustomerAPITests(ModelApiTest):
             self.test_customer
         )
     
-#     def test_update_customer(self):
-#         self.update_object(
-#             Customer,
-#             CustomerSerializer,
-#             'name',
-#             'Silver Weld',
-#             code="RO-0007",
-#             name="Refrigeration Oil",
-#             customer_type="prod",
-#             measurement="lts",
-#             price=61.63
-#         )
+    def test_update_customer(self):
+        self.update_object(
+            Customer,
+            CustomerSerializer,
+            'name',
+            'Hospital',
+            self.test_customer
+        )
     
 #     def test_delete_customer(self):
 #         self.delete_object(Customer, **self.test_customer)

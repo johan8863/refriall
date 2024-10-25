@@ -76,11 +76,7 @@ class ItemAPITests(ModelApiTest):
             ItemSerializer,
             'name',
             'Silver Weld',
-            code="RO-0007",
-            name="Refrigeration Oil",
-            item_type="prod",
-            measurement="lts",
-            price=61.63
+            self.test_item
         )
     
     def test_delete_item(self):

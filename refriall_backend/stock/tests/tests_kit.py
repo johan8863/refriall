@@ -50,7 +50,7 @@ class KitAPITests(ModelApiTest):
         self.read_object(Kit, 'name', self.test_kit)
     
     def test_update_kit(self):
-        self.update_object(Kit, KitSerializer, 'name', 'Oven', name='Refrigetator')
+        self.update_object(Kit, KitSerializer, 'name', 'Oven', self.test_kit)
     
     def test_delete_kit(self):
         self.delete_object(Kit, **self.test_kit)
