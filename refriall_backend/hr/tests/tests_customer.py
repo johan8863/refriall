@@ -1,4 +1,4 @@
-"""stock test module for Customer model and corresponding operations"""
+"""hr test module for Customer model and corresponding operations"""
 
 # local
 from ..models import Customer
