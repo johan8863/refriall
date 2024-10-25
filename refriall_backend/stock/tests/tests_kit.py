@@ -48,7 +48,7 @@ class KitAPITests(ModelApiTest):
         self.read_object(Kit, 'name', name='Oven')
     
     def test_update_kit(self):
-        self.update_object(Kit, 'name', name='Refrigerator')
+        self.update_object(Kit, 'name', 'Oven', name='Refrigerator')
     
     def test_delete_kit(self):
         self.delete_object(Kit, **self.test_kit)

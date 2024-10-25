@@ -28,7 +28,7 @@ def get_object_helper(class_name, **kwargs):
         print(generic_exception)
 
 class ModelTest(TestCase):
-    """Class used to test Kit CRUD and validation operations"""
+    """Class used to test model CRUD and validation operations"""
 
     # CRUD Tests
     def create_object(self, class_name, **kwargs):
@@ -131,15 +131,15 @@ class ModelApiTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[test_attr], created_object.__getattribute__(test_attr))
     
-    def update_object(self, class_name, test_attr, **kwargs):
+    def update_object(self, class_name, test_attr, test_value, **kwargs):
         """
         After of updating an object, a status code 200 response must be given and
         the new object attrs must match the provided ones.
         """
         # inputs
         created_object = create_object_helper(class_name, **kwargs)
-        updated_kit_data = { test_attr: 'Oven' }
-        response = self.client.put(self.get_url(created_object.id), updated_kit_data, format='json')
+        model_data = { test_attr: test_value }
+        response = self.client.put(self.get_url(created_object.id), model_data, format='json')
         updated_object = get_object_helper(class_name, id=created_object.id)
         # assertions
         self.assertEqual(response.status_code, status.HTTP_200_OK)
