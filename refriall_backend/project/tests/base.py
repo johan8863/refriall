@@ -165,9 +165,19 @@ class ModelApiTest(APITestCase):
         Trying to create a duplicated object name must return a status code 400.
         """
         # inputs
+
+        # When trying to create an object with an attr that already exists,
+        # the response will have a status code of 400 but also an error message 
+        # in the key with the same name as the duplicated attr.
         create_object_helper(class_name, **test_object)
         response = self.client.post(self.list_url, test_object, format='json')
-        keys = test_object.keys()
+        # extracting keys
+        test_object_keys = test_object.keys()
+        response_keys = response.data.keys()
+        # turning the keys into sets to test that the response key is a subset
+        # of the object keys
+        test_object_keys_set = set(test_object_keys)
+        response_keys_set = set(response_keys)
         # assertions
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertCountEqual(list(response.data), list(keys))
+        self.assertTrue(response_keys_set.issubset(test_object_keys_set))
