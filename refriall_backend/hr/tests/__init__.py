@@ -1,2 +1,2 @@
 from .tests_customer import CustomerModelTests, CustomerAPITests
-from .tests_customer_dependency import CustomerDependencyModelTests
+from .tests_customer_dependency import CustomerDependencyModelTests, CustomerDependencyAPITests
