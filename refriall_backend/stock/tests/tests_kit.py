@@ -57,4 +57,4 @@ class KitAPITests(ModelApiTest):
     
     # Validation tests.
     def test_create_duplicate_kit(self):
-        self.create_duplicate_object(Kit, self.test_kit)
+        self.create_duplicate_object(Kit, KitSerializer, self.test_kit)
