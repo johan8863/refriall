@@ -84,4 +84,4 @@ class ItemAPITests(ModelApiTest):
     
     # Validation tests.
     def test_create_duplicate_item(self):
-        self.create_duplicate_object(Item, self.test_item)
+        self.create_duplicate_object(Item, ItemSerializer, self.test_item)

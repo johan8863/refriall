@@ -161,7 +161,7 @@ class ModelApiTest(APITestCase):
         self.assertEqual(object_after_count, object_before_count - 1)
     
     # Validation tests.
-    def create_duplicate_object(self, class_name, test_object):
+    def create_duplicate_object(self, class_name, serializer_class, test_object):
         """
         Trying to create a duplicated object name must return a status code 400.
         """
@@ -170,14 +170,15 @@ class ModelApiTest(APITestCase):
         # When trying to create an object with an attr that already exists,
         # the response will have a status code of 400 but also an error message 
         # in the key with the same name as the duplicated attr.
-        create_object_helper(class_name, **test_object)
-        response = self.client.post(self.list_url, test_object, format='json')
+        created_object = create_object_helper(class_name, **test_object)
+        object_serialized_data = serializer_class(created_object).data
+        response = self.client.post(self.list_url, object_serialized_data, format='json')
         # extracting keys
-        test_object_keys = test_object.keys()
+        object_serialized_data_keys = test_object.keys()
         response_keys = response.data.keys()
         # turning the keys into sets to test that the response key is a subset
         # of the object keys
-        test_object_keys_set = set(test_object_keys)
+        test_object_keys_set = set(object_serialized_data_keys)
         response_keys_set = set(response_keys)
         # assertions
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

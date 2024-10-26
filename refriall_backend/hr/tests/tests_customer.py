@@ -1,4 +1,4 @@
-"""stock test module for Customer model and corresponding operations"""
+"""hr test module for Customer model and corresponding operations"""
 
 # local
 from ..models import Customer
@@ -107,4 +107,4 @@ class CustomerAPITests(ModelApiTest):
     
     # Validation tests.
     def test_create_duplicate_customer(self):
-        self.create_duplicate_object(Customer, self.test_customer)
+        self.create_duplicate_object(Customer, CustomerSerializer, self.test_customer)
