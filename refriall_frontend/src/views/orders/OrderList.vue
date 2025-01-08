@@ -31,11 +31,11 @@ const getOrders = async () => {
         orders.value = resp.results;
         
     } catch (error) {
-        console.error('General error', error)
+        // console.error('General error', error)
         if (error.response) {
             orderBackendErrors.value = `${error.response.data} - ${error.response.status}`
-        } else {
-            orderBackendErrors.value = 'Error inesperado, consulte al desarrollador'
+        } else if (error.request) {
+            orderBackendErrors.value = 'El servidor back-end no responde, consulte al desarrollador'
         }
     }
 };
