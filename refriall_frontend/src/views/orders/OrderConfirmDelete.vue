@@ -46,8 +46,6 @@ onMounted(async () => {
     order.value = resp.data;
 });
 
-const errorMessage = ref(null)
-
 const delOrder = async (id) => {
     try {
       await deleteOrder(id)
@@ -57,7 +55,7 @@ const delOrder = async (id) => {
         // The request was made, and the server responded with a status code
         console.log('Error status:', error.response.status)
         console.log('Error data:', error.response.data)
-        errorMessage = `${error.response.data} - ${error.response.status}`
+        const errorMessage = `${error.response.data} - ${error.response.status}`
         // Handle different status codes
         if (error.response.status === 404) {
           errorMessage = 'Orden no encontrada.'
