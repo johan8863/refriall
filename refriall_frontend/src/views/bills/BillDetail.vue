@@ -57,7 +57,12 @@ onMounted(async () => {
     } catch (error) {
         console.error('General error', error)
         if (error.response) {
-            billBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`
+            console.log("Error data: ", error.response.data);
+            console.log("Error status: ", error.response.status);
+            
+            if (error.response.status === 404) {
+                billBackendErrors.value = 'Factura no encontrada.'
+            }
         } else {
             billBackendErrors.value = 'Error inesperado, consulte al desarrollador'
         }
