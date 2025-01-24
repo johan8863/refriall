@@ -35,7 +35,11 @@ const delKit = async (id) => {
     } catch (error) {
         console.error('General error', error)
         if (error.response) {
-            kitErrors.value = error.response.data
+            console.log("Error data: ", error.response.data);
+            console.log("Error status: ", error.response.status);
+            if (error.response.status === 400) {
+                kitErrors.value = { message: 'El equipo no se puede eliminar porque tiene órdenes asociadas.' }    
+            }
         } else {
             kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
         }
