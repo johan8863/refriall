@@ -23,8 +23,18 @@ const router = useRouter();
 
 // loading the kit object
 onMounted(async () => {
-    const resp = await detatilKit(route.params.id);
-    kit.value = resp.data;
+    try {
+        const resp = await detatilKit(route.params.id);
+        kit.value = resp.data;
+    } catch (error) {
+        if (error.response) {
+            console.log("Error data: ", error.response.data);
+            console.log("Error status: ", error.response.status);
+            if (error.response.status === 404) {
+                kitErrors.value = { message404: 'El equipo que intenta eliminar no existe.' }
+            }
+        }
+    }
 });
 
 // delete the kit object
@@ -39,6 +49,8 @@ const delKit = async (id) => {
             console.log("Error status: ", error.response.status);
             if (error.response.status === 400) {
                 kitErrors.value = { message: 'El equipo no se puede eliminar porque tiene órdenes asociadas.' }    
+            } else if (error.response.status === 404) {
+                kitErrors.value = { message404: 'El equipo que intenta eliminar no existe.' }
             }
         } else {
             kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
@@ -77,6 +89,11 @@ const delKit = async (id) => {
                 <p
                     class="form-text text-danger">
                     {{ kitErrors.message }}</p>
+            </span>
+            <span v-if="kitErrors.message404">
+                <p
+                    class="form-text text-danger">
+                    {{ kitErrors.message404 }}</p>
             </span>
             <div>
                 <p>Está seguro que desea eliminar el equipo: {{ kit.name }}</p>
