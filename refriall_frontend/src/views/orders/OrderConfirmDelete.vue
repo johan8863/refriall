@@ -72,15 +72,6 @@ const delOrder = async (id) => {
         // Handle different status codes
         if (error.response.status === 404) {
           errorMessage.value = 'Orden no encontrada.'
-<<<<<<< HEAD
-=======
-          console.log(errorMessage.value);
-          
-<<<<<<< HEAD
->>>>>>> origin/main
-=======
->>>>>>> origin/dev
->>>>>>> dev
         } else if (error.response.status === 400) {
           console.log('Bad request: ' + error.response.data.error)
         }
