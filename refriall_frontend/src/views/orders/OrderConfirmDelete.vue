@@ -39,14 +39,25 @@ const order = ref({
     aproved_by: ''
 });
 
-
+const errorMessage = ref(null)
 
 onMounted(async () => {
+  try {
     const resp = await detailOrder(route.params.id);
     order.value = resp.data;
+  } catch (error) {
+    if (error.response) {
+        console.log("Error data: ", error.response.data);
+        console.log("Error status: ", error.response.status);
+        if (error.response.status === 404) {
+            errorMessage.value = "Orden no encontrada."
+        }
+    } else {
+        errorMessage.value = 'Error inesperado, consulte al desarrollador'
+    }
+  }
 });
 
-const errorMessage = ref(null)
 
 const delOrder = async (id) => {
     try {
@@ -61,6 +72,11 @@ const delOrder = async (id) => {
         // Handle different status codes
         if (error.response.status === 404) {
           errorMessage.value = 'Orden no encontrada.'
+<<<<<<< HEAD
+=======
+          console.log(errorMessage.value);
+          
+>>>>>>> origin/main
         } else if (error.response.status === 400) {
           console.log('Bad request: ' + error.response.data.error)
         }
@@ -93,9 +109,11 @@ const delOrder = async (id) => {
         <!-- main content -->
         <div class="col-md-6">
             <p>Está seguro que desea eliminar la orden?</p>
-            <span
-              v-if="errorMessage"
-              class="form-text text-danger">{{ errorMessage }}</span>
+
+            <div v-if="errorMessage">
+              <span class="form-text text-danger">{{ errorMessage }}</span>
+            </div>
+
             <button
               class="btn btn-sm btn-danger"
               @click="delOrder(order.id, router, errorMessage)">Eliminar</button>

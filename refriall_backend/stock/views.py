@@ -2,8 +2,10 @@
 
 # django
 from django.http import Http404
+from django.db.models.deletion import ProtectedError
 
 # third
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
@@ -11,6 +13,7 @@ from rest_framework import viewsets
 # local
 from .models import Item, Kit
 from .serializers import ItemSerializer, ItemSerializerForReadOnly, KitSerializer
+from finance.serializers import OrderSerializerForReadOnly
 from . import paginators
 
 
@@ -43,6 +46,17 @@ class ItemDetail(APIView):
 class KitViewSet(viewsets.ModelViewSet):
     queryset = Kit.objects.all()
     serializer_class = KitSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            kit_pk = kwargs['pk']
+            kit = Kit.objects.get(pk=kit_pk)
+            return Response(data={
+                    "kit": KitSerializer(kit).data
+                }, status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class KitListPagination(APIView, paginators.KitPagination):
