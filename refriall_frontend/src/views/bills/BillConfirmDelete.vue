@@ -52,8 +52,20 @@ const billBackendErrors = ref({
 
 
 onMounted(async () => {
-    const resp = await detailBill(route.params.id);
-    bill.value = resp.data;
+    try {
+        const resp = await detailBill(route.params.id);
+        bill.value = resp.data;
+    } catch (error) {
+        if (error.response) {
+            console.log("Error data: ", error.response.data);
+            console.log("Error status: ", error.response.status);
+            if (error.response.status === 404) {
+                billBackendErrors.value = { not_found: "Factura no encontrada."}
+            }
+        } else {
+            billBackendErrors.value = {general_error: 'Error inesperado, consulte al desarrollador'}
+        }
+    }
 });
 
 // delete the bill object
@@ -64,9 +76,16 @@ const delBill = async (id) => {
     } catch (error) {
         console.error('General error', error)
         if (error.response) {
+            console.log('Error status: ', error.response.status);
+            console.log('Error code: ', error.response.code);
             billBackendErrors.value = error.response.data
+            if (error.response.status === 404) {
+                billBackendErrors.value = { not_found: "Factura no encontrada."}
+                console.log(billBackendErrors.value);
+                
+            }
         } else {
-            billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+            billBackendErrors.value = {general_error: 'Error inesperado, consulte al desarrollador'}
         }
     }
 };
@@ -100,10 +119,16 @@ const delBill = async (id) => {
                 {{ error }}</p>
         </span>
         <!-- backend general errors -->
-        <span v-if="billBackendErrors.message">
+        <span v-if="billBackendErrors.general_error">
             <p
                 class="form-text text-danger">
-                {{ billBackendErrors.message }}</p>
+                {{ billBackendErrors.general_error }}</p>
+        </span>
+        <!-- backend not found errors -->
+        <span v-if="billBackendErrors.not_found">
+            <p
+                class="form-text text-danger">
+                {{ billBackendErrors.not_found }}</p>
         </span>
 
             <p>Está seguro que desea eliminar la siguiente factura?</p>
