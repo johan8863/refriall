@@ -17,11 +17,7 @@ const currency = ref({
     description: '',
 });
 
-// currency objectto store backend errors
-const currencyBackenderror = ref({
-    name: '',
-    description: '',
-});
+const errorMessage = ref(null)
 
 // delete the currency object
 const delCurrency = async (id) => {
@@ -31,9 +27,16 @@ const delCurrency = async (id) => {
     } catch (error) {
         console.error('General error: ', error)
         if (error.response) {
-            currencyBackenderror.value = error.response.data
+            console.log('Error status:', error.response.status)
+            console.log('Error data:', error.response.data)
+            if (error.response.status === 404) {
+                errorMessage.value = 'Moneda no encontrada'
+            }
+            if (error.response.status === 400) {
+                errorMessage.value = 'Moneda asociada'
+            }
         } else {
-            currencyBackenderror.value = { message: `Error inesperado, ${error}` }
+            errorMessage.value = `Error inesperado, ${error}`
         }
         // in case of backend errors, log to the console... for now
         console.log(error);
@@ -41,7 +44,21 @@ const delCurrency = async (id) => {
 };
 
 onMounted(async () => {
-    currency.value = (await detailCurrency(route.params.id)).data;
+    try {
+        currency.value = (await detailCurrency(route.params.id)).data;
+    } catch (error) {
+        if (error.response) {
+            console.log('Error status:', error.response.status)
+            console.log('Error data:', error.response.data)
+            if (error.response.status === 404) {
+                errorMessage.value = 'Moneda no encontrada.'
+            }
+        } else if (error.request) {
+            errorMessage.value = 'Error de Servidor, póngase en contacto con el desarrollador.'
+            console.log(error.request);
+            
+        }
+    }
 })
 
 
@@ -65,19 +82,11 @@ onMounted(async () => {
         </div>
         <!-- main content -->
         <div class="col-md-4">
-            <!-- backend errors from non_field_errors dictionary -->
-            <span v-if="billBackendErrors.non_field_errors">
-                    <p
-                      class="form-text text-danger"
-                      v-for="(error, index) in billBackendErrors.non_field_errors"
-                      :key="index">
-                      {{ error }}</p>
-                </span>
                 <!-- backend general errors -->
-                <span v-if="billBackendErrors.message">
+                <span v-if="errorMessage">
                     <p
                       class="form-text text-danger">
-                      {{ billBackendErrors.message }}</p>
+                      {{ errorMessage }}</p>
                 </span>
             <div>
                 <p>Está seguro que desea eliminar la moneda: {{ currency.name }}</p>

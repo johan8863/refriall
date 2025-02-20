@@ -2,9 +2,11 @@
 
 # django
 from django.db.models import Q
+from django.db.models.deletion import ProtectedError
 from django.http import Http404
 
 # third
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -18,6 +20,20 @@ from .paginators import BillPagination, OrderPagination
 class CurrencyViewSet(viewsets.ModelViewSet):
     queryset = Currency.objects.all()
     serializer_class = CurrencySerializer
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            currency_pk = kwargs['pk']
+            currency = Currency.objects.get(pk=currency_pk)
+            return Response(
+                data={
+                    'currency': CurrencySerializer(currency).data
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
 
 
 class BillListPagination(APIView, BillPagination):
