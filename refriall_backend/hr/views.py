@@ -3,8 +3,10 @@
 # django
 from django.http import Http404
 from django.db.models import Q
+from django.db.models.deletion import ProtectedError
 
 # third
+from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -19,6 +21,19 @@ from finance.models import Order
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            customer_pk = kwargs['pk']
+            customer = Customer.objects.get(pk=customer_pk)
+            return Response(
+                data={
+                    'customer': CustomerSerializer(customer).data
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class CustomerListPagination(APIView, CustomerPagination):

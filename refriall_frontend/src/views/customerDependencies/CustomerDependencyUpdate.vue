@@ -205,7 +205,8 @@ onMounted(async () => {
                       type="text"
                       id="township"
                       class="form-control"
-                      v-model.trim="dependency.township">
+                      v-model.trim="dependency.township"
+                      @blur="v$.township.$touch">
                     <span v-if="v$.township.$error">
                         <p
                           class="form-text text-danger"
