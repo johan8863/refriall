@@ -20,6 +20,20 @@ class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            item_pk = kwargs['pk']
+            item = Item.objects.get(pk=item_pk)
+            return Response(
+                data={
+                    'item': ItemSerializer(item).data
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+
 
 class ItemListPagination(APIView, paginators.ItemPagination):
     def get(self, request, format=None):

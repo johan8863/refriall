@@ -16,17 +16,23 @@ const item = ref({
     price: '',
 });
 
-const itemBackendErrors = ref({
-    code: '',
-    name: '',
-    item_type: '',
-    measurement: '',
-    price: '',
-});
+const errorMessage = ref(null)
 
 onMounted(async () => {
-    const resp = await detailItem(route.params.id);
-    item.value = resp.data;
+    try {
+        const resp = await detailItem(route.params.id);
+        item.value = resp.data;
+    } catch (error) {
+        console.log('Error status:', error.response.status)
+        console.log('Error data:', error.response.data)
+        if (error.response) {
+            if (error.response.status === 404) {
+                errorMessage.value = 'Artículo no encontrado.'
+            }
+        } else if (error.request) {
+            errorMessage.value = 'Error de Servidor, consulte al desarrollador.'
+        }
+    }
 });
 
 // delete the item object
@@ -35,11 +41,17 @@ const delItem = async (id) => {
         await deleteItem(id);
         router.push({name: 'items'});
     } catch (error) {
-        console.error('General error', error)
+        console.log('Error status:', error.response.status)
+        console.log('Error data:', error.response.data)
         if (error.response) {
-            itemBackendErrors.value = error.response.data
-        } else {
-            itemBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+            if (error.response.status === 404) {
+                errorMessage.value = 'Artículo no encontrado.'
+            }
+            if (error.response.status === 400) {
+                errorMessage.value = 'Artículo asociado.'
+            }
+        } else if (error.request) {
+            errorMessage.value = 'Error de Servidor, consulte al desarrollador.'
         }
     }
 };
@@ -66,19 +78,11 @@ const delItem = async (id) => {
 
         <!-- main content -->
         <div class="col-md-6">
-            <!-- backend errors from non_field_errors dictionary -->
-            <span v-if="itemBackendErrors.non_field_errors">
-                <p
-                    class="form-text text-danger"
-                    v-for="(error, index) in itemBackendErrors.non_field_errors"
-                    :key="index">
-                    {{ error }}</p>
-            </span>
             <!-- backend general errors -->
-            <span v-if="itemBackendErrors.message">
+            <span v-if="errorMessage">
                 <p
                     class="form-text text-danger">
-                    {{ itemBackendErrors.message }}</p>
+                    {{ errorMessage }}</p>
             </span>
             <p>Está seguro que desea eliminar el artículo: {{ item.name }}?</p>
             <button
