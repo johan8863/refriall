@@ -13,7 +13,6 @@ from rest_framework import viewsets
 # local
 from .models import Item, Kit
 from .serializers import ItemSerializer, ItemSerializerForReadOnly, KitSerializer
-from finance.serializers import OrderSerializerForReadOnly
 from . import paginators
 
 
