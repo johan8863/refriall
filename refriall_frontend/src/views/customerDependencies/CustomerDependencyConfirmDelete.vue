@@ -18,7 +18,7 @@ const dependency = ref({
     township: '',
 });
 
-const dependencyErrors = ref(null);
+const errorMessage = ref(null);
 
 
 onMounted(async () => {
@@ -26,11 +26,14 @@ onMounted(async () => {
         const resp = await detailCustomerDependecy(route.params.id);
         dependency.value = resp.data;
     } catch (error) {
-        console.error('General error', error)
         if (error.response) {
-            dependencyErrors.value = `${error.response.data.detail} - ${error.response.status}`
-        } else {
-            dependencyErrors.value = 'Error inesperado, consulte al desarrollador'
+            console.log('Error status:', error.response.status)
+            console.log('Error data:', error.response.data)
+            if (error.response.status === 404) {
+                errorMessage.value = 'Dependencia no encontrada.'
+            }            
+        } else if (error.request) {
+            errorMessage.value = 'Error del Servidor, póngase en contacto con el desarrollador.'
         }
     }
 });
@@ -45,7 +48,18 @@ const delDependency = async (id) => {
             }
         })
     } catch (error) {
-        console.log(error);
+        if (error.response) {
+            console.log('Error status:', error.response.status)
+            console.log('Error data:', error.response.data)
+            if (error.response.status === 404) {
+                errorMessage.value = 'Dependencia no encontrada.'
+            }            
+            if (error.response.status === 400) {
+                errorMessage.value = 'Dependencia asociada.'
+            }
+        } else if (error.request) {
+            errorMessage.value = 'Error del Servidor, póngase en contacto con el desarrollador.'
+        }
     }
 }
 
@@ -72,10 +86,10 @@ const delDependency = async (id) => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- backend general errors -->
-            <span v-if="dependencyErrors">
+            <span v-if="errorMessage">
                 <p
                     class="form-text text-danger">
-                    {{ dependencyErrors }}</p>
+                    {{ errorMessage }}</p>
             </span>
             <p>Está seguro que desea eliminar la dependencia: {{ dependency.name }}?</p>
             <div>

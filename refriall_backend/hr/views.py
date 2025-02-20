@@ -85,3 +85,16 @@ class ProviderViewSet(viewsets.ModelViewSet):
 class CustomerDependencyViewSet(viewsets.ModelViewSet):
     queryset = CustomerDependency.objects.all()
     serializer_class = CustomerDependencySerializer
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            dependency_pk = kwargs['pk']
+            dependency = CustomerDependency.objects.get(pk=dependency_pk)
+            return Response(
+                data={
+                    'dependency': CustomerDependencySerializer(dependency).data
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
