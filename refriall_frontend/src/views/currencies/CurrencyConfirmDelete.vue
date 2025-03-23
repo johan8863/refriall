@@ -53,6 +53,9 @@ onMounted(async () => {
             if (error.response.status === 404) {
                 errorMessage.value = 'Moneda no encontrada.'
             }
+            if (error.response.status === 400) {
+                errorMessage.value = 'Moneda asociada.'
+            }
         } else if (error.request) {
             errorMessage.value = 'Error de Servidor, póngase en contacto con el desarrollador.'
             console.log(error.request);
