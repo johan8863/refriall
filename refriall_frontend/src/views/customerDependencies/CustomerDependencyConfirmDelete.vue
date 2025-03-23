@@ -31,7 +31,10 @@ onMounted(async () => {
             console.log('Error data:', error.response.data)
             if (error.response.status === 404) {
                 errorMessage.value = 'Dependencia no encontrada.'
-            }            
+            }
+            if (error.response.status === 400) {
+                errorMessage.value = 'Dependencia asociada.'
+            }   
         } else if (error.request) {
             errorMessage.value = 'Error del Servidor, póngase en contacto con el desarrollador.'
         }
