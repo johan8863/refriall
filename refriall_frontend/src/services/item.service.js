@@ -2,22 +2,35 @@ import apiBase from "./base.service";
 
 const urlItem = '/stock/items'
 const urlItemListPagination = '/stock/items/list/pagination'
-const urlItemDetail = '/stock/items/detail'
 
-export const listItem = async (currentPage=null) => {
+export const listItem = async (currentPage = null, searchTerm = null) => {
+    const params = {};
+    
     if (currentPage) {
-        return await apiBase.get(`${urlItemListPagination}/?page=${currentPage}`);
-    } else {
-        return await apiBase.get(`${urlItem}/`);
+        params.page = currentPage;
     }
+    
+    if (searchTerm) {
+        params.search = searchTerm;
+    }
+    
+    return await apiBase.get(urlItemListPagination, { params });
+};
+
+export const searchItems = async (searchTerm, page = 1) => {
+    const params = { search: searchTerm };
+    if (page > 1) {
+        params.page = page;
+    }
+    return await apiBase.get(urlItemListPagination, { params });
 };
 
 export const getItem = async(id) => {
-    return await apiBase.get(`${urlItem}/${id}/`)
-}
+    return await apiBase.get(`${urlItem}/${id}/`);
+};
 
 export const detailItem = async (id) => {
-    return await apiBase.get(`${urlItemDetail}/${id}/`);
+    return await apiBase.get(`${urlItem}/detail/${id}/`);
 };
 
 export const postItem = async (item) => {
@@ -29,5 +42,5 @@ export const putItem = async (item) => {
 };
 
 export const deleteItem = async (id) => {
-    await apiBase.delete(`${urlItem}/${id}/`);
+    return await apiBase.delete(`${urlItem}/${id}/`);
 };

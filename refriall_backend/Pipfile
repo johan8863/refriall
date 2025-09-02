@@ -10,6 +10,7 @@ mysqlclient = "*"
 django-cors-headers = "*"
 python-decouple = "*"
 tzdata = "*"
+django-filter = "*"
 
 [dev-packages]
 

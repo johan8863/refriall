@@ -5,10 +5,9 @@ from django.http import Http404
 from django.db.models.deletion import ProtectedError
 
 # third
-from rest_framework import status
+from rest_framework import status, viewsets, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import viewsets
 
 # local
 from .models import Item, Kit
@@ -19,6 +18,14 @@ from . import paginators
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+    pagination_class = paginators.ItemPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'code', 'description']
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return ItemSerializerForReadOnly
+        return ItemSerializer
 
     def destroy(self, request, *args, **kwargs):
         try:
@@ -32,12 +39,17 @@ class ItemViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
-            
 
 
 class ItemListPagination(APIView, paginators.ItemPagination):
     def get(self, request, format=None):
         items = Item.objects.all()
+        
+        # Búsqueda
+        search_term = request.query_params.get('search', None)
+        if search_term:
+            items = items.filter(name__icontains=search_term)
+        
         results = self.paginate_queryset(items, request, view=self)
         serializer = ItemSerializerForReadOnly(results, many=True)
         return self.get_paginated_response(serializer.data)
