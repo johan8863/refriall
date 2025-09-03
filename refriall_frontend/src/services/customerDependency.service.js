@@ -2,6 +2,11 @@ import apiBase from "./base.service";
 
 const urlCustomerDependency = '/hr/dependencies';
 
+export const searchCustomerDependencies = async (customerId, searchTerm) => {
+    const params = { search: searchTerm };
+    return await apiBase.get(`${urlCustomerDependency}/?customer=${customerId}`, { params });
+};
+
 export const listCustomerDependecy = async () => {
     return await apiBase.get(`${urlCustomerDependency}/`);
 };

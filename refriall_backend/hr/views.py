@@ -1,4 +1,4 @@
-"""finence views"""
+"""hr views"""
 
 # django
 from django.http import Http404
@@ -6,8 +6,7 @@ from django.db.models import Q
 from django.db.models.deletion import ProtectedError
 
 # third
-from rest_framework import status
-from rest_framework import viewsets
+from rest_framework import filters, status, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -39,6 +38,12 @@ class CustomerViewSet(viewsets.ModelViewSet):
 class CustomerListPagination(APIView, CustomerPagination):
     def get(self, request, format=None):
         customers = Customer.objects.all()
+        
+        # Search y 'search' parameter is included
+        search_term = request.query_params.get('search', None)
+        if search_term:
+            customers = customers.filter(name__icontains=search_term)
+        
         results = self.paginate_queryset(customers, request, view=self)
         serializer = CustomerSerializerDetail(results, many=True)
         return self.get_paginated_response(serializer.data)
@@ -85,7 +90,16 @@ class ProviderViewSet(viewsets.ModelViewSet):
 class CustomerDependencyViewSet(viewsets.ModelViewSet):
     queryset = CustomerDependency.objects.all()
     serializer_class = CustomerDependencySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'customer__name']
 
+    def get_queryset(self):
+        queryset = CustomerDependency.objects.all()
+        customer_id = self.request.query_params.get('customer', None)
+        if customer_id:
+            queryset = queryset.filter(customer_id=customer_id)
+        return queryset
+    
     def destroy(self, request, *args, **kwargs):
         try:
             return super().destroy(request, *args, **kwargs)

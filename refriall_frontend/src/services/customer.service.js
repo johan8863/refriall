@@ -5,12 +5,26 @@ const urlCustomerListPagination = '/hr/customers/list/pagination'
 const urlCustomerDetail = '/hr/customers/detail'
 const urlCustomerOrderNoBill = '/hr/customers/orders/nobill'
 
-export const listCustomer = async (currentPage=null) => {
+export const listCustomer = async (currentPage = null, searchTerm = null) => {
+    const params = {};
+    
     if (currentPage) {
-        return await apiBase.get(`${urlCustomerListPagination}/?page=${currentPage}`);
-    } else {
-        return await apiBase.get(`${urlCustomer}/`);
+        params.page = currentPage;
     }
+    
+    if (searchTerm) {
+        params.search = searchTerm;
+    }
+    
+    return await apiBase.get(urlCustomerListPagination, { params });
+};
+
+export const searchCustomers = async (searchTerm, page = 1) => {
+    const params = { search: searchTerm };
+    if (page > 1) {
+        params.page = page;
+    }
+    return await apiBase.get(urlCustomerListPagination, { params });
 };
 
 export const listCustomerOrdersNoBill = async (currency) => await apiBase.get(`${urlCustomerOrderNoBill}/${currency}/`)
