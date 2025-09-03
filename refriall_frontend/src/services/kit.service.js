@@ -3,12 +3,26 @@ import apiBase from "./base.service";
 const urlKit ='/stock/kits';
 const urlKitListPagination ='/stock/kits/list/pagination';
 
-export const listKit = async (currentPage=null) => {
+export const listKit = async (currentPage=null, searchTerm = null) => {
+    const params = {}
+    
     if (currentPage) {
-        return await apiBase.get(`${urlKitListPagination}/?page=${currentPage}`);
-    } else {
-        return await apiBase.get(`${urlKit}/`);
+        params.page = currentPage;
     }
+    
+    if (searchTerm) {
+        params.search = searchTerm;
+    }
+    
+    return await apiBase.get(urlKitListPagination, { params });
+};
+
+export const searchKits = async (searchTerm, page = 1) => {
+    const params = { search: searchTerm };
+    if (page > 1) {
+        params.page = page;
+    }
+    return await apiBase.get(urlKitListPagination, { params });
 };
 
 export const detatilKit = async (id) => {

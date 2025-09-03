@@ -45,7 +45,7 @@ class ItemListPagination(APIView, paginators.ItemPagination):
     def get(self, request, format=None):
         items = Item.objects.all()
         
-        # Búsqueda
+        # Search y 'search' parameter is included
         search_term = request.query_params.get('search', None)
         if search_term:
             items = items.filter(name__icontains=search_term)
@@ -87,6 +87,12 @@ class KitViewSet(viewsets.ModelViewSet):
 class KitListPagination(APIView, paginators.KitPagination):
     def get(self, request, format=None):
         kits = Kit.objects.all()
+
+        # Search y 'search' parameter is included
+        search_term  = request.query_params.get('search', None)
+        if search_term:
+            kits = kits.filter(name__icontains=search_term)
+
         results = self.paginate_queryset(kits, request, view=self)
         serializer = KitSerializer(results, many=True)
         return self.get_paginated_response(serializer.data)
