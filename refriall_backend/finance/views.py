@@ -39,6 +39,15 @@ class CurrencyViewSet(viewsets.ModelViewSet):
 class BillListPagination(APIView, BillPagination):
     def get(self, request, format=None):
         bills = Bill.objects.all()
+        
+        # Search by folio or customer name
+        search_term = request.query_params.get('search', None)
+        if search_term:
+            bills = bills.filter(
+                Q(folio__icontains=search_term) |
+                Q(customer__name__icontains=search_term)
+            )
+        
         results = self.paginate_queryset(bills, request, view=self)
         serializer = BillSerializerForReadOnly(results, many=True)
         return self.get_paginated_response(serializer.data)
@@ -78,6 +87,16 @@ class BillViewSet(viewsets.ModelViewSet):
 class OrderListPagination(APIView, OrderPagination):
     def get(self, request, format=None):
         orders = Order.objects.all()
+        
+        # Search by folio, customer name or dependency
+        search_term = request.query_params.get('search', None)
+        if search_term:
+            orders = orders.filter(
+                Q(folio__icontains=search_term) |
+                Q(customer__name__icontains=search_term) |
+                Q(customer_dependency__name__icontains=search_term)
+            )
+        
         results = self.paginate_queryset(orders, request, view=self)
         serializer = OrderSerializerForReadOnly(results, many=True)
         return self.get_paginated_response(serializer.data)

@@ -5,8 +5,26 @@ const urlBillDetail = '/finance/bills/detail';
 const urlBillDetailUpdate = '/finance/bills/detail/update';
 const urlBillPost = '/finance/bills_write';
 
-export const listBillsPagination = async (currentPage) => {
-    return await apiBase.get(`${urlBillListPagination}/?page=${currentPage}`);
+export const listBillsPagination = async (currentPage = null, searchTerm = null) => {
+    const params = {};
+    
+    if (currentPage) {
+        params.page = currentPage;
+    }
+    
+    if (searchTerm) {
+        params.search = searchTerm;
+    }
+    
+    return await apiBase.get(urlBillListPagination, { params });
+};
+
+export const searchBills = async (searchTerm, page = 1) => {
+    const params = { search: searchTerm };
+    if (page > 1) {
+        params.page = page;
+    }
+    return await apiBase.get(urlBillListPagination, { params });
 };
 
 export const detailBill = async (id) => {

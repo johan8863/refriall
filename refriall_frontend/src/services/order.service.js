@@ -8,12 +8,26 @@ const urlFromCustomerNotMatched = '/finance/orders/fromcustomernotmatched'
 const urlFromCustomer = '/finance/orders/fromcustomer'
 const urlNotMatched = '/finance/orders/notmatched'
 
-export const listOrder = async (currentPage=null) => {
+export const listOrder = async (currentPage = null, searchTerm = null) => {
+    const params = {};
+    
     if (currentPage) {
-        return await apiBase.get(`${urlOrderListPagination}/?page=${currentPage}`);
-    } else {
-        return await apiBase.get(`${urlOrderList}/`);
+        params.page = currentPage;
     }
+    
+    if (searchTerm) {
+        params.search = searchTerm;
+    }
+    
+    return await apiBase.get(urlOrderListPagination, { params });
+};
+
+export const searchOrders = async (searchTerm, page = 1) => {
+    const params = { search: searchTerm };
+    if (page > 1) {
+        params.page = page;
+    }
+    return await apiBase.get(urlOrderListPagination, { params });
 };
 
 export const detailOrder = async (id) => {
