@@ -248,20 +248,25 @@ const clearCustomerDependency = () => {
 
 const loadData = async () => {
   // get customers
-  const respCustomers = await listCustomer()
-  customers.value = respCustomers.data
+  const respCustomers = (await listCustomer()).data
+  customers.value = respCustomers.results
+  
   // get kits
-  const respKits = await listKit()
-  kits.value = respKits.data
+  const respKits = (await listKit()).data
+  kits.value = respKits.results
+  
   // get items
-  const respItems = await listItem()
-  items.value = respItems.data
+  const respItems = (await listItem()).data
+  items.value = respItems.results
+
   // get dependencies
   const respDependencies = await listCustomerDependecy()
   dependencies.value = respDependencies.data
+
   // get currencies
   const respCurrencies = await listCurrencies()
   currencies.value = respCurrencies.data;
+  
 };
 
 
