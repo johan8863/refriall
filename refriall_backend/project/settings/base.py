@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third
-    'django_filters',
     'corsheaders',
     'rest_framework',
     # local apps
@@ -116,11 +115,3 @@ AUTH_USER_MODEL = 'hr.Provider'
 
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True
-
-
-REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.SearchFilter',
-    ],
-}
