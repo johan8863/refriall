@@ -2,9 +2,6 @@
 // vue
 import { ref, onMounted, watch } from "vue";
 
-// app
-import { getItem } from "../services/item.service";
-
 const props = defineProps({
     items: {
         type: Array,

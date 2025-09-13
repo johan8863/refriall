@@ -10,7 +10,7 @@ import { required, helpers } from '@vuelidate/validators'
 // app
 import { listCustomer } from '../../services/customer.service'
 import { listKit } from '../../services/kit.service'
-import { listItem } from '../../services/item.service'
+import { listItemsForSelect } from '../../services/item.service'
 import ItemTime from '../../components/ItemTime.vue'
 import { detailOrderUpdate } from '../../services/order.service'
 import { listCustomerDependecy } from '../../services/customerDependency.service'
@@ -256,8 +256,8 @@ const loadData = async () => {
   kits.value = respKits.results
   
   // get items
-  const respItems = (await listItem()).data
-  items.value = respItems.results
+  const respItems = await listItemsForSelect()
+  items.value = respItems.data
 
   // get dependencies
   const respDependencies = await listCustomerDependecy()

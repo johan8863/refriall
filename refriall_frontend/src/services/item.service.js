@@ -17,6 +17,16 @@ export const listItem = async (currentPage = null, searchTerm = null) => {
     return await apiBase.get(urlItemListPagination, { params });
 };
 
+export const listItemsForSelect = async (searchTerm = null) => {
+    const params = {};
+    
+    if (searchTerm) {
+        params.search = searchTerm;
+    }
+    
+    return await apiBase.get('/stock/items/list/select/', { params });
+};
+
 export const searchItems = async (searchTerm, page = 1) => {
     const params = { search: searchTerm };
     if (page > 1) {

@@ -41,6 +41,19 @@ class ItemViewSet(viewsets.ModelViewSet):
             )
 
 
+class ItemListForSelect(APIView):
+    def get(self, request, format=None):
+        items = Item.objects.all()
+        
+        # search
+        search_term = request.query_params.get('search', None)
+        if search_term:
+            items = items.filter(name__icontains=search_term)
+        
+        serializer = ItemSerializerForReadOnly(items, many=True)
+        return Response(serializer.data)
+
+
 class ItemListPagination(APIView, paginators.ItemPagination):
     def get(self, request, format=None):
         items = Item.objects.all()
