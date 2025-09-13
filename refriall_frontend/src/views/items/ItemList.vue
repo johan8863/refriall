@@ -35,12 +35,21 @@ const getItems = async (page = 1) => {
     }
 };
 
+const restartSearchFlags = () => {
+    currentPage.value = 1;
+    showNextButton.value = false;
+    showPrevButton.value = false;
+}
+
 const handleSearch = async () => {
+    
     if (!searchTerm.value.trim()) {
         await getItems(1);
         hasSearched.value = false;
         return;
     }
+
+    restartSearchFlags()
 
     isLoading.value = true;
     hasSearched.value = true;
@@ -62,15 +71,29 @@ const handleSearch = async () => {
 };
 
 const clearSearch = async () => {
+    
     searchTerm.value = '';
     hasSearched.value = false;
+    
+    restartSearchFlags()
     await getItems(1);
 };
 
 const loadNextItems = async () => {
     currentPage.value += 1;
-    if (hasSearched.value) {
-        await searchItems(searchTerm.value, currentPage.value);
+    if (hasSearched.value && searchTerm.value.trim()) {
+        isLoading.value = true;
+        try {
+            const resp = await searchItems(searchTerm.value, currentPage.value);
+            const data = resp.data;
+            items.value = data.results;
+            showNextButton.value = !!data.next;
+            showPrevButton.value = !!data.previous;
+        } catch (error) {
+            handleError(error);
+        } finally {
+            isLoading.value = false;
+        }
     } else {
         await getItems(currentPage.value);
     }
@@ -78,8 +101,19 @@ const loadNextItems = async () => {
 
 const loadPrevItems = async () => {
     currentPage.value -= 1;
-    if (hasSearched.value) {
-        await searchItems(searchTerm.value, currentPage.value);
+    if (hasSearched.value && searchTerm.value.trim()) {
+        isLoading.value = true;
+        try {
+            const resp = await searchItems(searchTerm.value, currentPage.value);
+            const data = resp.data;
+            items.value = data.results;
+            showNextButton.value = !!data.next;
+            showPrevButton.value = !!data.previous;
+        } catch (error) {
+            handleError(error);
+        } finally {
+            isLoading.value = false;
+        }
     } else {
         await getItems(currentPage.value);
     }

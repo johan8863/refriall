@@ -35,12 +35,21 @@ const getOrders = async (page = 1) => {
     }
 };
 
+const restartSearchFlags = () => {
+    currentPage.value = 1;
+    showNextButton.value = false;
+    showPrevButton.value = false;
+}
+
 const handleSearch = async () => {
+    
     if (!searchTerm.value.trim()) {
         await getOrders(1);
         hasSearched.value = false;
         return;
     }
+
+    restartSearchFlags()
 
     isLoading.value = true;
     hasSearched.value = true;
@@ -62,26 +71,41 @@ const handleSearch = async () => {
 };
 
 const clearSearch = async () => {
-    searchTerm.value = '';
-    hasSearched.value = false;
+    
+    showNextButton.value = false;
+    showPrevButton.value = false;
+
+    restartSearchFlags()
     await getOrders(1);
 };
 
 const loadNextItems = async () => {
     currentPage.value += 1;
-    if (hasSearched.value) {
-        await searchOrders(searchTerm.value, currentPage.value);
+    if (hasSearched.value && searchTerm.value.trim()) {
+        // search purpose
+        const resp = await searchOrders(searchTerm.value, currentPage.value);
+        const data = resp.data;
+        orders.value = data.results; // o bills.value
+        showNextButton.value = !!data.next;
+        showPrevButton.value = !!data.previous;
     } else {
+        // whole pagination list
         await getOrders(currentPage.value);
     }
 };
 
 const loadPrevItems = async () => {
     currentPage.value -= 1;
-    if (hasSearched.value) {
-        await searchOrders(searchTerm.value, currentPage.value);
+    if (hasSearched.value && searchTerm.value.trim()) {
+        // search purpose
+        const resp = await searchOrders(searchTerm.value, currentPage.value); // o searchBills
+        const data = resp.data;
+        orders.value = data.results; // o bills.value
+        showNextButton.value = !!data.next;
+        showPrevButton.value = !!data.previous;
     } else {
-        await getOrders(currentPage.value);
+        // whole pagination list
+        await getOrders(currentPage.value); // o getBills
     }
 };
 
