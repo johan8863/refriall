@@ -59,7 +59,6 @@ onMounted(async () => {
     try {
         const resp = await detailProvider(route.params.id);
         provider.value = await resp.data;
-        console.log(provider.value)
     } catch (error) {
         console.error('General error', error)
         if (error.response) {

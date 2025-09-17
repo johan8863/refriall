@@ -7,6 +7,10 @@ export const listProvider = async (currentPage) => {
     return await apiBase.get(`${urlProviderListPagination}/?page=${currentPage}`);
 };
 
+export const listAllProviders = async () => {
+    return await apiBase.get(`${urlProvider}/`);
+};
+
 export const detailProvider = async (id) => {
     return await apiBase.get(`${urlProvider}/${id}/`);
 };

@@ -11,6 +11,7 @@ import { required, helpers } from '@vuelidate/validators'
 import { listCustomer } from '../../services/customer.service'
 import { listKit } from '../../services/kit.service'
 import { listItemsForSelect } from '../../services/item.service'
+import { listAllProviders } from '../../services/provider.service'
 import ItemTime from '../../components/ItemTime.vue'
 import { detailOrderUpdate } from '../../services/order.service'
 import { listCustomerDependecy } from '../../services/customerDependency.service'
@@ -39,7 +40,7 @@ const order = ref({
   kit_serial: '',
   job_description: '',
   itemtime_set: [],
-  provider: 1,
+  provider: '',
   provider_signature_date: '',
   customer_signature_date: '',
   check_number: '',
@@ -59,6 +60,7 @@ const dependencies = ref([]);
 const kits = ref([]);
 const items = ref([]);
 const currencies = ref([]);
+const providers = ref([]);
 
 
 // router utilities and handlers
@@ -85,6 +87,9 @@ const atLeastOneModality = () =>
 
 // validation rules
 const rules = {
+  provider: {
+    customerOrDependency: helpers.withMessage('El prestador es requerido.', required),
+  },
   customer: {
     customerOrDependency: helpers.withMessage('Debe seleccionar un cliente o una dependencia, no ambos.', customerOrDependency),
   },
@@ -266,6 +271,11 @@ const loadData = async () => {
   // get currencies
   const respCurrencies = await listCurrencies()
   currencies.value = respCurrencies.data;
+
+  // get providers
+  const respproviders = await listAllProviders()
+  providers.value = respproviders.data;
+  
   
 };
 
@@ -329,6 +339,41 @@ onMounted(async () => {
             {{ orderBackendErrors.message }}
           </p>
         </span>
+
+        <!-- provider control -->
+        <div class="col-md-3 mb-2">
+            <label for="provider" class="form-label">Prestador</label>
+              <select
+                autofocus
+                id="provider"
+                class="form-select form-select-sm"
+                v-model.trim="order.provider"
+                @blur="v$.provider.$touch">
+                <option v-for="provider in providers" :key="provider.id" :value="provider.id">
+                  {{ provider.first_name }}
+                </option>
+              </select>
+
+              <!-- frontend validations -->
+              <p
+                class="form-text text-danger"
+                v-for="error in v$.customer.$errors"
+                :key="error.$uid">
+                {{ error.$message }}
+              </p>
+
+              <!-- backend validations -->
+              <span v-if="orderBackendErrors.customer">
+                <p
+                  class="form-text text-danger"
+                  v-for="(error, i) in orderBackendErrors.customer"
+                  :key="i">
+                    {{ error }}
+                </p>
+              </span>
+
+
+        </div>
 
         <!-- customer control -->
         <div class="col-md-3 mb-2">
@@ -583,46 +628,51 @@ onMounted(async () => {
           </span>
         </div>
 
-        <!-- check_diagnosis control -->
-        <div class="col-md-2 mb-2">
-          <label for="check_diagnosis">Rev/Diagnóstico</label>
-          <input
-            type="checkbox"
-            id="check_diagnosis"
-            class="form-check"
-            v-model.trim="order.check_diagnosis"/>
-            <!-- frontend validations -->
-            <p
-              class="form-text text-danger"
-              v-for="error in v$.check_diagnosis.$errors"
-              :key="error.$uid">
-              {{ error.$message }}
-            </p>
-        </div>
+        <div class="row mt-2">
 
-        <!-- repair control -->
-        <div class="col-md-2 mb-2">
-          <label for="repair">Reparación</label>
-          <input type="checkbox" id="repair" class="form-check" v-model.trim="order.repair" />
-        </div>
+          <!-- check_diagnosis control -->
+          <div class="col-md-2 mb-2">
+            <label for="check_diagnosis">Rev/Diagnóstico</label>
+            <input
+              type="checkbox"
+              id="check_diagnosis"
+              class="form-check"
+              v-model.trim="order.check_diagnosis"/>
+              <!-- frontend validations -->
+              <p
+                class="form-text text-danger"
+                v-for="error in v$.check_diagnosis.$errors"
+                :key="error.$uid">
+                {{ error.$message }}
+              </p>
+          </div>
 
-        <!-- install control -->
-        <div class="col-md-2 mb-2">
-          <label for="install">Instalación</label>
-          <input type="checkbox" id="install" class="form-check" v-model.trim="order.install" />
-        </div>
+          <!-- repair control -->
+          <div class="col-md-2 mb-2">
+            <label for="repair">Reparación</label>
+            <input type="checkbox" id="repair" class="form-check" v-model.trim="order.repair" />
+          </div>
 
-        <!-- maintenance control -->
-        <div class="col-md-2 mb-2">
-          <label for="maintenance">Mtto</label>
-          <input
-            type="checkbox"
-            id="maintenance"
-            class="form-check"
-            v-model.trim="order.maintenance"
-          />
+          <!-- install control -->
+          <div class="col-md-2 mb-2">
+            <label for="install">Instalación</label>
+            <input type="checkbox" id="install" class="form-check" v-model.trim="order.install" />
+          </div>
+
+          <!-- maintenance control -->
+          <div class="col-md-2 mb-2">
+            <label for="maintenance">Mtto</label>
+            <input
+              type="checkbox"
+              id="maintenance"
+              class="form-check"
+              v-model.trim="order.maintenance"
+            />
+          </div>
+          <div class="col-md-4"></div>
+          
         </div>
-        <div class="col-md-4"></div>
+        
 
         <!-- kit control -->
         <div class="col-md-3 mb-2">
