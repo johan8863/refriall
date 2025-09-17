@@ -21,6 +21,7 @@ class ProviderSerializerRead(serializers.ModelSerializer):
             "address",
             "activity",
             "license_number",
+            "password",
             "personal_id",
         ]
 

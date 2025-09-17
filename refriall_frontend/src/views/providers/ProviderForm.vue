@@ -1,7 +1,7 @@
 <script setup>
 
 // vue
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { RouterLink, useRouter, useRoute } from 'vue-router'
 
 // third
@@ -10,7 +10,7 @@ import { required, helpers } from "@vuelidate/validators";
 
 // app
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { postProvider } from '../../services/provider.service';
+import { detailProvider, postProvider, putProvider } from '../../services/provider.service';
 
 // router utilities and handlers
 const router = useRouter();
@@ -76,15 +76,24 @@ const v$ = useVuelidate(rules, provider);
 // provider object to be filled with backend errors
 const providerBackendErrors = ref({
   first_name: [],
+  username: [],
+  first_name: [],
   last_name: [],
+  tcp_code: [],
+  bank_account_header: [],
+  bank_account: [],
+  address: [],
+  activity: [],
   license_number: [],
+  password: [],
   personal_id: [],
 });
 
 const createProvider = async (provider) => {
+
   try {
     if (await v$.value.$validate()) {
-      const { data } = await postProvider(provider.value)
+      const { data } = await postProvider(provider)
       router.push({ name: 'providers_detail', params: { id: data.id } })
     }
   } catch (error) {
@@ -99,7 +108,44 @@ const createProvider = async (provider) => {
   }
 }
 
-const onSubmit = () => createProvider(provider)
+const updateProvider = async (provider) => {
+    
+  try {
+    if (await v$.value.$validate()) {
+      const { data } = await putProvider(provider)
+      console.log(data);
+      
+      router.push({ name: 'providers_detail', params: { id: data.id } })
+    }
+  } catch (error) {
+    console.error('General error', error)
+    if (error.response) {
+      providerBackendErrors.value = error.response.data
+    } else {
+      providerBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+    }
+    console.log(providerBackendErrors.value)
+  }
+}
+
+const onSubmit = () => provider.value.id ? updateProvider(provider.value) : createProvider(provider.value)
+
+onMounted(async () => {
+    try {
+        const id = route.params.id
+        if (id) {
+            const resp = await detailProvider(id)
+            provider.value = resp.data
+        }
+    } catch (error) {
+        console.log("General error: ", error)
+        if (error.response) {
+            providerBackendErrors.value = error.response
+        } else {
+            providerBackendErrors.value = { message: "Error inesperado, consulte al desarrollador." }
+        }
+    }
+})
 
 
 </script>
@@ -429,7 +475,7 @@ const onSubmit = () => createProvider(provider)
                 </div>
 
                 <!-- password control -->
-                <div class="mb-2">
+                <div v-if="!provider.id" class="mb-2">
                     <label
                       for="password"
                       class="form-label">Clave</label>

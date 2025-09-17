@@ -70,8 +70,13 @@ const router = createRouter({
       component: () => import('../views/providers/ProviderList.vue')
     },
     {
-      path: '/providers/create', 
+      path: '/providers/create',
       name: 'providers_create', 
+      component: () => import('../views/providers/ProviderForm.vue')
+    },
+    {
+      path: '/providers/update/:id',
+      name: 'providers_update', 
       component: () => import('../views/providers/ProviderForm.vue')
     },
     {

@@ -9,6 +9,9 @@
                 <li class="list-group-item">
                     <router-link :to="{name: 'providers'}">Prestadores</router-link>
                 </li>
+                <li class="list-group-item">
+                    <router-link v-if="provider.id" :to="{name: 'providers_update', params: {id: provider.id}}">Editar</router-link>
+                </li>
             </ul>
         </div>
 
@@ -50,9 +53,24 @@ const provider = ref({
     license_number: '',
 });
 
+const providerErrors = ref(null)
+
 onMounted(async () => {
-    const resp = await detailProvider(route.params.id);
-    provider.value = resp.data;
+    try {
+        const resp = await detailProvider(route.params.id);
+        provider.value = await resp.data;
+        console.log(provider.value)
+    } catch (error) {
+        console.error('General error', error)
+        if (error.response) {
+            providerErrors.value = `${error.response.data.detail} - ${error.response.status}`
+            console.log('response', providerErrors.value);
+            
+        } else {
+            providerErrors.value = 'Error inesperado, consulte al desarrollador'
+            console.log('else', providerErrors.value);
+        }
+    }
 });
 
 </script>
