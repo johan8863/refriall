@@ -15,6 +15,11 @@
         <!-- main content -->
         <div class="col-md-4">
             <h3>{{ provider.first_name }}</h3>
+            <p>CI: {{ provider.personal_id }}</p>
+            <p>Lic.: {{ provider.license_number }}</p>
+            <p>TCP: {{ provider.tcp_code }}</p>
+            <p>Titular de Cuenta: {{ provider.bank_account_header }}</p>
+            <p>Nro de Cuenta: {{ provider.bank_account }}</p>
         </div>
 
     </div> <!-- end row -->
@@ -38,7 +43,11 @@ const provider = ref({
     first_name: '',
     last_name: '',
     license_number: '',
+    tcp_code: '',
     personal_id: '',
+    bank_account_header: '',
+    bank_account: '',
+    license_number: '',
 });
 
 onMounted(async () => {
