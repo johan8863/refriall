@@ -152,7 +152,7 @@ onMounted(async () => {
 
 <template>
 
-    <div class="row">
+    <div class="row mb-2">
         <!-- side menu -->
         <div class="col-md-2">
             <ul :class="listGroup.listGroup">
@@ -166,10 +166,11 @@ onMounted(async () => {
         </div>
 
         <!-- main content -->
-        <div class="col-md-4">
+        <div class="col-md-9">
+
 
             <!-- form -->
-            <form @submit.prevent="onSubmit">
+            <form class="row" @submit.prevent="onSubmit">
 
                 <!-- backend errors -->
                 <span v-if="providerBackendErrors.non_field_errors">
@@ -189,352 +190,404 @@ onMounted(async () => {
                 </span>
 
                 <!-- username control -->
-                <div class="mb-2">
-                    <label
-                      for="username"
-                      class="form-label">Usuario</label>
-                    <input
-                      type="text"
-                      id="username"
-                      class="form-control"
-                      v-model.trim="provider.username"
-                      @blur="v$.username.$touch">
+                <div class="col-md-3 mb-2">
 
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.username.$errors"
-                        :key="error.$uid">
-                        {{ error.$message }}
-                    </p>
-
-                    <!-- backend validations -->
-                    <span v-if="providerBackendErrors.username">
+                    <div class="mb-2">
+                        <label
+                            for="username"
+                            class="form-label">Usuario</label>
+                        <input
+                            type="text"
+                            id="username"
+                            class="form-control"
+                            v-model.trim="provider.username"
+                            @blur="v$.username.$touch">
+    
+                        <!-- frontend validations -->
                         <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in providerBackendErrors.username"
-                        :key="i">
-                            {{ error }}
+                            class="form-text text-danger"
+                            v-for="error in v$.username.$errors"
+                            :key="error.$uid">
+                            {{ error.$message }}
                         </p>
-                    </span>
+    
+                        <!-- backend validations -->
+                        <span v-if="providerBackendErrors.username">
+                            <p
+                            class="form-text text-danger"
+                            v-for="(error, i) in providerBackendErrors.username"
+                            :key="i">
+                                {{ error }}
+                            </p>
+                        </span>
+                    </div>
+
                 </div>
 
                 <!-- first_name control -->
-                <div class="mb-2">
-                    <label
-                      for="first_name"
-                      class="form-label">Nombre</label>
-                    <input
-                      type="text"
-                      id="first_name"
-                      class="form-control"
-                      v-model.trim="provider.first_name"
-                      @blur="v$.first_name.$touch">
+                <div class="col-md-3 mb-2">
 
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.first_name.$errors"
-                        :key="error.$uid">
-                        {{ error.$message }}
-                    </p>
-
-                    <!-- backend validations -->
-                    <span v-if="providerBackendErrors.first_name">
+                    <div class="mb-2">
+                        <label
+                        for="first_name"
+                        class="form-label">Nombre</label>
+                        <input
+                        type="text"
+                        id="first_name"
+                        class="form-control"
+                        v-model.trim="provider.first_name"
+                        @blur="v$.first_name.$touch">
+    
+                        <!-- frontend validations -->
                         <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in providerBackendErrors.first_name"
-                        :key="i">
-                            {{ error }}
+                            class="form-text text-danger"
+                            v-for="error in v$.first_name.$errors"
+                            :key="error.$uid">
+                            {{ error.$message }}
                         </p>
-                    </span>
-                </div>
-
-                <!-- last_name control -->
-                <div class="mb-2">
-                    <label
-                      for="last_name"
-                      class="form-label">Apellidos</label>
-                    <input
-                      type="text"
-                      id="last_name"
-                      class="form-control"
-                      v-model.trim="provider.last_name"
-                      @blur="v$.last_name.$touch">
-
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.last_name.$errors"
-                        :key="error.$uid">
-                        {{ error.$message }}
-                    </p>
-
-                    <!-- backend validations -->
-                    <span v-if="providerBackendErrors.last_name">
-                        <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in providerBackendErrors.last_name"
-                        :key="i">
-                            {{ error }}
-                        </p>
-                    </span>
-
+    
+                        <!-- backend validations -->
+                        <span v-if="providerBackendErrors.first_name">
+                            <p
+                            class="form-text text-danger"
+                            v-for="(error, i) in providerBackendErrors.first_name"
+                            :key="i">
+                                {{ error }}
+                            </p>
+                        </span>
+                    </div>
+                    
                 </div>
                 
-                <!-- tcp_code control -->
-                <div class="mb-2">
-                    <label
-                      for="tcp_code"
-                      class="form-label">Código TCP</label>
-                    <input
-                      type="text"
-                      id="tcp_code"
-                      class="form-control"
-                      v-model.trim="provider.tcp_code"
-                      @blur="v$.tcp_code.$touch">
 
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.tcp_code.$errors"
-                        :key="error.$uid">
-                        {{ error.$message }}
-                    </p>
+                <!-- last_name control -->
+                <div class="col-md-3 mb-2">
 
-                    <!-- backend validations -->
-                    <span v-if="providerBackendErrors.tcp_code">
+                    <div class="mb-2">
+                        <label
+                        for="last_name"
+                        class="form-label">Apellidos</label>
+                        <input
+                        type="text"
+                        id="last_name"
+                        class="form-control"
+                        v-model.trim="provider.last_name"
+                        @blur="v$.last_name.$touch">
+    
+                        <!-- frontend validations -->
                         <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in providerBackendErrors.tcp_code"
-                        :key="i">
-                            {{ error }}
+                            class="form-text text-danger"
+                            v-for="error in v$.last_name.$errors"
+                            :key="error.$uid">
+                            {{ error.$message }}
                         </p>
-                    </span>
-
+    
+                        <!-- backend validations -->
+                        <span v-if="providerBackendErrors.last_name">
+                            <p
+                            class="form-text text-danger"
+                            v-for="(error, i) in providerBackendErrors.last_name"
+                            :key="i">
+                                {{ error }}
+                            </p>
+                        </span>
+    
+                    </div>
+                    
                 </div>
+                
+                
+                <!-- tcp_code control -->
+                <div class="col-md-3 mb-2">
+
+                    <div class="mb-2">
+                        <label
+                        for="tcp_code"
+                        class="form-label">Código TCP</label>
+                        <input
+                        type="text"
+                        id="tcp_code"
+                        class="form-control"
+                        v-model.trim="provider.tcp_code"
+                        @blur="v$.tcp_code.$touch">
+    
+                        <!-- frontend validations -->
+                        <p
+                            class="form-text text-danger"
+                            v-for="error in v$.tcp_code.$errors"
+                            :key="error.$uid">
+                            {{ error.$message }}
+                        </p>
+    
+                        <!-- backend validations -->
+                        <span v-if="providerBackendErrors.tcp_code">
+                            <p
+                            class="form-text text-danger"
+                            v-for="(error, i) in providerBackendErrors.tcp_code"
+                            :key="i">
+                                {{ error }}
+                            </p>
+                        </span>
+    
+                    </div>
+                    
+                </div>
+                
 
                 <!-- bank_account_header control -->
-                <div class="mb-2">
-                    <label
-                      for="bank_account_header"
-                      class="form-label">Titular de la Cuenta</label>
-                    <input
-                      type="text"
-                      id="bank_account_header"
-                      class="form-control"
-                      v-model.trim="provider.bank_account_header"
-                      @blur="v$.bank_account_header.$touch">
-
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.bank_account_header.$errors"
-                        :key="error.$uid">
-                        {{ error.$message }}
-                    </p>
-
-                    <!-- backend validations -->
-                    <span v-if="providerBackendErrors.bank_account_header">
+                <div class="col-md-3 mb-2">
+                    
+                    <div class="mb-2">
+                        <label
+                        for="bank_account_header"
+                        class="form-label">Titular de la Cuenta</label>
+                        <input
+                        type="text"
+                        id="bank_account_header"
+                        class="form-control"
+                        v-model.trim="provider.bank_account_header"
+                        @blur="v$.bank_account_header.$touch">
+    
+                        <!-- frontend validations -->
                         <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in providerBackendErrors.bank_account_header"
-                        :key="i">
-                            {{ error }}
+                            class="form-text text-danger"
+                            v-for="error in v$.bank_account_header.$errors"
+                            :key="error.$uid">
+                            {{ error.$message }}
                         </p>
-                    </span>
-
+    
+                        <!-- backend validations -->
+                        <span v-if="providerBackendErrors.bank_account_header">
+                            <p
+                            class="form-text text-danger"
+                            v-for="(error, i) in providerBackendErrors.bank_account_header"
+                            :key="i">
+                                {{ error }}
+                            </p>
+                        </span>
+    
+                    </div>
+                    
                 </div>
+                
 
                 <!-- bank_account control -->
-                <div class="mb-2">
-                    <label
-                      for="bank_account"
-                      class="form-label">Nro de Cuenta</label>
-                    <input
-                      type="text"
-                      id="bank_account"
-                      class="form-control"
-                      v-model.trim="provider.bank_account"
-                      @blur="v$.bank_account.$touch">
+                <div class="col-md-3 mb-2">
 
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.bank_account.$errors"
-                        :key="error.$uid">
-                        {{ error.$message }}
-                    </p>
-
-                    <!-- backend validations -->
-                    <span v-if="providerBackendErrors.bank_account">
+                    <div class="mb-2">
+                        <label
+                        for="bank_account"
+                        class="form-label">Nro de Cuenta</label>
+                        <input
+                        type="text"
+                        id="bank_account"
+                        class="form-control"
+                        v-model.trim="provider.bank_account"
+                        @blur="v$.bank_account.$touch">
+    
+                        <!-- frontend validations -->
                         <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in providerBackendErrors.bank_account"
-                        :key="i">
-                            {{ error }}
+                            class="form-text text-danger"
+                            v-for="error in v$.bank_account.$errors"
+                            :key="error.$uid">
+                            {{ error.$message }}
                         </p>
-                    </span>
-
+    
+                        <!-- backend validations -->
+                        <span v-if="providerBackendErrors.bank_account">
+                            <p
+                            class="form-text text-danger"
+                            v-for="(error, i) in providerBackendErrors.bank_account"
+                            :key="i">
+                                {{ error }}
+                            </p>
+                        </span>
+    
+                    </div>
+                    
                 </div>
+                
 
                 <!-- address control -->
-                <div class="mb-2">
-                    <label
-                      for="address"
-                      class="form-label">Dirección</label>
-                    <input
-                      type="text"
-                      id="address"
-                      class="form-control"
-                      v-model.trim="provider.address"
-                      @blur="v$.address.$touch">
+                <div class="col-md-3 mb-2">
 
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.address.$errors"
-                        :key="error.$uid">
-                        {{ error.$message }}
-                    </p>
-
-                    <!-- backend validations -->
-                    <span v-if="providerBackendErrors.address">
+                    <div class="mb-2">
+                        <label
+                        for="address"
+                        class="form-label">Dirección</label>
+                        <input
+                        type="text"
+                        id="address"
+                        class="form-control"
+                        v-model.trim="provider.address"
+                        @blur="v$.address.$touch">
+    
+                        <!-- frontend validations -->
                         <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in providerBackendErrors.address"
-                        :key="i">
-                            {{ error }}
+                            class="form-text text-danger"
+                            v-for="error in v$.address.$errors"
+                            :key="error.$uid">
+                            {{ error.$message }}
                         </p>
-                    </span>
-
+    
+                        <!-- backend validations -->
+                        <span v-if="providerBackendErrors.address">
+                            <p
+                            class="form-text text-danger"
+                            v-for="(error, i) in providerBackendErrors.address"
+                            :key="i">
+                                {{ error }}
+                            </p>
+                        </span>
+    
+                    </div>
+                    
                 </div>
+                
 
                 <!-- activity control -->
-                <div class="mb-2">
-                    <label
-                      for="activity"
-                      class="form-label">Actividad</label>
-                    <input
-                      type="text"
-                      id="activity"
-                      class="form-control"
-                      v-model.trim="provider.activity"
-                      @blur="v$.activity.$touch">
+                <div class="col-md-3 mb-2">
 
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.activity.$errors"
-                        :key="error.$uid">
-                        {{ error.$message }}
-                    </p>
-
-                    <!-- backend validations -->
-                    <span v-if="providerBackendErrors.activity">
+                    <div class="mb-2">
+                        <label
+                        for="activity"
+                        class="form-label">Actividad</label>
+                        <input
+                        type="text"
+                        id="activity"
+                        class="form-control"
+                        v-model.trim="provider.activity"
+                        @blur="v$.activity.$touch">
+    
+                        <!-- frontend validations -->
                         <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in providerBackendErrors.activity"
-                        :key="i">
-                            {{ error }}
+                            class="form-text text-danger"
+                            v-for="error in v$.activity.$errors"
+                            :key="error.$uid">
+                            {{ error.$message }}
                         </p>
-                    </span>
-
+    
+                        <!-- backend validations -->
+                        <span v-if="providerBackendErrors.activity">
+                            <p
+                            class="form-text text-danger"
+                            v-for="(error, i) in providerBackendErrors.activity"
+                            :key="i">
+                                {{ error }}
+                            </p>
+                        </span>
+    
+                    </div>
+                    
                 </div>
+                
 
                 <!-- license_number control -->
-                <div class="mb-2">
-                    <label
-                      for="license_number"
-                      class="form-label">Nro. de Licencia</label>
-                    <input
-                      type="text"
-                      id="license_number"
-                      class="form-control"
-                      v-model.trim="provider.license_number"
-                      @blur="v$.license_number.$touch">
+                <div class="col-md-3 mb-2">
 
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.license_number.$errors"
-                        :key="error.$uid">
-                        {{ error.$message }}
-                    </p>
-
-                    <!-- backend validations -->
-                    <span v-if="providerBackendErrors.license_number">
+                    <div class="mb-2">
+                        <label
+                        for="license_number"
+                        class="form-label">Nro. de Licencia</label>
+                        <input
+                        type="text"
+                        id="license_number"
+                        class="form-control"
+                        v-model.trim="provider.license_number"
+                        @blur="v$.license_number.$touch">
+    
+                        <!-- frontend validations -->
                         <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in providerBackendErrors.license_number"
-                        :key="i">
-                            {{ error }}
+                            class="form-text text-danger"
+                            v-for="error in v$.license_number.$errors"
+                            :key="error.$uid">
+                            {{ error.$message }}
                         </p>
-                    </span>
-
+    
+                        <!-- backend validations -->
+                        <span v-if="providerBackendErrors.license_number">
+                            <p
+                            class="form-text text-danger"
+                            v-for="(error, i) in providerBackendErrors.license_number"
+                            :key="i">
+                                {{ error }}
+                            </p>
+                        </span>
+    
+                    </div>
+                    
                 </div>
 
                 <!-- password control -->
-                <div v-if="!provider.id" class="mb-2">
-                    <label
-                      for="password"
-                      class="form-label">Clave</label>
-                    <input
-                      type="password"
-                      id="password"
-                      class="form-control"
-                      v-model.trim="provider.password"
-                      @blur="v$.password.$touch">
+                <div v-if="!provider.id" class="col-md-3 mb-2">
 
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.password.$errors"
-                        :key="error.$uid">
-                        {{ error.$message }}
-                    </p>
-
-                    <!-- backend validations -->
-                    <span v-if="providerBackendErrors.password">
+                    <div class="mb-2">
+                        <label
+                        for="password"
+                        class="form-label">Clave</label>
+                        <input
+                        type="password"
+                        id="password"
+                        class="form-control"
+                        v-model.trim="provider.password"
+                        @blur="v$.password.$touch">
+    
+                        <!-- frontend validations -->
                         <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in providerBackendErrors.password"
-                        :key="i">
-                            {{ error }}
+                            class="form-text text-danger"
+                            v-for="error in v$.password.$errors"
+                            :key="error.$uid">
+                            {{ error.$message }}
                         </p>
-                    </span>
-
+    
+                        <!-- backend validations -->
+                        <span v-if="providerBackendErrors.password">
+                            <p
+                            class="form-text text-danger"
+                            v-for="(error, i) in providerBackendErrors.password"
+                            :key="i">
+                                {{ error }}
+                            </p>
+                        </span>
+    
+                    </div>
+                    
                 </div>
+                
 
                 <!-- personal_id control -->
-                <div class="mb-2">
-                    <label
-                      for="personal_id"
-                      class="form-label">CI</label>
-                    <input
-                      type="text"
-                      id="personal_id"
-                      class="form-control"
-                      v-model.trim="provider.personal_id"
-                      @blur="v$.personal_id.$touch">
+                <div class="col-md-3 mb-2">
 
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.personal_id.$errors"
-                        :key="error.$uid">
-                        {{ error.$message }}
-                    </p>
-
-                    <!-- backend validations -->
-                    <span v-if="providerBackendErrors.personal_id">
+                    <div class="mb-2">
+                        <label
+                        for="personal_id"
+                        class="form-label">CI</label>
+                        <input
+                        type="text"
+                        id="personal_id"
+                        class="form-control"
+                        v-model.trim="provider.personal_id"
+                        @blur="v$.personal_id.$touch">
+    
+                        <!-- frontend validations -->
                         <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in providerBackendErrors.personal_id"
-                        :key="i">
-                            {{ error }}
+                            class="form-text text-danger"
+                            v-for="error in v$.personal_id.$errors"
+                            :key="error.$uid">
+                            {{ error.$message }}
                         </p>
-                    </span>
+    
+                        <!-- backend validations -->
+                        <span v-if="providerBackendErrors.personal_id">
+                            <p
+                            class="form-text text-danger"
+                            v-for="(error, i) in providerBackendErrors.personal_id"
+                            :key="i">
+                                {{ error }}
+                            </p>
+                        </span>
+                    </div>
+                    
                 </div>
 
                 <!-- buttons -->
@@ -543,6 +596,7 @@ onMounted(async () => {
                     <router-link :to="{name: 'providers'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
                 </div>
             </form>
+
         </div>
 
     </div> <!-- end row -->
