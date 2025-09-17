@@ -7,7 +7,7 @@ from rest_framework import serializers
 from .models import Provider, Customer, CustomerDependency
 
 
-class ProviderSerializer(serializers.ModelSerializer):
+class ProviderSerializerRead(serializers.ModelSerializer):
     class Meta:
         model = Provider
         fields = [
@@ -21,6 +21,25 @@ class ProviderSerializer(serializers.ModelSerializer):
             "address",
             "activity",
             "license_number",
+            "personal_id",
+        ]
+
+
+class ProviderSerializerWrite(serializers.ModelSerializer):
+    class Meta:
+        model = Provider
+        fields = [
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "tcp_code",
+            "bank_account_header",
+            "bank_account",
+            "address",
+            "activity",
+            "license_number",
+            "password",
             "personal_id",
         ]
 

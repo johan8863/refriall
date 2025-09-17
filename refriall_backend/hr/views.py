@@ -12,7 +12,13 @@ from rest_framework.response import Response
 
 # local
 from .models import Customer, Provider, CustomerDependency
-from .serializers import CustomerSerializer, CustomerSerializerDetail, ProviderSerializer, CustomerDependencySerializer
+from .serializers import (
+    CustomerSerializer,
+    CustomerSerializerDetail,
+    ProviderSerializerRead,
+    ProviderSerializerWrite,
+    CustomerDependencySerializer
+)
 from .paginators import CustomerPagination, ProviderPagination
 from finance.models import Order
 
@@ -78,13 +84,18 @@ class ProviderListPagination(APIView, ProviderPagination):
     def get(self, request, format=None):
         providers = Provider.objects.all()
         results = self.paginate_queryset(providers, request, view=self)
-        serializer = ProviderSerializer(results, many=True)
+        serializer = ProviderSerializerRead(results, many=True)
         return self.get_paginated_response(serializer.data)
 
 
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
-    serializer_class = ProviderSerializer
+    serializer_class = ProviderSerializerRead
+
+    def get_serializer_class(self):
+        if self.action in ['create', 'update']:
+            return ProviderSerializerWrite
+        return super().get_serializer_class()
 
 
 class CustomerDependencyViewSet(viewsets.ModelViewSet):

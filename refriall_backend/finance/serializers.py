@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 # local
 from .models import Bill, Currency, Order, ItemTime, ItemTimeOrder
-from hr.serializers import CustomerSerializer, CustomerDependencySerializer, ProviderSerializer
+from hr.serializers import CustomerSerializer, CustomerDependencySerializer, ProviderSerializerRead
 from stock.serializers import ItemSerializer, ItemOrderSerializerDetail, ItemSerializerForReadOnly, KitSerializer
 from stock.models import ItemOrder
 
@@ -46,7 +46,7 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
     customer = CustomerSerializer()
     customer_dependency = CustomerDependencySerializer()
     kit = KitSerializer()
-    provider = ProviderSerializer()
+    provider = ProviderSerializerRead()
     currency = CurrencySerializer()
 
     class Meta:
@@ -261,7 +261,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class BillSerializerForReadOnly(serializers.ModelSerializer):
     customer = CustomerSerializer()
-    provider = ProviderSerializer()
+    provider = ProviderSerializerRead()
     get_orders = OrderSerializerForReadOnly(many=True)
     currency = CurrencySerializer()
 
