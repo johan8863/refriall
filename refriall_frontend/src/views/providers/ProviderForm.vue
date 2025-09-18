@@ -113,8 +113,6 @@ const updateProvider = async (provider) => {
   try {
     if (await v$.value.$validate()) {
       const { data } = await putProvider(provider)
-      console.log(data);
-      
       router.push({ name: 'providers_detail', params: { id: data.id } })
     }
   } catch (error) {
@@ -129,6 +127,10 @@ const updateProvider = async (provider) => {
 }
 
 const onSubmit = () => provider.value.id ? updateProvider(provider.value) : createProvider(provider.value)
+
+const goBack = () => provider.value.id ? 
+                        router.push({name: 'providers_detail', params: {id: provider.value.id}}) :
+                        router.push({name: 'providers'})
 
 onMounted(async () => {
     try {
@@ -593,7 +595,9 @@ onMounted(async () => {
                 <!-- buttons -->
                 <div>
                     <input type="submit" class="btn btn-sm btn-primary" value="Guardar">
-                    <router-link :to="{name: 'providers'}" class="btn btn-sm btn-secondary">Cancelar</router-link>
+                    <button
+                      class="btn btn-sm btn-secondary"
+                      @click="goBack()">Cancelar</button>
                 </div>
             </form>
 
