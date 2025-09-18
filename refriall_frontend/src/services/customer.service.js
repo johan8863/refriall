@@ -19,6 +19,10 @@ export const listCustomer = async (currentPage = null, searchTerm = null) => {
     return await apiBase.get(urlCustomerListPagination, { params });
 };
 
+export const listAllCustomers = async () => {
+    return await apiBase.get(`${urlCustomer}/`);
+};
+
 export const searchCustomers = async (searchTerm, page = 1) => {
     const params = { search: searchTerm };
     if (page > 1) {
