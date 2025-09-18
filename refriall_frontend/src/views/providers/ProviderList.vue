@@ -31,7 +31,7 @@
                                 <tbody>
                                     <tr v-for="provider in providers" :key="provider.id">
                                         <td>
-                                            <router-link :to="{name: 'providers_detail', params: {id: provider.id}}">{{ provider.first_name }}</router-link>
+                                            <router-link v-if="provider.id" :to="{name: 'providers_detail', params: {id: provider.id}}">{{ provider.first_name }}</router-link>
                                         </td>
                                     </tr>
                                 </tbody>

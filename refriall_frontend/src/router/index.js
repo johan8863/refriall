@@ -85,6 +85,11 @@ const router = createRouter({
       component: () => import('../views/providers/ProviderDetail.vue')
     },
     {
+      path: '/providers/confirm/delete/:id', 
+      name: 'providers_confirm_delete', 
+      component: () => import('../views/providers/ProviderConfirmDelte.vue')
+    },
+    {
       path: '/customers',
       name: 'customers',
       component: () => import('../views/customers/CustomerList.vue')

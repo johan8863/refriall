@@ -12,6 +12,9 @@
                 <li class="list-group-item">
                     <router-link v-if="provider.id" :to="{name: 'providers_update', params: {id: provider.id}}">Editar</router-link>
                 </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link v-if="provider.id" :to="{name: 'providers_confirm_delete', params: {id: provider.id}}">Eliminar</router-link>
+                </li>
             </ul>
         </div>
 

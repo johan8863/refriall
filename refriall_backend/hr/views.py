@@ -96,6 +96,17 @@ class ProviderViewSet(viewsets.ModelViewSet):
         if self.action in ['create', 'update']:
             return ProviderSerializerWrite
         return super().get_serializer_class()
+    
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            provider_pk = kwargs['pk']
+            provider = Provider.objects.get(pk=provider_pk)
+            return Response(
+                data=ProviderSerializerRead(provider),
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class CustomerDependencyViewSet(viewsets.ModelViewSet):
