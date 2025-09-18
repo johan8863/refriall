@@ -8,7 +8,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 
 // app
-import { listCustomer } from '../../services/customer.service'
+import { listAllCustomers } from '../../services/customer.service'
 import { listKit } from '../../services/kit.service'
 import { listItemsForSelect } from '../../services/item.service'
 import { listAllProviders } from '../../services/provider.service'
@@ -88,9 +88,12 @@ const atLeastOneModality = () =>
 // validation rules
 const rules = {
   provider: {
-    customerOrDependency: helpers.withMessage('El prestador es requerido.', required),
+    required: helpers.withMessage('El prestador es requerido.', required),
   },
   customer: {
+    customerOrDependency: helpers.withMessage('Debe seleccionar un cliente o una dependencia, no ambos.', customerOrDependency),
+  },
+  customer_dependency: {
     customerOrDependency: helpers.withMessage('Debe seleccionar un cliente o una dependencia, no ambos.', customerOrDependency),
   },
   symptom: {
@@ -253,8 +256,7 @@ const clearCustomerDependency = () => {
 
 const loadData = async () => {
   // get customers
-  const respCustomers = (await listCustomer()).data
-  customers.value = respCustomers.results
+  customers.value = (await listAllCustomers()).data
   
   // get kits
   const respKits = (await listKit()).data
@@ -357,16 +359,16 @@ onMounted(async () => {
               <!-- frontend validations -->
               <p
                 class="form-text text-danger"
-                v-for="error in v$.customer.$errors"
+                v-for="error in v$.provider.$errors"
                 :key="error.$uid">
                 {{ error.$message }}
               </p>
 
               <!-- backend validations -->
-              <span v-if="orderBackendErrors.customer">
+              <span v-if="orderBackendErrors.provider">
                 <p
                   class="form-text text-danger"
-                  v-for="(error, i) in orderBackendErrors.customer"
+                  v-for="(error, i) in orderBackendErrors.provider"
                   :key="i">
                     {{ error }}
                 </p>
