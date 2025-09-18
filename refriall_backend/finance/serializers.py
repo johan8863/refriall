@@ -320,7 +320,6 @@ class BillSerializer(serializers.ModelSerializer):
         ]
     
     def validate(self, attrs):
-        print(attrs['orders'])
         if attrs['customer'] == None:
             raise serializers.ValidationError({
                 'customer': 'Debe seleccionar un cliente.'
@@ -358,7 +357,6 @@ class BillSerializerDetailUpdate(serializers.ModelSerializer):
         ]
     
     def validate(self, attrs):
-        print(attrs['orders'])
         if attrs['customer'] == None:
             raise serializers.ValidationError({
                 'customer': 'Debe seleccionar un cliente.'

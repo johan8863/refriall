@@ -129,8 +129,8 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 class OrderFromCustomerNotMatched(APIView):
     """returns all orders related to the given customer id and bill__isnull=True"""
-    def get(self, request, pk, currency, format=None):
-        orders = Order.objects.filter(Q(customer=pk) | Q(customer_dependency__customer=pk), Q(currency=currency), Q(bill__isnull=True))
+    def get(self, request, currency_pk, provider_pk, customer_pk, format=None):
+        orders = Order.objects.filter(Q(customer=customer_pk) | Q(customer_dependency__customer=customer_pk), Q(currency=currency_pk), Q(provider=provider_pk), Q(bill__isnull=True))
         serializer = OrderSerializerForReadOnly(orders, many=True)
         return Response(serializer.data)
 

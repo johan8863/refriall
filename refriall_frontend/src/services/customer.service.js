@@ -27,7 +27,7 @@ export const searchCustomers = async (searchTerm, page = 1) => {
     return await apiBase.get(urlCustomerListPagination, { params });
 };
 
-export const listCustomerOrdersNoBill = async (currency) => await apiBase.get(`${urlCustomerOrderNoBill}/${currency}/`)
+export const listCustomerOrdersNoBill = async (currency, provider) => await apiBase.get(`${urlCustomerOrderNoBill}/${currency}/${provider}/`)
 
 export const detailCustomer = async (customer) => {
     return await apiBase.get(`${urlCustomerDetail}/${customer}/`);

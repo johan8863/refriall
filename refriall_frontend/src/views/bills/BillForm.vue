@@ -11,6 +11,7 @@ import { helpers, required } from '@vuelidate/validators';
 import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
 import { listCustomerOrdersNoBill } from "../../services/customer.service";
 import { getOrdersFromCustomerNotMatched } from "../../services/order.service";
+import { listProviderCurrencyOrderNoBill } from '../../services/provider.service';
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 import { listCurrencies } from '../../services/currency.service';
 
@@ -56,6 +57,7 @@ const billBackendErrors = ref({
 
 
 const customers = ref([]);
+const providers = ref([]);
 const orders = ref([]);
 const currencies = ref([]);
 
@@ -138,15 +140,44 @@ const chargeCustomersNoBill = async () => {
 
 }
 
+const chargeProviderNoBill = async () => {
+    bill.value.provider = ''
+    orders.value = []
+    const respProviders = await listProviderCurrencyOrderNoBill(bill.value.currency);
+    providers.value = respProviders.data;
+}
+
+const customersFromProvider = async () => {
+    try {
+        if (bill.value.currency && bill.value.provider) {
+            orders.value = []
+            customers.value = (await listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)).data
+        }
+        if (bill.value.currency && bill.value.provider && bill.value.customer) {
+            orders.value = []
+            customers.value = (await listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)).data
+            orders.value = (await getOrdersFromCustomerNotMatched(bill.value.currency, bill.value.provider, bill.value.customer)).data;
+        }
+    } catch (error) {
+        console.error('General error', error)
+        if (error.response) {
+            billBackendErrors.value = error.response.data
+        } else {
+            billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+        }
+        console.log(billBackendErrors.value)
+    }
+}
+
 const ordersFromCustomer = async () => {
     try {
-        if (bill.value.currency && bill.value.customer) {
-            orders.value = (await getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)).data;
+        if (bill.value.currency && bill.value.provider) {
+            orders.value = (await getOrdersFromCustomerNotMatched(bill.value.currency, bill.value.provider, bill.value.customer)).data;
         } else {
             orders.value = []
         }
     } catch (error) {
-        console.error('General erro', error)
+        console.error('General error', error)
         if (error.response) {
             billBackendErrors.value = error.response.data
         } else {
@@ -207,7 +238,7 @@ onMounted(async () => {
 
         <!-- main content -->
         <div class="col-md-9">
-            <template v-if="bill.currency && customers.length === 0">
+            <template v-if="bill.currency && providers.length === 0">
                 <span class="text-danger">No hay órdenes libres para asociar.</span>
             </template>
 
@@ -236,7 +267,7 @@ onMounted(async () => {
                       id="currency"
                       class="form-select"
                       autofocus
-                      @change="chargeCustomersNoBill"
+                      @change="chargeProviderNoBill"
                       v-model="bill.currency"
                       @blur="v$.currency.$touch">
                       <option
@@ -261,6 +292,31 @@ onMounted(async () => {
                     </span>
                 </div>
 
+                <!-- provider control -->
+                <div class="col-md-3 mb-2">
+                    <label for="provider">Prestador</label>
+                    <select
+                      name="provider"
+                      id="provider"
+                      class="form-select"
+                      :disabled="!bill.currency || (bill.currency && providers.length === 0)"
+                      @change="customersFromProvider"
+                      v-model="bill.provider">
+                        <option
+                          v-for="provider in providers"
+                          :key="provider.id"
+                          :value="provider.id">{{ provider.first_name }}</option>
+                    </select>
+                    <!-- backend errors -->
+                    <span v-if="billBackendErrors.provider">
+                        <p
+                          v-for="(error, index) in billBackendErrors.provider"
+                          :key="index"
+                          class="form-text text-danger">
+                            {{ error }}</p>
+                    </span>
+                </div>
+
                 <!-- customer control -->
                 <div class="col-md-3 mb-2">
                     <label for="customer">Cliente</label>
@@ -268,7 +324,7 @@ onMounted(async () => {
                       name="customer"
                       id="customer"
                       class="form-select"
-                      :disabled="!bill.currency || (bill.currency && customers.length === 0)"
+                      :disabled="(!bill.currency && !bill.provider) || (bill.currency && customers.length === 0)"
                       @change="ordersFromCustomer"
                       v-model="bill.customer">
                         <option

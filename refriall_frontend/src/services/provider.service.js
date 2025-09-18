@@ -2,6 +2,7 @@ import apiBase from "./base.service";
 
 const urlProvider = '/hr/providers'
 const urlProviderListPagination = '/hr/providers/list/pagination'
+const urlProviderCurrencyOrderNoBill = '/hr/providers/orders/nobill'
 
 export const listProvider = async (currentPage) => {
     return await apiBase.get(`${urlProviderListPagination}/?page=${currentPage}`);
@@ -9,6 +10,10 @@ export const listProvider = async (currentPage) => {
 
 export const listAllProviders = async () => {
     return await apiBase.get(`${urlProvider}/`);
+};
+
+export const listProviderCurrencyOrderNoBill = async (currency) => {
+    return apiBase.get(`${urlProviderCurrencyOrderNoBill}/${currency}/`)
 };
 
 export const detailProvider = async (id) => {

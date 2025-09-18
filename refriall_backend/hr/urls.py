@@ -18,6 +18,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('customers/list/pagination/', views.CustomerListPagination.as_view(), name='customers_list_pagination'),
     path('customers/detail/<int:pk>/', views.CustomerDetail.as_view(), name='customers_detail'),
-    path('customers/orders/nobill/<int:currency>/', views.CustomerOrderCurrencyNoBill.as_view(), name='customers_order_no_bill'),
+    path('customers/orders/nobill/<int:currency_pk>/<int:provider_pk>/', views.CustomerOrderCurrencyProviderNoBill.as_view(), name='customers_order_no_bill'),
+    path('providers/orders/nobill/<int:currency>/', views.ProviderOrderCurrencyNoBill.as_view(), name='providers_order_no_bill'),
     path('providers/list/pagination/', views.ProviderListPagination.as_view(), name='providers_list_pagination'),
 ]
