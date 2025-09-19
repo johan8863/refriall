@@ -12,7 +12,7 @@ class CustomUser(AbstractUser):
 
 class Provider(CustomUser):
     tcp_code = models.CharField(max_length=10)
-    license_number = models.CharField('Licencia', max_length=15)
+    license_number = models.CharField('Licencia', max_length=16)
     personal_id = models.CharField('CI', max_length=11)
     bank_account_header = models.CharField(max_length=30)
     bank_account = models.CharField(max_length=20)
