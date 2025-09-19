@@ -6,7 +6,7 @@ import { RouterLink, useRouter, useRoute } from 'vue-router'
 
 // third
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers } from "@vuelidate/validators";
+import { required, helpers, numeric } from "@vuelidate/validators";
 
 // app
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
@@ -33,6 +33,11 @@ const provider = ref({
 });
 
 // validation rules
+
+// custom
+const requiredlength = (lenData) => (value) => value.length === lenData 
+
+// object rules
 const rules = {
   username: {
     required: helpers.withMessage('El Usuario es requerido.', required)
@@ -50,7 +55,9 @@ const rules = {
     required: helpers.withMessage('El Titular de Cuenta es requerido.', required)
   },
   bank_account: {
-    required: helpers.withMessage('La Cuenta Bancaria es requerida.', required)
+    required: helpers.withMessage('La Cuenta Bancaria es requerida.', required),
+    numeric: helpers.withMessage('La Cuenta debe contener sólo números.', numeric),
+    requiredlength: helpers.withMessage('La Cuenta debe contener 16 caracteres.', requiredlength(16)),
   },
   address: {
     required: helpers.withMessage('La Dirección es requerida.', required)
@@ -59,13 +66,15 @@ const rules = {
     required: helpers.withMessage('La Actividad es requerida.', required)
   },
   license_number: {
-    required: helpers.withMessage('La Licencia es requerida.', required)
+    required: helpers.withMessage('La Licencia es requerida.', required),
   },
   password: {
     required: helpers.withMessage('La Clave es requerida.', required)
   },
   personal_id: {
-    required: helpers.withMessage('El CI es requerido.', required)
+    required: helpers.withMessage('El CI es requerido.', required),
+    numeric: helpers.withMessage('El CI debe contener sólo números.', numeric),
+    requiredlength: helpers.withMessage('El CI debe contener 11 caracteres.', requiredlength(11)),
   },
 };
 
@@ -169,7 +178,6 @@ onMounted(async () => {
 
         <!-- main content -->
         <div class="col-md-9">
-
 
             <!-- form -->
             <form class="row" @submit.prevent="onSubmit">

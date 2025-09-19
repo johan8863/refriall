@@ -15,7 +15,7 @@ class Provider(CustomUser):
     license_number = models.CharField('Licencia', max_length=16)
     personal_id = models.CharField('CI', max_length=11)
     bank_account_header = models.CharField(max_length=30)
-    bank_account = models.CharField(max_length=20)
+    bank_account = models.CharField(max_length=16)
     address = models.TextField()
     activity = models.CharField(max_length=55)
 

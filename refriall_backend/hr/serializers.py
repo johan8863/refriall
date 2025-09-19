@@ -50,16 +50,16 @@ class ProviderSerializerWrite(serializers.ModelSerializer):
         str_attr = str(attr)
         return str_attr.isdigit()
     
-    def validate_license_number(self, value):
-        """license_number attr must be exactly 16 characters long"""
+    def validate_bank_account(self, value):
+        """bank_account attr must be exactly 16 characters long"""
 
-        license_number_len = len(value)
+        bank_account_len = len(value)
 
         if not self.validate_all_digits(value):
-            raise serializers.ValidationError("La licencia debe contener sólo números.")
+            raise serializers.ValidationError("La cuenta debe contener sólo números.")
 
-        if license_number_len != 16:
-            raise serializers.ValidationError("La licencia debe contener 16 caracteres.")
+        if bank_account_len != 16:
+            raise serializers.ValidationError("La cuenta debe contener 16 caracteres.")
         return value
     
     def validate_personal_id(self, value):
@@ -68,10 +68,10 @@ class ProviderSerializerWrite(serializers.ModelSerializer):
         personal_id_len = len(value)
 
         if not self.validate_all_digits(value):
-            raise serializers.ValidationError("El CI debe contener sólo números.")
+            raise serializers.ValidationError("El ci debe contener sólo números.")
             
         if personal_id_len != 11:
-            raise serializers.ValidationError("El CI debe contener 11 caracteres.")
+            raise serializers.ValidationError("El ci debe contener 11 caracteres.")
         return value
 
 
