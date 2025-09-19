@@ -58,7 +58,7 @@ class ProviderSerializerWrite(serializers.ModelSerializer):
         if not self.validate_all_digits(value):
             raise serializers.ValidationError("La licencia debe contener sólo números.")
 
-        if license_number_len is not 16:
+        if license_number_len != 16:
             raise serializers.ValidationError("La licencia debe contener 16 caracteres.")
         return value
     
@@ -70,7 +70,7 @@ class ProviderSerializerWrite(serializers.ModelSerializer):
         if not self.validate_all_digits(value):
             raise serializers.ValidationError("El CI debe contener sólo números.")
             
-        if personal_id_len is not 11:
+        if personal_id_len != 11:
             raise serializers.ValidationError("El CI debe contener 11 caracteres.")
         return value
 
