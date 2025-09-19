@@ -71,7 +71,7 @@ class ProviderSerializerWrite(serializers.ModelSerializer):
             raise serializers.ValidationError("El CI debe contener sólo números.")
             
         if personal_id_len is not 11:
-            raise serializers.ValidationError("El CI debe contener 16 caracteres.")
+            raise serializers.ValidationError("El CI debe contener 11 caracteres.")
         return value
 
 
