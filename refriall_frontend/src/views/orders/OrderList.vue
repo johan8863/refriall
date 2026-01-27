@@ -121,7 +121,7 @@ const handleError = (error) => {
 };
 
 onMounted(async () => {
-    await getOrders(1);
+    await getOrders();
 });
 </script>
 
