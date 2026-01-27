@@ -18,8 +18,8 @@ urlpatterns = [
                 path('refresh/', TokenRefreshView.as_view(), name='token-refresh'),
             ])),
         ])),
+        path('stock/', include('stock.urls')),
+        path('hr/', include('hr.urls')),
+        path('finance/', include('finance.urls')),
     ])),
-    path('stock/', include('stock.urls')),
-    path('hr/', include('hr.urls')),
-    path('finance/', include('finance.urls')),
 ]
