@@ -61,10 +61,11 @@ REST_FRAMEWORK = {
 }
 
 # SIMPLEJWT TOKEN SETTINGS
-SIMPLEJWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(config('ACCESS_TOKEN_LIFETIME'))),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(config('REFRESH_TOKEN_LIFETIME'))),
-    "ROTATE_REFRESH_TOKEN": config('ROTATE_REFRESH_TOKEN', cast=bool)
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': config('ROTATE_REFRESH_TOKENS', cast=bool),    
 }
 
 ROOT_URLCONF = 'project.urls'
