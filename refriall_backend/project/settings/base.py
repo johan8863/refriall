@@ -1,5 +1,6 @@
 """refriall_backend settings"""
 
+from datetime import timedelta
 from pathlib import Path
 import os
 
@@ -48,6 +49,23 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# REST_FRAMEWORK AND SIMPLEJWT
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    )
+}
+
+# SIMPLEJWT TOKEN SETTINGS
+SIMPLEJWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(config('ACCESS_TOKEN_LIFETIME'))),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(config('REFRESH_TOKEN_LIFETIME'))),
+    "ROTATE_REFRESH_TOKEN": config('ROTATE_REFRESH_TOKEN', cast=bool)
+}
 
 ROOT_URLCONF = 'project.urls'
 
