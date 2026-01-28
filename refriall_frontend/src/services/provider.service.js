@@ -1,8 +1,9 @@
+import { providerAPIEnvs } from "../settings/env";
 import apiBase from "./base.service";
 
-const urlProvider = '/hr/providers'
-const urlProviderListPagination = '/hr/providers/list/pagination'
-const urlProviderCurrencyOrderNoBill = '/hr/providers/orders/nobill'
+const urlProvider = providerAPIEnvs.providerUrl;
+const urlProviderListPagination = providerAPIEnvs.providerListPaginationUrl;
+const urlProviderCurrencyOrderNoBill = providerAPIEnvs.providerCurrencyOrderNoBillUrl;
 
 export const listProvider = async (currentPage) => {
     return await apiBase.get(`${urlProviderListPagination}/?page=${currentPage}`);
