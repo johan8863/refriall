@@ -1,7 +1,8 @@
+import { kitAPIEnvs } from "../settings/env";
 import apiBase from "./base.service";
 
-const urlKit ='/stock/kits';
-const urlKitListPagination ='/stock/kits/list/pagination';
+const urlKit = kitAPIEnvs.kitUrl;
+const urlKitListPagination = kitAPIEnvs.kitListPaginationUrl;
 
 export const listKit = async (currentPage=null, searchTerm = null) => {
     const params = {}
