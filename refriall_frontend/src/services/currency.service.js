@@ -1,6 +1,7 @@
+import { currenciesAPIEnvs } from "../settings/env";
 import apiBase from "./base.service";
 
-const url = '/finance/currencies_write';
+const url = currenciesAPIEnvs.currenciesUrl;
 
 export const listCurrencies = async () => await apiBase.get(`${url}/`);
 
