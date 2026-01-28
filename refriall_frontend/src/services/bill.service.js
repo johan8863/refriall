@@ -1,9 +1,10 @@
+import { billsAPIEnvs } from "../settings/env";
 import apiBase from "./base.service";
 
-const urlBillListPagination = '/finance/bills/list/pagination/';
-const urlBillDetail = '/finance/bills/detail';
-const urlBillDetailUpdate = '/finance/bills/detail/update';
-const urlBillPost = '/finance/bills_write';
+const urlBillListPagination = billsAPIEnvs.billListPaginationUrl;
+const urlBillDetail = billsAPIEnvs.billDetailUrl;
+const urlBillDetailUpdate = billsAPIEnvs.billDetailUpdateUrl;
+const urlBillPost = billsAPIEnvs.billPostUrl;
 
 export const listBillsPagination = async (currentPage = null, searchTerm = null) => {
     const params = {};
