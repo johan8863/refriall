@@ -4,7 +4,7 @@ import apiBase from "./base.service";
 const urlItem = itemAPIEnvs.itemUrl;
 const urlItemListPagination = itemAPIEnvs.itemListPaginationUrl;
 
-export const listItem = async (currentPage = null, searchTerm = null) => {
+export const listItem = (currentPage = null, searchTerm = null) => {
     const params = {};
     
     if (currentPage) {
@@ -15,43 +15,43 @@ export const listItem = async (currentPage = null, searchTerm = null) => {
         params.search = searchTerm;
     }
     
-    return await apiBase.get(urlItemListPagination, { params });
+    return apiBase.get(urlItemListPagination, { params });
 };
 
-export const listItemsForSelect = async (searchTerm = null) => {
+export const listItemsForSelect = (searchTerm = null) => {
     const params = {};
     
     if (searchTerm) {
         params.search = searchTerm;
     }
     
-    return await apiBase.get('/stock/items/list/select/', { params });
+    return apiBase.get('/stock/items/list/select/', { params });
 };
 
-export const searchItems = async (searchTerm, page = 1) => {
+export const searchItems = (searchTerm, page = 1) => {
     const params = { search: searchTerm };
     if (page > 1) {
         params.page = page;
     }
-    return await apiBase.get(urlItemListPagination, { params });
+    return apiBase.get(urlItemListPagination, { params });
 };
 
-export const getItem = async(id) => {
-    return await apiBase.get(`${urlItem}/${id}/`);
+export const getItem = (id) => {
+    return apiBase.get(`${urlItem}/${id}/`);
 };
 
-export const detailItem = async (id) => {
-    return await apiBase.get(`${urlItem}/detail/${id}/`);
+export const detailItem = (id) => {
+    return apiBase.get(`${urlItem}/detail/${id}/`);
 };
 
-export const postItem = async (item) => {
-    return await apiBase.post(`${urlItem}/`, item);
+export const postItem = (item) => {
+    return apiBase.post(`${urlItem}/`, item);
 };
 
-export const putItem = async (item) => {
-    return await apiBase.put(`${urlItem}/${item.id}/`, item);
+export const putItem = (item) => {
+    return apiBase.put(`${urlItem}/${item.id}/`, item);
 };
 
-export const deleteItem = async (id) => {
-    return await apiBase.delete(`${urlItem}/${id}/`);
+export const deleteItem = (id) => {
+    return apiBase.delete(`${urlItem}/${id}/`);
 };
