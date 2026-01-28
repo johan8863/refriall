@@ -9,7 +9,7 @@ const urlFromCustomerNotMatched = orderAPIEnvs.orderFromCustomerNotMatchedUrl;
 const urlFromCustomer = orderAPIEnvs.orderFromCustomerUrl;
 const urlNotMatched = orderAPIEnvs.orderNotMatchedUrl;
 
-export const listOrder = async (currentPage = null, searchTerm = null) => {
+export const listOrder = (currentPage = null, searchTerm = null) => {
     const params = {};
     
     if (currentPage) {
@@ -20,47 +20,47 @@ export const listOrder = async (currentPage = null, searchTerm = null) => {
         params.search = searchTerm;
     }
     
-    return await apiBase.get(urlOrderListPagination, { params });
+    return apiBase.get(urlOrderListPagination, { params });
 };
 
-export const searchOrders = async (searchTerm, page = 1) => {
+export const searchOrders = (searchTerm, page = 1) => {
     const params = { search: searchTerm };
     if (page > 1) {
         params.page = page;
     }
-    return await apiBase.get(urlOrderListPagination, { params });
+    return apiBase.get(urlOrderListPagination, { params });
 };
 
-export const detailOrder = async (id) => {
-    return await apiBase.get(`${urlOrderDetail}/${id}/`);
+export const detailOrder = (id) => {
+    return apiBase.get(`${urlOrderDetail}/${id}/`);
 };
 
-export const detailOrderUpdate = async (id) => {
-    return await apiBase.get(`${urlOrderPost}/${id}/`);
+export const detailOrderUpdate = (id) => {
+    return apiBase.get(`${urlOrderPost}/${id}/`);
 };
 
-export const postOrder = async (order) => {
-    return await apiBase.post(`${urlOrderPost}/`, order);
+export const postOrder = (order) => {
+    return apiBase.post(`${urlOrderPost}/`, order);
 };
 
-export const putOrder = async (order) => {
-    return await apiBase.put(`${urlOrderPost}/${order.id}/`, order);
+export const putOrder = (order) => {
+    return apiBase.put(`${urlOrderPost}/${order.id}/`, order);
 };
 
-export const deleteOrder = async (id) => {
-    await apiBase.delete(`${urlOrderPost}/${id}/`);
+export const deleteOrder = (id) => {
+    apiBase.delete(`${urlOrderPost}/${id}/`);
 };
 
-export const getOrdersFromCustomerNotMatched = async (currencyId, providerId, customerId) => {
+export const getOrdersFromCustomerNotMatched = (currencyId, providerId, customerId) => {
     // consumes the endpoints that retrieves all order given a Customer ID and matched attr = false
-    return await apiBase.get(`${urlFromCustomerNotMatched}/${currencyId}/${providerId}/${customerId}/`);
+    return apiBase.get(`${urlFromCustomerNotMatched}/${currencyId}/${providerId}/${customerId}/`);
 };
 
-export const getOrdersFromCustomer = async (id) => {
+export const getOrdersFromCustomer = (id) => {
     // consumes the endpoints that retrieves all order given a Customer ID
-    return await apiBase.get(`${urlFromCustomer}/${id}/`);
+    return apiBase.get(`${urlFromCustomer}/${id}/`);
 };
 
-export const getOrdersNotMatched = async () => {
-    return await apiBase.get(`${urlNotMatched}`);
+export const getOrdersNotMatched = () => {
+    return apiBase.get(`${urlNotMatched}`);
 };
