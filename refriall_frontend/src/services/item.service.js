@@ -1,7 +1,8 @@
+import { itemAPIEnvs } from "../settings/env";
 import apiBase from "./base.service";
 
-const urlItem = '/stock/items'
-const urlItemListPagination = '/stock/items/list/pagination'
+const urlItem = itemAPIEnvs.itemUrl;
+const urlItemListPagination = itemAPIEnvs.itemListPaginationUrl;
 
 export const listItem = async (currentPage = null, searchTerm = null) => {
     const params = {};
