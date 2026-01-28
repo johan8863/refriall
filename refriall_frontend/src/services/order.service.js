@@ -1,12 +1,13 @@
+import { orderAPIEnvs } from "../settings/env";
 import apiBase from "./base.service";
 
-const urlOrderList = '/finance/orders/list'
-const urlOrderListPagination = '/finance/orders/list/pagination'
-const urlOrderDetail = '/finance/orders/detail'
-const urlOrderPost = '/finance/orders_write'
-const urlFromCustomerNotMatched = '/finance/orders/fromcustomernotmatched'
-const urlFromCustomer = '/finance/orders/fromcustomer'
-const urlNotMatched = '/finance/orders/notmatched'
+const urlOrderList = orderAPIEnvs.orderListUrl;
+const urlOrderListPagination = orderAPIEnvs.orderListPaginationUrl;
+const urlOrderDetail = orderAPIEnvs.orderDetailUrl;
+const urlOrderPost = orderAPIEnvs.orderPostUrl;
+const urlFromCustomerNotMatched = orderAPIEnvs.orderFromCustomerNotMatchedUrl;
+const urlFromCustomer = orderAPIEnvs.orderFromCustomerUrl;
+const urlNotMatched = orderAPIEnvs.orderNotMatchedUrl;
 
 export const listOrder = async (currentPage = null, searchTerm = null) => {
     const params = {};
