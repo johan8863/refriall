@@ -1,9 +1,10 @@
+import { customerAPIEnvs } from "../settings/env";
 import apiBase from "./base.service";
 
-const urlCustomer = '/hr/customers'
-const urlCustomerListPagination = '/hr/customers/list/pagination'
-const urlCustomerDetail = '/hr/customers/detail'
-const urlCustomerOrderNoBill = '/hr/customers/orders/nobill'
+const urlCustomer = customerAPIEnvs.customerUrl;
+const urlCustomerListPagination = customerAPIEnvs.customerListPaginationUrl;
+const urlCustomerDetail = customerAPIEnvs.customerDetailUrl;
+const urlCustomerOrderNoBill = customerAPIEnvs.customerOrderNoBillUrl;
 
 export const listCustomer = async (currentPage = null, searchTerm = null) => {
     const params = {};
