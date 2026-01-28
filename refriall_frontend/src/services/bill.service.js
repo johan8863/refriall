@@ -1,6 +1,6 @@
 import apiBase from "./base.service";
 
-const urlBillListPagination = '/finance/bills/list/pagination';
+const urlBillListPagination = '/finance/bills/list/pagination/';
 const urlBillDetail = '/finance/bills/detail';
 const urlBillDetailUpdate = '/finance/bills/detail/update';
 const urlBillPost = '/finance/bills_write';
