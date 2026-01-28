@@ -4,7 +4,7 @@ import apiBase from "./base.service";
 const urlKit = kitAPIEnvs.kitUrl;
 const urlKitListPagination = kitAPIEnvs.kitListPaginationUrl;
 
-export const listKit = async (currentPage=null, searchTerm = null) => {
+export const listKit = (currentPage=null, searchTerm = null) => {
     const params = {}
     
     if (currentPage) {
@@ -15,29 +15,29 @@ export const listKit = async (currentPage=null, searchTerm = null) => {
         params.search = searchTerm;
     }
     
-    return await apiBase.get(urlKitListPagination, { params });
+    return apiBase.get(urlKitListPagination, { params });
 };
 
-export const searchKits = async (searchTerm, page = 1) => {
+export const searchKits = (searchTerm, page = 1) => {
     const params = { search: searchTerm };
     if (page > 1) {
         params.page = page;
     }
-    return await apiBase.get(urlKitListPagination, { params });
+    return apiBase.get(urlKitListPagination, { params });
 };
 
-export const detatilKit = async (id) => {
-    return await apiBase.get(`${urlKit}/${id}/`);
+export const detatilKit = (id) => {
+    return apiBase.get(`${urlKit}/${id}/`);
 };
 
-export const postKit = async (kit) => {
-    return await apiBase.post(`${urlKit}/`, kit);
+export const postKit = (kit) => {
+    return apiBase.post(`${urlKit}/`, kit);
 };
 
-export const putKit = async (kit) => {
-    return await apiBase.put(`${urlKit}/${kit.id}/`, kit);
+export const putKit = (kit) => {
+    return apiBase.put(`${urlKit}/${kit.id}/`, kit);
 };
 
-export const deleteKit = async (id) => {
-    await apiBase.delete(`${urlKit}/${id}/`);
+export const deleteKit = (id) => {
+    apiBase.delete(`${urlKit}/${id}/`);
 };
