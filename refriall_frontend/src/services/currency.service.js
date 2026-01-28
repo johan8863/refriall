@@ -3,12 +3,12 @@ import apiBase from "./base.service";
 
 const url = currenciesAPIEnvs.currenciesUrl;
 
-export const listCurrencies = async () => await apiBase.get(`${url}/`);
+export const listCurrencies = () => apiBase.get(`${url}/`);
 
-export const detailCurrency = async (id) => await apiBase.get(`${url}/${id}/`);
+export const detailCurrency = (id) => apiBase.get(`${url}/${id}/`);
 
-export const postCurrency = async (currency) => await apiBase.post(`${url}/`, currency);
+export const postCurrency = (currency) => apiBase.post(`${url}/`, currency);
 
-export const putCurrency = async (currency) => await apiBase.put(`${url}/${currency.id}/`, currency);
+export const putCurrency = (currency) => apiBase.put(`${url}/${currency.id}/`, currency);
 
-export const deleteCurrency = async (id) => await apiBase.delete(`${url}/${id}/`);
+export const deleteCurrency = (id) => apiBase.delete(`${url}/${id}/`);
