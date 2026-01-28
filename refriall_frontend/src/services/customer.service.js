@@ -6,7 +6,7 @@ const urlCustomerListPagination = customerAPIEnvs.customerListPaginationUrl;
 const urlCustomerDetail = customerAPIEnvs.customerDetailUrl;
 const urlCustomerOrderNoBill = customerAPIEnvs.customerOrderNoBillUrl;
 
-export const listCustomer = async (currentPage = null, searchTerm = null) => {
+export const listCustomer = (currentPage = null, searchTerm = null) => {
     const params = {};
     
     if (currentPage) {
@@ -17,35 +17,35 @@ export const listCustomer = async (currentPage = null, searchTerm = null) => {
         params.search = searchTerm;
     }
     
-    return await apiBase.get(urlCustomerListPagination, { params });
+    return apiBase.get(urlCustomerListPagination, { params });
 };
 
-export const listAllCustomers = async () => {
-    return await apiBase.get(`${urlCustomer}/`);
+export const listAllCustomers = () => {
+    return apiBase.get(`${urlCustomer}/`);
 };
 
-export const searchCustomers = async (searchTerm, page = 1) => {
+export const searchCustomers = (searchTerm, page = 1) => {
     const params = { search: searchTerm };
     if (page > 1) {
         params.page = page;
     }
-    return await apiBase.get(urlCustomerListPagination, { params });
+    return apiBase.get(urlCustomerListPagination, { params });
 };
 
-export const listCustomerOrdersNoBill = async (currency, provider) => await apiBase.get(`${urlCustomerOrderNoBill}/${currency}/${provider}/`)
+export const listCustomerOrdersNoBill = (currency, provider) => apiBase.get(`${urlCustomerOrderNoBill}/${currency}/${provider}/`)
 
-export const detailCustomer = async (customer) => {
-    return await apiBase.get(`${urlCustomerDetail}/${customer}/`);
+export const detailCustomer = (customer) => {
+    return apiBase.get(`${urlCustomerDetail}/${customer}/`);
 };
 
-export const postCustomer = async (customer) => {
-    return await apiBase.post(`${urlCustomer}/`, customer);
+export const postCustomer = (customer) => {
+    return apiBase.post(`${urlCustomer}/`, customer);
 };
 
-export const putCustomer = async (customer) => {
-    return await apiBase.put(`${urlCustomer}/${customer.id}/`, customer);
+export const putCustomer = (customer) => {
+    return apiBase.put(`${urlCustomer}/${customer.id}/`, customer);
 };
 
-export const deleteCustomer = async (customer) => {
-    await apiBase.delete(`${urlCustomer}/${customer}/`);
+export const deleteCustomer = (customer) => {
+    apiBase.delete(`${urlCustomer}/${customer}/`);
 };
