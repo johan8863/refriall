@@ -1,10 +1,20 @@
 <script setup>
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
+import NavBar from './components/NavBar.vue';
+import { computed, onMounted } from 'vue';
+import { useAuthStore } from './stores/authStore';
 
-import NavBar from "@/components/NavBar.vue";
+const authStore = useAuthStore()
+
+const route = useRoute();
+
+// computed to show/hide navbar based on meta properties
+const showNavBar = computed(() => !route.meta.hideNavBar)
+
+onMounted(() => authStore.initAuth())
 </script>
 
 <template>
-  <NavBar />
+  <NavBar v-if="showNavBar" />
   <RouterView />
 </template>

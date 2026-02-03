@@ -15,6 +15,14 @@ const router = createRouter({
       component: OrderList
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/auth/LoginView.vue'),
+      meta: {
+        hideNavBar: true,
+      },
+    },
+    {
       path: '/kits',
       name: 'kits',
       component: () => import('../views/kits/KitList.vue'),
@@ -216,8 +224,22 @@ const router = createRouter({
       path: '/bills/delete/:id',
       name: 'bills_delete',
       component: () => import('../views/bills/BillConfirmDelete.vue')
-    }
+    },
   ]
+})
+
+router.beforeEach(async (to) => {
+  const { useAuthStore } = await import('../stores/authStore')
+  const authStore = useAuthStore()
+  if (!authStore.isAuthenticated && to.name !== 'login') {
+    return {
+      name: 'login',
+      query: { redirect: to.fullPath }
+    }
+  }
+  if (authStore.isAuthenticated && to.name === 'login') {
+    return { name: 'login'}
+  }
 })
 
 export default router

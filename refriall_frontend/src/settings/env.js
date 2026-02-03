@@ -47,3 +47,8 @@ export const providerAPIEnvs = {
     providerListPaginationUrl: allEnvs.VITE_PROVIDER_LIST_PAGINATION_URL,
     providerCurrencyOrderNoBillUrl: allEnvs.VITE_PROVIDER_CURRENCY_ORDER_NO_BILL_URL,
 }
+
+export const authAPIEnvs = {
+    tokenPairUrl: allEnvs.VITE_TOKEN_PAIR_URL,
+    refreshTokenUrl: allEnvs.VITE_REFRESH_TOKEN_URL,
+}
