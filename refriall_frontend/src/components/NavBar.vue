@@ -4,6 +4,13 @@
 import { RouterLink } from "vue-router";
 import { navBar } from "../assets/js/bootstrap_classes/navBar";
 
+// local
+import { useAuthStore } from "../stores/authStore";
+
+
+// store
+const authStore = useAuthStore()
+
 </script>
 
 <template>
@@ -65,7 +72,7 @@ import { navBar } from "../assets/js/bootstrap_classes/navBar";
                 </ul>
             </div>
             <div class="ms-auto">
-                <a href="#" class="btn btn-sm btn-outline-danger">Salir</a>
+                <button @click="authStore.logout()" class="btn btn-sm btn-outline-danger">Salir</button>
             </div>
         </div>
     </nav>

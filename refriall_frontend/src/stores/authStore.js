@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { authAPI } from "../services/authAPI";
+import router from "../router";
 
 export const useAuthStore = defineStore('authStore', () => {
     const isLoadingAuth = ref(false)
@@ -32,8 +33,10 @@ export const useAuthStore = defineStore('authStore', () => {
     }
 
     const logout = () => {
+        isAuthenticated.value = false
         localStorage.removeItem('refriall_auth_access_token')
         localStorage.removeItem('refriall_auth_refresh_token')
+        router.push({name: 'login'})
     }
 
     const initAuth = () => {
@@ -45,6 +48,7 @@ export const useAuthStore = defineStore('authStore', () => {
         isAuthenticated,
         isLoadingAuth,
         initAuth,
-        login
+        login,
+        logout
     }
 })
