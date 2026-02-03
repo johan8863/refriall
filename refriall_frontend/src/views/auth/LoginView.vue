@@ -24,19 +24,15 @@ const handleLogin = async () => {
         router.push(redirectRoute)
     } catch (error) {
         if (error.response) {
-            if (error.response.status === 400) {
+            if (error.response.status === 400 || error.response.status === 401) {
                 authError.value = 'Usuario o Clave incorrectos.'
-            }
-            else if (error.response.status === 500) {
+            } else if (error.response.status === 500) {
                 authError.value = 'Error en el servidor, consulte al desarrollador.'
             }
-        } 
-        else if (error.request) {
+        } else if (error.request) {
             authError.value = 'Servidor caído, consulte al desarrollador.'
-        } 
-        else {
+        } else {
             authError.value = 'Error inesperado, consulte al desarrollador'
-            console.error({...error});
         }
     }
 }
