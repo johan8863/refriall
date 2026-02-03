@@ -28,6 +28,8 @@ const handleLogin = async () => {
                 authError.value = 'Usuario o Clave incorrectos.'
             } else if (error.response.status === 500) {
                 authError.value = 'Error en el servidor, consulte al desarrollador.'
+            } else {
+                authError.value = error.message
             }
         } else if (error.request) {
             authError.value = 'Servidor caído, consulte al desarrollador.'
