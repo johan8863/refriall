@@ -32,6 +32,17 @@ apiBase.interceptors.response.use(
                 if (!refreshToken) {
                     throw new Error("No refresh token available")
                 }
+
+                if (originalRequest.url.includes(REFRESH_URL)) {
+                    localStorage.removeItem('refriall_auth_access_token')
+                    localStorage.removeItem('refriall_auth_refresh_token')
+
+                    if (window.location.href !== '/login') {
+                        window.location.href = '/login'
+                    }
+
+                    return Promise.reject(refreshError)
+                }
                 const { data } = await apiBase.post(REFRESH_URL, {refresh: refreshToken})
                 const { access } = data
 
@@ -53,6 +64,8 @@ apiBase.interceptors.response.use(
                 return Promise.reject(refreshError)
             }
         }
+        console.error("General response interceptor error", error);
+        
         return Promise.reject(error)
     }
 )
