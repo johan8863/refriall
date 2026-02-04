@@ -33,7 +33,7 @@ apiBase.interceptors.response.use(
                     throw new Error("No refresh token available")
                 }
 
-                if (originalRequest.url.includes(REFRESH_URL)) {
+                if (error.response.status === 401 && originalRequest.url.includes(REFRESH_URL)) {
                     localStorage.removeItem('refriall_auth_access_token')
                     localStorage.removeItem('refriall_auth_refresh_token')
 
@@ -43,6 +43,7 @@ apiBase.interceptors.response.use(
 
                     return Promise.reject(refreshError)
                 }
+                
                 const { data } = await apiBase.post(REFRESH_URL, {refresh: refreshToken})
                 const { access } = data
 
