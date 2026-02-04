@@ -25,44 +25,47 @@ apiBase.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config
-        if (error.response.status === 401 && !originalRequest._retry) {
-            try {
-                originalRequest._retry = true
-                const refreshToken = localStorage.getItem('refriall_auth_refresh_token')
-                if (!refreshToken) {
-                    throw new Error("No refresh token available")
-                }
-
-                if (error.response.status === 401 && originalRequest.url.includes(REFRESH_URL)) {
+        if (error.response.status === 401) {
+            if (!originalRequest._retry) {
+                try {
+                    originalRequest._retry = true
+                    
+                    const refreshToken = localStorage.getItem('refriall_auth_refresh_token')
+                    if (!refreshToken) {
+                        throw new Error("No refresh token available")
+                    }
+    
+                    if (originalRequest.url.includes(REFRESH_URL)) {
+                        localStorage.removeItem('refriall_auth_access_token')
+                        localStorage.removeItem('refriall_auth_refresh_token')
+    
+                        if (window.location.href !== '/login') {
+                            window.location.href = '/login'
+                        }
+    
+                        return Promise.reject(refreshError)
+                    }
+                    
+                    const { data } = await apiBase.post(REFRESH_URL, {refresh: refreshToken})
+                    const { access } = data
+    
+                    localStorage.setItem('refriall_auth_access_token', access)
+    
+                    originalRequest.headers.Authorization = `Bearer ${access}`
+    
+                    return apiBase(originalRequest)
+                } catch (refreshError) {
+                    console.error("Token refreshfailed", refreshError)
+    
                     localStorage.removeItem('refriall_auth_access_token')
                     localStorage.removeItem('refriall_auth_refresh_token')
-
+    
                     if (window.location.href !== '/login') {
                         window.location.href = '/login'
                     }
-
+    
                     return Promise.reject(refreshError)
                 }
-                
-                const { data } = await apiBase.post(REFRESH_URL, {refresh: refreshToken})
-                const { access } = data
-
-                localStorage.setItem('refriall_auth_access_token', access)
-
-                originalRequest.headers.Authorization = `Bearer ${access}`
-
-                return apiBase(originalRequest)
-            } catch (refreshError) {
-                console.error("Token refreshfailed", refreshError)
-
-                localStorage.removeItem('refriall_auth_access_token')
-                localStorage.removeItem('refriall_auth_refresh_token')
-
-                if (window.location.href !== '/login') {
-                    window.location.href = '/login'
-                }
-
-                return Promise.reject(refreshError)
             }
         }
         console.error("General response interceptor error", error);
