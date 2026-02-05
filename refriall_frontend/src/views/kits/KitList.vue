@@ -151,6 +151,7 @@ onMounted(async () => {
         <div class="col-md-10">
             <div class="row">
                 <div class="col-md-12 mt-2">
+                    <RouterView />
                     <form class="row g-3 align-items-center" @submit.prevent="handleSearch">
                         <div class="col-auto">
                             <label for="searchKitText" class="col-form-label">Búsqueda:</label>

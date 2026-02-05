@@ -24,28 +24,33 @@ const router = createRouter({
     },
     {
       path: '/kits',
-      name: 'kits',
-      component: () => import('../views/kits/KitList.vue'),
-    },
-    {
-      path: '/kits/create', 
-      name: 'kits_create', 
-      component: () => import('../views/kits/KitForm.vue')
-    },
-    {
-      path: '/kits/detail/:id', 
-      name: 'kits_detail', 
-      component: () => import('../views/kits/KitDetail.vue')
-    },
-    {
-      path: '/kits/update/:id', 
-      name: 'kits_update', 
-      component: () => import('../views/kits/KitForm.vue')
-    },
-    {
-      path: '/kits/confirm/delete/:id', 
-      name: 'kits_confirm_delete', 
-      component: () => import('../views/kits/KitConfirmDelete.vue')
+      children: [
+        {
+          path: '',
+          name: 'kits',
+          component: () => import('../views/kits/KitList.vue'),
+        },
+        {
+          path: 'create', 
+          name: 'kits_create', 
+          component: () => import('../views/kits/KitForm.vue')
+        },
+        {
+          path: 'detail/:id', 
+          name: 'kits_detail', 
+          component: () => import('../views/kits/KitDetail.vue')
+        },
+        {
+          path: 'update/:id', 
+          name: 'kits_update', 
+          component: () => import('../views/kits/KitForm.vue')
+        },
+        {
+          path: 'confirm/delete/:id', 
+          name: 'kits_confirm_delete', 
+          component: () => import('../views/kits/KitConfirmDelete.vue')
+        },
+      ]
     },
     {
       path: '/items',
