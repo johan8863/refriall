@@ -238,7 +238,7 @@ router.beforeEach(async (to) => {
     }
   }
   if (authStore.isAuthenticated && to.name === 'login') {
-    return { name: 'login'}
+    return { name: 'home'}
   }
 })
 
