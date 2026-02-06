@@ -36,19 +36,24 @@ const router = createRouter({
           component: () => import('../views/kits/KitForm.vue')
         },
         {
-          path: 'detail/:id', 
-          name: 'kits_detail', 
-          component: () => import('../views/kits/KitDetail.vue')
-        },
-        {
-          path: 'update/:id', 
-          name: 'kits_update', 
-          component: () => import('../views/kits/KitForm.vue')
-        },
-        {
-          path: 'confirm/delete/:id', 
-          name: 'kits_confirm_delete', 
-          component: () => import('../views/kits/KitConfirmDelete.vue')
+          path: ':id',
+          children: [
+            {
+              path: 'detail', 
+              name: 'kits_detail', 
+              component: () => import('../views/kits/KitDetail.vue')
+            },
+            {
+              path: 'update', 
+              name: 'kits_update', 
+              component: () => import('../views/kits/KitForm.vue')
+            },
+            {
+              path: 'confirm/delete', 
+              name: 'kits_confirm_delete', 
+              component: () => import('../views/kits/KitConfirmDelete.vue')
+            },
+          ]
         },
       ]
     },
