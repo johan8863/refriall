@@ -59,28 +59,38 @@ const router = createRouter({
     },
     {
       path: '/items',
-      name: 'items',
-      component: () => import('../views/items/ItemList.vue')
-    },
-    {
-      path: '/items/create', 
-      name: 'items_create', 
-      component: () => import('../views/items/ItemForm.vue')
-    },
-    {
-      path: '/items/detail/:id', 
-      name: 'items_detail', 
-      component: () => import('../views/items/ItemDetail.vue')
-    },
-    {
-      path: '/items/update/:id', 
-      name: 'items_update', 
-      component: () => import('../views/items/ItemForm.vue')
-    },
-    {
-      path: '/items/confirm/delete/:id', 
-      name: 'items_confirm_delete', 
-      component: () => import('../views/items/ItemConfirmDelete.vue')
+      children: [
+        {
+          path: '',
+          name: 'items',
+          component: () => import('../views/items/ItemList.vue')
+        },
+        {
+          path: 'create', 
+          name: 'items_create', 
+          component: () => import('../views/items/ItemForm.vue')
+        },
+        {
+          path: ':id',
+          children: [
+            {
+              path: 'detail', 
+              name: 'items_detail', 
+              component: () => import('../views/items/ItemDetail.vue')
+            },
+            {
+              path: 'update', 
+              name: 'items_update', 
+              component: () => import('../views/items/ItemForm.vue')
+            },
+            {
+              path: 'confirm/delete', 
+              name: 'items_confirm_delete', 
+              component: () => import('../views/items/ItemConfirmDelete.vue')
+            },
+          ]
+        },
+      ]
     },
     {
       path: '/providers',
