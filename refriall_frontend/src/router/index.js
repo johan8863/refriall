@@ -189,28 +189,38 @@ const router = createRouter({
     },
     {
       path: '/currencies',
-      name: 'currencies',
-      component: () => import ('../views/currencies/CurrencyList.vue')
-    },
-    {
-      path: '/currencies/detail/:id',
-      name: 'currency_detail',
-      component: () => import ('../views/currencies/CurrencyDetail.vue')
-    },
-    {
-      path: '/currencies/update/:id',
-      name: 'currency_update',
-      component: () => import ('../views/currencies/CurrencyForm.vue')
-    },
-    {
-      path: '/currencies/delete/:id',
-      name: 'currency_delete',
-      component: () => import ('../views/currencies/CurrencyConfirmDelete.vue')
-    },
-    {
-      path: '/currencies/create',
-      name: 'currency_create',
-      component: () => import ('../views/currencies/CurrencyForm.vue')
+      children: [
+        {
+          path: '',
+          name: 'currencies',
+          component: () => import ('../views/currencies/CurrencyList.vue')
+        },
+        {
+          path: 'create',
+          name: 'currency_create',
+          component: () => import ('../views/currencies/CurrencyForm.vue')
+        },
+        {
+          path: ':id',
+          children: [
+            {
+              path: 'detail',
+              name: 'currency_detail',
+              component: () => import ('../views/currencies/CurrencyDetail.vue')
+            },
+            {
+              path: 'update',
+              name: 'currency_update',
+              component: () => import ('../views/currencies/CurrencyForm.vue')
+            },
+            {
+              path: 'confirm/delete',
+              name: 'currency_delete',
+              component: () => import ('../views/currencies/CurrencyConfirmDelete.vue')
+            },
+          ]
+        },
+      ]
     },
     {
       path: '/orders',
