@@ -7,6 +7,7 @@ import { RouterLink, useRoute, useRouter } from "vue-router";
 // app
 import { detailOrder, deleteOrder } from '../../services/order.service'
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+import { orderErrorHandler } from "../../utils/errors/orderErrorHandler";
 
 const route = useRoute();
 const router = useRouter()
@@ -46,44 +47,19 @@ onMounted(async () => {
     const resp = await detailOrder(route.params.id);
     order.value = resp.data;
   } catch (error) {
-    if (error.response) {
-        console.log("Error data: ", error.response.data);
-        console.log("Error status: ", error.response.status);
-        if (error.response.status === 404) {
-            errorMessage.value = "Orden no encontrada."
-        }
-    } else {
-        errorMessage.value = 'Error inesperado, consulte al desarrollador'
-    }
+    orderErrorHandler(error, errorMessage)
   }
 });
 
 
 const delOrder = async (id) => {
-    try {
-      await deleteOrder(id)
-      router.push({ name: 'orders' })
-    } catch (error) {
-      if (error.response) {
-        // The request was made, and the server responded with a status code
-        console.log('Error status:', error.response.status)
-        console.log('Error data:', error.response.data)
-        errorMessage.value = `${error.response.data} - ${error.response.status}`
-        // Handle different status codes
-        if (error.response.status === 404) {
-          errorMessage.value = 'Orden no encontrada.'
-        } else if (error.response.status === 400) {
-          console.log('Bad request: ' + error.response.data.error)
-        }
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.log('No response received:', error.request)
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error:', error.message)
-      }
-    }
+  try {
+    await deleteOrder(id)
+    router.push({ name: 'orders' })
+  } catch (error) {
+    orderErrorHandler(error, errorMessage)
   }
+}
 
 </script>
 
