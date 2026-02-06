@@ -1,5 +1,11 @@
+// vue
 import { createRouter, createWebHistory } from 'vue-router'
-import OrderList from "../views/orders/OrderList.vue";
+
+// jwt-decode
+import { jwtDecode } from 'jwt-decode'
+
+// refriall
+import OrderList from '../views/orders/OrderList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,7 +21,7 @@ const router = createRouter({
         {
           path: '',
           name: 'home',
-          component: OrderList,
+          component: OrderList
         },
         {
           path: 'stock',
@@ -26,33 +32,33 @@ const router = createRouter({
                 {
                   path: '',
                   name: 'kits',
-                  component: () => import('../views/kits/KitList.vue'),
+                  component: () => import('../views/kits/KitList.vue')
                 },
                 {
-                  path: 'create', 
-                  name: 'kits_create', 
+                  path: 'create',
+                  name: 'kits_create',
                   component: () => import('../views/kits/KitForm.vue')
                 },
                 {
                   path: ':id',
                   children: [
                     {
-                      path: 'detail', 
-                      name: 'kits_detail', 
+                      path: 'detail',
+                      name: 'kits_detail',
                       component: () => import('../views/kits/KitDetail.vue')
                     },
                     {
-                      path: 'update', 
-                      name: 'kits_update', 
+                      path: 'update',
+                      name: 'kits_update',
                       component: () => import('../views/kits/KitForm.vue')
                     },
                     {
-                      path: 'confirm/delete', 
-                      name: 'kits_confirm_delete', 
+                      path: 'confirm/delete',
+                      name: 'kits_confirm_delete',
                       component: () => import('../views/kits/KitConfirmDelete.vue')
-                    },
+                    }
                   ]
-                },
+                }
               ]
             },
             {
@@ -64,32 +70,32 @@ const router = createRouter({
                   component: () => import('../views/items/ItemList.vue')
                 },
                 {
-                  path: 'create', 
-                  name: 'items_create', 
+                  path: 'create',
+                  name: 'items_create',
                   component: () => import('../views/items/ItemForm.vue')
                 },
                 {
                   path: ':id',
                   children: [
                     {
-                      path: 'detail', 
-                      name: 'items_detail', 
+                      path: 'detail',
+                      name: 'items_detail',
                       component: () => import('../views/items/ItemDetail.vue')
                     },
                     {
-                      path: 'update', 
-                      name: 'items_update', 
+                      path: 'update',
+                      name: 'items_update',
                       component: () => import('../views/items/ItemForm.vue')
                     },
                     {
-                      path: 'confirm/delete', 
-                      name: 'items_confirm_delete', 
+                      path: 'confirm/delete',
+                      name: 'items_confirm_delete',
                       component: () => import('../views/items/ItemConfirmDelete.vue')
-                    },
+                    }
                   ]
-                },
+                }
               ]
-            },
+            }
           ]
         },
         {
@@ -105,7 +111,7 @@ const router = createRouter({
                 },
                 {
                   path: 'create',
-                  name: 'providers_create', 
+                  name: 'providers_create',
                   component: () => import('../views/providers/ProviderForm.vue')
                 },
                 {
@@ -113,21 +119,21 @@ const router = createRouter({
                   children: [
                     {
                       path: 'update',
-                      name: 'providers_update', 
+                      name: 'providers_update',
                       component: () => import('../views/providers/ProviderForm.vue')
                     },
                     {
-                      path: 'detail', 
-                      name: 'providers_detail', 
+                      path: 'detail',
+                      name: 'providers_detail',
                       component: () => import('../views/providers/ProviderDetail.vue')
                     },
                     {
-                      path: 'confirm/delete', 
-                      name: 'providers_confirm_delete', 
+                      path: 'confirm/delete',
+                      name: 'providers_confirm_delete',
                       component: () => import('../views/providers/ProviderConfirmDelte.vue')
-                    },
+                    }
                   ]
-                },
+                }
               ]
             },
             {
@@ -139,26 +145,26 @@ const router = createRouter({
                   component: () => import('../views/customers/CustomerList.vue')
                 },
                 {
-                  path: 'create', 
-                  name: 'customers_create', 
+                  path: 'create',
+                  name: 'customers_create',
                   component: () => import('../views/customers/CustomerForm.vue')
                 },
                 {
                   path: ':id',
                   children: [
                     {
-                      path: 'detail', 
-                      name: 'customers_detail', 
+                      path: 'detail',
+                      name: 'customers_detail',
                       component: () => import('../views/customers/CustomerDetail.vue')
                     },
                     {
-                      path: 'update', 
-                      name: 'customers_update', 
+                      path: 'update',
+                      name: 'customers_update',
                       component: () => import('../views/customers/CustomerForm.vue')
                     },
                     {
-                      path: 'confirm/delete', 
-                      name: 'customers_confirm_delete', 
+                      path: 'confirm/delete',
+                      name: 'customers_confirm_delete',
                       component: () => import('../views/customers/CustomerConfirmDelete.vue')
                     },
                     {
@@ -167,29 +173,33 @@ const router = createRouter({
                         {
                           path: 'detail',
                           name: 'customer_dependecy_detail',
-                          component: () => import ('../views/customerDependencies/CustomerDependencyDetail.vue')
+                          component: () =>
+                            import('../views/customerDependencies/CustomerDependencyDetail.vue')
                         },
                         {
                           path: 'create',
                           name: 'customer_dependecy_create',
-                          component: () => import ('../views/customerDependencies/CustomerDependencyCreate.vue')
+                          component: () =>
+                            import('../views/customerDependencies/CustomerDependencyCreate.vue')
                         },
                         {
                           path: 'update',
                           name: 'customer_dependecy_update',
-                          component: () => import ('../views/customerDependencies/CustomerDependencyUpdate.vue')
+                          component: () =>
+                            import('../views/customerDependencies/CustomerDependencyUpdate.vue')
                         },
                         {
                           path: 'confirm/delete',
                           name: 'customer_dependecy_delete',
-                          component: () => import ('../views/customerDependencies/CustomerDependencyConfirmDelete.vue')
-                        },
+                          component: () =>
+                            import('../views/customerDependencies/CustomerDependencyConfirmDelete.vue')
+                        }
                       ]
-                    },
+                    }
                   ]
-                },
+                }
               ]
-            },
+            }
           ]
         },
         {
@@ -201,12 +211,12 @@ const router = createRouter({
                 {
                   path: '',
                   name: 'currencies',
-                  component: () => import ('../views/currencies/CurrencyList.vue')
+                  component: () => import('../views/currencies/CurrencyList.vue')
                 },
                 {
                   path: 'create',
                   name: 'currency_create',
-                  component: () => import ('../views/currencies/CurrencyForm.vue')
+                  component: () => import('../views/currencies/CurrencyForm.vue')
                 },
                 {
                   path: ':id',
@@ -214,20 +224,20 @@ const router = createRouter({
                     {
                       path: 'detail',
                       name: 'currency_detail',
-                      component: () => import ('../views/currencies/CurrencyDetail.vue')
+                      component: () => import('../views/currencies/CurrencyDetail.vue')
                     },
                     {
                       path: 'update',
                       name: 'currency_update',
-                      component: () => import ('../views/currencies/CurrencyForm.vue')
+                      component: () => import('../views/currencies/CurrencyForm.vue')
                     },
                     {
                       path: 'confirm/delete',
                       name: 'currency_delete',
-                      component: () => import ('../views/currencies/CurrencyConfirmDelete.vue')
-                    },
+                      component: () => import('../views/currencies/CurrencyConfirmDelete.vue')
+                    }
                   ]
-                },
+                }
               ]
             },
             {
@@ -236,41 +246,41 @@ const router = createRouter({
                 {
                   path: '',
                   name: 'orders',
-                  component: OrderList,
+                  component: OrderList
                 },
                 {
-                  path: 'create', 
-                  name: 'orders_create', 
+                  path: 'create',
+                  name: 'orders_create',
                   component: () => import('../views/orders/OrderForm.vue')
                 },
                 {
                   path: ':id',
                   children: [
                     {
-                      path: 'update', 
-                      name: 'orders_update', 
+                      path: 'update',
+                      name: 'orders_update',
                       component: () => import('../views/orders/OrderForm.vue')
                     },
                     {
-                      path: 'detail', 
-                      name: 'orders_detail', 
-                      component: () => import('../views/orders/OrderDetail.vue'),
+                      path: 'detail',
+                      name: 'orders_detail',
+                      component: () => import('../views/orders/OrderDetail.vue')
                     },
                     {
-                      path: 'preorder', 
-                      name: 'orders_detail_pre_order', 
+                      path: 'preorder',
+                      name: 'orders_detail_pre_order',
                       component: () => import('../views/orders/OrderDetail.vue'),
                       meta: {
                         preOrder: true
                       }
                     },
                     {
-                      path: 'confirm/delete', 
-                      name: 'orders_confirm_delete', 
+                      path: 'confirm/delete',
+                      name: 'orders_confirm_delete',
                       component: () => import('../views/orders/OrderConfirmDelete.vue')
-                    },
+                    }
                   ]
-                },
+                }
               ]
             },
             {
@@ -303,13 +313,13 @@ const router = createRouter({
                       path: 'confirm/delete',
                       name: 'bills_delete',
                       component: () => import('../views/bills/BillConfirmDelete.vue')
-                    },
+                    }
                   ]
-                },
+                }
               ]
-            },
+            }
           ]
-        },
+        }
       ]
     },
     {
@@ -317,15 +327,50 @@ const router = createRouter({
       name: 'login',
       component: () => import('../views/auth/LoginView.vue'),
       meta: {
-        hideNavBar: true,
-      },
-    },
+        hideNavBar: true
+      }
+    }
   ]
 })
 
 router.beforeEach(async (to) => {
   const { useAuthStore } = await import('../stores/authStore')
   const authStore = useAuthStore()
+
+  // get refresh auth token
+  const refreshToken = localStorage.getItem('refriall_auth_refresh_token')
+
+  if (!refreshToken && to.name !== 'login') {
+    authStore.isAuthenticated = false
+    localStorage.removeItem('refriall_auth_refresh_token')
+    return {
+      name: 'login',
+      query: { redirect: to.fullPath }
+    }
+  }
+
+  if (refreshToken) {
+    try {
+      const refreshDecoded = jwtDecode(refreshToken)
+      const isExpired = refreshDecoded.exp * 1000 < Date.now()
+
+      if (isExpired && to.name !== 'login') {
+        authStore.isAuthenticated = false
+        localStorage.removeItem('refriall_auth_access_token')
+        localStorage.removeItem('refriall_auth_refresh_token')
+
+        return {
+          name: 'login',
+          query: { redirect: to.fullPath }
+        }
+      }
+    } catch (error) {
+      authStore.isAuthenticated = false
+      localStorage.removeItem('refriall_auth_access_token')
+      localStorage.removeItem('refriall_auth_refresh_token')
+    }
+  }
+
   if (!authStore.isAuthenticated && to.name !== 'login') {
     return {
       name: 'login',
@@ -333,7 +378,7 @@ router.beforeEach(async (to) => {
     }
   }
   if (authStore.isAuthenticated && to.name === 'login') {
-    return { name: 'home'}
+    return { name: 'home' }
   }
 })
 
