@@ -18,6 +18,7 @@
     "axios": "^1.13.4",
     "bootstrap": "^5.3.2",
     "html2pdf.js": "^0.14.0",
+    "jwt-decode": "^4.0.0",
     "pinia": "^3.0.4",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
