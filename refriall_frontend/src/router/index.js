@@ -179,36 +179,46 @@ const router = createRouter({
     },
     {
       path: '/orders',
-      name: 'orders',
-      component: OrderList,
-    },
-    {
-      path: '/orders/create', 
-      name: 'orders_create', 
-      component: () => import('../views/orders/OrderForm.vue')
-    },
-    {
-      path: '/orders/update/:id', 
-      name: 'orders_update', 
-      component: () => import('../views/orders/OrderForm.vue')
-    },
-    {
-      path: '/orders/detail/:id', 
-      name: 'orders_detail', 
-      component: () => import('../views/orders/OrderDetail.vue'),
-    },
-    {
-      path: '/orders/detail/preorder/:id', 
-      name: 'orders_detail_pre_order', 
-      component: () => import('../views/orders/OrderDetail.vue'),
-      meta: {
-        preOrder: true
-      }
-    },
-    {
-      path: '/orders/confirm/delete/:id', 
-      name: 'orders_confirm_delete', 
-      component: () => import('../views/orders/OrderConfirmDelete.vue')
+      children: [
+        {
+          path: '',
+          name: 'orders',
+          component: OrderList,
+        },
+        {
+          path: 'create', 
+          name: 'orders_create', 
+          component: () => import('../views/orders/OrderForm.vue')
+        },
+        {
+          path: ':id',
+          children: [
+            {
+              path: 'update', 
+              name: 'orders_update', 
+              component: () => import('../views/orders/OrderForm.vue')
+            },
+            {
+              path: 'detail', 
+              name: 'orders_detail', 
+              component: () => import('../views/orders/OrderDetail.vue'),
+            },
+            {
+              path: 'preorder', 
+              name: 'orders_detail_pre_order', 
+              component: () => import('../views/orders/OrderDetail.vue'),
+              meta: {
+                preOrder: true
+              }
+            },
+            {
+              path: 'confirm/delete', 
+              name: 'orders_confirm_delete', 
+              component: () => import('../views/orders/OrderConfirmDelete.vue')
+            },
+          ]
+        },
+      ]
     },
     {
       path: '/bills',
