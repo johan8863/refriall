@@ -94,28 +94,38 @@ const router = createRouter({
     },
     {
       path: '/providers',
-      name: 'providers',
-      component: () => import('../views/providers/ProviderList.vue')
-    },
-    {
-      path: '/providers/create',
-      name: 'providers_create', 
-      component: () => import('../views/providers/ProviderForm.vue')
-    },
-    {
-      path: '/providers/update/:id',
-      name: 'providers_update', 
-      component: () => import('../views/providers/ProviderForm.vue')
-    },
-    {
-      path: '/providers/detail/:id', 
-      name: 'providers_detail', 
-      component: () => import('../views/providers/ProviderDetail.vue')
-    },
-    {
-      path: '/providers/confirm/delete/:id', 
-      name: 'providers_confirm_delete', 
-      component: () => import('../views/providers/ProviderConfirmDelte.vue')
+      children: [
+        {
+          path: '',
+          name: 'providers',
+          component: () => import('../views/providers/ProviderList.vue')
+        },
+        {
+          path: 'create',
+          name: 'providers_create', 
+          component: () => import('../views/providers/ProviderForm.vue')
+        },
+        {
+          path: ':id',
+          children: [
+            {
+              path: 'update',
+              name: 'providers_update', 
+              component: () => import('../views/providers/ProviderForm.vue')
+            },
+            {
+              path: 'detail', 
+              name: 'providers_detail', 
+              component: () => import('../views/providers/ProviderDetail.vue')
+            },
+            {
+              path: 'confirm/delete', 
+              name: 'providers_confirm_delete', 
+              component: () => import('../views/providers/ProviderConfirmDelte.vue')
+            },
+          ]
+        },
+      ]
     },
     {
       path: '/customers',
