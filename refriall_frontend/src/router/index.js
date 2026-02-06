@@ -129,48 +129,63 @@ const router = createRouter({
     },
     {
       path: '/customers',
-      name: 'customers',
-      component: () => import('../views/customers/CustomerList.vue')
-    },
-    {
-      path: '/customers/create', 
-      name: 'customers_create', 
-      component: () => import('../views/customers/CustomerForm.vue')
-    },
-    {
-      path: '/customers/detail/:id', 
-      name: 'customers_detail', 
-      component: () => import('../views/customers/CustomerDetail.vue')
-    },
-    {
-      path: '/customers/update/:id', 
-      name: 'customers_update', 
-      component: () => import('../views/customers/CustomerForm.vue')
-    },
-    {
-      path: '/customers/confirm/delete/:id', 
-      name: 'customers_confirm_delete', 
-      component: () => import('../views/customers/CustomerConfirmDelete.vue')
-    },
-    {
-      path: '/customer/dependencies/detail/:id',
-      name: 'customer_dependecy_detail',
-      component: () => import ('../views/customerDependencies/CustomerDependencyDetail.vue')
-    },
-    {
-      path: '/customer/dependencies/create/:id',
-      name: 'customer_dependecy_create',
-      component: () => import ('../views/customerDependencies/CustomerDependencyCreate.vue')
-    },
-    {
-      path: '/customer/dependencies/update/:id',
-      name: 'customer_dependecy_update',
-      component: () => import ('../views/customerDependencies/CustomerDependencyUpdate.vue')
-    },
-    {
-      path: '/customer/dependencies/delete/:id',
-      name: 'customer_dependecy_delete',
-      component: () => import ('../views/customerDependencies/CustomerDependencyConfirmDelete.vue')
+      children: [
+        {
+          path: '',
+          name: 'customers',
+          component: () => import('../views/customers/CustomerList.vue')
+        },
+        {
+          path: 'create', 
+          name: 'customers_create', 
+          component: () => import('../views/customers/CustomerForm.vue')
+        },
+        {
+          path: ':id',
+          children: [
+            {
+              path: 'detail', 
+              name: 'customers_detail', 
+              component: () => import('../views/customers/CustomerDetail.vue')
+            },
+            {
+              path: 'update', 
+              name: 'customers_update', 
+              component: () => import('../views/customers/CustomerForm.vue')
+            },
+            {
+              path: 'confirm/delete', 
+              name: 'customers_confirm_delete', 
+              component: () => import('../views/customers/CustomerConfirmDelete.vue')
+            },
+            {
+              path: 'dependencies',
+              children: [
+                {
+                  path: 'detail',
+                  name: 'customer_dependecy_detail',
+                  component: () => import ('../views/customerDependencies/CustomerDependencyDetail.vue')
+                },
+                {
+                  path: 'create',
+                  name: 'customer_dependecy_create',
+                  component: () => import ('../views/customerDependencies/CustomerDependencyCreate.vue')
+                },
+                {
+                  path: 'update',
+                  name: 'customer_dependecy_update',
+                  component: () => import ('../views/customerDependencies/CustomerDependencyUpdate.vue')
+                },
+                {
+                  path: 'confirm/delete',
+                  name: 'customer_dependecy_delete',
+                  component: () => import ('../views/customerDependencies/CustomerDependencyConfirmDelete.vue')
+                },
+              ]
+            },
+          ]
+        },
+      ]
     },
     {
       path: '/currencies',
