@@ -19,7 +19,7 @@ const handleLogin = async () => {
     
     try {
         authError.value = null;
-        await authStore.login(user.value)
+        await authStore.authenticate(user.value)
         const redirectRoute = route.query.redirect || { name: 'home' }
         router.push(redirectRoute)
     } catch (error) {

@@ -341,8 +341,7 @@ router.beforeEach(async (to) => {
   const refreshToken = localStorage.getItem('refriall_auth_refresh_token')
 
   if (!refreshToken && to.name !== 'login') {
-    authStore.isAuthenticated = false
-    localStorage.removeItem('refriall_auth_refresh_token')
+    authStore.$reset()
     return {
       name: 'login',
       query: { redirect: to.fullPath }
@@ -355,9 +354,7 @@ router.beforeEach(async (to) => {
       const isExpired = refreshDecoded.exp * 1000 < Date.now()
 
       if (isExpired && to.name !== 'login') {
-        authStore.isAuthenticated = false
-        localStorage.removeItem('refriall_auth_access_token')
-        localStorage.removeItem('refriall_auth_refresh_token')
+        authStore.$reset()
 
         return {
           name: 'login',
@@ -365,9 +362,7 @@ router.beforeEach(async (to) => {
         }
       }
     } catch (error) {
-      authStore.isAuthenticated = false
-      localStorage.removeItem('refriall_auth_access_token')
-      localStorage.removeItem('refriall_auth_refresh_token')
+      authStore.$reset()
     }
   }
 

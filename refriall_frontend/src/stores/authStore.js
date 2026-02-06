@@ -7,7 +7,7 @@ export const useAuthStore = defineStore('authStore', () => {
     const isLoadingAuth = ref(false)
     const isAuthenticated = ref(false)
 
-    const login = async (credentials) => {
+    const authenticate = async (credentials) => {
         try {
             // auth loading state
             isLoadingAuth.value = true
@@ -32,11 +32,11 @@ export const useAuthStore = defineStore('authStore', () => {
         }
     }
 
-    const logout = () => {
+    const $reset = () => {
         isAuthenticated.value = false
+        isLoadingAuth.value = false
         localStorage.removeItem('refriall_auth_access_token')
         localStorage.removeItem('refriall_auth_refresh_token')
-        router.push({name: 'login'})
     }
 
     const initAuth = () => {
@@ -48,7 +48,7 @@ export const useAuthStore = defineStore('authStore', () => {
         isAuthenticated,
         isLoadingAuth,
         initAuth,
-        login,
-        logout
+        authenticate,
+        $reset
     }
 })

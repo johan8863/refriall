@@ -6,10 +6,16 @@ import { navBar } from "../assets/js/bootstrap_classes/navBar";
 
 // local
 import { useAuthStore } from "../stores/authStore";
+import router from "../router";
 
 
 // store
 const authStore = useAuthStore()
+
+const logout = () => {
+    authStore.$reset()
+    router.push({name: 'login'})
+}
 
 </script>
 
@@ -72,7 +78,7 @@ const authStore = useAuthStore()
                 </ul>
             </div>
             <div class="ms-auto">
-                <button @click="authStore.logout()" class="btn btn-sm btn-outline-danger">Salir</button>
+                <button @click="logout" class="btn btn-sm btn-outline-danger">Salir</button>
             </div>
         </div>
     </nav>
