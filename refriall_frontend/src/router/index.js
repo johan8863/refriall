@@ -11,10 +11,10 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
       children: [
         {
           path: '',
+          name: 'home',
           component: OrderList,
         },
         {
