@@ -9,7 +9,7 @@ import { required, helpers } from '@vuelidate/validators'
 
 // app
 import { listAllCustomers } from '../../services/customer.service'
-import { kitService } from '../../services/kit.service'
+import { kitService } from '../../services/kitService'
 import { listItemsForSelect } from '../../services/item.service'
 import { listAllProviders } from '../../services/provider.service'
 import ItemTime from '../../components/ItemTime.vue'

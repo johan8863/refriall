@@ -4,7 +4,7 @@ import { onMounted, ref } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 
 // app
-import { detatilKit } from "../../services/kit.service";
+import { kitService } from "../../services/kitService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 
@@ -25,7 +25,7 @@ const route = useRoute();
 // loading the kit object
 onMounted(async () => {
     try {
-        const resp = await detatilKit(route.params.id);
+        const resp = await kitService.detailKit(route.params.id);
         kit.value = resp.data;
     } catch (error) {
         console.error('General error', error)

@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink, useRouter, useRoute } from "vue-router";
 
 // local
-import { postKit, putKit, detatilKit } from "../../services/kit.service";
+import { kitService } from "../../services/kitService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // third
@@ -52,7 +52,7 @@ const createKit = async (kit) => {
         if (await v$.value.$validate()) {
             // if front validations run,
             // post the object and redirect to its detail view
-            const { data } = await postKit(kit);
+            const { data } = await kitService.postKit(kit);
             router.push({name: 'kits_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -73,7 +73,7 @@ const updateKit = async (kit) => {
         // if front validations run,
         // put the object and redirect to its detail view
         if (await v$.value.$validate()) {
-            const { data } = await putKit(kit);
+            const { data } = await kitService.putKit(kit);
             router.push({name: 'kits_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -93,7 +93,7 @@ onMounted(async () => {
     try {
         const id = route.params.id;
         if (id) {
-            const { data } = await detatilKit(id);
+            const { data } = await kitService.detailKit(id);
             kit.value = data;
         }
     } catch (error) {

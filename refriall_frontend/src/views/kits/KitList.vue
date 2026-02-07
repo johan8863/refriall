@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 
 // app
-import { listKit, searchKits } from "../../services/kit.service";
+import { kitService } from "../../services/kitService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const kits = ref([]);
@@ -21,7 +21,7 @@ const searchTerm = ref('');
 const getKits = async (page = 1) => {
     isLoading.value = true;
     try {
-        const resp = await listKit(page);
+        const resp = await kitService.listKit(page);
         const data = resp.data;
         
         showNextButton.value = !!data.next;
@@ -84,7 +84,7 @@ const loadNextItems = async () => {
     if (hasSearched.value && searchTerm.value.trim()) {
         isLoading.value = true;
         try {
-            const resp = await searchKits(searchTerm.value, currentPage.value);
+            const resp = await kitService.searchKits(searchTerm.value, currentPage.value);
             const data = resp.data;
             kits.value = data.results;
             showNextButton.value = !!data.next;
