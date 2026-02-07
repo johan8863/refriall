@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 
 // app
-import { listBillsPagination, searchBills } from '../../services/bill.service';
+import { listBillsPagination, searchBills } from '../../services/billService';
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 
 const bills = ref([]);

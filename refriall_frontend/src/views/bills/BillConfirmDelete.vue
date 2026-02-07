@@ -5,7 +5,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 // app
-import { detailBill, deleteBill } from "../../services/bill.service";
+import { detailBill, deleteBill } from "../../services/billService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute();

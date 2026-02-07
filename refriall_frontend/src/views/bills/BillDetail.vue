@@ -4,7 +4,7 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 // app
-import { detailBill } from '../../services/bill.service';
+import { detailBill } from '../../services/billService';
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 
 // third

@@ -8,7 +8,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { helpers, required } from '@vuelidate/validators';
 
 // app
-import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
+import { detailBillUpdate, postBill, putBill } from "../../services/billService";
 import { customerService } from "../../services/customerService";
 import { orderService } from "../../services/orderService";
 import { providerService } from '../../services/providerService';
