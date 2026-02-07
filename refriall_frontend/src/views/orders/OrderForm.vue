@@ -11,7 +11,7 @@ import { required, helpers } from '@vuelidate/validators'
 import { listAllCustomers } from '../../services/customer.service'
 import { kitService } from '../../services/kitService'
 import { listItemsForSelect } from '../../services/item.service'
-import { listAllProviders } from '../../services/providerService'
+import { providerService } from '../../services/providerService'
 import ItemTime from '../../components/ItemTime.vue'
 import { orderService } from '../../services/orderService'
 import { listCustomerDependecy } from '../../services/customerDependency.service'
@@ -255,7 +255,7 @@ const loadData = async () => {
       listItemsForSelect(),
       listCustomerDependecy(),
       listCurrencies(),
-      listAllProviders()
+      providerService.listAllProviders()
     ])
 
     customers.value = respCustomers

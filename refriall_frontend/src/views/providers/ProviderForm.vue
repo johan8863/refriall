@@ -10,7 +10,7 @@ import { required, helpers, numeric } from "@vuelidate/validators";
 
 // app
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { detailProvider, postProvider, putProvider } from '../../services/providerService';
+import { providerService } from '../../services/providerService';
 
 // router utilities and handlers
 const router = useRouter();
@@ -102,7 +102,7 @@ const createProvider = async (provider) => {
 
   try {
     if (await v$.value.$validate()) {
-      const { data } = await postProvider(provider)
+      const { data } = await providerService.postProvider(provider)
       router.push({ name: 'providers_detail', params: { id: data.id } })
     }
   } catch (error) {
@@ -121,7 +121,7 @@ const updateProvider = async (provider) => {
     
   try {
     if (await v$.value.$validate()) {
-      const { data } = await putProvider(provider)
+      const { data } = await providerService.putProvider(provider)
       router.push({ name: 'providers_detail', params: { id: data.id } })
     }
   } catch (error) {
@@ -145,7 +145,7 @@ onMounted(async () => {
     try {
         const id = route.params.id
         if (id) {
-            const resp = await detailProvider(id)
+            const resp = await providerService.detailProvider(id)
             provider.value = resp.data
         }
     } catch (error) {

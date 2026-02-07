@@ -11,7 +11,7 @@ import { helpers, required } from '@vuelidate/validators';
 import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
 import { listCustomerOrdersNoBill } from "../../services/customer.service";
 import { orderService } from "../../services/orderService";
-import { listProviderCurrencyOrderNoBill } from '../../services/providerService';
+import { providerService } from '../../services/providerService';
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 import { listCurrencies } from '../../services/currency.service';
 
@@ -143,7 +143,7 @@ const chargeCustomersNoBill = async () => {
 const chargeProviderNoBill = async () => {
     bill.value.provider = ''
     orders.value = []
-    const respProviders = await listProviderCurrencyOrderNoBill(bill.value.currency);
+    const respProviders = await providerService.listProviderCurrencyOrderNoBill(bill.value.currency);
     providers.value = respProviders.data;
 }
 

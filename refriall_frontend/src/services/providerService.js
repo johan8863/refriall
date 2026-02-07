@@ -5,30 +5,12 @@ const urlProvider = providerAPIEnvs.providerUrl;
 const urlProviderListPagination = providerAPIEnvs.providerListPaginationUrl;
 const urlProviderCurrencyOrderNoBill = providerAPIEnvs.providerCurrencyOrderNoBillUrl;
 
-export const listProvider = (currentPage) => {
-    return apiBase.get(`${urlProviderListPagination}/?page=${currentPage}`);
-};
-
-export const listAllProviders = () => {
-    return apiBase.get(`${urlProvider}/`);
-};
-
-export const listProviderCurrencyOrderNoBill = (currency) => {
-    return apiBase.get(`${urlProviderCurrencyOrderNoBill}/${currency}/`)
-};
-
-export const detailProvider = (id) => {
-    return apiBase.get(`${urlProvider}/${id}/`);
-};
-
-export const postProvider = (provider) => {
-    return apiBase.post(`${urlProvider}/`, provider);
-};
-
-export const putProvider = (provider) => {
-    return apiBase.put(`${urlProvider}/${provider.id}/`, provider);
-};
-
-export const deleteProvider = (id) => {
-    apiBase.delete(`${urlProvider}/${id}/`);
-};
+export const providerService = {
+    listProvider: (currentPage) => apiBase.get(`${urlProviderListPagination}/?page=${currentPage}`),
+    listAllProviders: () => apiBase.get(`${urlProvider}/`),
+    listProviderCurrencyOrderNoBill: (currency) => apiBase.get(`${urlProviderCurrencyOrderNoBill}/${currency}/`),
+    detailProvider: (id) => apiBase.get(`${urlProvider}/${id}/`),
+    postProvider: (provider) => apiBase.post(`${urlProvider}/`, provider),
+    putProvider: (provider) => apiBase.put(`${urlProvider}/${provider.id}/`, provider),
+    deleteProvider: (id) => apiBase.delete(`${urlProvider}/${id}/`),
+}

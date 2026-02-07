@@ -74,7 +74,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 
 // app
-import { listProvider } from "../../services/providerService";
+import { providerService } from "../../services/providerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const providers = ref([]);
@@ -84,7 +84,7 @@ const showNextButton = ref(false);
 const showPrevButton = ref(false);
 
 const getProviders = async () => {
-    const resp = (await listProvider(currentPage.value)).data;
+    const resp = (await providerService.listProvider(currentPage.value)).data;
     
     showNextButton.value = false;
     if (resp.next) {

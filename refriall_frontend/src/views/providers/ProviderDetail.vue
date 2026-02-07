@@ -39,7 +39,7 @@ import { RouterLink, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
 
 // app
-import { detailProvider } from "../../services/providerService";
+import { providerService } from "../../services/providerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute();
@@ -60,7 +60,7 @@ const providerErrors = ref(null)
 
 onMounted(async () => {
     try {
-        const resp = await detailProvider(route.params.id);
+        const resp = await providerService.detailProvider(route.params.id);
         provider.value = await resp.data;
     } catch (error) {
         console.error('General error', error)

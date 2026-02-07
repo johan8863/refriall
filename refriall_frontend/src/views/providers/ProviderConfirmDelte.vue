@@ -5,7 +5,7 @@ import { onMounted, ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
 // app
-import { deleteProvider, detailProvider } from "../../services/providerService";
+import { providerService } from "../../services/providerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // main object
@@ -43,7 +43,7 @@ const router = useRouter();
 
 const delProvider = async (id) => {
     try {
-        await deleteProvider(id);
+        await providerService.deleteProvider(id);
         router.push({name: "providers"})
     } catch (error) {
         console.error('General error', error)
@@ -63,7 +63,7 @@ const delProvider = async (id) => {
 
 onMounted(async () => {
     try {
-        const resp = await detailProvider(route.params.id)
+        const resp = await providerService.detailProvider(route.params.id)
         provider.value = resp.data
     } catch (error) {
         if (error.response) {
