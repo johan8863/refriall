@@ -9,7 +9,7 @@ import { required, helpers } from '@vuelidate/validators'
 
 // app
 import { listAllCustomers } from '../../services/customer.service'
-import { getAllKits } from '../../services/kit.service'
+import { kitService } from '../../services/kit.service'
 import { listItemsForSelect } from '../../services/item.service'
 import { listAllProviders } from '../../services/provider.service'
 import ItemTime from '../../components/ItemTime.vue'
@@ -18,7 +18,7 @@ import { listCustomerDependecy } from '../../services/customerDependency.service
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { listCurrencies } from '../../services/currency.service'
 import { useOrderTotalComputed } from '../../composables/OrderComposable'
-import { orderErrorHandler } from '../../utils/errors/orderErrorHandler'
+import { errorHandler, objectNames } from '../../utils/errors/errorHandler'
 
 // main object
 const order = ref({
@@ -215,7 +215,7 @@ const updateOrder = async (order) => {
       router.push({ name: 'orders_detail', params: { id: data.id } })
     }
   } catch (error) {
-    orderErrorHandler(error, orderBackendErrors)
+    errorHandler(error, orderBackendErrors, objectNames.order)
   }
 }
 
@@ -228,7 +228,7 @@ const createOrder = async (order) => {
       router.push({ name: 'orders_detail', params: { id: data.id } })
     }
   } catch (error) {
-    orderErrorHandler(error, orderBackendErrors)
+    errorHandler(error, orderBackendErrors, objectNames.order)
   }
 }
 
@@ -251,7 +251,7 @@ const loadData = async () => {
       { data: respProviders }
     ] = await Promise.all([
       listAllCustomers(),
-      getAllKits(),
+      kitService.getAllKits(),
       listItemsForSelect(),
       listCustomerDependecy(),
       listCurrencies(),
@@ -265,7 +265,7 @@ const loadData = async () => {
     currencies.value = respCurrencies
     providers.value = respProviders
   } catch (error) {
-    orderErrorHandler(error, errorMessage)
+    errorHandler(error, errorMessage)
   }
 }
 
@@ -275,14 +275,18 @@ onMounted(async () => {
 
   const id = route.params.id
   if (id) {
-    const { data } = await orderService.detailOrderUpdate(id)
-    order.value = data
-    order.value.itemtime_set = order.value.itemtime_set.map((itemTime) => {
-      return {
-        item: itemTime.item,
-        times: itemTime.times
-      }
-    })
+    try {
+      const { data } = await orderService.detailOrderUpdate(id)
+      order.value = data
+      order.value.itemtime_set = order.value.itemtime_set.map((itemTime) => {
+        return {
+          item: itemTime.item,
+          times: itemTime.times
+        }
+      })      
+    } catch (error) {
+      errorHandler(error, orderBackendErrors, objectNames.order)
+    }
   } else {
     // create initial empty objects for itemtime
     createItemTime()

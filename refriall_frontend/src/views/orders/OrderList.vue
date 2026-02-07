@@ -6,6 +6,7 @@ import { RouterLink } from "vue-router";
 // app
 import { orderService } from "../../services/order.service";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+import { errorHandler, objectNames } from "../../utils/errors/errorHandler";
 
 const orders = ref([]);
 const currentPage = ref(1);
@@ -29,7 +30,7 @@ const getOrders = async (page = 1) => {
         orders.value = data.results;
         orderBackendErrors.value = null;
     } catch (error) {
-        handleError(error);
+        errorHandler(error, orderBackendErrors, objectNames.order)
     } finally {
         isLoading.value = false;
     }
@@ -64,7 +65,7 @@ const handleSearch = async () => {
         orderBackendErrors.value = null;
         
     } catch (error) {
-        handleError(error);
+        errorHandler(error, orderBackendErrors, objectNames.order)
     } finally {
         isLoading.value = false;
     }
