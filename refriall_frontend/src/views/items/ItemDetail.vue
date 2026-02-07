@@ -5,7 +5,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 
 // app
-import { detailItem } from "../../services/item.service";
+import { itemService } from "../../services/itemService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 
@@ -20,11 +20,9 @@ const item = ref({
 
 const itemBackendErrors = ref(null)
 
-const notFound = ref(null);
-
 onMounted(async () => {
     try {
-        const resp = await detailItem(route.params.id);
+        const resp = await itemService.detailItem(route.params.id);
         item.value = resp.data;
     } catch (error) {
         console.error('General error', error)

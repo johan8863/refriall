@@ -4,7 +4,7 @@ import { RouterLink, useRouter, useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 
 // app
-import { postItem, putItem, getItem } from "../../services/item.service";
+import { itemService } from "../../services/itemService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // third
@@ -70,7 +70,7 @@ const v$ = useVuelidate(rules, item);
 const createItem = async (item) => {
     try {
         if (await v$.value.$validate()) {
-            const { data } = await postItem(item);
+            const { data } = await itemService.postItem(item);
             router.push({name: 'items_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -89,7 +89,7 @@ const createItem = async (item) => {
 const updateItem = async (item) => {
     try {
         if (await v$.value.$validate()) {
-            const { data } = await putItem(item);
+            const { data } = await itemService.putItem(item);
             router.push({name: 'items_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -109,7 +109,7 @@ const updateItem = async (item) => {
 onMounted(async () => {
     const id = route.params.id;
     if (id) {
-        const { data } = await getItem(id);
+       (id);
         item.value = data;
     }
 });

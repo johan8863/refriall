@@ -2,7 +2,7 @@
 
 import { ref, onMounted } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
-import { deleteItem, detailItem } from "../../services/item.service";
+import { itemService } from "../../services/itemService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 
@@ -20,7 +20,7 @@ const errorMessage = ref(null)
 
 onMounted(async () => {
     try {
-        const resp = await detailItem(route.params.id);
+        const resp = await itemService.detailItem(route.params.id);
         item.value = resp.data;
     } catch (error) {
         console.log('Error status:', error.response.status)
@@ -38,7 +38,7 @@ onMounted(async () => {
 // delete the item object
 const delItem = async (id) => {
     try {
-        await deleteItem(id);
+        await itemService.deleteItem(id);
         router.push({name: 'items'});
     } catch (error) {
         console.log('Error status:', error.response.status)

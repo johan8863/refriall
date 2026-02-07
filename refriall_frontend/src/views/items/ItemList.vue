@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 
 // app
-import { listItem, searchItems } from "../../services/item.service";
+import { itemService } from "../../services/itemService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const items = ref([]);
@@ -21,7 +21,7 @@ const searchTerm = ref('');
 const getItems = async (page = 1) => {
     isLoading.value = true;
     try {
-        const resp = await listItem(page);
+        const resp = await itemService.listItem(page);
         const data = resp.data;
         
         showNextButton.value = !!data.next;
@@ -55,7 +55,7 @@ const handleSearch = async () => {
     hasSearched.value = true;
     
     try {
-        const resp = await searchItems(searchTerm.value);
+        const resp = await itemService.searchItems(searchTerm.value);
         const data = resp.data;
         
         items.value = data.results;
@@ -84,7 +84,7 @@ const loadNextItems = async () => {
     if (hasSearched.value && searchTerm.value.trim()) {
         isLoading.value = true;
         try {
-            const resp = await searchItems(searchTerm.value, currentPage.value);
+            const resp = await itemService.searchItems(searchTerm.value, currentPage.value);
             const data = resp.data;
             items.value = data.results;
             showNextButton.value = !!data.next;
@@ -104,7 +104,7 @@ const loadPrevItems = async () => {
     if (hasSearched.value && searchTerm.value.trim()) {
         isLoading.value = true;
         try {
-            const resp = await searchItems(searchTerm.value, currentPage.value);
+            const resp = await itemService.searchItems(searchTerm.value, currentPage.value);
             const data = resp.data;
             items.value = data.results;
             showNextButton.value = !!data.next;
