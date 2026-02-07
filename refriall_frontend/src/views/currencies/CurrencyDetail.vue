@@ -5,7 +5,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 
 // app
-import { detailCurrency } from "../../services/currencyService";
+import { currencyService } from "../../services/currencyService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const currency = ref({
@@ -19,7 +19,7 @@ const route = useRoute();
 
 onMounted(async () => {
     try {
-        const response = await detailCurrency(route.params.id);
+        const response = await currencyService.detailCurrency(route.params.id);
         currency.value = response.data
     } catch (error) {
         console.error('General error', error)

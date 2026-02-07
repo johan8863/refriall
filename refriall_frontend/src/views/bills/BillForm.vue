@@ -13,7 +13,7 @@ import { customerService } from "../../services/customerService";
 import { orderService } from "../../services/orderService";
 import { providerService } from '../../services/providerService';
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { listCurrencies } from '../../services/currencyService';
+import { currencyService } from '../../services/currencyService';
 
 
 const bill = ref({
@@ -205,7 +205,7 @@ const pushAllOrders = (event) => {
 
 onMounted(async () => {
     // get currencies
-    const respCurrencies = await listCurrencies();
+    const respCurrencies = await currencyService.listCurrencies();
     currencies.value = respCurrencies.data;
     
     const id = route.params.id;

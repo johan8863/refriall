@@ -6,7 +6,7 @@ import { RouterLink } from "vue-router";
 
 // app
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { listCurrencies } from "../../services/currencyService";
+import { currencyService } from "../../services/currencyService";
 
 const currencies = ref([])
 
@@ -14,7 +14,7 @@ const currencyBackenderror = ref(null);
 
 const getCurrencies = async () => {
     try {
-        currencies.value = (await listCurrencies()).data
+        currencies.value = (await currencyService.listCurrencies()).data
     } catch (error) {
         console.error('General error: ', error);
         if (error.response) {

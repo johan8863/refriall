@@ -16,7 +16,7 @@ import ItemTime from '../../components/ItemTime.vue'
 import { orderService } from '../../services/orderService'
 import { customerDependecyService } from '../../services/customerDependencyService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
-import { listCurrencies } from '../../services/currencyService'
+import { currencyService } from '../../services/currencyService'
 import { useOrderTotalComputed } from '../../composables/OrderComposable'
 import { errorHandler, objectNames } from '../../utils/errors/errorHandler'
 
@@ -254,7 +254,7 @@ const loadData = async () => {
       kitService.getAllKits(),
       itemService.listItemsForSelect(),
       customerDependecyService.listCustomerDependecy(),
-      listCurrencies(),
+      currencyService.listCurrencies(),
       providerService.listAllProviders()
     ])
 

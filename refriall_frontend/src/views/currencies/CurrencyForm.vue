@@ -10,7 +10,7 @@ import { required, helpers } from "@vuelidate/validators";
 
 // app
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { detailCurrency, postCurrency, putCurrency } from "../../services/currencyService";
+import { currencyService } from "../../services/currencyService";
 
 // router utilities and handlers
 const router = useRouter();
@@ -60,7 +60,7 @@ const createCurrency = async (currency) => {
             // set the currency name to upper case and
             // post the object and redirect to its detail view
             currenyNameUpper(currency);
-            const { data } = await postCurrency(currency);
+            const { data } = await currencyService.postCurrency(currency);
             router.push({name: 'currency_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -82,7 +82,7 @@ const updateCurrency = async (currency) => {
             // set the currency name to upper case and
             // put the object and redirect to its detail view
             currenyNameUpper(currency);
-            const { data } = await putCurrency(currency);
+           (currency);
             router.push({name: 'currency_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -103,7 +103,7 @@ onMounted(async () => {
         // if id, it means the view was accessed to update the currency attrs,
         // therefore, the matching id object is loaded
         if (id) {
-            currency.value = (await detailCurrency(id)).data;
+            currency.value = (await currencyService.detailCurrency(id)).data;
         }
     } catch (error) {
         currencyBackendErrors.value = error.response.data;

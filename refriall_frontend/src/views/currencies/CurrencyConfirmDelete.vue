@@ -4,7 +4,7 @@ import { onMounted, ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
 // app
-import { deleteCurrency, detailCurrency } from "../../services/currencyService";
+import { currencyService } from "../../services/currencyService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // router utilities to redirect the view and catch route params
@@ -22,7 +22,7 @@ const errorMessage = ref(null)
 // delete the currency object
 const delCurrency = async (id) => {
     try {
-        await deleteCurrency(id);
+        await currencyService.deleteCurrency(id);
         router.push({name: 'currencies'});
     } catch (error) {
         console.error('General error: ', error)
@@ -45,7 +45,7 @@ const delCurrency = async (id) => {
 
 onMounted(async () => {
     try {
-        currency.value = (await detailCurrency(route.params.id)).data;
+        currency.value = (await currencyService.detailCurrency(route.params.id)).data;
     } catch (error) {
         if (error.response) {
             console.log('Error status:', error.response.status)
