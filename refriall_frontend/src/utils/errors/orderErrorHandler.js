@@ -3,7 +3,7 @@ export const orderErrorHandler = (sourceError, displayError) => {
     const { data, status } = sourceError.response
     switch (status) {
       case 400:
-        displayError.value = 'Datos faltantes o incorrectos.'
+        displayError.value = data || data.detail
         break
       case 401:
         displayError.value = 'No autorizado, inicie sesión nuevamente.'

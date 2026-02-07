@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 
 // app
-import { listOrder, searchOrders } from "../../services/order.service";
+import { orderService } from "../../services/order.service";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const orders = ref([]);
@@ -21,7 +21,7 @@ const searchTerm = ref('');
 const getOrders = async (page = 1) => {
     isLoading.value = true;
     try {
-        const resp = await listOrder(page);
+        const resp = await orderService.listOrder(page);
         const data = resp.data;
         
         showNextButton.value = !!data.next;
@@ -55,7 +55,7 @@ const handleSearch = async () => {
     hasSearched.value = true;
     
     try {
-        const resp = await searchOrders(searchTerm.value);
+        const resp = await orderService.searchOrders(searchTerm.value);
         const data = resp.data;
         
         orders.value = data.results;
@@ -83,7 +83,7 @@ const loadNextItems = async () => {
     currentPage.value += 1;
     if (hasSearched.value && searchTerm.value.trim()) {
         // search purpose
-        const resp = await searchOrders(searchTerm.value, currentPage.value);
+        const resp = await orderService.searchOrders(searchTerm.value, currentPage.value);
         const data = resp.data;
         orders.value = data.results; // o bills.value
         showNextButton.value = !!data.next;
@@ -98,7 +98,7 @@ const loadPrevItems = async () => {
     currentPage.value -= 1;
     if (hasSearched.value && searchTerm.value.trim()) {
         // search purpose
-        const resp = await searchOrders(searchTerm.value, currentPage.value); // o searchBills
+        const resp = await orderService.searchOrders(searchTerm.value, currentPage.value); // o searchBills
         const data = resp.data;
         orders.value = data.results; // o bills.value
         showNextButton.value = !!data.next;

@@ -9,16 +9,16 @@ import { required, helpers } from '@vuelidate/validators'
 
 // app
 import { listAllCustomers } from '../../services/customer.service'
-import { listKit } from '../../services/kit.service'
+import { getAllKits } from '../../services/kit.service'
 import { listItemsForSelect } from '../../services/item.service'
 import { listAllProviders } from '../../services/provider.service'
 import ItemTime from '../../components/ItemTime.vue'
-import { detailOrderUpdate } from '../../services/order.service'
+import { orderService } from '../../services/order.service'
 import { listCustomerDependecy } from '../../services/customerDependency.service'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { listCurrencies } from '../../services/currency.service'
 import { useOrderTotalComputed } from '../../composables/OrderComposable'
-import { postOrder, putOrder } from '../../services/order.service'
+import { orderErrorHandler } from '../../utils/errors/orderErrorHandler'
 
 // main object
 const order = ref({
@@ -51,50 +51,53 @@ const order = ref({
   customer_personal_id: '',
   checked_by: '',
   aproved_by: ''
-});
-
+})
 
 // secondary backend objects
-const customers = ref([]);
-const dependencies = ref([]);
-const kits = ref([]);
-const items = ref([]);
-const currencies = ref([]);
-const providers = ref([]);
-
+const customers = ref([])
+const dependencies = ref([])
+const kits = ref([])
+const items = ref([])
+const currencies = ref([])
+const providers = ref([])
 
 // router utilities and handlers
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 
-const goToOrders = () => router.push({name: 'orders'})
-const goToOrderDetail = () => router.push({name: 'orders_detail', params: {id: order.value.id}})
-const goBack = () => !order.value.id ? goToOrders() : goToOrderDetail()
+const goToOrders = () => router.push({ name: 'orders' })
+const goToOrderDetail = () => router.push({ name: 'orders_detail', params: { id: order.value.id } })
+const goBack = () => (!order.value.id ? goToOrders() : goToOrderDetail())
 
 // customs rules
-const customerOrDependency = () => 
-  ( order.value.customer && !order.value.customer_dependency ) || 
-  ( !order.value.customer && order.value.customer_dependency )
+const customerOrDependency = () =>
+  (order.value.customer && !order.value.customer_dependency) ||
+  (!order.value.customer && order.value.customer_dependency)
 
 const minimalItems = () => order.value.itemtime_set.length > 0
 
-const atLeastOneModality = () => 
+const atLeastOneModality = () =>
   order.value.check_diagnosis ||
   order.value.repair ||
   order.value.install ||
-  order.value.maintenance 
-
+  order.value.maintenance
 
 // validation rules
 const rules = {
   provider: {
-    required: helpers.withMessage('El prestador es requerido.', required),
+    required: helpers.withMessage('El prestador es requerido.', required)
   },
   customer: {
-    customerOrDependency: helpers.withMessage('Debe seleccionar un cliente o una dependencia, no ambos.', customerOrDependency),
+    customerOrDependency: helpers.withMessage(
+      'Debe seleccionar un cliente o una dependencia, no ambos.',
+      customerOrDependency
+    )
   },
   customer_dependency: {
-    customerOrDependency: helpers.withMessage('Debe seleccionar un cliente o una dependencia, no ambos.', customerOrDependency),
+    customerOrDependency: helpers.withMessage(
+      'Debe seleccionar un cliente o una dependencia, no ambos.',
+      customerOrDependency
+    )
   },
   symptom: {
     required: helpers.withMessage('El síntoma es requerido.', required)
@@ -115,7 +118,10 @@ const rules = {
     required: helpers.withMessage('La moneda es requerida.', required)
   },
   check_diagnosis: {
-    atLeastOneModality: helpers.withMessage('Debe seleccionar al menos una modalidad.', atLeastOneModality)
+    atLeastOneModality: helpers.withMessage(
+      'Debe seleccionar al menos una modalidad.',
+      atLeastOneModality
+    )
   },
   kit: {
     required: helpers.withMessage('El equipo es requerido.', required)
@@ -138,12 +144,10 @@ const rules = {
   itemtime_set: {
     minimalItems: helpers.withMessage('Debe seleccionar al menos un artículo.', minimalItems)
   }
-};
-
+}
 
 // vuelidate object
-const v$ = useVuelidate(rules, order);
-
+const v$ = useVuelidate(rules, order)
 
 // order object to be filled with backend errors
 const orderBackendErrors = ref({
@@ -177,11 +181,10 @@ const orderBackendErrors = ref({
   checked_by: [],
   aproved_by: [],
   non_field_errors: []
-});
-
+})
 
 // preparation of the itemtime_set order property
-const createItemTime = (elements=12) => {
+const createItemTime = (elements = 12) => {
   // create 12 elements by default to iterate in the create initial form
   // the binding to the "Add item" button can be called with a lesser value
   for (let index = 0; index < elements; index++) {
@@ -190,105 +193,89 @@ const createItemTime = (elements=12) => {
       times: 1
     })
   }
-};
-
+}
 
 // computed composable property to calculate value of the order
 // as its being added items
 const { orderTotalComputed } = useOrderTotalComputed(order, items)
 
-
 // delete an item from the form by removing it
 // from the order object
 const deleteItem = (index) => {
   order.value.itemtime_set.splice(index, 1)
-};
+}
 
-
-const onSubmit = () => order.value.id ? updateOrder(order) : createOrder(order)
+const onSubmit = () => (order.value.id ? updateOrder(order) : createOrder(order))
 
 const updateOrder = async (order) => {
   try {
     if (await v$.value.$validate()) {
       order.value.itemtime_set = order.value.itemtime_set.filter((x) => x.item > 0)
-      const { data } = await putOrder(order.value)
+      const { data } = await orderService.putOrder(order.value)
       router.push({ name: 'orders_detail', params: { id: data.id } })
     }
   } catch (error) {
-    console.error('General erro', error)
-    if (error.response) {
-      orderBackendErrors.value = error.response.data
-    } else {
-      orderBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
-    console.log(orderBackendErrors.value)
+    orderErrorHandler(error, orderBackendErrors)
   }
 }
 
 const createOrder = async (order) => {
   try {
+    // only charge itemtime objects with values
     order.value.itemtime_set = order.value.itemtime_set.filter((x) => x.item > 0)
     if (await v$.value.$validate()) {
-      const { data } = await postOrder(order.value)
+      const { data } = await orderService.postOrder(order.value)
       router.push({ name: 'orders_detail', params: { id: data.id } })
     }
   } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      orderBackendErrors.value = error.response.data
-      console.log('orderBackendErrors', orderBackendErrors.value);
-    } else {
-      orderBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
-    console.log(orderBackendErrors.value)
+    orderErrorHandler(error, orderBackendErrors)
   }
 }
 
 const clearCustomer = () => {
   order.value.customer = ''
-};
-
+}
 
 const clearCustomerDependency = () => {
   order.value.customer_dependency = ''
-};
-
+}
 
 const loadData = async () => {
-  // get customers
-  customers.value = (await listAllCustomers()).data
-  
-  // get kits
-  const respKits = (await listKit()).data
-  kits.value = respKits.results
-  
-  // get items
-  const respItems = await listItemsForSelect()
-  items.value = respItems.data
+  try {
+    const [
+      { data: respCustomers },
+      { data: respKits },
+      { data: respItems },
+      { data: respDependencies },
+      { data: respCurrencies },
+      { data: respProviders }
+    ] = await Promise.all([
+      listAllCustomers(),
+      getAllKits(),
+      listItemsForSelect(),
+      listCustomerDependecy(),
+      listCurrencies(),
+      listAllProviders()
+    ])
 
-  // get dependencies
-  const respDependencies = await listCustomerDependecy()
-  dependencies.value = respDependencies.data
-
-  // get currencies
-  const respCurrencies = await listCurrencies()
-  currencies.value = respCurrencies.data;
-
-  // get providers
-  const respproviders = await listAllProviders()
-  providers.value = respproviders.data;
-  
-  
-};
-
+    customers.value = respCustomers
+    kits.value = respKits
+    items.value = respItems
+    dependencies.value = respDependencies
+    currencies.value = respCurrencies
+    providers.value = respProviders
+  } catch (error) {
+    orderErrorHandler(error, errorMessage)
+  }
+}
 
 // on mounted cycle
 onMounted(async () => {
   loadData()
-  
+
   const id = route.params.id
   if (id) {
-    const { data } = await detailOrderUpdate(id)
+    const { data } = await orderService.detailOrderUpdate(id)
     order.value = data
     order.value.itemtime_set = order.value.itemtime_set.map((itemTime) => {
       return {
@@ -300,8 +287,7 @@ onMounted(async () => {
     // create initial empty objects for itemtime
     createItemTime()
   }
-});
-
+})
 </script>
 
 <template>
@@ -336,45 +322,41 @@ onMounted(async () => {
           </p>
         </span>
         <span v-if="orderBackendErrors.message">
-          <p
-            class="form-text text-danger">
+          <p class="form-text text-danger">
             {{ orderBackendErrors.message }}
           </p>
         </span>
 
         <!-- provider control -->
         <div class="col-md-3 mb-2">
-            <label for="provider" class="form-label">Prestador</label>
-              <select
-                autofocus
-                id="provider"
-                class="form-select form-select-sm"
-                v-model.trim="order.provider"
-                @blur="v$.provider.$touch">
-                <option v-for="provider in providers" :key="provider.id" :value="provider.id">
-                  {{ provider.first_name }}
-                </option>
-              </select>
+          <label for="provider" class="form-label">Prestador</label>
+          <select
+            autofocus
+            id="provider"
+            class="form-select form-select-sm"
+            v-model.trim="order.provider"
+            @blur="v$.provider.$touch"
+            >
+            <option v-for="provider in providers" :key="provider.id" :value="provider.id">
+              {{ provider.first_name }}
+            </option>
+          </select>
+          
+          <!-- frontend validations -->
+          <p class="form-text text-danger" v-for="error in v$.provider.$errors" :key="error.$uid">
+            {{ error.$message }}
+          </p>
 
-              <!-- frontend validations -->
-              <p
-                class="form-text text-danger"
-                v-for="error in v$.provider.$errors"
-                :key="error.$uid">
-                {{ error.$message }}
-              </p>
-
-              <!-- backend validations -->
-              <span v-if="orderBackendErrors.provider">
-                <p
-                  class="form-text text-danger"
-                  v-for="(error, i) in orderBackendErrors.provider"
-                  :key="i">
-                    {{ error }}
-                </p>
-              </span>
-
-
+          <!-- backend validations -->
+          <span v-if="orderBackendErrors.provider">
+            <p
+              class="form-text text-danger"
+              v-for="(error, i) in orderBackendErrors.provider"
+              :key="i"
+            >
+              {{ error }}
+            </p>
+          </span>
         </div>
 
         <!-- customer control -->
@@ -387,17 +369,19 @@ onMounted(async () => {
                 id="customer"
                 class="form-select form-select-sm"
                 v-model.trim="order.customer"
-                @blur="v$.customer.$touch">
+                @blur="v$.customer.$touch"
+                >
                 <option v-for="customer in customers" :key="customer.id" :value="customer.id">
                   {{ customer.name }}
                 </option>
               </select>
-
+              
               <!-- frontend validations -->
               <p
                 class="form-text text-danger"
                 v-for="error in v$.customer.$errors"
-                :key="error.$uid">
+                :key="error.$uid"
+              >
                 {{ error.$message }}
               </p>
 
@@ -406,17 +390,17 @@ onMounted(async () => {
                 <p
                   class="form-text text-danger"
                   v-for="(error, i) in orderBackendErrors.customer"
-                  :key="i">
-                    {{ error }}
+                  :key="i"
+                >
+                  {{ error }}
                 </p>
               </span>
             </div>
 
             <div class="col-md-1">
-              <button
-                type="button"
-                class="btn btn-sm btn-danger"
-                @click="clearCustomer()">X</button>
+              <button type="button" class="btn btn-sm btn-danger" @click="clearCustomer()">
+                X
+              </button>
             </div>
           </div>
         </div>
@@ -429,11 +413,13 @@ onMounted(async () => {
               <select
                 id="customer_dependency"
                 class="form-select form-select-sm"
-                v-model.trim="order.customer_dependency">
+                v-model.trim="order.customer_dependency"
+              >
                 <option
                   v-for="dependency in dependencies"
                   :key="dependency.id"
-                  :value="dependency.id">
+                  :value="dependency.id"
+                >
                   {{ dependency.name }}
                 </option>
               </select>
@@ -443,8 +429,9 @@ onMounted(async () => {
                 <p
                   class="form-text text-danger"
                   v-for="(error, i) in orderBackendErrors.customer_dependency"
-                  :key="i">
-                    {{ error }}
+                  :key="i"
+                >
+                  {{ error }}
                 </p>
               </span>
             </div>
@@ -452,7 +439,10 @@ onMounted(async () => {
               <button
                 type="button"
                 class="btn btn-sm btn-danger"
-                @click="clearCustomerDependency()">X</button>
+                @click="clearCustomerDependency()"
+              >
+                X
+              </button>
             </div>
           </div>
         </div>
@@ -465,13 +455,11 @@ onMounted(async () => {
             class="form-control"
             id="symptom"
             v-model.trim="order.symptom"
-            @blur="v$.symptom.$touch"/>
-
+            @blur="v$.symptom.$touch"
+          />
+            
           <!-- frontend validations -->
-          <p
-            class="form-text text-danger"
-            v-for="error in v$.symptom.$errors"
-            :key="error.$uid">
+          <p class="form-text text-danger" v-for="error in v$.symptom.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
@@ -480,8 +468,9 @@ onMounted(async () => {
             <p
               class="form-text text-danger"
               v-for="(error, i) in orderBackendErrors.symptom"
-              :key="i">
-                {{ error }}
+              :key="i"
+            >
+              {{ error }}
             </p>
           </span>
         </div>
@@ -494,22 +483,17 @@ onMounted(async () => {
             class="form-control"
             id="flaw"
             v-model.trim="order.flaw"
-            @blur="v$.flaw.$touch"/>
-
+            @blur="v$.flaw.$touch"
+          />
+            
           <!-- frontend validations -->
-          <p
-            class="form-text text-danger"
-            v-for="error in v$.flaw.$errors"
-            :key="error.$uid">
+          <p class="form-text text-danger" v-for="error in v$.flaw.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
           <!-- backend validations -->
           <span v-if="orderBackendErrors.flaw">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.flaw"
-              :key="i">
+            <p class="form-text text-danger" v-for="(error, i) in orderBackendErrors.flaw" :key="i">
               {{ error }}
             </p>
           </span>
@@ -523,23 +507,26 @@ onMounted(async () => {
             class="form-control"
             id="repair_description"
             v-model.trim="order.repair_description"
-            @blur="v$.repair_description.$touch"/>
-
+            @blur="v$.repair_description.$touch"
+          />
+            
           <!-- frontend validations -->
-            <p
-              class="form-text text-danger"
-              v-for="error in v$.repair_description.$errors"
-              :key="error.$uid">
-                {{ error.$message }}
-            </p>
+          <p
+            class="form-text text-danger"
+            v-for="error in v$.repair_description.$errors"
+            :key="error.$uid"
+          >
+            {{ error.$message }}
+          </p>
 
           <!-- backend validations -->
           <span v-if="orderBackendErrors.repair_description">
             <p
               class="form-text text-danger"
               v-for="(error, i) in orderBackendErrors.repair_description"
-              :key="i">
-                {{ error }}
+              :key="i"
+            >
+              {{ error }}
             </p>
           </span>
         </div>
@@ -552,23 +539,22 @@ onMounted(async () => {
             class="form-control"
             id="folio"
             v-model.trim="order.folio"
-            @blur="v$.folio.$touch"/>
-
+            @blur="v$.folio.$touch"
+          />
+            
           <!-- frontend errors -->
-          <p
-            class="form-text text-danger"
-            v-for="error in v$.folio.$errors"
-            :key="error.$uid">
-              {{ error.$message }}
-            </p>
+          <p class="form-text text-danger" v-for="error in v$.folio.$errors" :key="error.$uid">
+            {{ error.$message }}
+          </p>
 
           <!-- backend errors -->
           <span v-if="orderBackendErrors.folio">
             <p
               class="form-text text-danger"
               v-for="(error, i) in orderBackendErrors.folio"
-              :key="i">
-                {{ error }}
+              :key="i"
+            >
+              {{ error }}
             </p>
           </span>
         </div>
@@ -579,16 +565,15 @@ onMounted(async () => {
             id="support"
             class="form-select"
             v-model.trim="order.support"
-            @blur="v$.support.$touch">
-              <option value="t">Taller</option>
-              <option value="i">In Situ</option>
+            @blur="v$.support.$touch"
+          >
+            <option value="t">Taller</option>
+            <option value="i">In Situ</option>
           </select>
+          
           <!-- frontend errors -->
-          <p
-            class="form-text text-danger"
-            v-for="error in v$.support.$errors"
-            :key="error.$uid">
-              {{ error.$message }}
+          <p class="form-text text-danger" v-for="error in v$.support.$errors" :key="error.$uid">
+            {{ error.$message }}
           </p>
 
           <!-- backend errors -->
@@ -596,8 +581,9 @@ onMounted(async () => {
             <p
               class="form-text text-danger"
               v-for="(error, i) in orderBackendErrors.support"
-              :key="i">
-                {{ error }}
+              :key="i"
+            >
+              {{ error }}
             </p>
           </span>
         </div>
@@ -609,29 +595,29 @@ onMounted(async () => {
             id="currency"
             class="form-select form-select-sm"
             v-model.number="order.currency"
-            @blur="v$.currency.$touch">
-            <option
-              v-for="currency in currencies"
-              :key="currency.id"
-              :value="currency.id">{{ currency.name }}</option>            
+            @blur="v$.currency.$touch"
+          >
+            <option v-for="currency in currencies" :key="currency.id" :value="currency.id">
+              {{ currency.name }}
+            </option>
           </select>
           <!-- frontend validations -->
-          <p
-            class="form-text text-danger"
-            v-for="error in v$.currency.$errors"
-            :key="error.$uuid">
+          <p class="form-text text-danger" v-for="error in v$.currency.$errors" :key="error.$uuid">
             {{ error.$message }}
           </p>
           <!-- backend validations -->
           <span v-if="orderBackendErrors.currency">
-            <p class="form-text text-danger" v-for="(error, i) in orderBackendErrors.currency" :key="i">
+            <p
+              class="form-text text-danger"
+              v-for="(error, i) in orderBackendErrors.currency"
+              :key="i"
+            >
               {{ error }}
             </p>
           </span>
         </div>
 
         <div class="row mt-2">
-
           <!-- check_diagnosis control -->
           <div class="col-md-2 mb-2">
             <label for="check_diagnosis">Rev/Diagnóstico</label>
@@ -639,14 +625,16 @@ onMounted(async () => {
               type="checkbox"
               id="check_diagnosis"
               class="form-check"
-              v-model.trim="order.check_diagnosis"/>
-              <!-- frontend validations -->
-              <p
-                class="form-text text-danger"
-                v-for="error in v$.check_diagnosis.$errors"
-                :key="error.$uid">
-                {{ error.$message }}
-              </p>
+              v-model.trim="order.check_diagnosis"
+            />
+            <!-- frontend validations -->
+            <p
+              class="form-text text-danger"
+              v-for="error in v$.check_diagnosis.$errors"
+              :key="error.$uid"
+            >
+              {{ error.$message }}
+            </p>
           </div>
 
           <!-- repair control -->
@@ -672,32 +660,29 @@ onMounted(async () => {
             />
           </div>
           <div class="col-md-4"></div>
-          
         </div>
-        
 
         <!-- kit control -->
         <div class="col-md-3 mb-2">
           <label for="kit">Equipo</label>
-          <select id="kit" class="form-select" v-model.trim="order.kit" @blur="v$.kit.$touch">
+          <select
+            id="kit"
+            class="form-select"
+            v-model.trim="order.kit"
+            @blur="v$.kit.$touch"
+          >
             <option v-for="kit in kits" :key="kit.id" :value="kit.id">{{ kit.name }}</option>
           </select>
-
+          
           <!-- frontend validations -->
-          <p
-            class="form-text text-danger"
-            v-for="error in v$.kit.$errors"
-            :key="error.$uid">
+          <p class="form-text text-danger" v-for="error in v$.kit.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
           <!-- backend validations -->
           <span v-if="orderBackendErrors.kit">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.kit"
-              :key="i">
-                {{ error }}
+            <p class="form-text text-danger" v-for="(error, i) in orderBackendErrors.kit" :key="i">
+              {{ error }}
             </p>
           </span>
         </div>
@@ -710,13 +695,11 @@ onMounted(async () => {
             class="form-control"
             id="kit_brand"
             v-model.trim="order.kit_brand"
-            @blur="v$.kit_brand.$touch" />
-
+            @blur="v$.kit_brand.$touch"
+          />
+            
           <!-- frontend validations -->
-          <p
-            class="form-text text-danger"
-            v-for="error in v$.kit_brand.$errors"
-            :key="error.$uid">
+          <p class="form-text text-danger" v-for="error in v$.kit_brand.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
@@ -725,8 +708,9 @@ onMounted(async () => {
             <p
               class="form-text text-danger"
               v-for="(error, i) in orderBackendErrors.kit_brand"
-              :key="i">
-                {{ error }}
+              :key="i"
+            >
+              {{ error }}
             </p>
           </span>
         </div>
@@ -739,14 +723,12 @@ onMounted(async () => {
             class="form-control"
             id="kit_model"
             v-model.trim="order.kit_model"
-            @blur="v$.kit_model.$touch" />
-
+            @blur="v$.kit_model.$touch"
+          />
+            
           <!-- frontend validations -->
-          <p
-            class="form-text text-danger"
-            v-for="error in v$.kit_model.$errors"
-            :key="error.$uid">
-              {{ error.$message }}
+          <p class="form-text text-danger" v-for="error in v$.kit_model.$errors" :key="error.$uid">
+            {{ error.$message }}
           </p>
 
           <!-- backend validations -->
@@ -769,23 +751,22 @@ onMounted(async () => {
             class="form-control"
             id="kit_serial"
             v-model.trim="order.kit_serial"
-            @blur="v$.kit_serial.$touch" />
-
+            @blur="v$.kit_serial.$touch"
+          />
+            
           <!-- frontend validations -->
-            <p
-              class="form-text text-danger"
-              v-for="error in v$.kit_serial.$errors"
-              :key="error.$uid">
-                {{ error.$message }}
-            </p>
+          <p class="form-text text-danger" v-for="error in v$.kit_serial.$errors" :key="error.$uid">
+            {{ error.$message }}
+          </p>
 
           <!-- backend validations -->
           <span v-if="orderBackendErrors.kit_serial">
             <p
               class="form-text text-danger"
               v-for="(error, i) in orderBackendErrors.kit_serial"
-              :key="i">
-                {{ error }}
+              :key="i"
+            >
+              {{ error }}
             </p>
           </span>
         </div>
@@ -798,7 +779,8 @@ onMounted(async () => {
             id="job_description"
             class="form-control"
             cols="30"
-            rows="10">
+            rows="10"
+          >
           </textarea>
 
           <!-- backend validations -->
@@ -806,8 +788,9 @@ onMounted(async () => {
             <p
               class="form-text text-danger"
               v-for="(error, i) in orderBackendErrors.job_description"
-              :key="i">
-                {{ error }}
+              :key="i"
+            >
+              {{ error }}
             </p>
           </span>
         </div>
@@ -815,10 +798,9 @@ onMounted(async () => {
         <!-- items_times control -->
         <div class="row">
           <div class="col-md-12 mb-2">
-            <button
-              type="button"
-              class="btn btn-sm btn-primary"
-              @click="createItemTime(1)">Agregar artículo</button>
+            <button type="button" class="btn btn-sm btn-primary" @click="createItemTime(1)">
+              Agregar artículo
+            </button>
           </div>
 
           <div class="col-md-6">Artículo o Servicio</div>
@@ -827,20 +809,14 @@ onMounted(async () => {
           <div class="col-md-1">Precio</div>
         </div>
         <!-- frontend validations -->
-          <p
-            class="form-text text-danger"
-            v-for="error in v$.itemtime_set.$errors"
-            :key="error.$uid">
-              {{ error.$message }}
-          </p>
+        <p class="form-text text-danger" v-for="error in v$.itemtime_set.$errors" :key="error.$uid">
+          {{ error.$message }}
+        </p>
         <!-- 
-          if no order.id means the order its being created,
+          if no order.id means the order is being created,
           therefore the state management is being done via the list indexes 
         -->
-        <div
-          v-if="!order.id"
-          class="col-md-12 mb-2"
-          style="overflow-y: auto; height: 400px">
+        <div v-if="!order.id" class="col-md-12 mb-2" style="overflow-y: auto; height: 400px">
           <template v-for="(item, index) in order.itemtime_set" :key="index">
             <item-time
               v-if="order.itemtime_set.length > 0"
@@ -855,10 +831,7 @@ onMounted(async () => {
           if order.id means the order its being updated,
           therefore the state management is being done via the itemtimes objects ids 
         -->
-        <div
-          v-else
-          class="col-md-12 mb-2"
-          style="overflow-y: auto; height: 400px">
+        <div v-else class="col-md-12 mb-2" style="overflow-y: auto; height: 400px">
           <template v-for="(item, index) in order.itemtime_set" :key="index">
             <item-time
               v-if="order.itemtime_set.length > 0"
@@ -912,13 +885,15 @@ onMounted(async () => {
             id="provider_signature_date"
             class="form-control"
             :disabled="order.id"
-            @blur="v$.provider_signature_date.$touch" />
-
+            @blur="v$.provider_signature_date.$touch"
+          />
+            
           <!-- frontend validations -->
           <p
             class="form-text text-danger"
             v-for="error in v$.provider_signature_date.$errors"
-            :key="error.$uid">
+            :key="error.$uid"
+          >
             {{ error.$message }}
           </p>
 
@@ -927,8 +902,9 @@ onMounted(async () => {
             <p
               class="form-text text-danger"
               v-for="(error, i) in orderBackendErrors.provider_signature_date"
-              :key="i">
-                {{ error }}
+              :key="i"
+            >
+              {{ error }}
             </p>
           </span>
         </div>
@@ -946,8 +922,9 @@ onMounted(async () => {
           <p
             class="form-text text-danger"
             v-for="error in v$.customer_signature_date.$errors"
-            :key="error.$uid">
-              {{ error.$message }}
+            :key="error.$uid"
+          >
+            {{ error.$message }}
           </p>
 
           <!-- backend validations -->
@@ -969,15 +946,10 @@ onMounted(async () => {
 
         <!-- buttons -->
         <div class="mb-4">
-          <button
-            type="submit"
-            class="btn btn-sm btn-primary">
-              {{ !order.id ? 'Guardar' : 'Actualizar'}}
+          <button type="submit" class="btn btn-sm btn-primary">
+            {{ !order.id ? 'Guardar' : 'Actualizar' }}
           </button>
-          <button
-            type="button"
-            class="btn btn-sm btn-secondary"
-            @click="goBack">Cancelar</button>
+          <button type="button" class="btn btn-sm btn-secondary" @click="goBack">Cancelar</button>
         </div>
       </form>
     </div>

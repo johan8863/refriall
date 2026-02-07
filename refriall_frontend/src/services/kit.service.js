@@ -4,6 +4,8 @@ import apiBase from "./base.service";
 const urlKit = kitAPIEnvs.kitUrl;
 const urlKitListPagination = kitAPIEnvs.kitListPaginationUrl;
 
+export const getAllKits = () => apiBase.get(`${urlKit}/`)
+
 export const listKit = (currentPage=null, searchTerm = null) => {
     const params = {}
     

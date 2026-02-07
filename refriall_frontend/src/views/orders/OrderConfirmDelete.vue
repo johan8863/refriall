@@ -5,7 +5,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
 // app
-import { detailOrder, deleteOrder } from '../../services/order.service'
+import { orderService } from '../../services/order.service'
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 import { orderErrorHandler } from "../../utils/errors/orderErrorHandler";
 
@@ -44,7 +44,7 @@ const errorMessage = ref(null)
 
 onMounted(async () => {
   try {
-    const resp = await detailOrder(route.params.id);
+    const resp = await orderService.detailOrder(route.params.id);
     order.value = resp.data;
   } catch (error) {
     orderErrorHandler(error, errorMessage)
@@ -54,7 +54,7 @@ onMounted(async () => {
 
 const delOrder = async (id) => {
   try {
-    await deleteOrder(id)
+    await orderService.deleteOrder(id)
     router.push({ name: 'orders' })
   } catch (error) {
     orderErrorHandler(error, errorMessage)

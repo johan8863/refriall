@@ -5,12 +5,13 @@ import { RouterLink, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
 
 // app
-import { detailOrder } from "../../services/order.service";
+import { orderService } from "../../services/order.service";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 import { useOrderPaginate } from "../../composables/OrderComposable";
 
 // third
 import html2pdf from "html2pdf.js";
+import { orderErrorHandler } from "../../utils/errors/orderErrorHandler";
 
 const route = useRoute();
 const order = ref({
@@ -52,24 +53,19 @@ const order = ref({
     get_total_amount_unmounting: 0
 });
 
-const orderBackendErrors = ref(null)
+const errorMessage = ref(null)
 
 
 const paginatedOrders = ref([]);
 
 onMounted(async () => {
     try {
-        const resp = await detailOrder(route.params.id);
+        const resp = await orderService.detailOrder(route.params.id);
         order.value = resp.data;
     
         paginatedOrders.value = paginate(order, 12);
     } catch (error) {
-        console.error("General error: ", error)
-        if (error.response) {
-            orderBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`
-        } else {
-            orderBackendErrors.value = 'Error inesperado, consulte al desarrollador'
-        }
+        orderErrorHandler(error, errorMessage)
     }
 });
 
@@ -123,9 +119,9 @@ function pdf() {
 
         <!-- main content -->
         <div class="col-md-9">
-            <div v-if="orderBackendErrors">
+            <div v-if="errorMessage">
                 <span class="form-text text-danger">
-                    {{ orderBackendErrors }}
+                    {{ errorMessage }}
                 </span>
             </div>
             <!-- order info -->
