@@ -8,7 +8,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 
 // app
-import { listAllCustomers } from '../../services/customer.service'
+import { customerService } from '../../services/customerService'
 import { kitService } from '../../services/kitService'
 import { itemService } from '../../services/itemService'
 import { providerService } from '../../services/providerService'
@@ -250,7 +250,7 @@ const loadData = async () => {
       { data: respCurrencies },
       { data: respProviders }
     ] = await Promise.all([
-      listAllCustomers(),
+      customerService.listAllCustomers(),
       kitService.getAllKits(),
       itemService.listItemsForSelect(),
       customerDependecyService.listCustomerDependecy(),

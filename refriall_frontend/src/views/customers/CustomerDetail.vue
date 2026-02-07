@@ -4,7 +4,7 @@ import { ref, onMounted, computed } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 
 // app
-import { detailCustomer } from "../../services/customer.service";
+import { customerService } from "../../services/customerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute();
@@ -52,7 +52,7 @@ const clearDependencySearch = () => {
 onMounted(async () => {
     isLoading.value = true;
     try {
-        const resp = await detailCustomer(route.params.id);
+        const resp = await customerService.detailCustomer(route.params.id);
         customer.value = resp.data;
     } catch (error) {
         if (error.response) {

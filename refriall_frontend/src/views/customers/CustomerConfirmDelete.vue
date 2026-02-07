@@ -5,7 +5,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
 // app
-import { deleteCustomer, detailCustomer } from "../../services/customer.service";
+import { customerService } from "../../services/customerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // customer object to be filled
@@ -28,7 +28,7 @@ const route = useRoute();
 
 onMounted(async () => {
     try {
-        const resp = await detailCustomer(route.params.id);
+        const resp = await customerService.detailCustomer(route.params.id);
         customer.value = resp.data;
     } catch (error) {
         onsole.log('Error status:', error.response.status)
@@ -45,7 +45,7 @@ onMounted(async () => {
 
 const delCustomer = async (id) => {
     try {
-        await deleteCustomer(id);
+        await customerService.deleteCustomer(id);
         router.push({name: 'customers'});
     } catch (error) {
         console.log('Error status:', error.response.status)

@@ -9,7 +9,7 @@ import { helpers, required } from '@vuelidate/validators';
 
 // app
 import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
-import { listCustomerOrdersNoBill } from "../../services/customer.service";
+import { customerService } from "../../services/customerService";
 import { orderService } from "../../services/orderService";
 import { providerService } from '../../services/providerService';
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
@@ -135,7 +135,7 @@ const updateBill = async (bill) => {
 const chargeCustomersNoBill = async () => {
     bill.value.customer = ""
     orders.value = []
-    const respCustomers = await listCustomerOrdersNoBill(bill.value.currency);
+    const respCustomers = await customerService.listCustomerOrdersNoBill(bill.value.currency);
     customers.value = respCustomers.data;
 
 }
@@ -151,11 +151,11 @@ const customersFromProvider = async () => {
     try {
         if (bill.value.currency && bill.value.provider) {
             orders.value = []
-            customers.value = (await listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)).data
+            customers.value = (await customerService.listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)).data
         }
         if (bill.value.currency && bill.value.provider && bill.value.customer) {
             orders.value = []
-            customers.value = (await listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)).data
+            customers.value = (await customerService.listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)).data
             orders.value = (await orderService.getOrdersFromCustomerNotMatched(bill.value.currency, bill.value.provider, bill.value.customer)).data;
         }
     } catch (error) {

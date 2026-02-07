@@ -4,7 +4,7 @@ import { RouterLink, useRouter, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
 
 // app
-import { postCustomer, putCustomer, detailCustomer } from "../../services/customer.service";
+import { customerService } from "../../services/customerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // third
@@ -88,7 +88,7 @@ const createCustomer = async (customer) => {
         if (await v$.value.$validate()) {
             // if front validations run, insert a customer 
             // and redirect to its detail view
-            const { data } = await postCustomer(customer);
+            const { data } = await customerService.postCustomer(customer);
             router.push({name: 'customers_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -110,7 +110,7 @@ const updateCustomer = async (customer) => {
         if (await v$.value.$validate()) {
             // if front validations run, update a customer 
             // and redirect to its detail view
-            const { data } = await putCustomer(customer);
+            const { data } = await customerService.putCustomer(customer);
             router.push({name: 'customers_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -131,7 +131,7 @@ const updateCustomer = async (customer) => {
 onMounted(async () => {
     const id = route.params.id;
     if (id) {
-        const { data } = await detailCustomer(id);
+        const { data } = await customerService.detailCustomer(id);
         customer.value = data;
     }
 });

@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 
 // app
-import { listCustomer, searchCustomers } from "../../services/customer.service";
+import { customerService } from "../../services/customer.service";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const customers = ref([]);
@@ -21,7 +21,7 @@ const searchTerm = ref('');
 const getCustomers = async (page = 1) => {
     isLoading.value = true;
     try {
-        const resp = await listCustomer(page);
+        const resp = await customerService.listCustomer(page);
         const data = resp.data;
         
         showNextButton.value = !!data.next;
@@ -55,7 +55,7 @@ const handleSearch = async () => {
     hasSearched.value = true;
     
     try {
-        const resp = await searchCustomers(searchTerm.value);
+        const resp = await customerService.searchCustomers(searchTerm.value);
         const data = resp.data;
         
         customers.value = data.results;
@@ -84,7 +84,7 @@ const loadNextItems = async () => {
     if (hasSearched.value && searchTerm.value.trim()) {
         isLoading.value = true;
         try {
-            const resp = await searchCustomers(searchTerm.value, currentPage.value);
+            const resp = await customerService.searchCustomers(searchTerm.value, currentPage.value);
             const data = resp.data;
             customers.value = data.results;
             showNextButton.value = !!data.next;
@@ -104,7 +104,7 @@ const loadPrevItems = async () => {
     if (hasSearched.value && searchTerm.value.trim()) {
         isLoading.value = true;
         try {
-            const resp = await searchCustomers(searchTerm.value, currentPage.value);
+            const resp = await customerService.searchCustomers(searchTerm.value, currentPage.value);
             const data = resp.data;
             customers.value = data.results;
             showNextButton.value = !!data.next;
