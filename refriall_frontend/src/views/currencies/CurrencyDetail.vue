@@ -5,7 +5,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 
 // app
-import { detailCurrency } from "../../services/currency.service";
+import { detailCurrency } from "../../services/currencyService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const currency = ref({

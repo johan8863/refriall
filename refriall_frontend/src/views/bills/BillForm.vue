@@ -13,7 +13,7 @@ import { customerService } from "../../services/customerService";
 import { orderService } from "../../services/orderService";
 import { providerService } from '../../services/providerService';
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { listCurrencies } from '../../services/currency.service';
+import { listCurrencies } from '../../services/currencyService';
 
 
 const bill = ref({

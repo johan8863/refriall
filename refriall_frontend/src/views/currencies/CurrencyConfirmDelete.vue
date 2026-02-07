@@ -4,7 +4,7 @@ import { onMounted, ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
 // app
-import { deleteCurrency, detailCurrency } from "../../services/currency.service";
+import { deleteCurrency, detailCurrency } from "../../services/currencyService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // router utilities to redirect the view and catch route params

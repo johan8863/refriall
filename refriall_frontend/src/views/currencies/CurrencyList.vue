@@ -6,7 +6,7 @@ import { RouterLink } from "vue-router";
 
 // app
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { listCurrencies } from "../../services/currency.service";
+import { listCurrencies } from "../../services/currencyService";
 
 const currencies = ref([])
 

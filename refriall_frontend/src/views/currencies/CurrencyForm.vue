@@ -10,7 +10,7 @@ import { required, helpers } from "@vuelidate/validators";
 
 // app
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { detailCurrency, postCurrency, putCurrency } from "../../services/currency.service";
+import { detailCurrency, postCurrency, putCurrency } from "../../services/currencyService";
 
 // router utilities and handlers
 const router = useRouter();
