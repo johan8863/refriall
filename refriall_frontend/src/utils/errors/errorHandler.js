@@ -1,4 +1,17 @@
-export const orderErrorHandler = (sourceError, displayError) => {
+export const objectNames = {
+  order: 'Orden',
+  bill: 'Factura',
+  kit: 'Equipo',
+  provider: 'Prestador',
+  customer: 'Cliente',
+  customerDependency: 'Dependencia',
+  gender: {
+    male: 'm',
+    female: 'f'
+  }
+}
+
+export const errorHandler = (sourceError, displayError, objectName = 'Objeto', gender = 'f') => {
   if (sourceError.response) {
     const { data, status } = sourceError.response
     switch (status) {
@@ -9,7 +22,8 @@ export const orderErrorHandler = (sourceError, displayError) => {
         displayError.value = 'No autorizado, inicie sesión nuevamente.'
         break
       case 404:
-        displayError.value = 'Orden no encontrada.'
+        const errorMessage = `${objectName} no encontrad`
+        displayError.value = gender === 'f' ? errorMessage + 'a.' : errorMessage + 'o.'
         break
       case 500:
         displayError.value = 'Error interno del servidor, consulte al desarrollador.'
