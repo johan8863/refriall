@@ -5,7 +5,7 @@ import { RouterLink, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
 
 // app
-import { orderService } from "../../services/order.service";
+import { orderService } from "../../services/orderService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 import { useOrderPaginate } from "../../composables/OrderComposable";
 

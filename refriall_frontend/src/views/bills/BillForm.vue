@@ -10,7 +10,7 @@ import { helpers, required } from '@vuelidate/validators';
 // app
 import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
 import { listCustomerOrdersNoBill } from "../../services/customer.service";
-import { getOrdersFromCustomerNotMatched } from "../../services/order.service";
+import { orderService } from "../../services/orderService";
 import { listProviderCurrencyOrderNoBill } from '../../services/provider.service';
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 import { listCurrencies } from '../../services/currency.service';
@@ -156,7 +156,7 @@ const customersFromProvider = async () => {
         if (bill.value.currency && bill.value.provider && bill.value.customer) {
             orders.value = []
             customers.value = (await listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)).data
-            orders.value = (await getOrdersFromCustomerNotMatched(bill.value.currency, bill.value.provider, bill.value.customer)).data;
+            orders.value = (await orderService.getOrdersFromCustomerNotMatched(bill.value.currency, bill.value.provider, bill.value.customer)).data;
         }
     } catch (error) {
         console.error('General error', error)
