@@ -4,7 +4,7 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 // app
-import { detailBill } from '../../services/billService';
+import { billService } from '../../services/billService';
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 
 // third
@@ -48,7 +48,7 @@ const paginatedBills = ref([]);
 
 onMounted(async () => {
     try {
-        const resp = await detailBill(route.params.id);
+        const resp = await billService.detailBill(route.params.id);
         bill.value = resp.data;
     
         prepareBillToPaginate(billToPaginate, bill);

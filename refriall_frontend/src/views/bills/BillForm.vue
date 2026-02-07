@@ -8,7 +8,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { helpers, required } from '@vuelidate/validators';
 
 // app
-import { detailBillUpdate, postBill, putBill } from "../../services/billService";
+import { billService } from "../../services/billService";
 import { customerService } from "../../services/customerService";
 import { orderService } from "../../services/orderService";
 import { providerService } from '../../services/providerService';
@@ -102,7 +102,7 @@ const v$ = useVuelidate(rules, bill);
 const createBill = async (bill) => {
     try {
         if (await v$.value.$validate()) {
-            const { data } = await postBill(bill);
+            const { data } = await billService.postBill(bill);
             router.push({name: 'bills_detail', params: {id: data.id}})
         }
     } catch (error) {
@@ -119,7 +119,7 @@ const createBill = async (bill) => {
 const updateBill = async (bill) => {
     try {
         if (await v$.value.$validate()) {
-            const { data } = await putBill(bill);
+            const { data } = await billService.putBill(bill);
             router.push({name: 'bills_detail', params: {id: data.id}})
         }
     } catch (error) {
@@ -210,7 +210,7 @@ onMounted(async () => {
     
     const id = route.params.id;
     if (id) {
-        const { data } = await detailBillUpdate(id);
+        const { data } = await billService.detailBillUpdate(id);
         bill.value = data;
         bill.value.orders = bill.value.get_orders.map(item => item.id)
         // get the orders that havent been related to a bill yet and display them to be selected

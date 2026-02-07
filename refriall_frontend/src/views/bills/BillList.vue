@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 
 // app
-import { listBillsPagination, searchBills } from '../../services/billService';
+import { billService } from '../../services/billService';
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 
 const bills = ref([]);
@@ -21,7 +21,7 @@ const searchTerm = ref('');
 const getBills = async (page = 1) => {
     isLoading.value = true;
     try {
-        const resp = await listBillsPagination(page);
+        const resp = await billService.listBillsPagination(page);
         const data = resp.data;
         
         showNextButton.value = !!data.next;
@@ -55,7 +55,7 @@ const handleSearch = async () => {
     hasSearched.value = true;
     
     try {
-        const resp = await searchBills(searchTerm.value);
+        const resp = await billService.searchBills(searchTerm.value);
         const data = resp.data;
         
         bills.value = data.results;
@@ -83,7 +83,7 @@ const loadNextItems = async () => {
     currentPage.value += 1;
     if (hasSearched.value && searchTerm.value.trim()) {
         // Search purpose
-        const resp = await searchBills(searchTerm.value, currentPage.value);
+        const resp = await billService.searchBills(searchTerm.value, currentPage.value);
         const data = resp.data;
         bills.value = data.results; // o bills.value
         showNextButton.value = !!data.next;
@@ -98,7 +98,7 @@ const loadPrevItems = async () => {
     currentPage.value -= 1;
     if (hasSearched.value && searchTerm.value.trim()) {
         // search purpose
-        const resp = await searchBills(searchTerm.value, currentPage.value);
+        const resp = await billService.searchBills(searchTerm.value, currentPage.value);
         const data = resp.data;
         bills.value = data.results; // o bills.value
         showNextButton.value = !!data.next;

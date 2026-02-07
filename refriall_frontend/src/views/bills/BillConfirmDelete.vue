@@ -5,7 +5,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 // app
-import { detailBill, deleteBill } from "../../services/billService";
+import { billService } from "../../services/billService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute();
@@ -53,7 +53,7 @@ const billBackendErrors = ref({
 
 onMounted(async () => {
     try {
-        const resp = await detailBill(route.params.id);
+        const resp = await billService.detailBill(route.params.id);
         bill.value = resp.data;
     } catch (error) {
         if (error.response) {
@@ -71,7 +71,7 @@ onMounted(async () => {
 // delete the bill object
 const delBill = async (id) => {
     try {
-        await deleteBill(id);
+        await billService.deleteBill(id);
         router.push({name: 'bills'});
     } catch (error) {
         console.error('General error', error)
