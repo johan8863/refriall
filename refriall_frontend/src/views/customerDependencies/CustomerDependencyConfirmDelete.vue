@@ -5,7 +5,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 // app
-import { deleteCustomerDependency, detailCustomerDependecy } from "../../services/customerDependency.service";
+import { customerDependecyService } from "../../services/customerDependencyService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute()
@@ -23,7 +23,7 @@ const errorMessage = ref(null);
 
 onMounted(async () => {
     try {
-        const resp = await detailCustomerDependecy(route.params.id);
+        const resp = await customerDependecyService.detailCustomerDependecy(route.params.id);
         dependency.value = resp.data;
     } catch (error) {
         if (error.response) {
@@ -43,7 +43,7 @@ onMounted(async () => {
 
 const delDependency = async (id) => {
     try {
-        await deleteCustomerDependency(id);
+        await customerDependecyService.deleteCustomerDependency(id);
         router.push({
             name: 'customers_detail',
             params: {

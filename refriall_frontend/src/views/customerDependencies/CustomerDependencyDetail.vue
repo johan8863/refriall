@@ -5,7 +5,7 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 // app
-import { detailCustomerDependecy } from '../../services/customerDependency.service';
+import { customerDependecyService } from '../../services/customerDependencyService';
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute();
@@ -21,7 +21,7 @@ const billBackendErrors = ref(null);
 
 onMounted(async () => {
     try {
-        const response = await detailCustomerDependecy(route.params.id);
+        const response = await customerDependecyService.detailCustomerDependecy(route.params.id);
         dependency.value = response.data;
 
         

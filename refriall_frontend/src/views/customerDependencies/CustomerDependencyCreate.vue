@@ -5,7 +5,7 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 // app
-import { postCustomerDependency } from "../../services/customerDependency.service";
+import { customerDependecyService } from "../../services/customerDependencyService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // third
@@ -57,7 +57,7 @@ const createDependency = async (dependency) => {
     try {
         if (await v$.value.$validate) {
             dependency.customer = route.params.id;
-            const { data } = await postCustomerDependency(dependency);
+            const { data } = await customerDependecyService.postCustomerDependency(dependency);
             router.push({
                 name: 'customers_detail',
                 params: {

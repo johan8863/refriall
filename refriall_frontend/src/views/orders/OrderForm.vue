@@ -14,7 +14,7 @@ import { itemService } from '../../services/itemService'
 import { providerService } from '../../services/providerService'
 import ItemTime from '../../components/ItemTime.vue'
 import { orderService } from '../../services/orderService'
-import { listCustomerDependecy } from '../../services/customerDependency.service'
+import { customerDependecyService } from '../../services/customerDependencyService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { listCurrencies } from '../../services/currency.service'
 import { useOrderTotalComputed } from '../../composables/OrderComposable'
@@ -253,7 +253,7 @@ const loadData = async () => {
       listAllCustomers(),
       kitService.getAllKits(),
       itemService.listItemsForSelect(),
-      listCustomerDependecy(),
+      customerDependecyService.listCustomerDependecy(),
       listCurrencies(),
       providerService.listAllProviders()
     ])

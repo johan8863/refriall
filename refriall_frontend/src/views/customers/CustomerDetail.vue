@@ -5,7 +5,6 @@ import { RouterLink, useRoute } from "vue-router";
 
 // app
 import { detailCustomer } from "../../services/customer.service";
-import { searchCustomerDependencies } from "../../services/customerDependency.service";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute();

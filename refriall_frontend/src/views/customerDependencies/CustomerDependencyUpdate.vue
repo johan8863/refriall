@@ -5,7 +5,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 // app
-import { detailCustomerDependecy, putCustomerDependcy } from "../../services/customerDependency.service";
+import { customerDependecyService } from "../../services/customerDependencyService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // third
@@ -62,7 +62,7 @@ const v$ = useVuelidate(rules, dependency);
 const updateDependency = async (dependency) => {
     try {
         if (await v$.value.$validate) {
-            const { data } = await putCustomerDependcy(dependency);
+            const { data } = await customerDependecyService.putCustomerDependcy(dependency);
             router.push({
                 name: 'customers_detail',
                 params: {
@@ -83,7 +83,7 @@ const updateDependency = async (dependency) => {
 
 // onMounted cycle
 onMounted(async () => {
-    const resp = await detailCustomerDependecy(route.params.id);
+    const resp = await customerDependecyService.detailCustomerDependecy(route.params.id);
     dependency.value = resp.data;
 });
 
