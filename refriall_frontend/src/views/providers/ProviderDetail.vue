@@ -39,7 +39,7 @@ import { RouterLink, useRoute } from "vue-router";
 import { ref, onMounted } from 'vue';
 
 // app
-import { detailProvider } from "../../services/provider.service";
+import { detailProvider } from "../../services/providerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const route = useRoute();

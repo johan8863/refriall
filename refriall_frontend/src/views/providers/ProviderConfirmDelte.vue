@@ -5,7 +5,7 @@ import { onMounted, ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
 // app
-import { deleteProvider, detailProvider } from "../../services/provider.service";
+import { deleteProvider, detailProvider } from "../../services/providerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // main object

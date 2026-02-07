@@ -11,7 +11,7 @@ import { helpers, required } from '@vuelidate/validators';
 import { detailBillUpdate, postBill, putBill } from "../../services/bill.service";
 import { listCustomerOrdersNoBill } from "../../services/customer.service";
 import { orderService } from "../../services/orderService";
-import { listProviderCurrencyOrderNoBill } from '../../services/provider.service';
+import { listProviderCurrencyOrderNoBill } from '../../services/providerService';
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
 import { listCurrencies } from '../../services/currency.service';
 

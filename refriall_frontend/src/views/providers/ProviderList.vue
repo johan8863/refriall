@@ -74,7 +74,7 @@ import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 
 // app
-import { listProvider } from "../../services/provider.service";
+import { listProvider } from "../../services/providerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 const providers = ref([]);

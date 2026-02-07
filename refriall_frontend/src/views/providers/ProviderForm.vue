@@ -10,7 +10,7 @@ import { required, helpers, numeric } from "@vuelidate/validators";
 
 // app
 import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { detailProvider, postProvider, putProvider } from '../../services/provider.service';
+import { detailProvider, postProvider, putProvider } from '../../services/providerService';
 
 // router utilities and handlers
 const router = useRouter();
