@@ -1,5 +1,5 @@
 import { orderAPIEnvs } from "../settings/env";
-import apiBase from "./base.service";
+import apiBase from "./baseService";
 
 const urlOrderListPagination = orderAPIEnvs.orderListPaginationUrl;
 const urlOrderDetail = orderAPIEnvs.orderDetailUrl;

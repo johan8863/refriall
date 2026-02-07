@@ -1,5 +1,5 @@
 import { currenciesAPIEnvs } from "../settings/env";
-import apiBase from "./base.service";
+import apiBase from "./baseService";
 
 const url = currenciesAPIEnvs.currenciesUrl;
 

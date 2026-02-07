@@ -1,5 +1,5 @@
 import { providerAPIEnvs } from "../settings/env";
-import apiBase from "./base.service";
+import apiBase from "./baseService";
 
 const urlProvider = providerAPIEnvs.providerUrl;
 const urlProviderListPagination = providerAPIEnvs.providerListPaginationUrl;

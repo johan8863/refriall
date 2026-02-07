@@ -1,5 +1,5 @@
 import { kitAPIEnvs } from "../settings/env";
-import apiBase from "./base.service";
+import apiBase from "./baseService";
 
 const urlKit = kitAPIEnvs.kitUrl;
 const urlKitListPagination = kitAPIEnvs.kitListPaginationUrl;

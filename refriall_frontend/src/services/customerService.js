@@ -1,5 +1,5 @@
 import { customerAPIEnvs } from "../settings/env";
-import apiBase from "./base.service";
+import apiBase from "./baseService";
 
 const urlCustomer = customerAPIEnvs.customerUrl;
 const urlCustomerListPagination = customerAPIEnvs.customerListPaginationUrl;

@@ -1,5 +1,5 @@
 import { itemAPIEnvs } from "../settings/env";
-import apiBase from "./base.service";
+import apiBase from "./baseService";
 
 const urlItem = itemAPIEnvs.itemUrl;
 const urlItemListPagination = itemAPIEnvs.itemListPaginationUrl;

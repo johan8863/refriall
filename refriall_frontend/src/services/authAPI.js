@@ -1,5 +1,5 @@
 import { authAPIEnvs } from "../settings/env";
-import apiBase from "./base.service";
+import apiBase from "./baseService";
 
 export const authAPI = {
     tokenPair: (credentials) => apiBase.post(authAPIEnvs.tokenPairUrl, credentials),

@@ -1,5 +1,5 @@
 import { billsAPIEnvs } from "../settings/env";
-import apiBase from "./base.service";
+import apiBase from "./baseService";
 
 const urlBillListPagination = billsAPIEnvs.billListPaginationUrl;
 const urlBillDetail = billsAPIEnvs.billDetailUrl;

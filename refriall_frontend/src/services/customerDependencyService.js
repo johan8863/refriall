@@ -1,4 +1,4 @@
-import apiBase from "./base.service";
+import apiBase from "./baseService";
 
 const urlCustomerDependency = '/hr/dependencies';
 
