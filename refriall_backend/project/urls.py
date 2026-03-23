@@ -17,6 +17,7 @@ urlpatterns = [
                 path('', TokenObtainPairView.as_view(), name='token-obtain-pair'),
                 path('refresh/', TokenRefreshView.as_view(), name='token-refresh'),
             ])),
+            path('rest_framework/', include('rest_framework.urls')),
         ])),
         path('stock/', include('stock.urls')),
         path('hr/', include('hr.urls')),
