@@ -47,7 +47,7 @@ class Bill(models.Model):
     aproved_by = models.CharField('Aprobado por', max_length=35, null=True, blank=True)
 
     class Meta:
-        ordering = ['provider_signature_date']
+        ordering = ['-provider_signature_date']
         verbose_name = 'Factura'
         verbose_name_plural = 'Facturas'
     
@@ -254,7 +254,7 @@ class Order(models.Model):
     aproved_by = models.CharField('Aprobado por', max_length=35, null=True, blank=True)
 
     class Meta:
-        ordering = ['provider_signature_date']
+        ordering = ['-provider_signature_date']
         verbose_name = 'Orden de Servicio'
         verbose_name_plural = 'Órdenes de Servicio'
     
