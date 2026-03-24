@@ -42,10 +42,6 @@ onMounted(async () => {
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
-
 <template>
     <div class="row">
         <!-- side menu -->

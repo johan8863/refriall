@@ -1,3 +1,53 @@
+<script setup>
+
+// vue
+import { ref, onMounted } from "vue";
+import { RouterLink } from "vue-router";
+
+// app
+import { providerService } from "../../services/providerService";
+import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+
+const providers = ref([]);
+
+const currentPage = ref(1);
+const showNextButton = ref(false);
+const showPrevButton = ref(false);
+
+const getProviders = async () => {
+    const resp = (await providerService.listProvider(currentPage.value)).data;
+    
+    showNextButton.value = false;
+    if (resp.next) {
+        showNextButton.value = true;
+    }
+    
+    showPrevButton.value = false;
+    if (resp.previous) {
+        showPrevButton.value = true;
+    }
+
+    providers.value = resp.results;
+};
+
+const loadNextItems = () => {
+    currentPage.value += 1;
+    getProviders()
+}
+
+const loadPrevItems = () => {
+    currentPage.value -= 1;
+    getProviders()
+}
+
+
+onMounted(async () => {
+    getProviders()
+});
+
+
+</script>
+
 <template>
 
     <div class="row">
@@ -66,53 +116,3 @@
     </div>
 
 </template>
-
-<script setup>
-
-// vue
-import { ref, onMounted } from "vue";
-import { RouterLink } from "vue-router";
-
-// app
-import { providerService } from "../../services/providerService";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-
-const providers = ref([]);
-
-const currentPage = ref(1);
-const showNextButton = ref(false);
-const showPrevButton = ref(false);
-
-const getProviders = async () => {
-    const resp = (await providerService.listProvider(currentPage.value)).data;
-    
-    showNextButton.value = false;
-    if (resp.next) {
-        showNextButton.value = true;
-    }
-    
-    showPrevButton.value = false;
-    if (resp.previous) {
-        showPrevButton.value = true;
-    }
-
-    providers.value = resp.results;
-};
-
-const loadNextItems = () => {
-    currentPage.value += 1;
-    getProviders()
-}
-
-const loadPrevItems = () => {
-    currentPage.value -= 1;
-    getProviders()
-}
-
-
-onMounted(async () => {
-    getProviders()
-});
-
-
-</script>

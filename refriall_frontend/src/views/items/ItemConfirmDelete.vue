@@ -58,10 +58,6 @@ const delItem = async (id) => {
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
-
 <template>
     <div class="row">
         <!-- side menu -->

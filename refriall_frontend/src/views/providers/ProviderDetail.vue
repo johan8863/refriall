@@ -1,37 +1,3 @@
-<template>
-    <div class="row">
-        <!-- side menu -->
-        <div class="col-md-2">
-            <ul :class="listGroup.listGroup">
-                <li :class="listGroup.listGroupItem">
-                    <strong>Prestadores</strong>
-                </li>
-                <li class="list-group-item">
-                    <router-link :to="{name: 'providers'}">Prestadores</router-link>
-                </li>
-                <li class="list-group-item">
-                    <router-link v-if="provider.id" :to="{name: 'providers_update', params: {id: provider.id}}">Editar</router-link>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link v-if="provider.id" :to="{name: 'providers_confirm_delete', params: {id: provider.id}}">Eliminar</router-link>
-                </li>
-            </ul>
-        </div>
-
-        <!-- main content -->
-        <div class="col-md-4">
-            <h3>{{ provider.first_name }}</h3>
-            <p>CI: {{ provider.personal_id }}</p>
-            <p>Lic.: {{ provider.license_number }}</p>
-            <p>TCP: {{ provider.tcp_code }}</p>
-            <p>Titular de Cuenta: {{ provider.bank_account_header }}</p>
-            <p>Nro de Cuenta: {{ provider.bank_account }}</p>
-        </div>
-
-    </div> <!-- end row -->
-
-</template>
-
 <script setup>
 
 // vue
@@ -77,6 +43,36 @@ onMounted(async () => {
 
 </script>
 
-<style lang="scss" scoped>
+<template>
+    <div class="row">
+        <!-- side menu -->
+        <div class="col-md-2">
+            <ul :class="listGroup.listGroup">
+                <li :class="listGroup.listGroupItem">
+                    <strong>Prestadores</strong>
+                </li>
+                <li class="list-group-item">
+                    <router-link :to="{name: 'providers'}">Prestadores</router-link>
+                </li>
+                <li class="list-group-item">
+                    <router-link v-if="provider.id" :to="{name: 'providers_update', params: {id: provider.id}}">Editar</router-link>
+                </li>
+                <li :class="listGroup.listGroupItem">
+                    <router-link v-if="provider.id" :to="{name: 'providers_confirm_delete', params: {id: provider.id}}">Eliminar</router-link>
+                </li>
+            </ul>
+        </div>
 
-</style>
+        <!-- main content -->
+        <div class="col-md-4">
+            <h3>{{ provider.first_name }}</h3>
+            <p>CI: {{ provider.personal_id }}</p>
+            <p>Lic.: {{ provider.license_number }}</p>
+            <p>TCP: {{ provider.tcp_code }}</p>
+            <p>Titular de Cuenta: {{ provider.bank_account_header }}</p>
+            <p>Nro de Cuenta: {{ provider.bank_account }}</p>
+        </div>
+
+    </div> <!-- end row -->
+
+</template>
