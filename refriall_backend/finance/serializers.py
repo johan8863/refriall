@@ -40,6 +40,21 @@ class ItemTimeOrderSerializerDetail(serializers.ModelSerializer):
         ]
 
 
+class OrderSerializerReadListView(serializers.ModelSerializer):
+    customer = CustomerSerializer()
+    customer_dependency = CustomerDependencySerializer()
+
+    class Meta:
+        model = Order
+        fields = [
+            "id",
+            "customer",
+            "customer_dependency",
+            "folio",
+            "get_total_amount",
+        ]
+
+
 class OrderSerializerForReadOnly(serializers.ModelSerializer):
     itemtime_set = ItemTimeSerializerForReadOnly(many=True)
     itemtimeorder_set = ItemTimeSerializerForReadOnly(many=True)

@@ -13,7 +13,15 @@ from rest_framework import viewsets
 
 # local
 from .models import Bill, Currency, Order
-from .serializers import BillSerializer, BillSerializerForReadOnly, BillSerializerDetailUpdate, CurrencySerializer, OrderSerializerForReadOnly, OrderSerializer
+from .serializers import (
+    BillSerializer,
+    BillSerializerForReadOnly,
+    BillSerializerDetailUpdate,
+    CurrencySerializer,
+    OrderSerializerForReadOnly,
+    OrderSerializer,
+    OrderSerializerReadListView
+)
 from .paginators import BillPagination, OrderPagination
 
 
@@ -98,15 +106,15 @@ class OrderListPagination(APIView, OrderPagination):
             )
         
         results = self.paginate_queryset(orders, request, view=self)
-        serializer = OrderSerializerForReadOnly(results, many=True)
+        serializer = OrderSerializerReadListView(results, many=True)
         return self.get_paginated_response(serializer.data)
 
 
-class OrderList(APIView):
-    def get(self, request, format=None):
-        orders = Order.objects.all()
-        serializer = OrderSerializerForReadOnly(orders, many=True)
-        return Response(serializer.data)
+# class OrderList(APIView):
+#     def get(self, request, format=None):
+#         orders = Order.objects.all()
+#         serializer = OrderSerializerForReadOnly(orders, many=True)
+#         return Response(serializer.data)
 
 
 class OrderDetail(APIView):
