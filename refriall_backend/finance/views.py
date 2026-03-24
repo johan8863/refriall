@@ -110,13 +110,6 @@ class OrderListPagination(APIView, OrderPagination):
         return self.get_paginated_response(serializer.data)
 
 
-# class OrderList(APIView):
-#     def get(self, request, format=None):
-#         orders = Order.objects.all()
-#         serializer = OrderSerializerForReadOnly(orders, many=True)
-#         return Response(serializer.data)
-
-
 class OrderDetail(APIView):
     def get_object(self, pk):
         try:
