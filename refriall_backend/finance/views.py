@@ -16,6 +16,7 @@ from .models import Bill, Currency, Order
 from .serializers import (
     BillSerializer,
     BillSerializerForReadOnly,
+    BillSerializerReadListView,
     BillSerializerDetailUpdate,
     CurrencySerializer,
     OrderSerializerForReadOnly,
@@ -57,7 +58,7 @@ class BillListPagination(APIView, BillPagination):
             )
         
         results = self.paginate_queryset(bills, request, view=self)
-        serializer = BillSerializerForReadOnly(results, many=True)
+        serializer = BillSerializerReadListView(results, many=True)
         return self.get_paginated_response(serializer.data)
 
 

@@ -274,6 +274,19 @@ class OrderSerializer(serializers.ModelSerializer):
         return instance
 
 
+class BillSerializerReadListView(serializers.ModelSerializer):
+    customer = CustomerSerializer()
+
+    class Meta:
+        model = Bill
+        fields = [
+            "id",
+            "customer",
+            "folio",
+            "get_total_amount",
+        ]
+
+
 class BillSerializerForReadOnly(serializers.ModelSerializer):
     customer = CustomerSerializer()
     provider = ProviderSerializerRead()
