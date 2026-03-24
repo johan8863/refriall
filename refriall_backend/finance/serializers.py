@@ -284,6 +284,7 @@ class BillSerializerReadListView(serializers.ModelSerializer):
             "customer",
             "folio",
             "get_total_amount",
+            "provider_signature_date",
         ]
 
 
