@@ -4,7 +4,7 @@ import { onMounted, ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
 // app
-import { deleteKit, detatilKit } from "../../services/kitService";
+import { kitService, deleteKit, detatilKit } from "../../services/kitService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // kit object
@@ -24,7 +24,7 @@ const router = useRouter();
 // loading the kit object
 onMounted(async () => {
     try {
-        const resp = await detatilKit(route.params.id);
+        const resp = await kitService.detailKit(route.params.id);
         kit.value = resp.data;
     } catch (error) {
         if (error.response) {
@@ -40,7 +40,7 @@ onMounted(async () => {
 // delete the kit object
 const delKit = async (id) => {
     try {
-        await deleteKit(id);
+        await kitService.deleteKit(id);
         router.push({name: 'kits'});
     } catch (error) {
         console.error('General error', error)
