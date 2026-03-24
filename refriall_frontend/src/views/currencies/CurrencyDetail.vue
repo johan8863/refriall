@@ -2,7 +2,7 @@
 
 // vue
 import { ref, onMounted } from "vue";
-import { RouterLink, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 
 // app
 import { currencyService } from "../../services/currencyService";

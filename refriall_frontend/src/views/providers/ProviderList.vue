@@ -2,7 +2,6 @@
 
 // vue
 import { ref, onMounted } from "vue";
-import { RouterLink } from "vue-router";
 
 // app
 import { providerService } from "../../services/providerService";

@@ -1,7 +1,6 @@
 <script setup>
 // vue
 import { ref, onMounted } from "vue";
-import { RouterLink } from "vue-router";
 
 // app
 import { itemService } from "../../services/itemService";

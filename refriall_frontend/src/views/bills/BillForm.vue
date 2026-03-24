@@ -1,7 +1,7 @@
 <script setup>
 // vue
 import { onMounted, ref } from 'vue';
-import { RouterLink, useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 // third
 import { useVuelidate } from "@vuelidate/core";

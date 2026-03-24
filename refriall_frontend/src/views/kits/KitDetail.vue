@@ -1,7 +1,7 @@
 <script setup>
 // vue
 import { onMounted, ref } from "vue";
-import { RouterLink, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 
 // app
 import { kitService } from "../../services/kitService";

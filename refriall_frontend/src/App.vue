@@ -1,5 +1,5 @@
 <script setup>
-import { RouterView, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import NavBar from './components/NavBar.vue';
 import { computed, onMounted } from 'vue';
 import { useAuthStore } from './stores/authStore';

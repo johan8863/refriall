@@ -1,7 +1,7 @@
 <script setup>
 // vue
 import { ref, onMounted, computed } from "vue";
-import { RouterLink, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 
 // app
 import { customerService } from "../../services/customerService";

@@ -1,6 +1,6 @@
 <script setup>
 // vue
-import { RouterLink, useRouter, useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 
 // app

@@ -2,7 +2,7 @@
 
 // vue
 import { ref, onMounted } from "vue";
-import { RouterLink, useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 // app
 import { orderService } from '../../services/orderService'
