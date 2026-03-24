@@ -4,7 +4,7 @@ import { onMounted, ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
 // app
-import { kitService, deleteKit, detatilKit } from "../../services/kitService";
+import { kitService } from "../../services/kitService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
 // kit object
