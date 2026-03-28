@@ -69,6 +69,10 @@ const goToOrders = () => router.push({ name: 'orders' })
 const goToOrderDetail = () => router.push({ name: 'orders_detail', params: { id: order.value.id } })
 const goBack = () => (!order.value.id ? goToOrders() : goToOrderDetail())
 
+// loading status
+const isLoadingBackendData = ref(false)
+const isLoadingOrderData = ref(false)
+
 // customs rules
 const customerOrDependency = () =>
   (order.value.customer && !order.value.customer_dependency) ||
@@ -242,6 +246,8 @@ const clearCustomerDependency = () => {
 
 const loadData = async () => {
   try {
+    // start loading backend data
+    isLoadingBackendData.value = true
     const [
       { data: respCustomers },
       { data: respKits },
@@ -266,16 +272,21 @@ const loadData = async () => {
     providers.value = respProviders
   } catch (error) {
     errorHandler(error, errorMessage)
+  } finally {
+    // finish loading backend data
+    isLoadingBackendData.value = false
   }
 }
 
 // on mounted cycle
 onMounted(async () => {
-  loadData()
+  await loadData()
 
   const id = route.params.id
   if (id) {
     try {
+      // start loading order data
+      isLoadingOrderData.value = true
       const { data } = await orderService.detailOrderUpdate(id)
       order.value = data
       order.value.itemtime_set = order.value.itemtime_set.map((itemTime) => {
@@ -286,6 +297,9 @@ onMounted(async () => {
       })      
     } catch (error) {
       errorHandler(error, orderBackendErrors, objectNames.order)
+    } finally {
+      // finish loading order data
+      isLoadingOrderData.value = false
     }
   } else {
     // create initial empty objects for itemtime
@@ -312,7 +326,25 @@ onMounted(async () => {
     </div>
 
     <!-- main content -->
-    <div class="col-md-10">
+
+    <!-- Loading backen data -->
+    <div class="col-md-10" v-if="isLoadingBackendData">
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+        <span role="status" class="text-primary">Cargando datos... </span>
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <!-- Loading order data -->
+    <div class="col-md-10" v-else-if="isLoadingOrderData">
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+        <span role="status" class="text-primary">Cargando orden... </span>
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <!-- displaying form -->
+    <div v-else class="col-md-10">
       <!-- form -->
       <form @submit.prevent="onSubmit" class="row">
         <!-- backend errors -->
