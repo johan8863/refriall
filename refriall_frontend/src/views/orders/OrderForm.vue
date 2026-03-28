@@ -327,7 +327,7 @@ onMounted(async () => {
 
     <!-- main content -->
 
-    <!-- Loading backen data -->
+    <!-- Loading backend data -->
     <div class="col-md-10" v-if="isLoadingBackendData">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
         <span role="status" class="text-primary">Cargando datos... </span>
