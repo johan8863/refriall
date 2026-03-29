@@ -47,11 +47,12 @@ const errorMessage = ref(null)
 const router = useRouter();
 const route = useRoute();
 
-
 const goToCustomers = () => router.push({name: 'customers'})
 const goToCustomerDetail = () => router.push({name: 'customers_detail', params: {id: customer.value.id}})
 const goBack = () => !customer.value.id ? goToCustomers() : goToCustomerDetail()
 
+// loading state
+const isLoading = ref(false)
 
 // vuelidate rules
 const rules = {
@@ -132,8 +133,18 @@ const handleSubmit = async () => {
 onMounted(async () => {
     const id = route.params.id;
     if (id) {
-        const { data } = await customerService.detailCustomer(id);
-        customer.value = data;
+        try {
+            // start loading state
+            isLoading.value = true
+            // get customer data
+            const { data } = await customerService.detailCustomer(id);
+            customer.value = data;
+        } catch (error) {
+            errorHandler(error, errorMessage, 'Cliente', 'm')
+        } finally {
+            // stop loading state
+            isLoading.value = false
+        }
     }
 });
 
@@ -155,7 +166,15 @@ onMounted(async () => {
         </div>
 
         <!-- main content -->
-        <div class="col-md-4">
+        <!-- loading customer data -->
+        <div v-if="isLoading" class="col-md-4">
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+                <span role="status" class="text-primary">Cargando datos... </span>
+                <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+            </div>
+        </div>
+        <!-- displaying customer data -->
+        <div v-else class="col-md-4">
             <!-- form -->
             <!-- backend errors from non_field_errors dictionary -->
             <span v-if="customerErrors.non_field_errors">
