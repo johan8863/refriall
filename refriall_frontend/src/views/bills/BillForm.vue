@@ -14,6 +14,7 @@ import { orderService } from '../../services/orderService'
 import { providerService } from '../../services/providerService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { currencyService } from '../../services/currencyService'
+import { errorHandler } from '../../utils/errors/errorHandler'
 
 const bill = ref({
   customer: '',
@@ -67,8 +68,10 @@ const goToBillDetail = () => router.push({ name: 'bills_detail', params: { id: b
 const goBack = () => (!bill.value.id ? goToBills() : goToBillDetail())
 
 // loading status
-const isLoadingBackendData = ref(false)
-const isLoadingBillData = ref(false)
+const isLoading = ref(false)
+
+// error message
+const errorMessage = ref(null)
 
 // custom rules
 const atLeastOneOrder = () => bill.value.orders.length > 0
@@ -147,47 +150,73 @@ const chargeCustomersNoBill = async () => {
   customers.value = respCustomers.data
 }
 
+// function to load providers with free orders to match given a currency
 const chargeProviderNoBill = async () => {
-  bill.value.provider = ''
-  orders.value = []
-  const respProviders = await providerService.listProviderCurrencyOrderNoBill(bill.value.currency)
-  providers.value = respProviders.data
-}
-
-const customersFromProvider = async () => {
   try {
-    if (bill.value.currency && bill.value.provider) {
-      orders.value = []
-      customers.value = (
-        await customerService.listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)
-      ).data
-    }
-    if (bill.value.currency && bill.value.provider && bill.value.customer) {
-      orders.value = []
-      customers.value = (
-        await customerService.listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)
-      ).data
-      orders.value = (
-        await orderService.getOrdersFromCustomerNotMatched(
-          bill.value.currency,
-          bill.value.provider,
-          bill.value.customer
-        )
-      ).data
-    }
+    // start loading state
+    isLoading.value = true
+    // reseting error state
+    errorMessage.value = null
+    // reseting bill both provider and orders 
+    // every time a new currency is selected
+    bill.value.provider = ''
+    providers.value = []
+    orders.value = []
+    // getting backend data
+    const respProviders = await providerService.listProviderCurrencyOrderNoBill(bill.value.currency)
+    providers.value = respProviders.data
   } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      billBackendErrors.value = error.response.data
-    } else {
-      billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
-    console.log(billBackendErrors.value)
+    error(error)
+    errorHandler(error, errorMessage, 'Prestador', 'm')
+  } finally {
+    isLoading.value = false
   }
 }
 
+// get the customers with free orders given a currency and a provider
+const customersFromProvider = async () => {
+  try {
+    // start loading state
+    isLoading.value = true
+    // if available both currency and provider, retrieve/update the list of customers
+    if (bill.value.currency && bill.value.provider) {
+      orders.value = []
+      customers.value = (
+        await customerService.listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)
+      ).data
+      // if customer changes, retrieve/update the list of orders
+      if (bill.value.customer) {
+        orders.value = (
+          await orderService.getOrdersFromCustomerNotMatched(
+            bill.value.currency,
+            bill.value.provider,
+            bill.value.customer
+          )
+        ).data
+      }
+    }
+  } catch (error) {
+    console.error('General error', error)
+    if (error.response) {
+      billBackendErrors.value = error.response.data
+    } else {
+      billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+    }
+    console.log(billBackendErrors.value)
+  } finally {
+    // finish loading state
+    isLoading.value = false
+  }
+}
+
+// get the available orders given a customer
 const ordersFromCustomer = async () => {
   try {
+    // start loading state
+    isLoading.value = true
+    // reset orders
+    orders.value = []
+    // if both currency and provider, retrieve/update the orders list
     if (bill.value.currency && bill.value.provider) {
       orders.value = (
         await orderService.getOrdersFromCustomerNotMatched(
@@ -207,6 +236,8 @@ const ordersFromCustomer = async () => {
       billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
     }
     console.log(billBackendErrors.value)
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -259,27 +290,19 @@ onMounted(async () => {
 
     <!-- main content -->
 
-    <!-- Loading backend data -->
-    <div v-if="isLoadingBackendData" class="col-md-9">
+    <!-- Loading data -->
+    <div v-if="isLoading" class="col-md-9">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
         <span role="status" class="text-primary">Cargando datos... </span>
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
     </div>
 
-    <!-- Loading bill data -->
-    <div v-else-if="isLoadingBillData" class="col-md-9">
-      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
-        <span role="status" class="text-primary">Cargando orden... </span>
-        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
-      </div>
-    </div>
-
     <!-- displaying form -->
-    <div class="col-md-9">
-      <template v-if="bill.currency && providers.length === 0">
+    <div v-else class="col-md-9">
+      <div v-if="bill.currency && providers.length === 0">
         <span class="text-danger">No hay órdenes libres para asociar.</span>
-      </template>
+      </div>
 
       <!-- form -->
       <form @submit.prevent="handleSubmit" class="row">
