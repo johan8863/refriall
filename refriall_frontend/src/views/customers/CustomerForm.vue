@@ -6,6 +6,7 @@ import { ref, onMounted } from 'vue';
 // app
 import { customerService } from "../../services/customerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+import { errorHandler } from "../../utils/errors/errorHandler";
 
 // third
 import { useVuelidate } from "@vuelidate/core";
@@ -26,7 +27,7 @@ const customer = ref({
 });
 
 
-// customer object to be created or updated
+// customer backend errors
 const customerErrors = ref({
     customer_type: [],
     name: [],
@@ -39,6 +40,8 @@ const customerErrors = ref({
     bank_account: [],
 });
 
+// error message
+const errorMessage = ref(null)
 
 // router utilities and handlers
 const router = useRouter();
@@ -95,11 +98,7 @@ const createCustomer = async (customer) => {
         // in case of backend exceptions, fill the corresponding ones in the 
         // customerErrors object
         console.error('General error', error)
-        if (error.response) {
-            customerErrors.value = error.response.data
-        } else {
-            customerErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-        }
+        errorHandler(error, errorMessage, 'Cliente', 'm')
     }
 };
 
@@ -117,11 +116,7 @@ const updateCustomer = async (customer) => {
         // in case of backend exceptions, fill the corresponding ones in the 
         // customerErrors object
         console.error('General error', error)
-        if (error.response) {
-            customerErrors.value = error.response.data
-        } else {
-            customerErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-        }
+        errorHandler(error, errorMessage, 'Cliente', 'm')
     }
 };
 
