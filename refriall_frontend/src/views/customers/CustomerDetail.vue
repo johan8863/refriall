@@ -92,17 +92,21 @@ onMounted(async () => {
         </div>
 
         <!-- main content -->
+        
+        <!-- loading customer data -->
+        <div v-if="isLoading" class="col-md-4">
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+                <span role="status" class="text-primary">Cargando datos... </span>
+                <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+            </div>
+        </div>
+
+        <!-- displaying customer data -->
         <div class="col-md-4">
             <!-- backend general errors -->
             <span v-if="customerBackendErrors">
                 <p class="form-text text-danger">{{ customerBackendErrors }}</p>
             </span>
-            
-            <div v-if="isLoading" class="text-center">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Cargando...</span>
-                </div>
-            </div>
 
             <div v-else>
                 <h3>{{ customer.name }}</h3>
