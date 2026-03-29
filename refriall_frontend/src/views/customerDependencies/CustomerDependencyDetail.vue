@@ -17,7 +17,7 @@ const dependency = ref({
     township: '',
 });
 
-const billBackendErrors = ref(null);
+const customerDependencyBackendErrors = ref(null);
 
 onMounted(async () => {
     try {
@@ -28,9 +28,9 @@ onMounted(async () => {
     } catch (error) {
         console.error('General error', error)
         if (error.response) {
-            billBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`
+            customerDependencyBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`
         } else {
-            billBackendErrors.value = 'Error inesperado, consulte al desarrollador'
+            customerDependencyBackendErrors.value = 'Error inesperado, consulte al desarrollador'
         }
     }
 });
@@ -63,10 +63,10 @@ onMounted(async () => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- backend general errors -->
-            <span v-if="billBackendErrors">
+            <span v-if="customerDependencyBackendErrors">
                 <p
                     class="form-text text-danger">
-                    {{ billBackendErrors }}</p>
+                    {{ customerDependencyBackendErrors }}</p>
             </span>
 
             <h3>{{ dependency.name }}</h3>
