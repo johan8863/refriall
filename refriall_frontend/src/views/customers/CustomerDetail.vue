@@ -20,7 +20,9 @@ const customer = ref({
     bank_account: '',
     get_dependencies: [],
 });
-const billBackendErrors = ref(null);
+// errors
+const customerBackendErrors = ref(null);
+
 const isLoading = ref(false);
 
 // search variables for dependencies
@@ -56,9 +58,9 @@ onMounted(async () => {
         customer.value = resp.data;
     } catch (error) {
         if (error.response) {
-            billBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`;
+            customerBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`;
         } else {
-            billBackendErrors.value = 'Error inesperado, consulte al desarrollador';
+            customerBackendErrors.value = 'Error inesperado, consulte al desarrollador';
         }
     } finally {
         isLoading.value = false;
@@ -95,8 +97,8 @@ onMounted(async () => {
         <!-- main content -->
         <div class="col-md-4">
             <!-- backend general errors -->
-            <span v-if="billBackendErrors">
-                <p class="form-text text-danger">{{ billBackendErrors }}</p>
+            <span v-if="customerBackendErrors">
+                <p class="form-text text-danger">{{ customerBackendErrors }}</p>
             </span>
             
             <div v-if="isLoading" class="text-center">
