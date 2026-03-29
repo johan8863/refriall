@@ -18,10 +18,16 @@ const item = ref({
     price: 0,
 });
 
+// loading state
+const isLoading = ref(false)
+
 const itemBackendErrors = ref(null)
 
 onMounted(async () => {
     try {
+        // start loading state
+        isLoading.value = true
+        // getting item data
         const resp = await itemService.detailItem(route.params.id);
         item.value = resp.data;
     } catch (error) {
@@ -31,6 +37,9 @@ onMounted(async () => {
         } else {
             itemBackendErrors.value = 'Error inesperado, consulte al desarrollador'
         }
+    } finally {
+        // stop loading state
+        isLoading.value = false
     }
 });
 
@@ -60,7 +69,16 @@ onMounted(async () => {
         </div>
 
         <!-- main content -->
-        <div class="col-md-6">
+        
+        <!-- loading item data -->
+        <div v-if="isLoading" class="col-md-6">
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+                <span role="status" class="text-primary">Cargando datos... </span>
+                <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+            </div>
+        </div>
+        <!-- displaying item data -->
+        <div v-else class="col-md-6">
             <!-- backend general errors -->
             <span v-if="itemBackendErrors">
                 <p
