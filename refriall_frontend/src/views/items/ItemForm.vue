@@ -109,8 +109,8 @@ const updateItem = async (item) => {
 onMounted(async () => {
     const id = route.params.id;
     if (id) {
-       (id);
-        item.value = data;
+        const response = await itemService.getItem(id)
+        item.value = response.data;
     }
 });
 
