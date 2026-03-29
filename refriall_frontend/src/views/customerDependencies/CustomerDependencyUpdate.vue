@@ -59,10 +59,10 @@ const rules = {
 const v$ = useVuelidate(rules, dependency);
 
 
-const updateDependency = async (dependency) => {
+const updateDependency = async () => {
     try {
         if (await v$.value.$validate) {
-            const { data } = await customerDependecyService.putCustomerDependcy(dependency);
+            const { data } = await customerDependecyService.putCustomerDependcy(dependency.value);
             router.push({
                 name: 'customers_detail',
                 params: {
@@ -120,7 +120,7 @@ onMounted(async () => {
                     {{ dependencyErrors.message }}</p>
             </span>
             <!-- form -->
-            <form @submit.prevent="updateDependency(dependency)">
+            <form @submit.prevent="updateDependency">
                 <span v-if="dependencyErrors.non_field_errors">
                     <p
                         class="form-text text-danger"
