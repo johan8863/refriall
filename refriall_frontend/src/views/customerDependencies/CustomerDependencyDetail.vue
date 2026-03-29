@@ -20,15 +20,22 @@ const dependency = ref({
 
 const customerDependencyBackendErrors = ref(null);
 
+// loading state
+const isLoading = ref(false)
+
 onMounted(async () => {
     try {
+        // start loading state
+        isLoading.value = true
+        // get dependecy data
         const response = await customerDependecyService.detailCustomerDependecy(route.params.id);
         dependency.value = response.data;
-
-        
     } catch (error) {
         console.error('General error', error)
         errorHandler(error, customerDependencyBackendErrors, 'Dependencia')
+    } finally {
+        // stop loading state
+        isLoading.value = false
     }
 });
 
@@ -58,7 +65,16 @@ onMounted(async () => {
         </div>
 
         <!-- main content -->
-        <div class="col-md-4">
+
+        <!-- loading dependency data -->
+        <div v-if="isLoading" class="col-md-4">
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+                <span role="status" class="text-primary">Cargando datos... </span>
+                <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+            </div>
+        </div>
+        <!-- displaying dependency data -->
+        <div v-else class="col-md-4">
             <!-- backend general errors -->
             <span v-if="customerDependencyBackendErrors">
                 <p
