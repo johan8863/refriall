@@ -6,6 +6,7 @@ import { useRoute } from "vue-router";
 // app
 import { customerService } from "../../services/customerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+import { errorHandler } from "../../utils/errors/errorHandler";
 
 const route = useRoute();
 const customer = ref({
@@ -57,11 +58,7 @@ onMounted(async () => {
         const resp = await customerService.detailCustomer(route.params.id);
         customer.value = resp.data;
     } catch (error) {
-        if (error.response) {
-            customerBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`;
-        } else {
-            customerBackendErrors.value = 'Error inesperado, consulte al desarrollador';
-        }
+        errorHandler(error, customerBackendErrors, 'Cliente', 'm')
     } finally {
         isLoading.value = false;
     }
