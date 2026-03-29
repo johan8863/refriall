@@ -36,6 +36,9 @@ const currencyBackendErrors = ref({
     description: [],
 });
 
+// loading state
+const isLoading = ref(false)
+
 
 // rules to manage front validations
 const rules = {
@@ -96,6 +99,7 @@ const updateCurrency = async () => {
     }
 };
 
+// submit handler
 const handleSubmit = async () => {
     currency.value.id ?
         await updateCurrency() :
