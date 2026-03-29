@@ -24,6 +24,7 @@ const goBack = () => !currency.value.id ? goToCurrencies() : goToCurrencyDetail(
 
 // currency object for post and put requests
 const currency = ref({
+    id: '',
     name: '',
     description: '',
 });
@@ -49,18 +50,18 @@ const v$ = useVuelidate(rules, currency);
 
 
 // helper function to always set to upper case the name of the currency
-const currenyNameUpper = (currency) => currency.name = currency.name.toUpperCase();
+const currenyNameUpper = () => currency.value.name = currency.value.name.toUpperCase();
 
 
 // create kit object function
-const createCurrency = async (currency) => {
+const createCurrency = async () => {
     try {
         if (await v$.value.$validate()) {
             // if front validations run,
             // set the currency name to upper case and
             // post the object and redirect to its detail view
-            currenyNameUpper(currency);
-            const { data } = await currencyService.postCurrency(currency);
+            currenyNameUpper();
+            const { data } = await currencyService.postCurrency(currency.value);
             router.push({name: 'currency_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -75,14 +76,14 @@ const createCurrency = async (currency) => {
 
 
 // update kit object function
-const updateCurrency = async (currency) => {
+const updateCurrency = async () => {
     try {
         if (await v$.value.$validate()) {
             // if front validations run,
             // set the currency name to upper case and
             // put the object and redirect to its detail view
-            currenyNameUpper(currency);
-           (currency);
+            currenyNameUpper();
+            const { data } = await currencyService.putCurrency(currency.value);
             router.push({name: 'currency_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -94,6 +95,12 @@ const updateCurrency = async (currency) => {
         }
     }
 };
+
+const handleSubmit = async () => {
+    currency.value.id ?
+        await updateCurrency() :
+        await createCurrency()
+}
 
 
 // onMounted life cycle
@@ -144,7 +151,7 @@ onMounted(async () => {
             </span>
             <!-- form -->
             <form
-              @submit.prevent="!currency.id ? createCurrency(currency) : updateCurrency(currency)"
+              @submit.prevent="handleSubmit"
               class="row">
                 <!-- name control -->
                 <div class="col-md-6 mb-2">
