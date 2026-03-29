@@ -86,12 +86,12 @@ const rules = {
 const v$ = useVuelidate(rules, customer);
 
 // create customer function
-const createCustomer = async (customer) => {
+const createCustomer = async () => {
     try {
         if (await v$.value.$validate()) {
             // if front validations run, insert a customer 
             // and redirect to its detail view
-            const { data } = await customerService.postCustomer(customer);
+            const { data } = await customerService.postCustomer(customer.value);
             router.push({name: 'customers_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -104,12 +104,12 @@ const createCustomer = async (customer) => {
 
 
 // update customer function
-const updateCustomer = async (customer) => {
+const updateCustomer = async () => {
     try {
         if (await v$.value.$validate()) {
             // if front validations run, update a customer 
             // and redirect to its detail view
-            const { data } = await customerService.putCustomer(customer);
+            const { data } = await customerService.putCustomer(customer.value);
             router.push({name: 'customers_detail', params: {id: data.id}});
         }
     } catch (error) {
@@ -119,6 +119,12 @@ const updateCustomer = async (customer) => {
         errorHandler(error, errorMessage, 'Cliente', 'm')
     }
 };
+
+const handleSubmit = async () => {
+    customer.value.id ? 
+        await updateCustomer() :
+        await createCustomer()
+}
 
 
 // onMounted cycle to get the customer object 
@@ -165,7 +171,7 @@ onMounted(async () => {
                       class="form-text text-danger">
                       {{ customerErrors.message }}</p>
                 </span>
-            <form @submit.prevent="!customer.id ? createCustomer(customer) : updateCustomer(customer)">
+            <form @submit.prevent="handleSubmit">
                 <!-- customer_type control -->
                 <div class="mb-2">
                     <label for="customer_type" class="form-label">Tipo</label>
