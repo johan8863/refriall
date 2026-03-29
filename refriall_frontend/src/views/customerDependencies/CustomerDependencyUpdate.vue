@@ -7,6 +7,7 @@ import { useRoute, useRouter } from "vue-router";
 // app
 import { customerDependecyService } from "../../services/customerDependencyService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+import { errorHandler } from "../../utils/errors/errorHandler";
 
 // third
 import { useVuelidate } from "@vuelidate/core";
@@ -38,6 +39,8 @@ const dependencyErrors = ref({
     township: [],
 });
 
+// loading state
+const isLoading = ref(false)
 
 const rules = {
     name: {
@@ -58,10 +61,9 @@ const rules = {
 // vuelidate object
 const v$ = useVuelidate(rules, dependency);
 
-
 const updateDependency = async () => {
     try {
-        if (await v$.value.$validate) {
+        if (await v$.value.$validate()) {
             const { data } = await customerDependecyService.putCustomerDependcy(dependency.value);
             router.push({
                 name: 'customers_detail',
@@ -83,8 +85,18 @@ const updateDependency = async () => {
 
 // onMounted cycle
 onMounted(async () => {
-    const resp = await customerDependecyService.detailCustomerDependecy(route.params.id);
-    dependency.value = resp.data;
+    try {
+        // start loading state
+        isLoading.value = true
+        // get dependency data
+        const resp = await customerDependecyService.detailCustomerDependecy(route.params.id);
+        dependency.value = resp.data;
+    } catch (error) {
+        errorHandler(error, dependencyErrors, 'Dependencia')
+    } finally {
+        // stop loading state
+        isLoading.value = false
+    }
 });
 
 </script>
@@ -104,7 +116,16 @@ onMounted(async () => {
         </div>
 
         <!-- main content -->
-        <div class="col-md-4">
+        
+        <!-- loading dependency data -->
+        <div v-if="isLoading" class="col-md-4">
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+                <span role="status" class="text-primary">Cargando datos... </span>
+                <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+            </div>
+        </div>
+        <!-- displaying dependency data -->
+        <div v-else class="col-md-4">
             <!-- backend errors from non_field_errors dictionary -->
             <span v-if="dependencyErrors.non_field_errors">
                 <p
