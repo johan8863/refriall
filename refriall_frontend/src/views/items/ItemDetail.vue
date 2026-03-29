@@ -6,6 +6,7 @@ import { useRoute } from 'vue-router'
 // app
 import { itemService } from '../../services/itemService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import { errorHandler } from '../../utils/errors/errorHandler'
 
 const route = useRoute()
 const item = ref({
@@ -30,11 +31,7 @@ onMounted(async () => {
     item.value = resp.data
   } catch (error) {
     console.error('General error', error)
-    if (error.response) {
-      itemBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`
-    } else {
-      itemBackendErrors.value = 'Error inesperado, consulte al desarrollador'
-    }
+    errorHandler(error, itemBackendErrors, 'Artículo', 'm')
   } finally {
     // stop loading state
     isLoading.value = false
