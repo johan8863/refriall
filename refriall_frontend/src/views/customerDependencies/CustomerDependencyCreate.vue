@@ -18,7 +18,7 @@ const route = useRoute();
 
 const goToCustomers = () => router.push({name: 'customers'});
 
-
+// dependncy objects
 const dependency = ref({
     customer: '',
     name: '',
@@ -53,11 +53,11 @@ const rules = {
 // vuelidate object
 const v$ = useVuelidate(rules, dependency);
 
-const createDependency = async (dependency) => {
+const createDependency = async () => {
     try {
-        if (await v$.value.$validate) {
+        if (await v$.value.$validate()) {
             dependency.customer = route.params.id;
-            const { data } = await customerDependecyService.postCustomerDependency(dependency);
+            const { data } = await customerDependecyService.postCustomerDependency(dependency.value);
             router.push({
                 name: 'customers_detail',
                 params: {
@@ -108,7 +108,7 @@ const createDependency = async (dependency) => {
                     {{ dependencyErrors.message }}</p>
             </span>
             <!-- form -->
-            <form @submit.prevent="createDependency(dependency)">
+            <form @submit.prevent="createDependency">
                 <span v-if="dependencyErrors.non_field_errors">
                     <p
                         class="form-text text-danger"
