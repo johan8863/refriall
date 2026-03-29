@@ -7,6 +7,7 @@ import { useRoute } from "vue-router";
 // app
 import { customerDependecyService } from '../../services/customerDependencyService';
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+import { errorHandler } from "../../utils/errors/errorHandler";
 
 const route = useRoute();
 const dependency = ref({
@@ -27,11 +28,7 @@ onMounted(async () => {
         
     } catch (error) {
         console.error('General error', error)
-        if (error.response) {
-            customerDependencyBackendErrors.value = `${error.response.data.detail} - ${error.response.status}`
-        } else {
-            customerDependencyBackendErrors.value = 'Error inesperado, consulte al desarrollador'
-        }
+        errorHandler(error, customerDependencyBackendErrors, 'Dependencia')
     }
 });
 
