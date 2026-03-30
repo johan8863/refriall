@@ -22,10 +22,6 @@ class ItemViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'code', 'description']
 
-    def get_serializer_class(self):
-        if self.action in ['list', 'retrieve']:
-            return ItemSerializerForReadOnly
-        return ItemSerializer
 
     def destroy(self, request, *args, **kwargs):
         try:
