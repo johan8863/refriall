@@ -1,208 +1,197 @@
 <script setup>
 // vue
-import { ref, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 // local
-import { kitService } from "../../services/kitService";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+import { kitService } from '../../services/kitService'
+import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 
 // third
-import { useVuelidate } from "@vuelidate/core";
-import { required, helpers } from "@vuelidate/validators";
-import { errorHandler } from "../../utils/errors/errorHandler";
-
+import { useVuelidate } from '@vuelidate/core'
+import { required, helpers } from '@vuelidate/validators'
+import { errorHandler } from '../../utils/errors/errorHandler'
 
 // kit object for post and put requests
 const kit = ref({
-    name: ''
-});
-
+  name: ''
+})
 
 // kit object to catch error messages from
 // django rest api
 const kitErrors = ref({
-    name: [],
-    detail: [],
-});
-
+  name: [],
+  detail: []
+})
 
 // router utilities and handlers
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 
-const goToKits = () => router.push({name: 'kits'})
-const goToKitDetail = () => router.push({name: 'kits_detail', params: {id: kit.value.id}})
-const goBack = () => !kit.value.id ? goToKits() : goToKitDetail()
+const goToKits = () => router.push({ name: 'kits' })
+const goToKitDetail = () => router.push({ name: 'kits_detail', params: { id: kit.value.id } })
+const goBack = () => (!kit.value.id ? goToKits() : goToKitDetail())
 
 // loading state
 const isLoading = ref(false)
 
 // rules to manage front validations
 const rules = {
-    name: {
-        required: helpers.withMessage('El nombre es requierido.', required)
-    }
-};
-
+  name: {
+    required: helpers.withMessage('El nombre es requierido.', required)
+  }
+}
 
 // vuelidate object
-const v$ = useVuelidate(rules, kit);
-
+const v$ = useVuelidate(rules, kit)
 
 // create kit object function
 const createKit = async (kit) => {
-    try {
-        if (await v$.value.$validate()) {
-            // if front validations run,
-            // post the object and redirect to its detail view
-            const { data } = await kitService.postKit(kit);
-            router.push({name: 'kits_detail', params: {id: data.id}});
-        }
-    } catch (error) {
-        // in case of backend errors, assign the errors dictionary
-        // to the kit errors object
-        console.error('General error', error)
-        if (error.response) {
-            kitErrors.value = error.response.data
-        } else {
-            kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-        }
+  try {
+    if (await v$.value.$validate()) {
+      // if front validations run,
+      // post the object and redirect to its detail view
+      const { data } = await kitService.postKit(kit)
+      router.push({ name: 'kits_detail', params: { id: data.id } })
     }
-};
-
+  } catch (error) {
+    // in case of backend errors, assign the errors dictionary
+    // to the kit errors object
+    console.error('General error', error)
+    if (error.response) {
+      kitErrors.value = error.response.data
+    } else {
+      kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+    }
+  }
+}
 
 const updateKit = async (kit) => {
-    try {
-        // if front validations run,
-        // put the object and redirect to its detail view
-        if (await v$.value.$validate()) {
-            const { data } = await kitService.putKit(kit);
-            router.push({name: 'kits_detail', params: {id: data.id}});
-        }
-    } catch (error) {
-        // in case of backend errors, assign the errors dictionary
-        // to the kit errors object
-        console.error('General error', error)
-        if (error.response) {
-            kitErrors.value = error.response.data
-        } else {
-            kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-        }
+  try {
+    // if front validations run,
+    // put the object and redirect to its detail view
+    if (await v$.value.$validate()) {
+      const { data } = await kitService.putKit(kit)
+      router.push({ name: 'kits_detail', params: { id: data.id } })
     }
-};
-
+  } catch (error) {
+    // in case of backend errors, assign the errors dictionary
+    // to the kit errors object
+    console.error('General error', error)
+    if (error.response) {
+      kitErrors.value = error.response.data
+    } else {
+      kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
+    }
+  }
+}
 
 onMounted(async () => {
-    try {
-        // start loading state
-        isLoading.value = true
-        // getting kit from backend
-        const id = route.params.id;
-        if (id) {
-            const { data } = await kitService.detailKit(id);
-            kit.value = data;
-        }
-    } catch (error) {
-        errorHandler(error, kitErrors, 'Equipo', 'm')
-    } finally {
-        // stop loading state
-        isLoading.value = false
+  try {
+    // start loading state
+    isLoading.value = true
+    // getting kit from backend
+    const id = route.params.id
+    if (id) {
+      const { data } = await kitService.detailKit(id)
+      kit.value = data
     }
-});
-
+  } catch (error) {
+    errorHandler(error, kitErrors, 'Equipo', 'm')
+  } finally {
+    // stop loading state
+    isLoading.value = false
+  }
+})
 </script>
 
 <template>
+  <div class="row">
+    <!-- side menu -->
+    <div class="col-md-2">
+      <ul :class="listGroup.listGroup">
+        <li :class="listGroup.listGroupItem">
+          <strong>Equipos</strong>
+        </li>
+        <li :class="listGroup.listGroupItem">
+          <router-link :to="{ name: 'kits' }">Equipos</router-link>
+        </li>
+      </ul>
+    </div>
 
-    <div class="row">
-        <!-- side menu -->
-        <div class="col-md-2">
-            <ul :class="listGroup.listGroup">
-                <li :class="listGroup.listGroupItem">
-                    <strong>Equipos</strong>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link :to="{name: 'kits'}">Equipos</router-link>
-                </li>
-            </ul>
-        </div>
+    <!-- main content -->
 
-        <!-- main content -->
-        
-        <!-- loading kit data -->
-        <div v-if="isLoading" class="col-md-6">
-            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
-                <span role="status" class="text-primary">Cargando datos... </span>
-                <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
-            </div>
+    <!-- loading kit data -->
+    <div v-if="isLoading" class="col-md-6">
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+        <span role="status" class="text-primary">Cargando datos... </span>
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+      </div>
+    </div>
+    <!-- displaying kit data -->
+    <div v-else class="col-md-4">
+      <!-- backend errors from non_field_errors dictionary -->
+      <span v-if="kitErrors.non_field_errors">
+        <p
+          class="form-text text-danger"
+          v-for="(error, index) in kitErrors.non_field_errors"
+          :key="index"
+        >
+          {{ error }}
+        </p>
+      </span>
+      <!-- backend general errors -->
+      <span v-if="kitErrors.message">
+        <p class="form-text text-danger">
+          {{ kitErrors.message }}
+        </p>
+      </span>
+      <!-- form -->
+      <form @submit.prevent="!kit.id ? createKit(kit) : updateKit(kit)">
+        <span v-if="kitErrors.non_field_errors">
+          <p
+            class="form-text text-danger"
+            v-for="(error, i) in kitErrors.non_field_errors"
+            :key="i"
+          >
+            {{ error.$message }}
+          </p>
+        </span>
+        <!-- name control -->
+        <div class="mb-2">
+          <label for="name" class="form-label">Nombre</label>
+          <input
+            autofocus
+            type="text"
+            id="name"
+            class="form-control"
+            v-model.trim="kit.name"
+            @blur="v$.name.$touch"
+          />
+          <!-- frontend validations -->
+          <p class="form-text text-danger" v-for="error in v$.name.$errors" :key="error.$uid">
+            {{ error.$message }}
+          </p>
+          <!-- backend validations -->
+          <span v-if="kitErrors.name">
+            <p class="form-text text-danger" v-for="(error, index) in kitErrors.name" :key="index">
+              {{ error }}
+            </p>
+          </span>
         </div>
-        <!-- displaying kit data -->
-        <div v-else class="col-md-4">
-            <!-- backend errors from non_field_errors dictionary -->
-            <span v-if="kitErrors.non_field_errors">
-                <p
-                    class="form-text text-danger"
-                    v-for="(error, index) in kitErrors.non_field_errors"
-                    :key="index">
-                    {{ error }}</p>
-            </span>
-            <!-- backend general errors -->
-            <span v-if="kitErrors.message">
-                <p
-                    class="form-text text-danger">
-                    {{ kitErrors.message }}</p>
-            </span>
-            <!-- form -->
-            <form @submit.prevent="!kit.id ? createKit(kit) : updateKit(kit)">
-                <span v-if="kitErrors.non_field_errors">
-                    <p
-                        class="form-text text-danger"
-                        v-for="(error, i) in kitErrors.non_field_errors"
-                        :key="i">{{ error.$message }}</p>
-                </span>
-                <!-- name control -->
-                <div class="mb-2">
-                    <label for="name" class="form-label">Nombre</label>
-                    <input
-                      autofocus
-                      type="text"
-                      id="name"
-                      class="form-control"
-                      v-model.trim="kit.name"
-                      @blur="v$.name.$touch">
-                    <!-- frontend validations -->
-                    <p
-                        class="form-text text-danger"
-                        v-for="error in v$.name.$errors"
-                        :key="error.$uid">{{ error.$message }}</p>
-                    <!-- backend validations -->
-                    <span v-if="kitErrors.name">
-                        <p
-                          class="form-text text-danger"
-                          v-for="(error, index) in kitErrors.name"
-                          :key="index">{{ error }}</p>
-                    </span>
-                </div>
-                <!-- buttons -->
-                <div>
-                    <!-- 
+        <!-- buttons -->
+        <div>
+          <!-- 
                         the order in the ternary operator is due to the fact that 
                         this form is more often used to create than to update 
                     -->
-                    <button
-                      type="submit"
-                      class="btn btn-sm btn-primary">
-                        {{ !kit.id ? 'Guardar' : 'Actualizar' }}
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-secondary"
-                      @click="goBack">Cancelar</button>
-                </div>
-            </form>
+          <button type="submit" class="btn btn-sm btn-primary">
+            {{ !kit.id ? 'Guardar' : 'Actualizar' }}
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" @click="goBack">Cancelar</button>
         </div>
-
-    </div> <!-- end row -->
-
+      </form>
+    </div>
+  </div>
+  <!-- end row -->
 </template>
