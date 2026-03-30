@@ -46,7 +46,7 @@ class ItemListForSelect(APIView):
         if search_term:
             items = items.filter(name__icontains=search_term)
         
-        serializer = ItemSerializerForReadOnly(items, many=True)
+        serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
 
 
