@@ -10,6 +10,7 @@ import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 // third
 import { useVuelidate } from "@vuelidate/core";
 import { required, minValue, helpers } from "@vuelidate/validators";
+import { errorHandler } from "../../utils/errors/errorHandler";
 
 
 // item object to be created or updated
@@ -32,6 +33,8 @@ const itemErrors = ref({
     price: [],
 });
 
+const errorMessage = ref(null)
+
 // router utilities and handlers
 const router = useRouter();
 const route = useRoute();
@@ -40,6 +43,8 @@ const goToItems = () => router.push({name: 'items'})
 const goToItemDetail = () => router.push({name: 'items_detail', params: {id: item.value.id}})
 const goBack = () => !item.value.id ? goToItems() : goToItemDetail()
 
+// loading state
+const isLoading = ref(false)
 
 // vuelidate rules
 const rules = {
@@ -109,8 +114,18 @@ const updateItem = async (item) => {
 onMounted(async () => {
     const id = route.params.id;
     if (id) {
-        const response = await itemService.getItem(id)
-        item.value = response.data;
+        try {
+            // start loading state
+            isLoading.value = true
+            // getting item data from backend
+            const response = await itemService.getItem(id)
+            item.value = response.data;
+        } catch (error) {
+            errorHandler(error, errorMessage, 'Artículo', 'm')
+        } finally {
+            // stop loading state
+            isLoading.value = false
+        }
     }
 });
 
@@ -131,7 +146,21 @@ onMounted(async () => {
         </div>
 
         <!-- main content -->
-        <div class="col-md-4">
+        
+        <!-- loading item data -->
+        <div v-if="isLoading" class="col-md-6">
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+                <span role="status" class="text-primary">Cargando datos... </span>
+                <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+            </div>
+        </div>
+
+        <!-- displaying form -->
+        <div v-else class="col-md-4">
+            <!-- backend errors when getting item data -->
+            <span v-if="errorMessage">
+                <p class="form-text text-danger">{{ errorMessage }}</p>
+            </span>
             <!-- backend errors from non_field_errors dictionary -->
             <span v-if="itemErrors.non_field_errors">
                 <p
