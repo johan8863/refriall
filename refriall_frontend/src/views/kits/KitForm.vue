@@ -10,6 +10,7 @@ import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 // third
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
+import { errorHandler } from "../../utils/errors/errorHandler";
 
 
 // kit object for post and put requests
@@ -33,6 +34,9 @@ const route = useRoute();
 const goToKits = () => router.push({name: 'kits'})
 const goToKitDetail = () => router.push({name: 'kits_detail', params: {id: kit.value.id}})
 const goBack = () => !kit.value.id ? goToKits() : goToKitDetail()
+
+// loading state
+const isLoading = ref(false)
 
 // rules to manage front validations
 const rules = {
@@ -91,16 +95,19 @@ const updateKit = async (kit) => {
 
 onMounted(async () => {
     try {
+        // start loading state
+        isLoading.value = true
+        // getting kit from backend
         const id = route.params.id;
         if (id) {
             const { data } = await kitService.detailKit(id);
             kit.value = data;
         }
     } catch (error) {
-        // in case of backend errors, assign the errors dictionary
-        // to the kit errors object
-        kitErrors.value = error.response.data;
-        console.log(error.response.data);
+        errorHandler(error, kitErrors, 'Equipo', 'm')
+    } finally {
+        // stop loading state
+        isLoading.value = false
     }
 });
 
@@ -122,7 +129,16 @@ onMounted(async () => {
         </div>
 
         <!-- main content -->
-        <div class="col-md-4">
+        
+        <!-- loading kit data -->
+        <div v-if="isLoading" class="col-md-6">
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+                <span role="status" class="text-primary">Cargando datos... </span>
+                <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+            </div>
+        </div>
+        <!-- displaying kit data -->
+        <div v-else class="col-md-4">
             <!-- backend errors from non_field_errors dictionary -->
             <span v-if="kitErrors.non_field_errors">
                 <p
