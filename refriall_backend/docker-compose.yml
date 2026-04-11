@@ -1,7 +1,7 @@
 services:
   db:
     container_name: mariadb_refriall
-    image: mariadb:10.4.32-focal
+    image: mariadb:11.8
     ports:
       - "3306:3306"
     volumes:
@@ -14,7 +14,7 @@ services:
     depends_on:
       - db
     container_name: phpmyadmin_refriall
-    image: phpmyadmin:5.2.1-apache
+    image: phpmyadmin:5.2
     ports:
       - "8080:80"
     environment:
