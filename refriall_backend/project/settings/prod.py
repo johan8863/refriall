@@ -1,6 +1,8 @@
 from .base import *
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+DEBUG = False
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
