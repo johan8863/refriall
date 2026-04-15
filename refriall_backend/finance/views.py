@@ -15,6 +15,7 @@ from rest_framework import viewsets
 from .models import Bill, Currency, Order
 from .serializers import (
     BillSerializer,
+    BillSerializerDeleteError,
     BillSerializerForReadOnly,
     BillSerializerReadListView,
     BillSerializerDetailUpdate,
@@ -127,6 +128,17 @@ class OrderDetail(APIView):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        order = Order.objects.get(pk=kwargs['pk'])
+        if order.bill_id is None:
+            return super().destroy(request, *args, **kwargs)
+        else:
+            bill = Bill.objects.get(pk=order.bill_id)
+            print(bill)
+            serializer = BillSerializerDeleteError(bill)
+            print(repr(serializer))
+            return Response(data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderFromCustomerNotMatched(APIView):

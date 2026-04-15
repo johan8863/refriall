@@ -288,6 +288,16 @@ class BillSerializerReadListView(serializers.ModelSerializer):
         ]
 
 
+class BillSerializerDeleteError(serializers.ModelSerializer):
+
+    class Meta:
+        model = Bill
+        fields = [
+            "id",
+            "folio",
+        ]
+
+
 class BillSerializerForReadOnly(serializers.ModelSerializer):
     customer = CustomerSerializer()
     provider = ProviderSerializerRead()

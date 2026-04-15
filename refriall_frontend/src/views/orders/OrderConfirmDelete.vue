@@ -40,7 +40,13 @@ const order = ref({
     aproved_by: ''
 });
 
+const billDeleteErrorObject = ref({
+  id: null,
+  folio: null
+})
+
 const errorMessage = ref(null)
+const errorBillMessage = ref(null)
 
 onMounted(async () => {
   try {
@@ -57,7 +63,17 @@ const delOrder = async (id) => {
     await orderService.deleteOrder(id)
     router.push({ name: 'orders' })
   } catch (error) {
-    errorHandler(error, errorMessage)
+    if (error.response) {
+      if (error.response.status === 404) {
+        errorMessage.value = 'Orden no encontrada'
+      }
+      if (error.response.status === 400) {
+        errorBillMessage.value = 'Orden asociada'
+        billDeleteErrorObject.value = error.response.data
+      }
+    } else {
+      errorMessage = 'Error inesperado, consulte al desarrollador'
+    }
   }
 }
 
@@ -84,6 +100,10 @@ const delOrder = async (id) => {
             <div v-if="errorMessage">
               <span class="form-text text-danger">{{ errorMessage }}</span>
             </div>
+            <div v-if="errorBillMessage && billDeleteErrorObject.id">
+              <span class="form-text text-danger">{{ errorBillMessage }} en la factura con folio: {{ billDeleteErrorObject.folio }}</span>
+            </div>
+            
 
             <button
               class="btn btn-sm btn-danger"
