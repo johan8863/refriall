@@ -101,7 +101,7 @@ const delOrder = async (id) => {
               <span class="form-text text-danger">{{ errorMessage }}</span>
             </div>
             <div v-if="errorBillMessage && billDeleteErrorObject.id">
-              <span class="form-text text-danger">{{ errorBillMessage }} en la factura con folio: {{ billDeleteErrorObject.folio }}</span>
+              <span class="form-text text-danger">{{ errorBillMessage }} en la factura con folio: <RouterLink :to="{name: 'bills_detail', params: {id: billDeleteErrorObject.id}}">{{ billDeleteErrorObject.folio }}</RouterLink></span>
             </div>
             
 
