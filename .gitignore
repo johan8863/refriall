@@ -1,5 +1,12 @@
-# python
-*.pyc
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # django
 refriall_backend/db.sqlite3
@@ -12,3 +19,14 @@ mariadb/
 
 # environment
 .env
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
