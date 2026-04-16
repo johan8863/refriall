@@ -5,18 +5,29 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mariadb:/var/lib/mysql:rw
+      - mariadb_refriall:/var/lib/mysql
     environment:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - MARIADB_DATABASE=${MARIADB_DATABASE}
     restart: always
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   pma:
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     container_name: phpmyadmin_refriall
     image: phpmyadmin:5.2
     ports:
       - "8080:80"
     environment:
       - PMA_ARBITRARY=1
+      - PMA_HOST=db
     restart: always
+
+volumes:
+  mariadb_refriall:
