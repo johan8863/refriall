@@ -72,7 +72,7 @@ const delOrder = async (id) => {
         billDeleteErrorObject.value = error.response.data
       }
     } else {
-      errorMessage = 'Error inesperado, consulte al desarrollador'
+      errorMessage.value = 'Error inesperado, consulte al desarrollador'
     }
   }
 }
