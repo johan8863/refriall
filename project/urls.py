@@ -4,7 +4,7 @@ Top project urls
 
 # django
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 
 # rest_framework_simplejwt
@@ -25,4 +25,7 @@ urlpatterns = [
         path('hr/', include('hr.urls')),
         path('finance/', include('finance.urls')),
     ])),
+    # any route which doesn't match api/, admin/, static/ or media/
+    # will be served by the vuejs bundle
+    re_path(r'^(?!api|admin|static|media).*$', TemplateView.as_view(template_name='index.html')),
 ]
