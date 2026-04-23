@@ -14,9 +14,6 @@ staticfiles/
 shell.py
 service.log
 
-# docker
-mariadb/
-
 # environment
 .env
 
