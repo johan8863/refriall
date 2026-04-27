@@ -40,21 +40,25 @@ On Windows
 The software is a fullstack application built with the following technologies:
 
 **DevOps:**
-- [Docker](https://www.docker.com/) - Containerization for the database and phpMyAdmin (for now)
+- [Docker](https://www.docker.com/) ≥28.0.0 - Containerization
 
-**Backend:**
-- [Django](https://www.djangoproject.com/) - Core framework for database schema modeling, querying, authentication, and CORS configuration
-- [Django REST Framework](https://www.django-rest-framework.org/) - RESTful API layer
-- [Django REST Framework SimpleJWT](https://django-rest-framework-simplejwt.readthedocs.io/) - JWT authentication
-- [MariaDB](https://mariadb.org/) - Relational database
-- [python-decouple](https://github.com/henriquebastos/python-decouple) - Environment variables management
-- [Gunicorn](https://gunicorn.org/) - WSGI HTTP server (Linux/macOS production)
-- [Waitress](https://docs.pylonsproject.org/projects/waitress/en/stable/) - WSGI server (Windows environments)
+**Backend (Python ≥3.14):**
+- [Django](https://www.djangoproject.com/) (5.2) - Core framework
+- [Django REST Framework](https://www.django-rest-framework.org/) (3.17.1) - API layer
+- [DRF SimpleJWT](https://djangorestframework-simplejwt.readthedocs.io/) (5.5.1) - JWT auth
+- [MariaDB](https://mariadb.org/) (11.8.6) - Database
+- [Gunicorn](https://gunicorn.org/) (≥25.3.0) - Linux/macOS WSGI server
+- [Waitress](https://docs.pylonsproject.org/projects/waitress/) (≥3.0.2) - Windows WSGI server
 
-**Frontend:**
-- [Vue.js](https://vuejs.org/) - Progressive JavaScript framework
-- [Axios](https://axios.rest/) - HTTP client for backend communication
-- [Bootstrap](https://getbootstrap.com/) - UI styling
+**Frontend (Node.js):**
+- [Vue.js](https://vuejs.org/) (3.3.4) - UI framework
+- [Pinia](https://pinia.vuejs.org/) (3.0.4) - State
+- [Vue Router](https://router.vuejs.org/) (4.2.4) - Routing
+- [Axios](https://axios.rest/) (1.13.4) - HTTP client
+- [Bootstrap](https://getbootstrap.com/) (5.3.2) - Styling
+- [Vite](https://vitejs.dev/) (7.3.1) - Build tool
+
+> **Pinpoint versions:** See `uv.lock` for backend, `package.json` for frontend.
 
 ## Installation
 
