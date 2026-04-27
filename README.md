@@ -25,9 +25,10 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
 
 ## Requirements
 
+- [docker](https://www.docker.com/) container application development
 - [uv](https://docs.astral.sh/uv/) python package and project manager
-- [python](https://www.python.org/)
-- [django](https://www.djangoproject.com/) and [django rest](https://www.django-rest-framework.org/) frameworks.
+- [pnpm](https://pnpm.io/) fast node package manager
+- [MariaDB](https://mariadb.org/) open source database
 
 ## Installation
 
