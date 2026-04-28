@@ -180,6 +180,13 @@ Once the dependecies are installed, build the frontend:
 pnpm build
 ```
 
+The `Vue.js` frontend is served by django, therefore, in order to have staticfiles ready to use you `must` run the following commands:
+
+```bash
+cd .. # return to the root directory
+uv run python manage.py collectstatic # collect static files from backend and frontend
+```
+
 #### 5. Automate startup as a Windows service (optional)
 
 Still alive? Good. Let's automate the software startup as a Windows service.
