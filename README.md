@@ -33,6 +33,8 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
 
 ## Requirements
 
+It is always suggested to have [git](https://git-scm.com/) so that you can update the software by just pulling updates no to download the compressed proyect from time to time. Follow instructions [here](https://git-scm.com/install/) to install on your operating system.
+
 On Mac/Linux
 
 - [docker](https://www.docker.com/) container application development
