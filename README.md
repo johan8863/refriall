@@ -179,12 +179,6 @@ Once the dependecies are installed, build the frontend:
 pnpm build
 ```
 
-Now you can run the development server:
-
-```bash
-pnpm dev
-```
-
 #### 5. Automate startup as a Windows service (optional)
 
 Still alive? Good. Let's automate the software startup as a Windows service.
