@@ -34,9 +34,11 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
 ## Requirements
 
 On Mac/Linux
+
 - [docker](https://www.docker.com/) container application development
 
 On Windows
+
 - [uv](https://docs.astral.sh/uv/) python package and project manager
 - [pnpm](https://pnpm.io/) fast node package manager
 - [MariaDB](https://mariadb.org/) open source database
@@ -47,9 +49,11 @@ On Windows
 The software is a fullstack application built with the following technologies:
 
 **DevOps:**
+
 - [Docker](https://www.docker.com/) ≥28.0.0 - Containerization
 
 **Backend (Python ≥3.14):**
+
 - [Django](https://www.djangoproject.com/) (5.2) - Core framework
 - [Django REST Framework](https://www.django-rest-framework.org/) (3.17.1) - API layer
 - [DRF SimpleJWT](https://djangorestframework-simplejwt.readthedocs.io/) (5.5.1) - JWT auth
@@ -58,6 +62,7 @@ The software is a fullstack application built with the following technologies:
 - [Waitress](https://docs.pylonsproject.org/projects/waitress/) (≥3.0.2) - Windows WSGI server
 
 **Frontend (Node.js):**
+
 - [Vue.js](https://vuejs.org/) (3.3.4) - UI framework
 - [Pinia](https://pinia.vuejs.org/) (3.0.4) - State
 - [Vue Router](https://router.vuejs.org/) (4.2.4) - Routing
@@ -92,6 +97,7 @@ After that `cd refriall_frontend` and repeat the process with the inner `.env.sa
 ### Prerequisites
 
 Before starting, ensure you have:
+
 - Windows 10 or 11 (64-bit)
 - Administrator access (for service installation)
 - At least 4GB RAM (8GB recommended)
@@ -99,9 +105,10 @@ Before starting, ensure you have:
 
 #### 1. Set up MariaDB database
 
-Start by downloading the MariaDB 11.8.6 windows installer from the official site [here](https://mariadb.org/download/). You'll see a form to select the version, operating system and other minor details. The installer is a next-next installer, you only need to define the password for the root user, the rest of the settings can be left at their defaults. Once installed, launch the `HeidiSQL` GUI app to create/manage databases. Create a database named either `mariadb_refriall_prod` or `mariadb_refriall_dev` depending on whether you're going to use the software or to develop/modify it. 
+Start by downloading the MariaDB 11.8.6 windows installer from the official site [here](https://mariadb.org/download/). You'll see a form to select the version, operating system and other minor details. The installer is a next-next installer, you only need to define the password for the root user, the rest of the settings can be left at their defaults. Once installed, launch the `HeidiSQL` GUI app to create/manage databases. Create a database named either `mariadb_refriall_prod` or `mariadb_refriall_dev` depending on whether you're going to use the software or to develop/modify it.
 
-At this point you should take a look at  the `manage.py` file to find this line:
+At this point you should take a look at the `manage.py` file to find this line:
+
 ```python
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', config('DJANGO_SETTINGS_MODULE'))
 ```
@@ -110,10 +117,9 @@ And read the instructions from the `.env.sample` or `.env` files and explore the
 
 #### 2. Install backend dependencies
 
-Before of moving forward with the database, backend frameworks and libraries must be installed. You have two choices: 
+Before of moving forward with the database, backend frameworks and libraries must be installed. You have two choices:
 
--Install uv directly as explained [here](https://docs.astral.sh/uv/getting-started/installation/#installation-methods)
--[Download](https://www.python.org/downloads/) python and run `pip install uv`
+-Install uv directly as explained [here](https://docs.astral.sh/uv/getting-started/installation/#installation-methods) -[Download](https://www.python.org/downloads/) python and run `pip install uv`
 
 Once you have `uv` installed execute this command from the root directory:
 
@@ -138,16 +144,38 @@ At this point, you can run the development server:
 uv run python manage.py runserver
 ```
 
+If you are reinstalling the software and already have a previous database, juts apply the migrations.
+
+> Note: Running the development server you'll se something similar to this:
+
+```bash
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified some issues:
+
+WARNINGS:
+?: (staticfiles.W004) The directory 'C:\Users\username\dev\refriall\refriall_frontend\dist\static' in the STATICFILES_DIRS setting does not exist.
+
+System check identified 1 issue (0 silenced).
+April 28, 2026 - 08:16:48
+Django version 5.2, using settings 'project.settings.dev'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+```
+
+Don't worry about the warning of the missing static folder, it's normal until the frontend is built.
+
 Then explore the API following the routes defined in `project/urls.py`.
 
 #### 4. Install frontend dependencies
 
+As with backend you have two choices for `pnpm`:
 
-
-As with backend you have two choices for `pnpm`: 
-
--Install directly as explained [here](https://pnpm.io/installation) 
--[Download](https://nodejs.org/en/download/) and install Node.js and run `npm install -g pnpm`. 
+-Install directly as explained [here](https://pnpm.io/installation) -[Download](https://nodejs.org/en/download/) and install Node.js and run `npm install -g pnpm`.
 
 Once pnpm is ready, change to the frontend directory and install dependencies:
 
@@ -156,11 +184,21 @@ cd refriall_frontend
 pnpm install
 ```
 
+Once the dependecies are installed, build the frontend:
+
+```bash
+pnpm build
+```
+
 Now you can run the development server:
+
+```bash
+pnpm dev
+```
 
 #### 5. Automate startup as a Windows service (optional)
 
-Still alive? Good. Let's automate the software startup as a Windows service. 
+Still alive? Good. Let's automate the software startup as a Windows service.
 
 First, create a `service.log` file in the root directory, it'll be used to write access and errors logs. Then download [nssm](https://nssm.cc/download)(you'll get a zip file). Extract the executable that matches your Windows architecture and copy it to `C:\Windows\System32` so it's available in your Windows PATH.
 
@@ -169,19 +207,20 @@ From a terminal run:
 ```bash
 nssm install refriall
 ```
+
 (You can change refriall to any name you like.) This will open a window to configure the new service.
 
 **Configuration**
 
 - **Application tab:** In the Path input, provide the path to `waitress-serve.exe` inside your Python virtual environment. Example:
-`C:\Users\username\dev\refriall\.venv\Scripts\waitress-serve.exe`
+  `C:\Users\username\dev\refriall\.venv\Scripts\waitress-serve.exe`
 - **Startup Directory:** Provide the root directory of the software (where manage.py resides). Example:
-`C:\Users\username\dev\refriall\`
+  `C:\Users\username\dev\refriall\`
 - **Arguments:** Paste this:
-`--listen=*:8000 project.wsgi:application`
+  `--listen=*:8000 project.wsgi:application`
 - **Details tab:** Provide both Display name and Description. These will appear when you run `services.msc`.
 - **I/O tab:** In both Output (stdout) and Output (stderr) inputs, provide the path to the `service.log` file. Example:
-`C:\Users\username\dev\refriall\service.log`
+  `C:\Users\username\dev\refriall\service.log`
 
 Click **Install service.** The service will be created but not started. To start it:
 
@@ -195,12 +234,12 @@ Enjoy using this software as much as I love to develop and maintain it.
 
 #### Troubleshooting (Windows)
 
-| Problem | Suggestion |
-|---------|----------|
-| `uv` not recognized | Close and reopen terminal after installation |
-| Port 8000 already in use | Run `netstat -ano \| findstr :8000` to find the process |
-| Service fails to start | Check `service.log` for error details |
-| Database connection error | Verify MariaDB service is running: `services.msc` |
+| Problem                   | Suggestion                                              |
+| ------------------------- | ------------------------------------------------------- |
+| `uv` not recognized       | Close and reopen terminal after installation            |
+| Port 8000 already in use  | Run `netstat -ano \| findstr :8000` to find the process |
+| Service fails to start    | Check `service.log` for error details                   |
+| Database connection error | Verify MariaDB service is running: `services.msc`       |
 
 ## Testing
 
