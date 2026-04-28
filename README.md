@@ -13,6 +13,12 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
   - [Common](#common)
   - [On Mac/Linux](#on-maclinux)
   - [On Windows](#on-windows)
+    - [Prerequisites](#prerequisites)
+    - [1. Set up MariaDB database](#1-set-up-mariadb-database)
+    - [2. Install backend dependencies](#2-install-backend-dependencies)
+    - [3. Set up the database schema](#3-set-up-the-database-schema)
+    - [4. Install frontend dependencies](#4-install-frontend-dependencies)
+    - [5. Automate startup as a Windows service (optional)](#5-automate-startup-as-a-windows-service-optional)
 - [Testing](#testing)
 - [Contact](#contact)
 
@@ -65,7 +71,7 @@ The software is a fullstack application built with the following technologies:
 
 ### Common
 
-Regardless of the platform the first installation step is to create the .env files for both backend and frontend. In the root directory of the project there is a .env.sample file, copy the content of that file, create a .env file and paste it into. You might want to generate a secure password for the SECRET_KEY var, here is a suggestion using python:
+Regardless of the platform, the first installation step is to create the `.env` files for both backend and frontend. In the root directory of the project there is a `.env.sample` file. Copy the contents of that file, create a new `.env` file, and paste the contents into it. You might want to generate a secure password for the `SECRET_KEY` variable. Here's a suggestion using Python:
 
 ```python
 import secrets
@@ -77,28 +83,124 @@ secure_password = ''.join(secrets.choice(characters) for _ in range(63))
 print(secure_password)
 ```
 
-After that `cd refriall_frontend` and repeat the process with the inner .env.sample file, in this one there's no password to recreate.
-
+After that `cd refriall_frontend` and repeat the process with the inner `.env.sample` file, in this one there's no password to recreate.
 
 ### On Mac/Linux
 
 ### On Windows
 
--Start by downloading the MariaDB 11.8.6 windows installer from the official site [here](https://mariadb.org/download/), you'll see a form to select the version, operating system and other minor details. The installer is a next-next installer, you only need to define the password for the root user, the rest of the settings can be left in their defaults. Once installed launch the `HeidiSQL` GUI app to create/manage databases. Create a database name with either `mariadb_refriall_prod` or `mariadb_refriall_dev` depending whether you're going to use the software or to develop/modify it. At this point you should take a look at  the `manage.py` file to realize or this line `os.environ.setdefault('DJANGO_SETTINGS_MODULE', config('DJANGO_SETTINGS_MODULE'))` and read instructions from the .env.sample or .env files. You also must look at the project/settings directory to explore environment variables usage.
+### Prerequisites
 
--Before of going forward with the database, backend frameworks and libraries must be installed, for that purpose you have two choices, install uv directly as explained [here](https://docs.astral.sh/uv/getting-started/installation/#installation-methods) or [download](https://www.python.org/downloads/) python and run `pip install uv`, once you have `uv` installed execute (from the root directory) `uv sync`, this command will download and install all of the python dependencies.
+Before starting, ensure you have:
+- Windows 10 or 11 (64-bit)
+- Administrator access (for service installation)
+- At least 4GB RAM (8GB recommended)
+- 2GB free disk space
 
--Now it's time to deal with the database schema. If it's an empty database, you must run two commands, `uv run python manage.py migrate` to apply all migrations and create the database tables, then `uv run python manage.py createsuperuser` to create the first user of the system. At this point you can run `uv run python manage.py runserver` and explore the api following the routes defined or imported in the `project/urls.py` file.
+#### 1. Set up MariaDB database
 
--It's time to install the frontend libraries! As with backend you have two choices for pnpm, installed as explained [here](https://pnpm.io/installation) or [download](https://nodejs.org/en/download/) and install Node.js and run `npm install -g pnpm`. Having `pnpm` ready change directory in refriall_frontend `cd refriall_frontend` and run `pnpm install`, shouldn't take long. Again, at this point you can run `pnpm dev` and start using the software in development mode(remember to have the process of `uv run python manage.py runserver` running).
+Start by downloading the MariaDB 11.8.6 windows installer from the official site [here](https://mariadb.org/download/). You'll see a form to select the version, operating system and other minor details. The installer is a next-next installer, you only need to define the password for the root user, the rest of the settings can be left at their defaults. Once installed, launch the `HeidiSQL` GUI app to create/manage databases. Create a database named either `mariadb_refriall_prod` or `mariadb_refriall_dev` depending on whether you're going to use the software or to develop/modify it. 
 
--Still alive?? Well, let's automate the software startup as a Windows service. First of all, create a service.log file in the root directory, it'll be used to write access and errors logs. Download [nssm](https://nssm.cc/download), you'll get a zip compressed file. Extract the executable that matches your Windows architecture and copy it in the `C:\Windows\System32` folder so that you can have it in the Windows PATH.
+At this point you should take a look at  the `manage.py` file to find this line:
+```python
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', config('DJANGO_SETTINGS_MODULE'))
+```
 
--From a terminal run `nssm install refriall`, you can change refriall to any other name you like. That will open a windows to configure the new service.
+And read the instructions from the `.env.sample` or `.env` files and explore the `project/settings/` directory to understand how environment variables are used.
 
-In the Application tab on the path input provide the waitress-serve.exe installed in your python virtual environment, for example: `C:\Users\username\dev\refriall\.venv\Scripts\waitress-serve.exe`, on the Startup Directoy input provide the root directory of the software(the one where resides manage.py), e.g. `C:\Users\username\dev\refriall\` and in the Arguments input, just paste this `--listen=*:8000 project.wsgi:application`. Move forward to the Details tab and provide both Display name and Description, those will be used when you run `services.msc` windows app. And last but not least, on the I/O tab provide in both Output(stdout) and Output(stderr) inputs the path to the servie.log file created, that'll be `C:\Users\username\dev\refriall\service.log`. 
+#### 2. Install backend dependencies
 
-Click `Install service` and the service will be created but not started, to do so, run `nssm start refriall` and now it done, head your browser at [http://localhost:8000/](http://localhost:8000/) and provide the credentials for the user you created with `uv run python manage.py createsuperuser`. Enjoy using this software as much as I love to develop and maintain it.
+Before of moving forward with the database, backend frameworks and libraries must be installed. You have two choices: 
+
+-Install uv directly as explained [here](https://docs.astral.sh/uv/getting-started/installation/#installation-methods)
+-[Download](https://www.python.org/downloads/) python and run `pip install uv`
+
+Once you have `uv` installed execute this command from the root directory:
+
+```bash
+uv sync
+```
+
+This will download and install all Python dependencies.
+
+#### 3. Set up the database schema
+
+If you're working with an empty database, you must run two commands:
+
+```bash
+uv run python manage.py migrate   # Creates database tables
+uv run python manage.py createsuperuser   # Creates the first user
+```
+
+At this point, you can run the development server:
+
+```bash
+uv run python manage.py runserver
+```
+
+Then explore the API following the routes defined in `project/urls.py`.
+
+#### 4. Install frontend dependencies
+
+
+
+As with backend you have two choices for `pnpm`: 
+
+-Install directly as explained [here](https://pnpm.io/installation) 
+-[Download](https://nodejs.org/en/download/) and install Node.js and run `npm install -g pnpm`. 
+
+Once pnpm is ready, change to the frontend directory and install dependencies:
+
+```bash
+cd refriall_frontend
+pnpm install
+```
+
+Now you can run the development server:
+
+#### 5. Automate startup as a Windows service (optional)
+
+Still alive? Good. Let's automate the software startup as a Windows service. 
+
+First, create a `service.log` file in the root directory, it'll be used to write access and errors logs. Then download [nssm](https://nssm.cc/download)(you'll get a zip file). Extract the executable that matches your Windows architecture and copy it to `C:\Windows\System32` so it's available in your Windows PATH.
+
+From a terminal run:
+
+```bash
+nssm install refriall
+```
+(You can change refriall to any name you like.) This will open a window to configure the new service.
+
+**Configuration**
+
+- **Application tab:** In the Path input, provide the path to `waitress-serve.exe` inside your Python virtual environment. Example:
+`C:\Users\username\dev\refriall\.venv\Scripts\waitress-serve.exe`
+- **Startup Directory:** Provide the root directory of the software (where manage.py resides). Example:
+`C:\Users\username\dev\refriall\`
+- **Arguments:** Paste this:
+`--listen=*:8000 project.wsgi:application`
+- **Details tab:** Provide both Display name and Description. These will appear when you run `services.msc`.
+- **I/O tab:** In both Output (stdout) and Output (stderr) inputs, provide the path to the `service.log` file. Example:
+`C:\Users\username\dev\refriall\service.log`
+
+Click **Install service.** The service will be created but not started. To start it:
+
+```bash
+nssm start refriall
+```
+
+Now open your browser at [http://localhost:8000/](http://localhost:8000/) and provide the credentials for the user you created with `createsuperuser`.
+
+Enjoy using this software as much as I love to develop and maintain it.
+
+#### Troubleshooting (Windows)
+
+| Problem | Suggestion |
+|---------|----------|
+| `uv` not recognized | Close and reopen terminal after installation |
+| Port 8000 already in use | Run `netstat -ano \| findstr :8000` to find the process |
+| Service fails to start | Check `service.log` for error details |
+| Database connection error | Verify MariaDB service is running: `services.msc` |
 
 ## Testing
 
