@@ -164,7 +164,8 @@ Don't worry about the warning of the missing static folder, it's normal until th
 
 As with backend you have two choices for `pnpm`:
 
--Install directly as explained [here](https://pnpm.io/installation) -[Download](https://nodejs.org/en/download/) and install Node.js and run `npm install -g pnpm`.
+- Install directly as explained [here](https://pnpm.io/installation)
+- [Download](https://nodejs.org/en/download/) and install Node.js and run `npm install -g pnpm`.
 
 Once pnpm is ready, change to the frontend directory and install dependencies:
 
