@@ -78,7 +78,13 @@ The software is a fullstack application built with the following technologies:
 
 ### Common
 
-Regardless of the platform, the first installation step is to create the `.env` files for both backend and frontend. In the root directory of the project there is a `.env.sample` file. Copy the contents of that file, create a new `.env` file, and paste the contents into it. You might want to generate a secure password for the `SECRET_KEY` variable. Here's a suggestion using Python:
+The first step is to clone the repository:
+
+```bash
+git clone https://github.com/johan8863/refriall.git
+```
+
+Then, regardless of the platform, the next installation step is to create the `.env` files for both backend and frontend. In the root directory of the project there is a `.env.sample` file. Copy the contents of that file, create a new `.env` file, and paste the contents into it. You might want to generate a secure password for the `SECRET_KEY` variable. Here's a suggestion using Python:
 
 ```python
 import secrets
