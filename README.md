@@ -82,6 +82,8 @@ The first step is to clone the repository:
 
 ```bash
 git clone https://github.com/johan8863/refriall.git
+
+cd refriall
 ```
 
 Then, regardless of the platform, the next installation step is to create the `.env` files for both backend and frontend. In the root directory of the project there is a `.env.sample` file. Copy the contents of that file, create a new `.env` file, and paste the contents into it. You might want to generate a secure password for the `SECRET_KEY` variable. Here's a suggestion using Python:
@@ -127,7 +129,8 @@ And read the instructions from the `.env.sample` or `.env` files and explore the
 
 Before of moving forward with the database, backend frameworks and libraries must be installed. You have two choices:
 
--Install uv directly as explained [here](https://docs.astral.sh/uv/getting-started/installation/#installation-methods) -[Download](https://www.python.org/downloads/) python and run `pip install uv`
+- Install uv directly as explained [here](https://docs.astral.sh/uv/getting-started/installation/#installation-methods)
+- [Download](https://www.python.org/downloads/) python and run `pip install uv`
 
 Once you have `uv` installed execute this command from the root directory:
 
