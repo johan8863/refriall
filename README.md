@@ -9,7 +9,7 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
 - [Features](#features)
 - [Requirements](#requirements)
 - [Stack](#stack)
-- [Installation](#installation)
+- [Deployment](#Deployment)
   - [Common](#common)
   - [On Mac/Linux](#on-maclinux)
   - [On Windows](#on-windows)
@@ -74,7 +74,7 @@ The software is a fullstack application built with the following technologies:
 
 > **Pinpoint versions:** See `uv.lock` for backend, `package.json` for frontend.
 
-## Installation
+## Deployment
 
 ### Common
 
@@ -151,36 +151,14 @@ uv run python manage.py createsuperuser   # Creates the first user
 
 If you are reinstalling the software and already have a previous database, juts apply the migrations.
 
-At this point, you can run the development server:
+In both cases you'll se a warning similar to this:.
 
 ```bash
-uv run python manage.py runserver
-```
-
-> Note: Running the development server you'll se something similar to this:
-
-```bash
-Watching for file changes with StatReloader
-Performing system checks...
-
-System check identified some issues:
-
 WARNINGS:
 ?: (staticfiles.W004) The directory 'C:\Users\username\dev\refriall\refriall_frontend\dist\static' in the STATICFILES_DIRS setting does not exist.
-
-System check identified 1 issue (0 silenced).
-April 28, 2026 - 08:16:48
-Django version 5.2, using settings 'project.settings.dev'
-Starting development server at http://127.0.0.1:8000/
-Quit the server with CONTROL-C.
-
-WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
-For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
 ```
 
 Don't worry about the warning of the missing static folder, it's normal until the frontend is built.
-
-Then explore the API following the routes defined in `project/urls.py`.
 
 #### 4. Install frontend dependencies
 
