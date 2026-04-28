@@ -149,13 +149,13 @@ uv run python manage.py migrate   # Creates database tables
 uv run python manage.py createsuperuser   # Creates the first user
 ```
 
+If you are reinstalling the software and already have a previous database, juts apply the migrations.
+
 At this point, you can run the development server:
 
 ```bash
 uv run python manage.py runserver
 ```
-
-If you are reinstalling the software and already have a previous database, juts apply the migrations.
 
 > Note: Running the development server you'll se something similar to this:
 
