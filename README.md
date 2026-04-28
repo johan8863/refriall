@@ -25,7 +25,7 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
 ## Features
 
 - Functionalities grouped by sections.
-- PDfs reports.
+- PDF report generation for bills and orders.
 - On demand reloading of backend data to get new model instances.
 - Validations in both, front and back-end.
 - Creation of order in different currencies.
