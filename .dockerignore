@@ -1,0 +1,37 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.python-version
+*.log
+
+# Django
+db.sqlite3
+/media
+/static_root/*
+!/static_root/.gitkeep
+
+# Entornos virtuales
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Vue 
+refriall_frontend/
+refriall_frontend/node_modules
+refriall_frontend/dist
+refriall_frontend/.git
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~

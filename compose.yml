@@ -28,6 +28,30 @@ services:
       - PMA_ARBITRARY=1
       - PMA_HOST=db
     restart: always
+  
+  django_backend:
+    depends_on:
+      db:
+        condition: service_healthy
+    build: .
+    container_name: django_app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    develop:
+      watch:
+        # Sync the working directory for code changes ignoring 
+        # the virtual environment
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - .venv/
+        # Rebuild the image if new dependencies or settings are written
+        # to the pyproject.toml
+        - action: rebuild
+          path: ./pyproject.toml
 
 volumes:
   mariadb_refriall:
