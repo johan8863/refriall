@@ -3,9 +3,9 @@
 
 set -e
 
-# echo "### appliying migrations..."
-# python manage.py migrate --noinput
-# echo "### migrations applied"
+echo "### appliying migrations..."
+python manage.py migrate --noinput
+echo "### migrations applied"
 
 echo "### collecting static files..."
 python manage.py collectstatic --noinput
