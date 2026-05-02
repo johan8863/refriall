@@ -54,19 +54,6 @@ services:
       - "8000:8000"
     env_file:
       - .env
-    develop:
-      watch:
-        # Sync the working directory for code changes ignoring 
-        # the virtual environment
-        - action: sync
-          path: .
-          target: /app
-          ignore:
-            - .venv/
-        # Rebuild the image if new dependencies or settings are written
-        # to the pyproject.toml
-        - action: rebuild
-          path: ./pyproject.toml
     volumes:
       - refriall_fronted_dist:/app/dist
     restart: always
