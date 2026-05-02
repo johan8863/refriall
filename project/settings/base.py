@@ -71,9 +71,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / "refriall_frontend/dist"
-        ],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -86,8 +84,15 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'project.wsgi.application'
+docker_templates = Path('/app/dist')
 
+if docker_templates.exists():
+    TEMPLATES[0]['DIRS'].append(docker_templates)
+else:
+    TEMPLATES[0]['DIRS'].append(BASE_DIR / "refriall_frontend/dist")
+
+
+WSGI_APPLICATION = 'project.wsgi.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -125,9 +130,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [
-    BASE_DIR / "refriall_frontend/dist/static"
-]
+STATICFILES_DIRS = []
+
+docker_staticfiles = Path('/app/dist/static')
+
+if docker_staticfiles.exists():
+    STATICFILES_DIRS.append(docker_staticfiles)
+else:
+    STATICFILES_DIRS.append(BASE_DIR / "refriall_frontend/dist/static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
