@@ -102,6 +102,8 @@ After that `cd refriall_frontend` and repeat the process with the inner `.env.sa
 
 ### On macOS/Linux
 
+For both of this operating systems `refriall` is prepared to be installed via [Docker](https://www.docker.com/), make sure you have it properly installed on your system by following its [documentation](https://docs.docker.com/), if you have any doubts you can always [contact me](#contact).
+
 ### On Windows
 
 ### Prerequisites
