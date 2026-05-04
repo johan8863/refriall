@@ -11,7 +11,7 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
 - [Stack](#stack)
 - [Deployment](#deployment)
   - [Common](#common)
-  - [On Mac/Linux](#on-maclinux)
+  - [On Mac/Linux](#on-macoslinux)
   - [On Windows](#on-windows)
     - [Prerequisites](#prerequisites)
     - [1. Set up MariaDB database](#1-set-up-mariadb-database)
@@ -33,7 +33,7 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
 
 ## Requirements
 
-It is always suggested to have [git](https://git-scm.com/) installed so that you can update the software by just pulling updates, no to download the compressed project from time to time. Follow instructions [here](https://git-scm.com/install/) to install `git` on your operating system.
+It is always suggested to have [git](https://git-scm.com/) installed so that you can update the software by just pulling updates, no to download the compressed project from time to time. Follow instructions [on the installation page](https://git-scm.com/install/) to install `git` on your operating system.
 
 On Mac/Linux
 
@@ -174,7 +174,7 @@ And read the instructions from the `.env.sample` or `.env` files and explore the
 
 Before of moving forward with the database, backend frameworks and libraries must be installed. You have two choices:
 
-- Install uv directly as explained [here](https://docs.astral.sh/uv/getting-started/installation/#installation-methods)
+- Install uv directly as explained [on installation methods](https://docs.astral.sh/uv/getting-started/installation/#installation-methods)
 - [Download](https://www.python.org/downloads/) python and run `pip install uv`
 
 Once you have `uv` installed execute this command from the root directory:
@@ -209,7 +209,7 @@ Don't worry about the warning of the missing static folder, it's normal until th
 
 As with backend you have two choices for `pnpm`:
 
-- Install directly as explained [here](https://pnpm.io/installation)
+- Install directly as explained [on the official documentation](https://pnpm.io/installation)
 - [Download](https://nodejs.org/en/download/) and install Node.js and run `npm install -g pnpm`.
 
 Once pnpm is ready, change to the frontend directory and install dependencies:
@@ -246,7 +246,7 @@ nssm install refriall
 
 (You can change refriall to any name you like.) This will open a window to configure the new service.
 
-**Configuration**
+##### Configuration
 
 - **Application tab:** In the Path input, provide the path to `waitress-serve.exe` inside your Python virtual environment. Example:
   `C:\Users\username\dev\refriall\.venv\Scripts\waitress-serve.exe`
