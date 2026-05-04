@@ -104,7 +104,7 @@ After that `cd refriall_frontend` and repeat the process with the inner `.env.sa
 
 For both of this operating systems `refriall` is prepared to be installed via [Docker](https://www.docker.com/), make sure you have it properly installed on your system by following its [documentation](https://docs.docker.com/), if you have any doubts you can always [contact me](#contact).
 
-Having docker up and running it is always recommended to take a look at the outer .env file you created. The main three following variables are the most important:
+Having docker up and running it is always recommended to take a look at the outer `.env` file you created. The main three following variables are the most important:
 
 ```bash
 # the name of the initial database, you can leave it unchanged
@@ -124,6 +124,28 @@ docker compose up --build -d
 ```
 
 and the system will be installed via `docker`.
+
+After that, you can access to [http://localhost:8000](http://localhost:8000) and you'll get to the `REFRIALL` login page. From this point you have two situations:
+
+- If starting a fresh new database you must connect to the django container and create the first super user:
+
+```bash
+# load the container shell
+docker compose exec django_backend bash
+
+# create a super user
+python manage.py createsuperuser
+```
+
+Now you can access to the system and start creating information.
+
+- If you have a legacy database, then you need to got to `phpMyAdmin` on [http://localhost:8080](http://localhost:8080) to recreate the database because in the building process tables were created thorugh migrations. On the login form provide the values for Server: `mariadb_refriall`, that is the name of the MariaDB container, then Username and Password from the values of the variables `MARIADB_USER` and `MARIADB_ROOT_PASSWORD` on your `.env` file.
+
+  Once in, select your database from the left list and got to the `Operations` tab, scroll down if not visible yet and click on the red text `Drop the database (DROP)`, then `OK` for confirmation.
+
+  Click on `New` at the top left list of databases and enter the same name as the `MARIADB_DATABASE` value. Then go to the `Import` tab and in the first section click the button `Choose File`, select your back-up and click `Import` at the bottom of that page.
+
+  Now you're ready to start working with your legacy information.
 
 ### On Windows
 
