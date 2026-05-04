@@ -9,7 +9,7 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
 - [Features](#features)
 - [Requirements](#requirements)
 - [Stack](#stack)
-- [Deployment](#Deployment)
+- [Deployment](#deployment)
   - [Common](#common)
   - [On Mac/Linux](#on-maclinux)
   - [On Windows](#on-windows)
