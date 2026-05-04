@@ -19,7 +19,6 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
     - [3. Set up the database schema](#3-set-up-the-database-schema)
     - [4. Install frontend dependencies](#4-install-frontend-dependencies)
     - [5. Automate startup as a Windows service (optional)](#5-automate-startup-as-a-windows-service-optional)
-- [Testing](#testing)
 - [Contact](#contact)
 
 ## Features
@@ -276,7 +275,5 @@ Enjoy using this software as much as I love to develop and maintain it.
 | Port 8000 already in use  | Run `netstat -ano \| findstr :8000` to find the process |
 | Service fails to start    | Check `service.log` for error details                   |
 | Database connection error | Verify MariaDB service is running: `services.msc`       |
-
-## Testing
 
 ## Contact
