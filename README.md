@@ -104,6 +104,27 @@ After that `cd refriall_frontend` and repeat the process with the inner `.env.sa
 
 For both of this operating systems `refriall` is prepared to be installed via [Docker](https://www.docker.com/), make sure you have it properly installed on your system by following its [documentation](https://docs.docker.com/), if you have any doubts you can always [contact me](#contact).
 
+Having docker up and running it is always recommended to take a look at the outer .env file you created. The main three following variables are the most important:
+
+```bash
+# the name of the initial database, you can leave it unchanged
+MARIADB_DATABASE=mariadb_refriall_prod
+
+# for docker you must change the value to mariadb_refriall, the name of the container
+MARIADB_HOST=127.0.0.1
+
+# the production settings module will be used, you can leave it unchanged too
+DJANGO_SETTINGS_MODULE=project.settings.prod
+```
+
+After that you only need to run:
+
+```bash
+docker compose up --build -d
+```
+
+and the system will be installed via `docker`.
+
 ### On Windows
 
 ### Prerequisites
