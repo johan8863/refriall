@@ -277,3 +277,10 @@ Enjoy using this software as much as I love to develop and maintain it.
 | Database connection error | Verify MariaDB service is running: `services.msc`       |
 
 ## Contact
+
+My name is Johan and I'm a Software Engineer on the journey of daily self improvement.
+
+| Info | |
+| --------- | --------- |
+| Email | [jtravieso8863@gmail.com](mailto:jtravieso8863@gmail.com) |
+| Phone | +53 54719664 |
