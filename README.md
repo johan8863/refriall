@@ -100,7 +100,7 @@ print(secure_password)
 
 After that `cd refriall_frontend` and repeat the process with the inner `.env.sample` file, in this one there's no password to recreate.
 
-### On Mac/Linux
+### On macOS/Linux
 
 ### On Windows
 
