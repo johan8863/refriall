@@ -11,7 +11,7 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
 - [Stack](#stack)
 - [Deployment](#deployment)
   - [Common](#common)
-  - [On Mac/Linux](#on-macoslinux)
+  - [On macOS/Linux](#on-macoslinux)
   - [On Windows](#on-windows)
     - [Prerequisites](#prerequisites)
     - [1. Set up MariaDB database](#1-set-up-mariadb-database)
