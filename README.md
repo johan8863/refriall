@@ -57,7 +57,7 @@ The software is a fullstack application built with the following technologies:
 
 - [Django](https://www.djangoproject.com/) (5.2) - Core framework
 - [Django REST Framework](https://www.django-rest-framework.org/) (3.17.1) - API layer
-- [DRF SimpleJWT](https://djangorestframework-simplejwt.readthedocs.io/) (5.5.1) - JWT auth
+- [DRF SimpleJWT](https://django-rest-framework-simplejwt.readthedocs.io/) (5.5.1) - JWT auth
 - [MariaDB](https://mariadb.org/) (11.8.6) - Database
 - [Gunicorn](https://gunicorn.org/) (≥25.3.0) - Linux/macOS WSGI server
 - [Waitress](https://docs.pylonsproject.org/projects/waitress/) (≥3.0.2) - Windows WSGI server
