@@ -161,6 +161,8 @@ Before starting, ensure you have:
 
 Start by downloading the MariaDB 11.8.6 windows installer from [the official site](https://mariadb.org/download/). You'll see a form to select the version, operating system and other minor details. The installer is a next-next installer, you only need to define the password for the root user, the rest of the settings can be left at their defaults. Once installed, launch the `HeidiSQL` GUI app to create/manage databases. Create a database named either `mariadb_refriall_prod` or `mariadb_refriall_dev` depending on whether you're going to use the software or to develop/modify it.
 
+> Important: The password for the root user must match the one in the .evn file for `MARIADB_ROOT_PASSWORD`
+
 At this point you should take a look at the `manage.py` file to find this line:
 
 ```python
