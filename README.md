@@ -18,7 +18,7 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
     - [2. Install backend dependencies](#2-install-backend-dependencies)
     - [3. Set up the database schema](#3-set-up-the-database-schema)
     - [4. Install frontend dependencies](#4-install-frontend-dependencies)
-    - [5. Automate startup as a Windows service (optional)](#5-automate-startup-as-a-windows-service-optional)
+    - [5. Automate startup as a Windows service](#5-automate-startup-as-a-windows-service)
 - [Contact](#contact)
 
 ## Features
@@ -231,7 +231,7 @@ cd .. # return to the root directory
 uv run python manage.py collectstatic # collect static files from backend and frontend
 ```
 
-#### 5. Automate startup as a Windows service (optional)
+#### 5. Automate startup as a Windows service
 
 Still alive? Good. Let's automate the software startup as a Windows service.
 
