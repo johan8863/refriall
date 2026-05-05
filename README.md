@@ -2,7 +2,7 @@
 
 ## Description
 
-Refriall is **custom software** that I constantly develop and maintain. It's essentially an orders and bills management system.
+Refriall is **custom software** that I constantly develop and maintain. It is essentially an order and bill management system.
 
 ## Index
 
@@ -19,24 +19,24 @@ Refriall is **custom software** that I constantly develop and maintain. It's ess
     - [3. Set up the database schema](#3-set-up-the-database-schema)
     - [4. Install frontend dependencies](#4-install-frontend-dependencies)
     - [5. Automate startup as a Windows service](#5-automate-startup-as-a-windows-service)
-- [Contact](#contact)
+- [Contact Section](#contact-section)
 
 ## Features
 
 - Functionalities grouped by sections.
 - PDF report generation for bills and orders.
 - On demand reloading of backend data to get new model instances.
-- Validations in both, front and back-end.
-- Creation of order in different currencies.
-- Association of order to bills matching Currency and Customer or Customer Dependency.
+- Validations on both front-end and back-end.
+- Creation of orders in different currencies.
+- Association of orders to bills matching currency and customer or customer dependency.
 
 ## Requirements
 
-It is always suggested to have [git](https://git-scm.com/) installed so that you can update the software by just pulling updates, no to download the compressed project from time to time. Follow instructions [on the installation page](https://git-scm.com/install/) to install `git` on your operating system.
+It is always suggested to have [git](https://git-scm.com/) installed so that you can update the software by just pulling updates, rather than downloading the compressed project from time to time. Follow instructions [on the installation page](https://git-scm.com/install/) to install `git` on your operating system.
 
 On Mac/Linux
 
-- [docker](https://www.docker.com/) container application development
+- [docker](https://www.docker.com/) containerization
 
 On Windows
 
@@ -71,7 +71,7 @@ The software is a fullstack application built with the following technologies:
 - [Bootstrap](https://getbootstrap.com/) (5.3.2) - Styling
 - [Vite](https://vitejs.dev/) (7.3.1) - Build tool
 
-> **Pinpoint versions:** See `uv.lock` for backend, `package.json` for frontend.
+> **Exact versions:** See `uv.lock` or backend dependencies and, `package.json` for frontend dependencies.
 
 ## Deployment
 
@@ -138,11 +138,11 @@ python manage.py createsuperuser
 
 Now you can access to the system and start creating information.
 
-- If you have a legacy database, then you need to got to `phpMyAdmin` on [http://localhost:8080](http://localhost:8080) to recreate the database because in the building process tables were created thorugh migrations. On the login form provide the values for Server: `mariadb_refriall`, that is the name of the MariaDB container, then Username and Password from the values of the variables `MARIADB_USER` and `MARIADB_ROOT_PASSWORD` on your `.env` file.
+- If you have a legacy database, then you need to go to `phpMyAdmin` on [http://localhost:8080](http://localhost:8080) to recreate the database because during the building process tables were created through migrations. On the login form provide the values for Server: `mariadb_refriall`, that is the name of the MariaDB container, then Username and Password from the values of the variables `MARIADB_USER` and `MARIADB_ROOT_PASSWORD` on your `.env` file.
 
   Once in, select your database from the left list and got to the `Operations` tab, scroll down if not visible yet and click on the red text `Drop the database (DROP)`, then `OK` for confirmation.
 
-  Click on `New` at the top left list of databases and enter the same name as the `MARIADB_DATABASE` value. Then go to the `Import` tab and in the first section click the button `Choose File`, select your back-up and click `Import` at the bottom of that page.
+  Click on `New` at the top left list of databases and enter the same name as the `MARIADB_DATABASE` value. Then go to the `Import` tab and in the first section click the `Choose File` button, select your backup and click `Import` at the bottom of that page.
 
   Now you're ready to start working with your legacy information.
 
@@ -161,15 +161,7 @@ Before starting, ensure you have:
 
 Start by downloading the MariaDB 11.8.6 windows installer from [the official site](https://mariadb.org/download/). You'll see a form to select the version, operating system and other minor details. The installer is a next-next installer, you only need to define the password for the root user, the rest of the settings can be left at their defaults. Once installed, launch the `HeidiSQL` GUI app to create/manage databases. Create a database named either `mariadb_refriall_prod` or `mariadb_refriall_dev` depending on whether you're going to use the software or to develop/modify it.
 
-> Important: The password for the root user must match the one in the .evn file for `MARIADB_ROOT_PASSWORD`
-
-At this point you should take a look at the `manage.py` file to find this line:
-
-```python
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', config('DJANGO_SETTINGS_MODULE'))
-```
-
-And read the instructions from the `.env.sample` or `.env` files and explore the `project/settings/` directory to understand how environment variables are used.
+> Important: The password for the root user must match the one in the .env file for `MARIADB_ROOT_PASSWORD`
 
 #### 2. Install backend dependencies
 
@@ -195,9 +187,9 @@ uv run python manage.py migrate   # Creates database tables
 uv run python manage.py createsuperuser   # Creates the first user
 ```
 
-If you are reinstalling the software and already have a previous database, juts apply the migrations.
+If you are reinstalling the software and already have a previous database, just apply the migrations.
 
-In both cases you'll se a warning similar to this:.
+In both cases you'll see a warning similar to this:
 
 ```bash
 WARNINGS:
@@ -235,9 +227,9 @@ uv run python manage.py collectstatic # collect static files from backend and fr
 
 #### 5. Automate startup as a Windows service
 
-Still alive? Good. Let's automate the software startup as a Windows service.
+Let's automate the software startup as a Windows service.
 
-First, create a `service.log` file in the root directory, it'll be used to write access and errors logs. Then download [nssm](https://nssm.cc/download)(you'll get a zip file). Extract the executable that matches your Windows architecture and copy it to `C:\Windows\System32` so it's available in your Windows PATH.
+First, create a `service.log` file in the root directory, it will be used to write access and error logs. Then download [nssm](https://nssm.cc/download)(you'll get a zip file). Extract the executable that matches your Windows architecture and copy it to `C:\Windows\System32` so it's available in your Windows PATH.
 
 From a terminal run:
 
@@ -249,13 +241,13 @@ nssm install refriall
 
 ##### Configuration
 
-- **Application tab:** In the Path input, provide the path to `waitress-serve.exe` inside your Python virtual environment. Example:
+- **Application tab:** In the Path input, provide the path to `waitress-serve.exe` located your Python virtual environment. Example:
   `C:\Users\username\dev\refriall\.venv\Scripts\waitress-serve.exe`
 - **Startup Directory:** Provide the root directory of the software (where manage.py resides). Example:
   `C:\Users\username\dev\refriall\`
 - **Arguments:** Paste this:
   `--listen=*:8000 project.wsgi:application`
-- **Details tab:** Provide both Display name and Description. These will appear when you run `services.msc`.
+- **Details tab:** Provide both the Display name and Description. These will appear when you run `services.msc`.
 - **I/O tab:** In both Output (stdout) and Output (stderr) inputs, provide the path to the `service.log` file. Example:
   `C:\Users\username\dev\refriall\service.log`
 
@@ -278,11 +270,15 @@ Enjoy using this software as much as I love to develop and maintain it.
 | Service fails to start    | Check `service.log` for error details                   |
 | Database connection error | Verify MariaDB service is running: `services.msc`       |
 
-## Contact
+## Contact Section
 
-My name is Johan and I'm a Software Engineer on the journey of daily self improvement.
+I'm Johan, a Software Engineer committed to daily self-improvement and building quality software.
 
-| Info | |
-| --------- | --------- |
-| Email | [jtravieso8863@gmail.com](mailto:jtravieso8863@gmail.com) |
-| Phone | +53 54719664 |
+| **Contact** | |
+|-------------| --------- |
+| **Email** | [jtravieso8863@gmail.com](mailto:jtravieso8863@gmail.com) |
+| **Phone** | [+53 54719664](tel:+5354719664) |
+
+---
+
+*Questions? Suggestions? Feel free to reach out.*
