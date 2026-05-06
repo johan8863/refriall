@@ -101,7 +101,7 @@ After that `cd refriall_frontend` and repeat the process with the inner `.env.sa
 
 ### On macOS/Linux
 
-For both of this operating systems `refriall` is prepared to be installed via [Docker](https://www.docker.com/), make sure you have it properly installed on your system by following its [documentation](https://docs.docker.com/), if you have any doubts you can always [contact me](#contact).
+For both of this operating systems `refriall` is prepared to be installed via [Docker](https://www.docker.com/), make sure you have it properly installed on your system by following its [documentation](https://docs.docker.com/), if you have any doubts you can always [contact me](#contact-section).
 
 Having docker up and running it is always recommended to take a look at the outer `.env` file you created. The main three following variables are the most important:
 
@@ -275,7 +275,7 @@ Enjoy using this software as much as I love to develop and maintain it.
 I'm Johan, a Software Engineer committed to daily self-improvement and building quality software.
 
 | **Contact** | |
-|-------------| --------- |
+| ------------- | --------- |
 | **Email** | [jtravieso8863@gmail.com](mailto:jtravieso8863@gmail.com) |
 | **Phone** | [+53 54719664](tel:+5354719664) |
 
