@@ -44,7 +44,7 @@ class Provider(CustomUser):
 
 
 class Customer(models.Model):
-    """Customer Model, it is used to identify who target the orders and the bills"""
+    """Customer Model, it is used to identify who targets the orders and the bills"""
     CLIENT_TYPE = [
         ('es', 'ESTATAL'),
         ('pr', 'PARTICULAR'),
