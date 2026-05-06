@@ -6,11 +6,18 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
+    """
+    Base class for the users of the system.
+    """
     class Meta:
+        # no table needed for this model
         abstract = True
 
 
 class Provider(CustomUser):
+    """
+    User of the system, responsible for managing all the data.
+    """
     tcp_code = models.CharField(max_length=10)
     license_number = models.CharField('Licencia', max_length=16)
     personal_id = models.CharField('CI', max_length=11)
