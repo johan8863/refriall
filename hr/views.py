@@ -16,8 +16,6 @@ from .models import Customer, Provider, CustomerDependency
 from .serializers import (
     CustomerSerializer,
     CustomerSerializerDetail,
-    ProviderSerializerRead,
-    ProviderSerializerWrite,
     ProviderCreateSerializer,
     ProviderUpdateSerializer,
     ProviderPasswordUpdateSerializer,
@@ -90,7 +88,7 @@ class ProviderOrderCurrencyNoBill(APIView):
         orders_without_bill = Order.objects.filter(bill__isnull=True, currency=currency)
         unique_providers = orders_without_bill.values('provider').distinct()
         providers = Provider.objects.filter(id__in=unique_providers)
-        serializer = ProviderSerializerRead(providers, many=True)
+        serializer = ProviderUpdateSerializer(providers, many=True)
         return Response(serializer.data)
 
 
@@ -99,13 +97,13 @@ class ProviderListPagination(APIView, ProviderPagination):
     def get(self, request, format=None):
         providers = Provider.objects.all()
         results = self.paginate_queryset(providers, request, view=self)
-        serializer = ProviderSerializerRead(results, many=True)
+        serializer = ProviderUpdateSerializer(results, many=True)
         return self.get_paginated_response(serializer.data)
 
 
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
-    serializer_class = ProviderSerializerRead
+    serializer_class = ProviderUpdateSerializer
 
     def get_serializer_class(self):
         """
@@ -124,7 +122,7 @@ class ProviderViewSet(viewsets.ModelViewSet):
             provider_pk = kwargs['pk']
             provider = Provider.objects.get(pk=provider_pk)
             return Response(
-                data=ProviderSerializerRead(provider),
+                data=ProviderUpdateSerializer(provider),
                 status=status.HTTP_400_BAD_REQUEST
             )
     
