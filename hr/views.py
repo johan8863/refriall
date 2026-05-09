@@ -7,6 +7,7 @@ from django.db.models.deletion import ProtectedError
 
 # third
 from rest_framework import filters, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -17,6 +18,9 @@ from .serializers import (
     CustomerSerializerDetail,
     ProviderSerializerRead,
     ProviderSerializerWrite,
+    ProviderCreateSerializer,
+    ProviderUpdateSerializer,
+    ProviderPasswordUpdateSerializer,
     CustomerDependencySerializer
 )
 from .paginators import CustomerPagination, ProviderPagination
@@ -104,9 +108,14 @@ class ProviderViewSet(viewsets.ModelViewSet):
     serializer_class = ProviderSerializerRead
 
     def get_serializer_class(self):
-        if self.action in ['create', 'update']:
-            return ProviderSerializerWrite
-        return super().get_serializer_class()
+        """
+        Returns different serializers based on the actions
+        """
+        if self.action == 'create':
+            return ProviderCreateSerializer
+        elif self.action in ['update', 'partial_update']:
+            return ProviderUpdateSerializer
+        return ProviderUpdateSerializer
     
     def destroy(self, request, *args, **kwargs):
         try:
@@ -118,6 +127,23 @@ class ProviderViewSet(viewsets.ModelViewSet):
                 data=ProviderSerializerRead(provider),
                 status=status.HTTP_400_BAD_REQUEST
             )
+    
+    @action(detail=False, methods=['post'], url_path='change-password')
+    def change_password(self, request):
+        """
+        Custom endpoint for users to change their own password.
+        POST /api/providers/change-password/
+        """
+        serializer = ProviderPasswordUpdateSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"detail": "Contraseña actualizada correctamente."}, 
+            status=status.HTTP_200_OK
+        )
 
 
 class CustomerDependencyViewSet(viewsets.ModelViewSet):
