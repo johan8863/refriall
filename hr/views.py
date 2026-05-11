@@ -8,6 +8,7 @@ from django.db.models.deletion import ProtectedError
 # third
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -19,6 +20,7 @@ from .serializers import (
     ProviderCreateSerializer,
     ProviderUpdateSerializer,
     ProviderPasswordUpdateSerializer,
+    ProviderAdminPasswordResetSerializer,
     CustomerDependencySerializer
 )
 from .paginators import CustomerPagination, ProviderPagination
@@ -142,7 +144,34 @@ class ProviderViewSet(viewsets.ModelViewSet):
             {"detail": "Contraseña actualizada correctamente."}, 
             status=status.HTTP_200_OK
         )
+    
+    @action(
+        detail=True, 
+        methods=['post'],
+        url_path="admin-reset-password",
+        permission_classes=[IsAdminUser]
+    )
+    def admin_reset_password(self, request, pk=None):
+        """
+        Admin endpoint to reset ANY user's password.
+        POST /api/providers/{id}/admin-reset-password/
+        """
+        
+        user = self.get_object()
 
+        serializer = ProviderAdminPasswordResetSerializer(
+            data=request.data,
+            context={'user': user}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            {
+                "detail": f"Clave cambiada con éxito en el usuario {user.username}"
+            },
+            status=status.HTTP_200_OK
+        )
 
 class CustomerDependencyViewSet(viewsets.ModelViewSet):
     queryset = CustomerDependency.objects.all()

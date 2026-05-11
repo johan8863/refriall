@@ -169,6 +169,29 @@ class ProviderPasswordUpdateSerializer(serializers.Serializer):
         return user
 
 
+
+class ProviderAdminPasswordResetSerializer(serializers.Serializer):
+    """
+    Serializer for admin to reset ANY user's password.
+    No current password required - only for privileged users.
+    """
+    new_password = serializers.CharField(write_only=True, required=True, min_length=8)
+    confirm_new_password = serializers.CharField(write_only=True, required=True)
+
+    def validate(self, data):
+        """Check that new passwords match."""
+        if data['new_password'] != data['confirm_new_password']:
+            raise serializers.ValidationError({'confirm_new_password': 'Las contraseñas no coinciden.'})
+        return data
+    
+    def save(self, **kwargs):
+        """Reset the user's password."""
+        user = self.context['user']
+        user.set_password(self.validated_data['new_password'])
+        user.save()
+        return user
+
+
 class CustomerDependencySerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerDependency
