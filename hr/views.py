@@ -106,6 +106,7 @@ class ProviderListPagination(APIView, ProviderPagination):
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
     serializer_class = ProviderUpdateSerializer
+    pagination_class = ProviderPagination
 
     def get_serializer_class(self):
         """
@@ -172,6 +173,24 @@ class ProviderViewSet(viewsets.ModelViewSet):
             },
             status=status.HTTP_200_OK
         )
+    
+    @action(detail=False, url_path="get-provider-order-currency-no-bill/(?P<currency>[0-9]+)")
+    def get_provider_order_currency_no_bill(self, request, currency):
+        """Returns provider with free orders to associate given a currency."""
+        orders_without_bill = Order.objects.filter(bill__isnull=True, currency=currency)
+        unique_providers = orders_without_bill.values('provider').distinct()
+        providers = Provider.objects.filter(id__in=unique_providers)
+        serializer = ProviderUpdateSerializer(providers, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, url_path="get-providers-paginated")
+    def get_providers_paginated(self, request, format=None):
+        """Returns the list of providers pagianted."""
+        providers = self.get_queryset()
+        results = self.paginate_queryset(providers)
+        serializer = ProviderUpdateSerializer(results, many=True)
+        return self.get_paginated_response(serializer.data)
+    
 
 class CustomerDependencyViewSet(viewsets.ModelViewSet):
     queryset = CustomerDependency.objects.all()
