@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class StockConfig(AppConfig):
+class HrConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'stock'
+    name = 'backend.apps.hr'

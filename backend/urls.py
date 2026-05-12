@@ -21,9 +21,9 @@ urlpatterns = [
             ])),
             path('rest_framework/', include('rest_framework.urls')),
         ])),
-        path('stock/', include('stock.urls')),
-        path('hr/', include('hr.urls')),
-        path('finance/', include('finance.urls')),
+        path('stock/', include('backend.apps.stock.urls')),
+        path('hr/', include('backend.apps.hr.urls')),
+        path('finance/', include('backend.apps.finance.urls')),
     ])),
     # any route which doesn't match api/, admin/, static/ or media/
     # will be served by the vuejs bundle

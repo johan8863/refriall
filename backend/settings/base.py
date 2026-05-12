@@ -31,9 +31,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     # local apps
-    'stock',
-    'hr',
-    'finance',
+    'backend.apps.stock',
+    'backend.apps.hr',
+    'backend.apps.finance',
 ]
 
 MIDDLEWARE = [

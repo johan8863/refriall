@@ -5,8 +5,8 @@ from django.db import models
 from django.db.models import F, Sum
 
 # local
-from hr.models import Customer, CustomerDependency, Provider
-from stock.models import Item, ItemOrder, Kit
+from ..hr.models import Customer, CustomerDependency, Provider
+from ..stock.models import Item, ItemOrder, Kit
 
 
 class Currency(models.Model):

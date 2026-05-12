@@ -8,6 +8,7 @@ from django.db.models.deletion import ProtectedError
 # third
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,7 +25,7 @@ from .serializers import (
     CustomerDependencySerializer
 )
 from .paginators import CustomerPagination, ProviderPagination
-from finance.models import Order
+from ..finance.models import Order
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
@@ -106,7 +107,7 @@ class ProviderListPagination(APIView, ProviderPagination):
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
     serializer_class = ProviderUpdateSerializer
-    pagination_class = ProviderPagination
+    # pagination_class = ProviderPagination
 
     def get_serializer_class(self):
         """
@@ -187,10 +188,23 @@ class ProviderViewSet(viewsets.ModelViewSet):
     def get_providers_paginated(self, request, format=None):
         """Returns the list of providers pagianted."""
         providers = self.get_queryset()
-        results = self.paginate_queryset(providers)
-        serializer = ProviderUpdateSerializer(results, many=True)
-        return self.get_paginated_response(serializer.data)
-    
+        # Create paginator ONLY for this action
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        paginator.page_size_query_param = 'page_size'
+        paginator.max_page_size = 100
+
+        # Apply pagination
+        page = paginator.paginate_queryset(providers, request)
+        
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        
+        # Fallback (should not happen)
+        serializer = self.get_serializer(providers, many=True)
+        return Response(serializer.data)
+
 
 class CustomerDependencyViewSet(viewsets.ModelViewSet):
     queryset = CustomerDependency.objects.all()
