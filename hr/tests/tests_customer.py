@@ -3,7 +3,7 @@
 # local
 from ..models import Customer
 from ..serializers import CustomerSerializer
-from project.tests.base import ModelTest, ModelApiTest, create_object_helper
+from backend.tests.base import ModelTest, ModelApiTest, create_object_helper
 
 
 class CustomerModelTests(ModelTest):

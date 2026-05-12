@@ -3,7 +3,7 @@
 # local
 from ..models import Item
 from ..serializers import ItemSerializer
-from project.tests.base import ModelTest, ModelApiTest, create_object_helper
+from backend.tests.base import ModelTest, ModelApiTest, create_object_helper
 
 
 class ItemModelTests(ModelTest):
