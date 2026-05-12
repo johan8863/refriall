@@ -2,12 +2,16 @@
 
 # django
 from django.db.utils import IntegrityError
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
 # rest_framework
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import AccessToken
+
+User = get_user_model()
 
 def create_object_helper(class_name, **kwargs):
     """Creates a django object of the type `class_name` with the given kwargs"""
@@ -93,7 +97,7 @@ class ModelTest(TestCase):
 class ModelApiTest(APITestCase):
     """Class to test a model api rest operations and validations"""
 
-    def base_setup(self, basename):
+    def base_setup(self, basename, authenticate=True):
         # If the routes for a model views were generated with the default router of
         # django rest framework, the routes are grouped by methods. 
         # For a better understanding of why the asbtraction of a base url, 
@@ -101,6 +105,29 @@ class ModelApiTest(APITestCase):
         # https://www.django-rest-framework.org/api-guide/routers/#defaultrouter
         self.base_url = basename
         self.list_url = reverse(basename + '-list')
+
+        # Create a test user and authenticate
+        if authenticate:
+            self.setup_authentication()
+    
+    def setup_authentication(self):
+        """Create a test user and authenticate the client"""
+        # Create a test user
+        self.test_user = User.objects.create_user(
+            username='testuser',
+            password='testpass123',
+            first_name='Test',
+            last_name='User'
+        )
+        
+        # Get token for the user
+        self.access_token = str(AccessToken.for_user(self.test_user))
+        
+        # Set credentials in the client
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        
+        # Alternatively, if using SessionAuthentication:
+        # self.client.login(username='testuser', password='testpass123')
     
     def get_url(self, id):
         """URL used for get, put and delete methods"""
