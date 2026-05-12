@@ -12,4 +12,4 @@ python manage.py collectstatic --noinput
 echo "### static files collected"
 
 echo "### starting gunicorn"
-gunicorn project.wsgi
+gunicorn backend.wsgi
