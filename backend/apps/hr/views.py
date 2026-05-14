@@ -84,26 +84,6 @@ class CustomerOrderCurrencyProviderNoBill(APIView):
         return Response(serializer.data)
 
 
-
-class ProviderOrderCurrencyNoBill(APIView):
-    """Returns all Providers with orders free to match in a bill given a currency"""
-    def get(self, request, currency, format=None):
-        orders_without_bill = Order.objects.filter(bill__isnull=True, currency=currency)
-        unique_providers = orders_without_bill.values('provider').distinct()
-        providers = Provider.objects.filter(id__in=unique_providers)
-        serializer = ProviderUpdateSerializer(providers, many=True)
-        return Response(serializer.data)
-
-
-
-class ProviderListPagination(APIView, ProviderPagination):
-    def get(self, request, format=None):
-        providers = Provider.objects.all()
-        results = self.paginate_queryset(providers, request, view=self)
-        serializer = ProviderUpdateSerializer(results, many=True)
-        return self.get_paginated_response(serializer.data)
-
-
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
     serializer_class = ProviderUpdateSerializer
