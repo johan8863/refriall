@@ -2,8 +2,6 @@ import { providerAPIEnvs } from "../settings/env";
 import apiBase from "./baseService";
 
 const urlProvider = providerAPIEnvs.providerUrl;
-const urlProviderListPagination = providerAPIEnvs.providerListPaginationUrl;
-const urlProviderCurrencyOrderNoBill = providerAPIEnvs.providerCurrencyOrderNoBillUrl;
 
 export const providerService = {
     listProvider: (currentPage) => apiBase.get(`${urlProvider}/get-providers-paginated/?page=${currentPage}`),
