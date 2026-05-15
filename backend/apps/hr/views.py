@@ -65,19 +65,6 @@ class CustomerListPagination(APIView, CustomerPagination):
         return self.get_paginated_response(serializer.data)
 
 
-class CustomerDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Customer.objects.get(pk=pk)
-        except Customer.DoesNotExist:
-            raise Http404
-    
-    def get(self, request, pk, format=None):
-        customer = self.get_object(pk=pk)
-        serializer = CustomerDetailSerializer(customer)
-        return Response(serializer.data)
-
-
 class CustomerOrderCurrencyProviderNoBill(APIView):
     """Return all customers with orders without bills with the received currency"""
     def get(self, request, currency_pk, provider_pk, format=None):

@@ -29,7 +29,7 @@ export const customerService = {
         return apiBase.get(urlCustomerListPagination, { params });
     },
     listCustomerOrdersNoBill: (currency, provider) => apiBase.get(`${urlCustomerOrderNoBill}/${currency}/${provider}/`),
-    detailCustomer: (customer) => apiBase.get(`${urlCustomerDetail}/${customer}/`),
+    detailCustomer: (id) => apiBase.get(`${urlCustomer}/${id}/`),
     postCustomer: (customer) => apiBase.post(`${urlCustomer}/`, customer),
     putCustomer: (customer) => apiBase.put(`${urlCustomer}/${customer.id}/`, customer),
     deleteCustomer: (customer) => apiBase.delete(`${urlCustomer}/${customer}/`),
