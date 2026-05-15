@@ -169,7 +169,6 @@ class ProviderPasswordUpdateSerializer(serializers.Serializer):
         return user
 
 
-
 class ProviderAdminPasswordResetSerializer(serializers.Serializer):
     """
     Serializer for admin to reset ANY user's password.
