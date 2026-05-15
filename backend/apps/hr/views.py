@@ -49,20 +49,28 @@ class CustomerViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
+    
+    @action(detail=False, url_path='customers-list-pagination')
+    def get_customer_list_pagination(self, request):
+        """List customers paginated"""
+        customers = self.get_queryset()
 
-
-class CustomerListPagination(APIView, CustomerPagination):
-    def get(self, request, format=None):
-        customers = Customer.objects.all()
-        
-        # Search y 'search' parameter is included
+        # search term
         search_term = request.query_params.get('search', None)
         if search_term:
             customers = customers.filter(name__icontains=search_term)
+
+        paginator = CustomerPagination()
+        page = paginator.paginate_queryset(customers, request)
+
+        # Apply pagination
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
         
-        results = self.paginate_queryset(customers, request, view=self)
-        serializer = CustomerDetailSerializer(results, many=True)
-        return self.get_paginated_response(serializer.data)
+        # Fallback
+        serializer = self.get_serializer(customers, many=True)
+        return Response(serializer.data)
 
 
 class CustomerOrderCurrencyProviderNoBill(APIView):
@@ -173,7 +181,7 @@ class ProviderViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(page, many=True)
             return paginator.get_paginated_response(serializer.data)
         
-        # Fallback (should not happen)
+        # Fallback
         serializer = self.get_serializer(providers, many=True)
         return Response(serializer.data)
 

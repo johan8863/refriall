@@ -2,7 +2,7 @@ import { customerAPIEnvs } from "../settings/env";
 import apiBase from "./baseService";
 
 const urlCustomer = customerAPIEnvs.customerUrl;
-const urlCustomerListPagination = customerAPIEnvs.customerListPaginationUrl;
+// const urlCustomerListPagination = customerAPIEnvs.customerListPaginationUrl;
 const urlCustomerDetail = customerAPIEnvs.customerDetailUrl;
 const urlCustomerOrderNoBill = customerAPIEnvs.customerOrderNoBillUrl;
 
@@ -18,7 +18,7 @@ export const customerService = {
             params.search = searchTerm;
         }
         
-        return apiBase.get(urlCustomerListPagination, { params });
+        return apiBase.get(`${urlCustomer}/customers-list-pagination/`, { params });
     },
     listAllCustomers: () => apiBase.get(`${urlCustomer}/`),
     searchCustomers: (searchTerm, page = 1) => {
@@ -26,7 +26,7 @@ export const customerService = {
         if (page > 1) {
             params.page = page;
         }
-        return apiBase.get(urlCustomerListPagination, { params });
+        return apiBase.get(`${urlCustomer}/customers-list-pagination/`, { params });
     },
     listCustomerOrdersNoBill: (currency, provider) => apiBase.get(`${urlCustomerOrderNoBill}/${currency}/${provider}/`),
     detailCustomer: (id) => apiBase.get(`${urlCustomer}/${id}/`),
