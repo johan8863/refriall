@@ -71,15 +71,34 @@ class CustomerViewSet(viewsets.ModelViewSet):
         # Fallback
         serializer = self.get_serializer(customers, many=True)
         return Response(serializer.data)
+    
+    @action(
+        detail=False,
+        url_path="customer-order-currency-provider-no-bill/(?P<currency_pk>[0-9]+)/(?P<provider_pk>[0-9]+)"
+    )
+    def get_customer_order_currency_provider_no_bill(
+        self,
+        request,
+        currency_pk,
+        provider_pk
+    ):
+        """
+        Return all customers with free orders to match in bills given a currency
+        """
+        orders_without_bill = Order.objects.filter(
+            bill__isnull=True,
+            currency=currency_pk,
+            provider=provider_pk
+        )
 
-
-class CustomerOrderCurrencyProviderNoBill(APIView):
-    """Return all customers with orders without bills with the received currency"""
-    def get(self, request, currency_pk, provider_pk, format=None):
-        orders_without_bill = Order.objects.filter(bill__isnull=True, currency=currency_pk, provider=provider_pk)
         unique_customers = orders_without_bill.values('customer').distinct()
         unique_customer_dependencies = orders_without_bill.values('customer_dependency').distinct()
-        customers = Customer.objects.filter(Q(id__in=unique_customers) | Q(dependencies__in=unique_customer_dependencies)).distinct()
+
+        customers = Customer.objects.filter(
+            Q(id__in=unique_customers) | 
+            Q(dependencies__in=unique_customer_dependencies)
+        ).distinct()
+
         serializer = CustomerSerializer(customers, many=True)
         return Response(serializer.data)
 
