@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 from .models import Customer, Provider, CustomerDependency
 from .serializers import (
     CustomerSerializer,
-    CustomerSerializerDetail,
+    CustomerDetailSerializer,
     ProviderCreateSerializer,
     ProviderUpdateSerializer,
     ProviderPasswordUpdateSerializer,
@@ -31,6 +31,11 @@ from ..finance.models import Order
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return CustomerDetailSerializer
+        return self.serializer_class
 
     def destroy(self, request, *args, **kwargs):
         try:
@@ -56,7 +61,7 @@ class CustomerListPagination(APIView, CustomerPagination):
             customers = customers.filter(name__icontains=search_term)
         
         results = self.paginate_queryset(customers, request, view=self)
-        serializer = CustomerSerializerDetail(results, many=True)
+        serializer = CustomerDetailSerializer(results, many=True)
         return self.get_paginated_response(serializer.data)
 
 
@@ -69,7 +74,7 @@ class CustomerDetail(APIView):
     
     def get(self, request, pk, format=None):
         customer = self.get_object(pk=pk)
-        serializer = CustomerSerializerDetail(customer)
+        serializer = CustomerDetailSerializer(customer)
         return Response(serializer.data)
 
 

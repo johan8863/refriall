@@ -224,7 +224,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         ]
 
 
-class CustomerSerializerDetail(serializers.ModelSerializer):
+class CustomerDetailSerializer(serializers.ModelSerializer):
     get_dependencies = CustomerDependencySerializer(many=True)
 
     class Meta:
