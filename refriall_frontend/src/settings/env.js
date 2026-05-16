@@ -28,7 +28,6 @@ export const itemAPIEnvs = {
 
 export const kitAPIEnvs = {
     kitUrl: allEnvs.VITE_KIT_URL,
-    kitListPaginationUrl: allEnvs.VITE_KIT_LIST_PAGINATION_URL,
 }
 
 export const orderAPIEnvs = {

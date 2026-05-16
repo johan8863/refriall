@@ -74,17 +74,39 @@ class KitViewSet(viewsets.ModelViewSet):
                     "kit": KitSerializer(kit).data
                 }, status=status.HTTP_400_BAD_REQUEST
             )
-
-
-class KitListPagination(APIView, paginators.KitPagination):
-    def get(self, request, format=None):
+    
+    @action(detail=False, url_path='kits-list-paginated')
+    def get_kits_list_paginated(self, request, format=None):
         kits = Kit.objects.all()
 
-        # Search y 'search' parameter is included
-        search_term  = request.query_params.get('search', None)
+        # search
+        search_term = request.query_params.get('search', None)
         if search_term:
             kits = kits.filter(name__icontains=search_term)
 
-        results = self.paginate_queryset(kits, request, view=self)
-        serializer = KitSerializer(results, many=True)
-        return self.get_paginated_response(serializer.data)
+        # pagination
+        paginator = paginators.ItemPagination()
+        page = paginator.paginate_queryset(kits, self.request)
+
+        # response
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        
+        # fallback
+        serializer = self.get_serializer(kits, many=True)
+        return Response(serializer.data)
+
+
+# class KitListPagination(APIView, paginators.KitPagination):
+#     def get(self, request, format=None):
+#         kits = Kit.objects.all()
+
+#         # Search y 'search' parameter is included
+#         search_term  = request.query_params.get('search', None)
+#         if search_term:
+#             kits = kits.filter(name__icontains=search_term)
+
+#         results = self.paginate_queryset(kits, request, view=self)
+#         serializer = KitSerializer(results, many=True)
+#         return self.get_paginated_response(serializer.data)

@@ -2,7 +2,6 @@ import { kitAPIEnvs } from "../settings/env";
 import apiBase from "./baseService";
 
 const urlKit = kitAPIEnvs.kitUrl;
-const urlKitListPagination = kitAPIEnvs.kitListPaginationUrl;
 
 export const kitService = {
     getAllKits: () => apiBase.get(`${urlKit}/`),
@@ -17,14 +16,14 @@ export const kitService = {
             params.search = searchTerm;
         }
         
-        return apiBase.get(urlKitListPagination, { params })
+        return apiBase.get(`${urlKit}/kits-list-paginated/`, { params })
     },
     searchKits: (searchTerm, page = 1) => {
         const params = { search: searchTerm };
         if (page > 1) {
             params.page = page;
         }
-        return apiBase.get(urlKitListPagination, { params });
+        return apiBase.get(`${urlKit}/kits-list-paginated/`, { params });
     },
     detailKit: (id) => apiBase.get(`${urlKit}/${id}/`),
     postKit: (kit) => apiBase.post(`${urlKit}/`, kit),    
