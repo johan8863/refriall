@@ -15,6 +15,5 @@ router.register(r'kits', views.KitViewSet, basename='kits')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('items/detail/<int:pk>/', views.ItemDetail.as_view(), name='items_detail'),
     path('kits/list/pagination/', views.KitListPagination.as_view(), name='kits_list_pagination'),
 ]

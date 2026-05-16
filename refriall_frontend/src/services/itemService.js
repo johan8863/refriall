@@ -34,7 +34,7 @@ export const itemService = {
         return apiBase.get(`${urlItem}/item-list-pagination/`, { params });
     },
     getItem: (id) => apiBase.get(`${urlItem}/${id}/`),
-    detailItem: (id) => apiBase.get(`${urlItem}/detail/${id}/`),
+    detailItem: (id) => apiBase.get(`${urlItem}/${id}/`),
     postItem: (item) => apiBase.post(`${urlItem}/`, item),
     putItem: (item) => apiBase.put(`${urlItem}/${item.id}/`, item),
     deleteItem: (id) => apiBase.delete(`${urlItem}/${id}/`),

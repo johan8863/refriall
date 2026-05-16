@@ -6,7 +6,7 @@ from rest_framework import serializers
 # local
 from .models import Bill, Currency, Order, ItemTime, ItemTimeOrder
 from ..hr.serializers import CustomerSerializer, CustomerDependencySerializer, ProviderUpdateSerializer
-from ..stock.serializers import ItemOrderSerializerDetail, ItemSerializerForReadOnly, KitSerializer
+from ..stock.serializers import ItemOrderSerializerDetail, ItemSerializer, KitSerializer
 from ..stock.models import ItemOrder
 
 
@@ -17,7 +17,7 @@ class CurrencySerializer(serializers.ModelSerializer):
 
 
 class ItemTimeSerializerForReadOnly(serializers.ModelSerializer):
-    item = ItemSerializerForReadOnly()
+    item = ItemSerializer()
 
     class Meta:
         model = ItemTime

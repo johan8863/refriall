@@ -17,6 +17,8 @@ class ItemSerializer(serializers.ModelSerializer):
             "item_type",
             "measurement",
             "price",
+            "get_item_type",
+            "get_measurement",
         ]
     
     def validate(self, attrs):
@@ -34,19 +36,6 @@ class ItemSerializer(serializers.ModelSerializer):
                 'price': 'El valor mínimo es 0.01.'
             })
         return super().validate(attrs)
-
-
-class ItemSerializerForReadOnly(serializers.ModelSerializer):
-    class Meta:
-        model = Item
-        fields = [
-            "id",
-            "code",
-            "name",
-            "get_item_type",
-            "get_measurement",
-            "price",
-        ]
 
 
 class ItemOrderSerializerDetail(serializers.ModelSerializer):
