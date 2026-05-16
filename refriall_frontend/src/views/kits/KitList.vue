@@ -54,7 +54,7 @@ const handleSearch = async () => {
     hasSearched.value = true;
     
     try {
-        const resp = await searchKits(searchTerm.value);
+        const resp = await kitService.searchKits(searchTerm.value);
         const data = resp.data;
         
         kits.value = data.results;
