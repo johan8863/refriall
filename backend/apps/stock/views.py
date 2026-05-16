@@ -21,11 +21,6 @@ class ItemViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     filter_backends = [filters.SearchFilter]
 
-    # def get_serializer_class(self):
-    #     if self.action in ['update', 'list']:
-    #         return ItemSerializerForReadOnly
-    #     return self.serializer_class
-
     def destroy(self, request, *args, **kwargs):
         try:
             return super().destroy(request, *args, **kwargs)
