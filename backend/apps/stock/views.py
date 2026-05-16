@@ -18,10 +18,13 @@ from . import paginators
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    pagination_class = paginators.ItemPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'code', 'description']
 
+    def get_serializer_class(self):
+        if self.action in ['retrieve', 'list']:
+            return ItemSerializerForReadOnly
+        return self.serializer_class
 
     def destroy(self, request, *args, **kwargs):
         try:
@@ -35,19 +38,6 @@ class ItemViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
-
-
-class ItemListForSelect(APIView):
-    def get(self, request, format=None):
-        items = Item.objects.all()
-        
-        # search
-        search_term = request.query_params.get('search', None)
-        if search_term:
-            items = items.filter(name__icontains=search_term)
-        
-        serializer = ItemSerializer(items, many=True)
-        return Response(serializer.data)
 
 
 class ItemListPagination(APIView, paginators.ItemPagination):

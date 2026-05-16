@@ -73,6 +73,9 @@ const goBack = () => (!order.value.id ? goToOrders() : goToOrderDetail())
 const isLoadingBackendData = ref(false)
 const isLoadingOrderData = ref(false)
 
+// error message
+const errorMessage = ref(null)
+
 // customs rules
 const customerOrDependency = () =>
   (order.value.customer && !order.value.customer_dependency) ||

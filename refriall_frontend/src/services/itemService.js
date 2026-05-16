@@ -25,7 +25,7 @@ export const itemService = {
             params.search = searchTerm;
         }
         
-        return apiBase.get('/stock/items/list/select/', { params });
+        return apiBase.get(urlItem, { params });
     },
     searchItems: (searchTerm, page = 1) => {
         const params = { search: searchTerm };
