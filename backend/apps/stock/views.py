@@ -6,6 +6,7 @@ from django.db.models.deletion import ProtectedError
 
 # third
 from rest_framework import status, viewsets, filters
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -19,7 +20,6 @@ class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name', 'code', 'description']
 
     def get_serializer_class(self):
         if self.action in ['retrieve', 'list']:
@@ -38,20 +38,31 @@ class ItemViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
+    
+    @action(detail=False, methods=['get'], url_path='item-list-pagination')
+    def get_item_list_pagination(self, request):
+        """Return Items paginated"""
 
-
-class ItemListPagination(APIView, paginators.ItemPagination):
-    def get(self, request, format=None):
+        # queryset
         items = Item.objects.all()
-        
-        # Search y 'search' parameter is included
+
+        # search
         search_term = request.query_params.get('search', None)
         if search_term:
             items = items.filter(name__icontains=search_term)
+
+        # pagination
+        paginator = paginators.ItemPagination()
+        page = paginator.paginate_queryset(items, self.request)
+
+        # response
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
         
-        results = self.paginate_queryset(items, request, view=self)
-        serializer = ItemSerializerForReadOnly(results, many=True)
-        return self.get_paginated_response(serializer.data)
+        # fallback
+        serializer = self.get_serializer(items, many=True)
+        return Response(serializer.data)
 
 
 class ItemDetail(APIView):

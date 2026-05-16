@@ -24,7 +24,6 @@ export const customerDependencyAPIEnvs = {
 
 export const itemAPIEnvs = {
     itemUrl: allEnvs.VITE_ITEM_URL,
-    itemListPaginationUrl: allEnvs.VITE_ITEM_LIST_PAGINATION_URL,
 }
 
 export const kitAPIEnvs = {

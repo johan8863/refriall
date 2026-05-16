@@ -2,7 +2,6 @@ import { itemAPIEnvs } from "../settings/env";
 import apiBase from "./baseService";
 
 const urlItem = itemAPIEnvs.itemUrl;
-const urlItemListPagination = itemAPIEnvs.itemListPaginationUrl;
 
 export const itemService = {
     listItem: (currentPage = null, searchTerm = null) => {
@@ -16,7 +15,7 @@ export const itemService = {
             params.search = searchTerm;
         }
         
-        return apiBase.get(urlItemListPagination, { params });
+        return apiBase.get(`${urlItem}/item-list-pagination/`, { params });
     },
     listItemsForSelect: (searchTerm = null) => {
         const params = {};
@@ -32,7 +31,7 @@ export const itemService = {
         if (page > 1) {
             params.page = page;
         }
-        return apiBase.get(urlItemListPagination, { params });
+        return apiBase.get(`${urlItem}/item-list-pagination/`, { params });
     },
     getItem: (id) => apiBase.get(`${urlItem}/${id}/`),
     detailItem: (id) => apiBase.get(`${urlItem}/detail/${id}/`),
