@@ -60,19 +60,6 @@ class ItemViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-# class ItemDetail(APIView):
-#     def get_object(self, pk):
-#         try:
-#             return Item.objects.get(pk=pk)
-#         except Item.DoesNotExist:
-#             raise Http404
-        
-#     def get(self, request, pk, format=None):
-#         item = self.get_object(pk=pk)
-#         serializer = ItemSerializerForReadOnly(item)
-#         return Response(serializer.data)
-
-
 class KitViewSet(viewsets.ModelViewSet):
     queryset = Kit.objects.all()
     serializer_class = KitSerializer
