@@ -3,7 +3,7 @@ import apiBase from "./baseService";
 
 const urlOrderListPagination = orderAPIEnvs.orderListPaginationUrl;
 const urlOrderDetail = orderAPIEnvs.orderDetailUrl;
-const urlOrderPost = orderAPIEnvs.orderPostUrl;
+const urlOrder = orderAPIEnvs.orderUrl;
 const urlFromCustomerNotMatched = orderAPIEnvs.orderFromCustomerNotMatchedUrl;
 const urlFromCustomer = orderAPIEnvs.orderFromCustomerUrl;
 const urlNotMatched = orderAPIEnvs.orderNotMatchedUrl;
@@ -30,10 +30,10 @@ export const orderService = {
         return apiBase.get(urlOrderListPagination, { params });
     },
     detailOrder: (id) => apiBase.get(`${urlOrderDetail}/${id}/`),
-    detailOrderUpdate: (id) => apiBase.get(`${urlOrderPost}/${id}/`),
-    postOrder: (order) => apiBase.post(`${urlOrderPost}/`, order),
-    putOrder: (order) => apiBase.put(`${urlOrderPost}/${order.id}/`, order),
-    deleteOrder: (id) => apiBase.delete(`${urlOrderPost}/${id}/`),
+    detailOrderUpdate: (id) => apiBase.get(`${urlOrder}/${id}/`),
+    postOrder: (order) => apiBase.post(`${urlOrder}/`, order),
+    putOrder: (order) => apiBase.put(`${urlOrder}/${order.id}/`, order),
+    deleteOrder: (id) => apiBase.delete(`${urlOrder}/${id}/`),
     getOrdersFromCustomerNotMatched: (
         currencyId, 
         providerId, 

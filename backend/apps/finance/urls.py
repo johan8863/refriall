@@ -10,7 +10,7 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'orders_write', views.OrderViewSet, basename='orders')
+router.register(r'orders', views.OrderViewSet, basename='orders')
 router.register(r'bills_write', views.BillViewSet, basename='bills')
 router.register(r'currencies_write', views.CurrencyViewSet, basename='currencies')
 

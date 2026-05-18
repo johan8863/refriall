@@ -34,7 +34,7 @@ export const orderAPIEnvs = {
     orderListUrl: allEnvs.VITE_ORDER_LIST_URL,
     orderListPaginationUrl: allEnvs.VITE_ORDER_LIST_PAGINATION_URL,
     orderDetailUrl: allEnvs.VITE_ORDER_DETAIL_URL,
-    orderPostUrl: allEnvs.VITE_ORDER_POST_URL,
+    orderUrl: allEnvs.VITE_ORDER_URL,
     orderFromCustomerNotMatchedUrl: allEnvs.VITE_ORDER_FROM_CUSTOMER_NOT_MATCHED_URL,
     orderFromCustomerUrl: allEnvs.VITE_ORDER_FROM_CUSTOMER_URL,
     orderNotMatchedUrl: allEnvs.VITE_ORDER_NOT_MATCHED_URL,
