@@ -30,7 +30,6 @@ export const kitAPIEnvs = {
 export const orderAPIEnvs = {
     orderListUrl: allEnvs.VITE_ORDER_LIST_URL,
     orderListPaginationUrl: allEnvs.VITE_ORDER_LIST_PAGINATION_URL,
-    orderDetailUrl: allEnvs.VITE_ORDER_DETAIL_URL,
     orderUrl: allEnvs.VITE_ORDER_URL,
     orderFromCustomerNotMatchedUrl: allEnvs.VITE_ORDER_FROM_CUSTOMER_NOT_MATCHED_URL,
     orderFromCustomerUrl: allEnvs.VITE_ORDER_FROM_CUSTOMER_URL,

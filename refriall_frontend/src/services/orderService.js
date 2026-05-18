@@ -1,7 +1,6 @@
 import { orderAPIEnvs } from "../settings/env";
 import apiBase from "./baseService";
 
-const urlOrderDetail = orderAPIEnvs.orderDetailUrl;
 const urlOrder = orderAPIEnvs.orderUrl;
 const urlFromCustomerNotMatched = orderAPIEnvs.orderFromCustomerNotMatchedUrl;
 const urlFromCustomer = orderAPIEnvs.orderFromCustomerUrl;
@@ -28,7 +27,7 @@ export const orderService = {
         }
         return apiBase.get(`${urlOrder}/orders-list-pagination/`, { params });
     },
-    detailOrder: (id) => apiBase.get(`${urlOrderDetail}/${id}/`),
+    detailOrder: (id) => apiBase.get(`${urlOrder}/${id}/order-detail/`),
     detailOrderUpdate: (id) => apiBase.get(`${urlOrder}/${id}/`),
     postOrder: (order) => apiBase.post(`${urlOrder}/`, order),
     putOrder: (order) => apiBase.put(`${urlOrder}/${order.id}/`, order),

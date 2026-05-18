@@ -113,19 +113,6 @@ class OrderListPagination(APIView, OrderPagination):
         return self.get_paginated_response(serializer.data)
 
 
-class OrderDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Order.objects.get(pk=pk)
-        except Order.DoesNotExist:
-            raise Http404
-    
-    def get(self, request, pk, format=None):
-        order = self.get_object(pk)
-        serializer = OrderSerializerForReadOnly(order)
-        return Response(serializer.data)
-    
-
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -167,6 +154,19 @@ class OrderViewSet(viewsets.ModelViewSet):
             return paginator.get_paginated_response(serializer.data)
         
         serializer = self.get_serializer(orders, many=True)
+        return Response(serializer.data)
+    
+    def get_object(self, pk):
+        try:
+            return Order.objects.get(pk=pk)
+        except Order.DoesNotExist:
+            return Response({"detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    @action(detail=True, url_path='order-detail')
+    def get_order_detail(self, request, pk):
+        """Return an Order serializer with inner serializers and property methods"""
+        order = self.get_object(pk)
+        serializer = OrderSerializerForReadOnly(order)
         return Response(serializer.data)
 
 
