@@ -139,9 +139,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             return super().destroy(request, *args, **kwargs)
         else:
             bill = Bill.objects.get(pk=order.bill_id)
-            print(bill)
             serializer = BillSerializerDeleteError(bill)
-            print(repr(serializer))
             return Response(data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 
