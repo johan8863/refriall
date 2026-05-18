@@ -2,9 +2,6 @@ import { customerAPIEnvs } from "../settings/env";
 import apiBase from "./baseService";
 
 const urlCustomer = customerAPIEnvs.customerUrl;
-// const urlCustomerListPagination = customerAPIEnvs.customerListPaginationUrl;
-const urlCustomerDetail = customerAPIEnvs.customerDetailUrl;
-const urlCustomerOrderNoBill = customerAPIEnvs.customerOrderNoBillUrl;
 
 export const customerService = {
     listCustomer: (currentPage = null, searchTerm = null) => {
