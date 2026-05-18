@@ -131,9 +131,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
 
     def get_serializer_class(self):
-        if self.action == 'list':
-            return OrderSerializerReadListView
-        elif self.action == 'get_orders_list_pagination':
+        if self.action in ['list', 'get_orders_list_pagination']:
             return OrderSerializerReadListView
         return self.serializer_class
 
