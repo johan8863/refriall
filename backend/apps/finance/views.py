@@ -129,6 +129,10 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return OrderSerializerReadListView
+
     def destroy(self, request, *args, **kwargs):
         order = Order.objects.get(pk=kwargs['pk'])
         if order.bill_id is None:
