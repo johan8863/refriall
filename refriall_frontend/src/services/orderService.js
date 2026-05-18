@@ -20,14 +20,14 @@ export const orderService = {
             params.search = searchTerm;
         }
         
-        return apiBase.get(urlOrderListPagination, { params });
+        return apiBase.get(`${urlOrder}/orders-list-pagination/`, { params });
     },
     searchOrders: (searchTerm, page = 1) => {
         const params = { search: searchTerm };
         if (page > 1) {
             params.page = page;
         }
-        return apiBase.get(urlOrderListPagination, { params });
+        return apiBase.get(`${urlOrder}/orders-list-pagination/`, { params });
     },
     detailOrder: (id) => apiBase.get(`${urlOrderDetail}/${id}/`),
     detailOrderUpdate: (id) => apiBase.get(`${urlOrder}/${id}/`),
