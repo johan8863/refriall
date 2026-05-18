@@ -53,6 +53,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
     @action(detail=False, url_path='customers-list-pagination')
     def get_customer_list_pagination(self, request):
         """List customers paginated"""
+        print('here')
         customers = self.get_queryset()
 
         # search term

@@ -6,6 +6,7 @@ from django.db.models.deletion import ProtectedError
 from django.http import Http404
 
 # third
+from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -132,6 +133,9 @@ class OrderViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return OrderSerializerReadListView
+        elif self.action == 'get_orders_list_pagination':
+            return OrderSerializerReadListView
+        return self.serializer_class
 
     def destroy(self, request, *args, **kwargs):
         order = Order.objects.get(pk=kwargs['pk'])
@@ -141,6 +145,31 @@ class OrderViewSet(viewsets.ModelViewSet):
             bill = Bill.objects.get(pk=order.bill_id)
             serializer = BillSerializerDeleteError(bill)
             return Response(data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=False, url_path='orders-list-pagination')
+    def get_orders_list_pagination(self, request):
+        orders = Order.objects.all()
+        
+        # Search by folio, customer name or dependency
+        search_term = request.query_params.get('search', None)
+        if search_term:
+            orders = orders.filter(
+                Q(folio__icontains=search_term) |
+                Q(customer__name__icontains=search_term) |
+                Q(customer_dependency__name__icontains=search_term)
+            )
+        
+        # pagination
+        paginator = OrderPagination()
+        page = paginator.paginate_queryset(orders, request)
+
+        # fallback
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        
+        serializer = self.get_serializer(orders, many=True)
+        return Response(serializer.data)
 
 
 class OrderFromCustomerNotMatched(APIView):
