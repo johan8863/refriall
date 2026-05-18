@@ -13,9 +13,6 @@ export const currenciesAPIEnvs = {
 
 export const customerAPIEnvs = {
     customerUrl: allEnvs.VITE_CUSTOMER_URL,
-    customerListPaginationUrl: allEnvs.VITE_CUSTOMER_LIST_PAGINATION_URL,
-    customerDetailUrl: allEnvs.VITE_CUSTOMER_DETAIL_URL,
-    customerOrderNoBillUrl: allEnvs.VITE_CUSTOMER_ORDER_NO_BILL_URL,
 }
 
 export const customerDependencyAPIEnvs = {
@@ -42,8 +39,6 @@ export const orderAPIEnvs = {
 
 export const providerAPIEnvs = {
     providerUrl: allEnvs.VITE_PROVIDER_URL,
-    providerListPaginationUrl: allEnvs.VITE_PROVIDER_LIST_PAGINATION_URL,
-    providerCurrencyOrderNoBillUrl: allEnvs.VITE_PROVIDER_CURRENCY_ORDER_NO_BILL_URL,
 }
 
 export const authAPIEnvs = {
