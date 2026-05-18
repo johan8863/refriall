@@ -8,6 +8,7 @@ import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 import { errorHandler, objectNames } from "../../utils/errors/errorHandler";
 
 const orders = ref([]);
+const ordersCount = ref(0)
 const currentPage = ref(1);
 const showNextButton = ref(false);
 const showPrevButton = ref(false);
@@ -26,6 +27,7 @@ const getOrders = async (page = 1) => {
         
         showNextButton.value = !!data.next;
         showPrevButton.value = !!data.previous;
+        ordersCount.value = data.count;
         orders.value = data.results;
         orderBackendErrors.value = null;
     } catch (error) {
@@ -202,7 +204,7 @@ onMounted(async () => {
                             </div>
 
                             <!-- Results -->
-                            <div v-else-if="orders.length > 0" class="mt-2">
+                            <div v-else-if="ordersCount > 0" class="mt-2">
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover mb-1">
                                         <thead class="table-dark">
