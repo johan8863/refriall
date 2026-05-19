@@ -95,24 +95,6 @@ class BillViewSet(viewsets.ModelViewSet):
     serializer_class = BillSerializer
 
 
-class OrderListPagination(APIView, OrderPagination):
-    def get(self, request, format=None):
-        orders = Order.objects.all()
-        
-        # Search by folio, customer name or dependency
-        search_term = request.query_params.get('search', None)
-        if search_term:
-            orders = orders.filter(
-                Q(folio__icontains=search_term) |
-                Q(customer__name__icontains=search_term) |
-                Q(customer_dependency__name__icontains=search_term)
-            )
-        
-        results = self.paginate_queryset(orders, request, view=self)
-        serializer = OrderSerializerReadListView(results, many=True)
-        return self.get_paginated_response(serializer.data)
-
-
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer

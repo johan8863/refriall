@@ -16,7 +16,6 @@ router.register(r'currencies_write', views.CurrencyViewSet, basename='currencies
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('orders/list/pagination/', views.OrderListPagination.as_view(), name='orders_list_pagination'),
     path('orders/fromcustomer/<int:pk>/', views.OrderFromCustomer.as_view(), name='orders_fromcustomer'),
     path('orders/notmatched/', views.OrderNotMatched.as_view(), name='orders_notmatched'),
     path('bills/list/pagination/', views.BillListPagination.as_view(), name='bills_list'),
