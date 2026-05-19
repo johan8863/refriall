@@ -168,11 +168,9 @@ class OrderViewSet(viewsets.ModelViewSet):
         order = self.get_object(pk)
         serializer = OrderSerializerForReadOnly(order)
         return Response(serializer.data)
-
-
-class OrderFromCustomerNotMatched(APIView):
-    """returns all orders related to the given customer id and bill__isnull=True"""
-    def get(self, request, currency_pk, provider_pk, customer_pk, format=None):
+    
+    @action(detail=False, url_path='orders-from-currency-customer-free-bill/(?P<currency_pk>[0-9]+)/(?P<provider_pk>[0-9]+)/(?P<customer_pk>[0-9]+)')
+    def get_orders_from_currency_customer_free_bill(self, request, currency_pk, provider_pk, customer_pk):
         orders = Order.objects.filter(Q(customer=customer_pk) | Q(customer_dependency__customer=customer_pk), Q(currency=currency_pk), Q(provider=provider_pk), Q(bill__isnull=True))
         serializer = OrderSerializerForReadOnly(orders, many=True)
         return Response(serializer.data)
