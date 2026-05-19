@@ -120,6 +120,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in ['list', 'get_orders_list_pagination']:
             return OrderSerializerReadListView
+        elif self.action in ['get_order_detail', 'get_orders_from_currency_customer_free_bill']:
+            return OrderSerializerForReadOnly
         return self.serializer_class
 
     def destroy(self, request, *args, **kwargs):
@@ -156,23 +158,17 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data)
     
-    def get_object(self, pk):
-        try:
-            return Order.objects.get(pk=pk)
-        except Order.DoesNotExist:
-            return Response({"detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
-    
     @action(detail=True, url_path='order-detail')
     def get_order_detail(self, request, pk):
         """Return an Order serializer with inner serializers and property methods"""
-        order = self.get_object(pk)
-        serializer = OrderSerializerForReadOnly(order)
+        order = self.get_object()
+        serializer = self.get_serializer(order)
         return Response(serializer.data)
     
     @action(detail=False, url_path='orders-from-currency-customer-free-bill/(?P<currency_pk>[0-9]+)/(?P<provider_pk>[0-9]+)/(?P<customer_pk>[0-9]+)')
     def get_orders_from_currency_customer_free_bill(self, request, currency_pk, provider_pk, customer_pk):
         orders = Order.objects.filter(Q(customer=customer_pk) | Q(customer_dependency__customer=customer_pk), Q(currency=currency_pk), Q(provider=provider_pk), Q(bill__isnull=True))
-        serializer = OrderSerializerForReadOnly(orders, many=True)
+        serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data)
 
 
