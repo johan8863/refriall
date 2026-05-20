@@ -33,7 +33,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerSerializer
 
     def get_serializer_class(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['list', 'retrieve', 'get_customer_list_pagination']:
             return CustomerDetailSerializer
         return self.serializer_class
 
@@ -115,7 +115,7 @@ class ProviderViewSet(viewsets.ModelViewSet):
         """
         if self.action == 'create':
             return ProviderCreateSerializer
-        elif self.action in ['update', 'partial_update']:
+        elif self.action in ['update', 'partial_update', 'get_provider_order_currency_no_bill']:
             return ProviderUpdateSerializer
         return ProviderUpdateSerializer
     
@@ -181,7 +181,7 @@ class ProviderViewSet(viewsets.ModelViewSet):
         orders_without_bill = Order.objects.filter(bill__isnull=True, currency=currency)
         unique_providers = orders_without_bill.values('provider').distinct()
         providers = Provider.objects.filter(id__in=unique_providers)
-        serializer = ProviderUpdateSerializer(providers, many=True)
+        serializer = self.get_serializer(providers, many=True)
         return Response(serializer.data)
     
     @action(detail=False, url_path="get-providers-paginated")
