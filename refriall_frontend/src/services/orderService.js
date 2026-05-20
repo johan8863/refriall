@@ -2,8 +2,6 @@ import { orderAPIEnvs } from "../settings/env";
 import apiBase from "./baseService";
 
 const urlOrder = orderAPIEnvs.orderUrl;
-const urlFromCustomer = orderAPIEnvs.orderFromCustomerUrl;
-const urlNotMatched = orderAPIEnvs.orderNotMatchedUrl;
 
 export const orderService = {
     listOrder: (currentPage = null, searchTerm = null) => {
@@ -38,8 +36,6 @@ export const orderService = {
     ) => apiBase.get(
         `${urlOrder}/orders-from-currency-customer-free-bill/${currencyId}/${providerId}/${customerId}/`
     ),
-    getOrdersFromCustomer: (id) => apiBase.get(`${urlFromCustomer}/${id}/`),
-    getOrdersNotMatched: () => apiBase.get(`${urlNotMatched}`),
 }
 
 
