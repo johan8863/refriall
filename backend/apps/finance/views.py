@@ -92,7 +92,33 @@ class BillDetailUpdate(APIView):
 
 class BillViewSet(viewsets.ModelViewSet):
     queryset = Bill.objects.all()
-    serializer_class = BillSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'get_bill_list_pagination':
+            return BillSerializerReadListView
+        return BillSerializer
+    
+    @action(detail=False, url_path='bill-list-pagination')
+    def get_bill_list_pagination(self, request, format=None):
+        """Returns bills list pagianted"""
+
+        # queryset
+        bills = Bill.objects.all()
+        
+        # search
+        search_term = request.query_params.get('search', None)
+        if search_term:
+            bills = bills.filter(
+                Q(folio__icontains=search_term) |
+                Q(customer__name__icontains=search_term)
+            )
+        
+        # pagination
+        paginator = BillPagination()
+        results = paginator.paginate_queryset(bills, request)
+
+        serializer = self.get_serializer(results, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 class OrderViewSet(viewsets.ModelViewSet):

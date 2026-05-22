@@ -1,10 +1,10 @@
 export const allEnvs = import.meta.env
 
 export const billsAPIEnvs = {
-    billListPaginationUrl: allEnvs.VITE_BILL_LIST_PAGINATION_URL,
+    // billListPaginationUrl: allEnvs.VITE_BILL_LIST_PAGINATION_URL,
     billDetailUrl: allEnvs.VITE_BILL_DETAIL_URL,
     billDetailUpdateUrl: allEnvs.VITE_BILL_DETAIL_UPDATE_URL,
-    billPostUrl: allEnvs.VITE_BILLPOST_URL,
+    billUrl: allEnvs.VITE_BILL_URL,
 }
 
 export const currenciesAPIEnvs = {
