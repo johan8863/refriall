@@ -1,7 +1,6 @@
 import { billsAPIEnvs } from "../settings/env";
 import apiBase from "./baseService";
 
-const urlBillDetailUpdate = billsAPIEnvs.billDetailUpdateUrl;
 const urlBill = billsAPIEnvs.billUrl;
 
 export const billService = {
@@ -26,7 +25,7 @@ export const billService = {
         return apiBase.get(`${urlBill}/bill-list-pagination/`, { params });
     },
     detailBill: (id) => apiBase.get(`${urlBill}/${id}/`),
-    detailBillUpdate: (id) => apiBase.get(`${urlBillDetailUpdate}/${id}/`),
+    detailBillUpdate: (id) => apiBase.get(`${urlBill}/${id}/`),
     postBill: (bill) => apiBase.post(`${urlBill}/`, bill),    
     putBill: (bill) => apiBase.put(`${urlBill}/${bill.id}/`, bill),
     deleteBill: (id) => apiBase.delete(`${urlBill}/${id}/`)

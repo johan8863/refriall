@@ -46,19 +46,6 @@ class CurrencyViewSet(viewsets.ModelViewSet):
             )
 
 
-class BillDetailUpdate(APIView):
-    def get_object(self, pk):
-        try:
-            return Bill.objects.get(pk=pk)
-        except Bill.DoesNotExist:
-            raise Http404
-        
-    def get(self, request, pk, format=None):
-        bill = self.get_object(pk=pk)
-        serializer = BillSerializerDetailUpdate(bill)
-        return Response(serializer.data)
-
-
 class BillViewSet(viewsets.ModelViewSet):
     queryset = Bill.objects.all()
 
@@ -67,6 +54,8 @@ class BillViewSet(viewsets.ModelViewSet):
             return BillSerializerReadListView
         elif self.action == 'retrieve':
             return BillSerializerForReadOnly
+        elif self.action == 'update':
+            return BillSerializerDetailUpdate
         return BillSerializer
     
     @action(detail=False, url_path='bill-list-pagination')
