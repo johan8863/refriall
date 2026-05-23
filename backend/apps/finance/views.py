@@ -25,7 +25,7 @@ from .serializers import (
     OrderSerializer,
     OrderSerializerReadListView
 )
-from ..utils.base_paginator import BaseCustomPagination
+from ...utils.base_paginator import BaseCustomPagination
 
 
 class CurrencyViewSet(viewsets.ModelViewSet):

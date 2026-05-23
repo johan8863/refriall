@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 # local
 from .models import Item, Kit
 from .serializers import ItemSerializer, KitSerializer
-from ..utils.base_paginator import BaseCustomPagination
+from ...utils.base_paginator import BaseCustomPagination
 
 
 class ItemViewSet(viewsets.ModelViewSet):

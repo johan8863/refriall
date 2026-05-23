@@ -25,7 +25,7 @@ from .serializers import (
     CustomerDependencySerializer
 )
 from ..finance.models import Order
-from ..utils.base_paginator import BaseCustomPagination
+from ...utils.base_paginator import BaseCustomPagination
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
