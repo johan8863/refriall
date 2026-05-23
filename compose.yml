@@ -29,24 +29,24 @@ services:
       - PMA_HOST=db
     restart: always
   
-  refriall_frontend:
+  frontend:
     container_name: vuejs_refriall
     depends_on:
       db:
         condition: service_healthy
     build:
-      context: ./refriall_frontend
+      context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - refriall_fronted_dist:/app/dist
+      - fronted_dist:/app/dist
     command: echo "Vue build completed"
     restart: "no"
   
-  django_backend:
+  backend:
     depends_on:
       # django needs to collect static files
       # from vuejs building
-      refriall_frontend:
+      frontend:
         condition: service_completed_successfully
     build: .
     container_name: django_app
@@ -55,9 +55,9 @@ services:
     env_file:
       - .env
     volumes:
-      - refriall_fronted_dist:/app/dist
+      - fronted_dist:/app/dist
     restart: always
 
 volumes:
   mariadb_refriall:
-  refriall_fronted_dist:
+  fronted_dist:

@@ -89,7 +89,7 @@ docker_templates = Path('/app/dist')
 if docker_templates.exists():
     TEMPLATES[0]['DIRS'].append(docker_templates)
 else:
-    TEMPLATES[0]['DIRS'].append(BASE_DIR / "refriall_frontend/dist")
+    TEMPLATES[0]['DIRS'].append(BASE_DIR / "frontend/dist")
 
 
 WSGI_APPLICATION = 'backend.wsgi.application'
@@ -137,7 +137,7 @@ docker_staticfiles = Path('/app/dist/static')
 if docker_staticfiles.exists():
     STATICFILES_DIRS.append(docker_staticfiles)
 else:
-    STATICFILES_DIRS.append(BASE_DIR / "refriall_frontend/dist/static")
+    STATICFILES_DIRS.append(BASE_DIR / "frontend/dist/static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
