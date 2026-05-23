@@ -46,24 +46,6 @@ class CurrencyViewSet(viewsets.ModelViewSet):
             )
 
 
-
-class BillListPagination(APIView, BillPagination):
-    def get(self, request, format=None):
-        bills = Bill.objects.all()
-        
-        # Search by folio or customer name
-        search_term = request.query_params.get('search', None)
-        if search_term:
-            bills = bills.filter(
-                Q(folio__icontains=search_term) |
-                Q(customer__name__icontains=search_term)
-            )
-        
-        results = self.paginate_queryset(bills, request, view=self)
-        serializer = BillSerializerReadListView(results, many=True)
-        return self.get_paginated_response(serializer.data)
-
-
 class BillDetailUpdate(APIView):
     def get_object(self, pk):
         try:
