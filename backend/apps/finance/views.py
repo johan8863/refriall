@@ -33,6 +33,7 @@ class CurrencyViewSet(viewsets.ModelViewSet):
     serializer_class = CurrencySerializer
 
     def destroy(self, request, *args, **kwargs):
+        """Custome function to watch the ProtectedError case"""
         try:
             return super().destroy(request, *args, **kwargs)
         except ProtectedError:
