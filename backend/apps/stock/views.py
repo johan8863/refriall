@@ -96,17 +96,3 @@ class KitViewSet(viewsets.ModelViewSet):
         # fallback
         serializer = self.get_serializer(kits, many=True)
         return Response(serializer.data)
-
-
-# class KitListPagination(APIView, paginators.KitPagination):
-#     def get(self, request, format=None):
-#         kits = Kit.objects.all()
-
-#         # Search y 'search' parameter is included
-#         search_term  = request.query_params.get('search', None)
-#         if search_term:
-#             kits = kits.filter(name__icontains=search_term)
-
-#         results = self.paginate_queryset(kits, request, view=self)
-#         serializer = KitSerializer(results, many=True)
-#         return self.get_paginated_response(serializer.data)
