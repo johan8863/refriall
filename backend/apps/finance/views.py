@@ -25,7 +25,7 @@ from .serializers import (
     OrderSerializer,
     OrderSerializerReadListView
 )
-from .paginators import BillPagination, OrderPagination
+from ..utils.base_paginator import BaseCustomPagination
 
 
 class CurrencyViewSet(viewsets.ModelViewSet):
@@ -75,7 +75,7 @@ class BillViewSet(viewsets.ModelViewSet):
             )
         
         # pagination
-        paginator = BillPagination()
+        paginator = BaseCustomPagination()
         results = paginator.paginate_queryset(bills, request)
 
         serializer = self.get_serializer(results, many=True)
@@ -116,7 +116,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             )
         
         # pagination
-        paginator = OrderPagination()
+        paginator = BaseCustomPagination()
         page = paginator.paginate_queryset(orders, request)
 
         # fallback
