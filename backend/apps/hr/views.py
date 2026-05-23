@@ -24,8 +24,8 @@ from .serializers import (
     ProviderAdminPasswordResetSerializer,
     CustomerDependencySerializer
 )
-from .paginators import CustomerPagination, ProviderPagination
 from ..finance.models import Order
+from ..utils.base_paginator import BaseCustomPagination
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
@@ -61,7 +61,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
         if search_term:
             customers = customers.filter(name__icontains=search_term)
 
-        paginator = CustomerPagination()
+        paginator = BaseCustomPagination()
         page = paginator.paginate_queryset(customers, request)
 
         # Apply pagination
@@ -188,13 +188,9 @@ class ProviderViewSet(viewsets.ModelViewSet):
     def get_providers_paginated(self, request, format=None):
         """Returns the list of providers pagianted."""
         providers = self.get_queryset()
-        # Create paginator ONLY for this action
-        paginator = PageNumberPagination()
-        paginator.page_size = 10
-        paginator.page_size_query_param = 'page_size'
-        paginator.max_page_size = 100
-
-        # Apply pagination
+        
+        # pagination
+        paginator = BaseCustomPagination()
         page = paginator.paginate_queryset(providers, request)
         
         if page is not None:
