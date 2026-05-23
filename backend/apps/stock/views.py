@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 # local
 from .models import Item, Kit
 from .serializers import ItemSerializer, KitSerializer
-from . import paginators
+from ..utils.base_paginator import BaseCustomPagination
 
 
 class ItemViewSet(viewsets.ModelViewSet):
@@ -47,7 +47,7 @@ class ItemViewSet(viewsets.ModelViewSet):
             items = items.filter(name__icontains=search_term)
 
         # pagination
-        paginator = paginators.ItemPagination()
+        paginator = BaseCustomPagination()
         page = paginator.paginate_queryset(items, self.request)
 
         # response
@@ -85,7 +85,7 @@ class KitViewSet(viewsets.ModelViewSet):
             kits = kits.filter(name__icontains=search_term)
 
         # pagination
-        paginator = paginators.ItemPagination()
+        paginator = BaseCustomPagination()
         page = paginator.paginate_queryset(kits, self.request)
 
         # response
