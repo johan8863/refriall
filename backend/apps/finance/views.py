@@ -64,19 +64,6 @@ class BillListPagination(APIView, BillPagination):
         return self.get_paginated_response(serializer.data)
 
 
-class BillDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Bill.objects.get(pk=pk)
-        except Bill.DoesNotExist:
-            raise Http404
-        
-    def get(self, request, pk, format=None):
-        bill = self.get_object(pk=pk)
-        serializer = BillSerializerForReadOnly(bill)
-        return Response(serializer.data)
-
-
 class BillDetailUpdate(APIView):
     def get_object(self, pk):
         try:
@@ -96,6 +83,8 @@ class BillViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'get_bill_list_pagination':
             return BillSerializerReadListView
+        elif self.action == 'retrieve':
+            return BillSerializerForReadOnly
         return BillSerializer
     
     @action(detail=False, url_path='bill-list-pagination')

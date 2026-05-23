@@ -1,8 +1,6 @@
 import { billsAPIEnvs } from "../settings/env";
 import apiBase from "./baseService";
 
-const urlBillListPagination = billsAPIEnvs.billListPaginationUrl;
-const urlBillDetail = billsAPIEnvs.billDetailUrl;
 const urlBillDetailUpdate = billsAPIEnvs.billDetailUpdateUrl;
 const urlBill = billsAPIEnvs.billUrl;
 
@@ -27,7 +25,7 @@ export const billService = {
         }
         return apiBase.get(`${urlBill}/bill-list-pagination/`, { params });
     },
-    detailBill: (id) => apiBase.get(`${urlBillDetail}/${id}/`),
+    detailBill: (id) => apiBase.get(`${urlBill}/${id}/`),
     detailBillUpdate: (id) => apiBase.get(`${urlBillDetailUpdate}/${id}/`),
     postBill: (bill) => apiBase.post(`${urlBill}/`, bill),    
     putBill: (bill) => apiBase.put(`${urlBill}/${bill.id}/`, bill),
