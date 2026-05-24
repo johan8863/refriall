@@ -130,7 +130,7 @@ After that, you can access to [http://localhost:8000](http://localhost:8000) and
 
 ```bash
 # load the container shell
-docker compose exec django_backend bash
+docker compose exec backend bash
 
 # create a super user
 python manage.py createsuperuser
