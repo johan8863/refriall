@@ -112,7 +112,7 @@ MARIADB_DATABASE=mariadb_refriall_prod
 # for docker you must change the value to mariadb_refriall, the name of the container
 MARIADB_HOST=127.0.0.1
 
-# the production settings module will be used, you can leave it unchanged too
+# the production settings module that will be used, you can leave it unchanged too
 DJANGO_SETTINGS_MODULE=project.settings.prod
 ```
 
