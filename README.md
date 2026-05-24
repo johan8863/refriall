@@ -97,7 +97,7 @@ secure_password = ''.join(secrets.choice(characters) for _ in range(63))
 print(secure_password)
 ```
 
-After that `cd refriall_frontend` and repeat the process with the inner `.env.sample` file, in this one there's no password to recreate.
+After that `cd frontend` and repeat the process with the inner `.env.sample` file, in this one there's no password to recreate.
 
 ### On macOS/Linux
 
@@ -193,7 +193,7 @@ In both cases you'll see a warning similar to this:
 
 ```bash
 WARNINGS:
-?: (staticfiles.W004) The directory 'C:\Users\username\dev\refriall\refriall_frontend\dist\static' in the STATICFILES_DIRS setting does not exist.
+?: (staticfiles.W004) The directory 'C:\Users\username\dev\refriall\frontend\dist\static' in the STATICFILES_DIRS setting does not exist.
 ```
 
 Don't worry about the warning of the missing static folder, it's normal until the frontend is built.
@@ -208,7 +208,7 @@ As with backend you have two choices for `pnpm`:
 Once pnpm is ready, change to the frontend directory and install dependencies:
 
 ```bash
-cd refriall_frontend
+cd frontend
 pnpm install
 ```
 
