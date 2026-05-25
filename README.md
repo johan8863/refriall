@@ -246,7 +246,7 @@ nssm install refriall
 - **Startup Directory:** Provide the root directory of the software (where manage.py resides). Example:
   `C:\Users\username\dev\refriall\`
 - **Arguments:** Paste this:
-  `--listen=*:8000 project.wsgi:application`
+  `--listen=*:8000 backend.wsgi:application`
 - **Details tab:** Provide both the Display name and Description. These will appear when you run `services.msc`.
 - **I/O tab:** In both Output (stdout) and Output (stderr) inputs, provide the path to the `service.log` file. Example:
   `C:\Users\username\dev\refriall\service.log`
