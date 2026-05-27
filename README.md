@@ -289,6 +289,8 @@ Once in, select your database from the left list and `right click` on it to sele
 
 Select the `Create` checkboxes for Database(s) and Table(s). On `Data`, select the `Insert` option and on `Output` select the `Individual SQL file`. At the end of the `File name` input, click the folder icon and select the backup location. Click on the `Export` button to finish the backup process.
 
+> Note: To restore a backup head to the development section on each platform where is explained how to start from a legacy database.
+
 ## Contact Section
 
 I'm Johan, a Software Engineer committed to daily self-improvement and building quality software.
