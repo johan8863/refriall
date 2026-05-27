@@ -20,6 +20,7 @@ Refriall is **custom software** that I constantly develop and maintain. It is es
     - [4. Install frontend dependencies](#4-install-frontend-dependencies)
     - [5. Automate startup as a Windows service](#5-automate-startup-as-a-windows-service)
 - [Backups](#backups)
+  - [macOS/linux Backups](#macoslinux-backups)
 - [Contact Section](#contact-section)
 
 ## Features
@@ -272,6 +273,12 @@ Enjoy using this software as much as I love to develop and maintain it.
 | Database connection error | Verify MariaDB service is running: `services.msc`       |
 
 ## Backups
+
+### macOS/linux Backups
+
+The option shipped for these platforms is phpMyAdmin. Point your browser at [http://localhost:8080](http://localhost:8080) and login by providing the credentials configured in the [Deployment](#on-macoslinux) section.
+
+Once in, select your database from the left list and go to the `Export` tab. Under that view, you only need to click the `Export button` and assign a name to the backup file.
 
 ## Contact Section
 
