@@ -271,6 +271,8 @@ Enjoy using this software as much as I love to develop and maintain it.
 | Service fails to start    | Check `service.log` for error details                   |
 | Database connection error | Verify MariaDB service is running: `services.msc`       |
 
+## Backups
+
 ## Contact Section
 
 I'm Johan, a Software Engineer committed to daily self-improvement and building quality software.
