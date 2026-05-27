@@ -21,6 +21,7 @@ Refriall is **custom software** that I constantly develop and maintain. It is es
     - [5. Automate startup as a Windows service](#5-automate-startup-as-a-windows-service)
 - [Backups](#backups)
   - [macOS/linux Backups](#macoslinux-backups)
+  - [Windows Backups](#windows-backups)
 - [Contact Section](#contact-section)
 
 ## Features
@@ -279,6 +280,14 @@ Enjoy using this software as much as I love to develop and maintain it.
 The option shipped for these platforms is phpMyAdmin. Point your browser at [http://localhost:8080](http://localhost:8080) and login by providing the credentials configured in the [Deployment](#on-macoslinux) section.
 
 Once in, select your database from the left list and go to the `Export` tab. Under that view, you only need to click the `Export button` and assign a name to the backup file.
+
+### Windows Backups
+
+For Windows, launch the `HeidiSQL` app mentioned above and also login to the session providing the credentials configured in the [Deployment](#on-windows) section.
+
+Once in, select your database from the left list and `right click` on it to select the `Export database as SQL`. That will launch a windows directly to an `Export SQL` tab. 
+
+Select the `Create` checkboxes for Database(s) and Table(s). On `Data`, select the `Insert` option and on `Output` select the `Individual SQL file`. At the end of the `File name` input, click the folder icon and select the backup location. Click on the `Export` button to finish the backup process.
 
 ## Contact Section
 
