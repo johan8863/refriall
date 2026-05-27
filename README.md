@@ -19,6 +19,7 @@ Refriall is **custom software** that I constantly develop and maintain. It is es
     - [3. Set up the database schema](#3-set-up-the-database-schema)
     - [4. Install frontend dependencies](#4-install-frontend-dependencies)
     - [5. Automate startup as a Windows service](#5-automate-startup-as-a-windows-service)
+-[Backups](#backups)
 - [Contact Section](#contact-section)
 
 ## Features
