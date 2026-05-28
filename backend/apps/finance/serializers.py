@@ -405,8 +405,3 @@ class BillSerializerDetailUpdate(serializers.ModelSerializer):
                 'orders': 'Debe seleccionar al menos una orden'
             })
         return super().validate(attrs)
-
-    def match_orders(self, orders):
-        for order in orders:
-            order.matched = True
-            order.save()
