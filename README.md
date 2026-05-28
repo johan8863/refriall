@@ -285,7 +285,7 @@ Once in, select your database from the left list and go to the `Export` tab. Und
 
 For Windows, launch the `HeidiSQL` app mentioned above and also login to the session providing the credentials configured in the [Deployment](#on-windows) section.
 
-Once in, select your database from the left list and `right click` on it to select the `Export database as SQL`. That will launch a windows directly to an `Export SQL` tab. 
+Once in, select your database from the left list and `right click` on it to select the `Export database as SQL`. That will launch a windows directly to an `Export SQL` tab.
 
 Select the `Create` checkboxes for Database(s) and Table(s). On `Data`, select the `Insert` option and on `Output` select the `Individual SQL file`. At the end of the `File name` input, click the folder icon and select the backup location. Click on the `Export` button to finish the backup process.
 
