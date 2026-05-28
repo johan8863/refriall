@@ -369,39 +369,3 @@ class BillSerializer(serializers.ModelSerializer):
             })
         return super().validate(attrs)
 
-
-class BillSerializerDetailUpdate(serializers.ModelSerializer):
-    get_orders = OrderSerializerForReadOnly(many=True)
-
-    class Meta:
-        model = Bill
-        fields = [
-            "id",
-            "customer",
-            "currency",
-            "folio",
-            "provider",
-            "provider_signature_date",
-            "customer_signature_date",
-            "orders",
-            "get_orders",
-            "check_number",
-            "charge_aprove",
-            "charge_check",
-            "customer_charge",
-            "customer_name",
-            "customer_personal_id",
-            "checked_by",
-            "aproved_by"
-        ]
-    
-    def validate(self, attrs):
-        if attrs['customer'] == None:
-            raise serializers.ValidationError({
-                'customer': 'Debe seleccionar un cliente.'
-            })
-        if attrs['orders'] == []:
-            raise serializers.ValidationError({
-                'orders': 'Debe seleccionar al menos una orden'
-            })
-        return super().validate(attrs)

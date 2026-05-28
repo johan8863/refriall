@@ -262,7 +262,7 @@ onMounted(async () => {
 
   const id = route.params.id
   if (id) {
-    const { data } = await billService.detailBillUpdate(id)
+    const { data } = await billService.detailBill(id)
     bill.value = data
     bill.value.orders = bill.value.get_orders.map((item) => item.id)
     // get the orders that havent been related to a bill yet and display them to be selected

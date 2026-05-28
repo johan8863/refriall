@@ -25,7 +25,6 @@ export const billService = {
         return apiBase.get(`${urlBill}/bill-list-pagination/`, { params });
     },
     detailBill: (id) => apiBase.get(`${urlBill}/${id}/`),
-    detailBillUpdate: (id) => apiBase.get(`${urlBill}/${id}/`),
     postBill: (bill) => apiBase.post(`${urlBill}/`, bill),    
     putBill: (bill) => apiBase.put(`${urlBill}/${bill.id}/`, bill),
     deleteBill: (id) => apiBase.delete(`${urlBill}/${id}/`)
