@@ -260,12 +260,16 @@ const loadData = async () => {
     isLoading.value = true
     
     const [
-      { data: respCurrencies }
+      { data: respCurrencies },
+      { data: respProviders }
     ] = await Promise.all([
-      currencyService.listCurrencies()
+      currencyService.listCurrencies(),
+      providerService.listAllProviders()
     ])
 
     currencies.value = respCurrencies
+    providers.value = respProviders
+
   } catch (error) {
     console.error(error);
   } finally {
@@ -288,6 +292,12 @@ onMounted(async () => {
     ).data
     bill.value.get_orders.push(...ordersNotMatched)
   }
+
+  // this tweak will reside here while bill
+  // creation isn't associated to the authenticated user
+  // so that the select for provider input will load empty on
+  // bill creation form
+  bill.value.provider = ''
 })
 </script>
 
