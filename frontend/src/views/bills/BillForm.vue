@@ -255,10 +255,27 @@ const pushAllOrders = (event) => {
   }
 }
 
+const loadData = async () => {
+  try {
+    isLoading.value = true
+    
+    const [
+      { data: respCurrencies }
+    ] = await Promise.all([
+      currencyService.listCurrencies()
+    ])
+
+    currencies.value = respCurrencies
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isLoading.value = false
+  }
+}
+
 onMounted(async () => {
-  // get currencies
-  const respCurrencies = await currencyService.listCurrencies()
-  currencies.value = respCurrencies.data
+  // load data
+  await loadData()
 
   const id = route.params.id
   if (id) {
