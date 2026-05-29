@@ -77,6 +77,12 @@ class BillViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(results, many=True)
         return paginator.get_paginated_response(serializer.data)
+    
+    @action(detail=True, url_path="get-for-update")
+    def get_for_update(self, request, pk):
+        bill = self.get_object()
+        serializer = self.get_serializer(bill)
+        return Response(serializer.data)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
