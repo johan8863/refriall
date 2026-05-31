@@ -261,14 +261,17 @@ const loadData = async () => {
     
     const [
       { data: respCurrencies },
-      { data: respProviders }
+      { data: respProviders },
+      { data: respCustomers }
     ] = await Promise.all([
       currencyService.listCurrencies(),
-      providerService.listAllProviders()
+      providerService.listAllProviders(),
+      customerService.listAllCustomers()
     ])
 
     currencies.value = respCurrencies
     providers.value = respProviders
+    customers.value = respCustomers
 
   } catch (error) {
     console.error(error);
