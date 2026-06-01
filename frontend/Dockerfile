@@ -11,7 +11,7 @@ WORKDIR /app
 FROM base AS prod-deps
 
 # Copy only dependencies files
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # Install only production dependencies
 # --mount=type=cache: use docker cache to avoid redownloading
@@ -19,7 +19,7 @@ COPY package.json pnpm-lock.yaml ./
 # --frozen-lockfile: don't update lockfile
 # --ignore-scripts: avoids scripts errors
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-    pnpm install --prod --frozen-lockfile --ignore-scripts
+    pnpm install --prod --frozen-lockfile
 
 # Stage 3: Build 
 FROM base AS build
@@ -28,14 +28,14 @@ FROM base AS build
 COPY --from=prod-deps /app/node_modules /app/node_modules
 
 # Copy lockfile and package.json
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # Copy the rest of the source
 COPY . .
 
 # Install all dependencies including dev dependencies
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-    pnpm install --frozen-lockfile --ignore-scripts
+    pnpm install --frozen-lockfile
 
 # Building
 RUN pnpm run build
