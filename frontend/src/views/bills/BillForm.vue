@@ -260,18 +260,15 @@ const loadData = async () => {
     isLoading.value = true
     
     const [
-      { data: respCurrencies },
       { data: respProviders },
       { data: respCustomers },
       { data: respBillCustomer },
     ] = await Promise.all([
-      currencyService.listCurrencies(),
       providerService.listProviderCurrencyOrderNoBill(bill.value.currency),
       customerService.listCustomerOrdersNoBill(bill.value.currency, bill.value.provider),
       customerService.detailCustomer(bill.value.customer)
     ])
 
-    currencies.value = respCurrencies
     providers.value = respProviders
     customers.value = respCustomers
     customers.value.push(respBillCustomer)
@@ -284,15 +281,15 @@ const loadData = async () => {
 }
 
 onMounted(async () => {
-  // load data
+  // always load currencies whether the action is to create or update
+  const respCurrencies = await currencyService.listCurrencies()
+  currencies.value = respCurrencies.data
   
   const id = route.params.id
   if (id) {
     const { data } = await billService.getForUpdate(id)
     bill.value = data
     await loadData()
-    console.log(bill.value.customer);
-    console.log(customers.value);
     
     // bill.value.orders = bill.value.get_orders.map((item) => item.id)
     // get the orders that havent been related to a bill yet and display them to be selected
