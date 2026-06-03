@@ -1,6 +1,6 @@
 <script setup>
 // vue
-import { onMounted, ref } from 'vue'
+import { handleError, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // third
@@ -274,7 +274,7 @@ const loadData = async () => {
     customers.value.push(respBillCustomer)
 
   } catch (error) {
-    console.error(error);
+    errorHandler(error, errorMessage)
   } finally {
     isLoading.value = false
   }
