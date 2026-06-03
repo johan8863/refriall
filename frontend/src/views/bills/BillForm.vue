@@ -20,7 +20,7 @@ const bill = ref({
   customer: '',
   currency: '',
   folio: '',
-  provider: 1,
+  provider: "",
   provider_signature_date: '',
   customer_signature_date: '',
   orders: [],
@@ -291,19 +291,8 @@ onMounted(async () => {
     bill.value = data
     await loadData()
     
-    // bill.value.orders = bill.value.get_orders.map((item) => item.id)
-    // get the orders that havent been related to a bill yet and display them to be selected
-    const ordersNotMatched = (
-      await orderService.getOrdersFromCustomerNotMatched(bill.value.customer, bill.value.currency)
-    ).data
-    bill.value.get_orders.push(...ordersNotMatched)
   }
 
-  // this tweak will reside here while bill
-  // creation isn't associated to the authenticated user
-  // so that the select for provider input will load empty on
-  // bill creation form
-  bill.value.provider = ''
 })
 </script>
 
