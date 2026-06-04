@@ -58,6 +58,7 @@ const customers = ref([])
 const providers = ref([])
 const orders = ref([])
 const currencies = ref([])
+const selectedOrdersIds = ref([])
 
 // routes utilities and handlers
 const router = useRouter()
@@ -138,9 +139,12 @@ const updateBill = async () => {
 }
 
 const handleSubmit = async () => {
-    bill.value.id ? 
-        updateBill(bill.value) :
-        createBill(bill.value)
+  if (bill.value.id) {
+    bill.value.orders = selectedOrdersIds.value
+    await updateBill(bill.value)
+  } else {
+    await createBill(bill.value)
+  }
 }
 
 const chargeCustomersNoBill = async () => {
@@ -291,6 +295,7 @@ onMounted(async () => {
     if (id) {
       const { data } = await billService.getForUpdate(id)
       bill.value = data
+      selectedOrdersIds.value = bill.value.orders.map(order => order.id)
       await loadData()
     }
   } catch (error) {
@@ -552,9 +557,8 @@ onMounted(async () => {
                   <input
                     type="checkbox"
                     :id="order.id"
-                    :checked="bill.id === order.bill"
                     class="form-check"
-                    v-model="bill.orders"
+                    v-model="selectedOrdersIds"
                     :value="order.id"
                   />
                 </td>
