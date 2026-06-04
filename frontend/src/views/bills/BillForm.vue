@@ -290,6 +290,7 @@ onMounted(async () => {
     const { data } = await billService.getForUpdate(id)
     bill.value = data
     await loadData()
+    console.log(bill.value.orders);
     
   }
 
@@ -541,11 +542,12 @@ onMounted(async () => {
             </thead>
 
             <tbody>
-              <tr v-for="order in bill.get_orders" :key="order.id">
+              <tr v-for="order in bill.orders" :key="order.id">
                 <td>
                   <input
                     type="checkbox"
                     :id="order.id"
+                    :checked="bill.id === order.bill"
                     class="form-check"
                     v-model="bill.orders"
                     :value="order.id"

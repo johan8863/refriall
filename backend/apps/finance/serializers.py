@@ -68,6 +68,7 @@ class OrderSerializerForReadOnly(serializers.ModelSerializer):
         model = Order
         fields = [
             "id",
+            "bill",
             "customer",
             "customer_dependency",
             "symptom",
@@ -336,6 +337,42 @@ class BillSerializerForReadOnly(serializers.ModelSerializer):
 
 
 class BillSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Bill
+        fields = [
+            "id",
+            "customer",
+            "currency",
+            "folio",
+            "provider",
+            "provider_signature_date",
+            "customer_signature_date",
+            "orders",
+            "check_number",
+            "charge_aprove",
+            "charge_check",
+            "customer_charge",
+            "customer_name",
+            "customer_personal_id",
+            "checked_by",
+            "aproved_by"
+        ]
+    
+    def validate(self, attrs):
+        if attrs['customer'] == None:
+            raise serializers.ValidationError({
+                'customer': 'Debe seleccionar un cliente.'
+            })
+        if attrs['orders'] == []:
+            raise serializers.ValidationError({
+                'orders': 'Debe seleccionar al menos una orden'
+            })
+        return super().validate(attrs)
+
+
+class BillGetForUpdateSerializer(serializers.ModelSerializer):
+    orders = OrderSerializerForReadOnly(many=True)
 
     class Meta:
         model = Bill

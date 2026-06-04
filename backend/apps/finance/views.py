@@ -18,6 +18,7 @@ from .serializers import (
     BillSerializer,
     BillSerializerDeleteError,
     BillSerializerForReadOnly,
+    BillGetForUpdateSerializer,
     BillSerializerReadListView,
     CurrencySerializer,
     OrderSerializerForReadOnly,
@@ -54,6 +55,8 @@ class BillViewSet(viewsets.ModelViewSet):
             return BillSerializerReadListView
         elif self.action == 'retrieve':
             return BillSerializerForReadOnly
+        elif self.action == 'get_for_update':
+            return BillGetForUpdateSerializer
         return BillSerializer
     
     @action(detail=False, url_path='bill-list-pagination')
