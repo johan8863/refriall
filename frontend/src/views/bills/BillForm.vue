@@ -290,8 +290,6 @@ onMounted(async () => {
     const { data } = await billService.getForUpdate(id)
     bill.value = data
     await loadData()
-    console.log(bill.value.orders);
-    
   }
 
 })
