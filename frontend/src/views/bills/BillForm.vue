@@ -281,15 +281,22 @@ const loadData = async () => {
 }
 
 onMounted(async () => {
-  // always load currencies whether the action is to create or update
-  const respCurrencies = await currencyService.listCurrencies()
-  currencies.value = respCurrencies.data
-  
-  const id = route.params.id
-  if (id) {
-    const { data } = await billService.getForUpdate(id)
-    bill.value = data
-    await loadData()
+  try {
+    isLoading.value = true
+    // always load currencies whether the action is to create or update
+    const respCurrencies = await currencyService.listCurrencies()
+    currencies.value = respCurrencies.data
+    
+    const id = route.params.id
+    if (id) {
+      const { data } = await billService.getForUpdate(id)
+      bill.value = data
+      await loadData()
+    }
+  } catch (error) {
+    errorHandler(error, errorMessage)
+  } finally {
+    isLoading.value = false
   }
 
 })
