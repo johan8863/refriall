@@ -146,13 +146,6 @@ const handleSubmit = async () => {
   }
 }
 
-const chargeCustomersNoBill = async () => {
-  bill.value.customer = ''
-  orders.value = []
-  const respCustomers = await customerService.listCustomerOrdersNoBill(bill.value.currency)
-  customers.value = respCustomers.data
-}
-
 // function to load providers with free orders to match given a currency
 const chargeProviderNoBill = async () => {
   try {
