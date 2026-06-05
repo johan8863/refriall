@@ -265,15 +265,18 @@ const loadData = async () => {
     
     const [
       { data: respProviders },
+      { data: respBillProvider },
       { data: respCustomers },
       { data: respBillCustomer },
     ] = await Promise.all([
       providerService.listProviderCurrencyOrderNoBill(bill.value.currency),
+      providerService.detailProvider(bill.value.provider),
       customerService.listCustomerOrdersNoBill(bill.value.currency, bill.value.provider),
       customerService.detailCustomer(bill.value.customer)
     ])
 
     providers.value = respProviders
+    providers.value.push(respBillProvider)
     customers.value = respCustomers
     customers.value.push(respBillCustomer)
 
