@@ -531,61 +531,8 @@ onMounted(async () => {
           </span>
         </div>
 
-        <!-- orders control update -->
-        <div v-if="bill.id" class="col-md-12">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>
-                  <input type="checkbox" name="" id="" class="form-check" @change="pushAllOrders" />
-                </th>
-                <th>Folio</th>
-                <th>Cliente</th>
-                <th>Dependencia</th>
-                <th>Importe Total</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr v-for="order in bill.orders" :key="order.id">
-                <td>
-                  <input
-                    type="checkbox"
-                    :id="order.id"
-                    class="form-check"
-                    v-model="selectedOrdersIds"
-                    :value="order.id"
-                  />
-                </td>
-                <td>
-                  <router-link
-                    :to="{ name: 'orders_detail', params: { id: order.id } }"
-                    target="_blank"
-                    >{{ order.folio }}</router-link
-                  >
-                </td>
-                <td v-if="order.customer">{{ order.customer.name }}</td>
-                <td v-else>-</td>
-                <td v-if="order.customer_dependency">{{ order.customer_dependency.name }}</td>
-                <td v-else>-</td>
-                <td>{{ order.get_total_amount }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <!-- backend validations -->
-          <span v-if="billBackendErrors.orders">
-            <p
-              v-for="(error, index) in billBackendErrors.orders"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
-        </div>
-
         <!-- orders control create -->
-        <div v-else class="col-md-12">
+        <div class="col-md-12">
           <table class="table">
             <thead>
               <tr>
