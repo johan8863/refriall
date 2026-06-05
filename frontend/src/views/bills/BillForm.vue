@@ -124,7 +124,6 @@ const createBill = async () => {
 const updateBill = async () => {
   try {
     if (await v$.value.$validate()) {
-        console.log(bill.value.provider);
         const { data } = await billService.putBill(bill.value)
         router.push({ name: 'bills_detail', params: { id: data.id } })
     }
