@@ -372,7 +372,6 @@ class BillSerializer(serializers.ModelSerializer):
 
 
 class BillGetForUpdateSerializer(serializers.ModelSerializer):
-    orders = OrderSerializerForReadOnly(many=True)
 
     class Meta:
         model = Bill

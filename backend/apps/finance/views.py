@@ -145,3 +145,15 @@ class OrderViewSet(viewsets.ModelViewSet):
         orders = Order.objects.filter(Q(customer=customer_pk) | Q(customer_dependency__customer=customer_pk), Q(currency=currency_pk), Q(provider=provider_pk), Q(bill__isnull=True))
         serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['post'], url_path="get-orders-by-ids")
+    def get_orders_by_ids(self, request):
+        """Return orders given a list of ids"""
+        orders_ids = request.data.get("ordersIds", [])
+        
+        if orders_ids:
+            orders_ids_data = Order.objects.filter(id__in=orders_ids)
+            serializer = OrderSerializerReadListView(orders_ids_data, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({"data": orders_ids}, status=status.HTTP_204_NO_CONTENT)

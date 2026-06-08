@@ -58,7 +58,7 @@ const customers = ref([])
 const providers = ref([])
 const orders = ref([])
 const currencies = ref([])
-const selectedOrdersIds = ref([])
+const ordersByIds = ref([])
 
 // routes utilities and handlers
 const router = useRouter()
@@ -139,7 +139,6 @@ const updateBill = async () => {
 
 const handleSubmit = async () => {
   if (bill.value.id) {
-    bill.value.orders = selectedOrdersIds.value
     await updateBill(bill.value)
   } else {
     await createBill(bill.value)
@@ -290,8 +289,13 @@ onMounted(async () => {
     if (id) {
       const { data } = await billService.getForUpdate(id)
       bill.value = data
-      selectedOrdersIds.value = bill.value.orders.map(order => order.id)
       await loadData()
+      console.log(bill.value.orders);
+      
+      const respOrdersByIds = await orderService.getOrdersByIds(bill.value.orders)
+      ordersByIds.value = respOrdersByIds.data
+      console.log(ordersByIds.value);
+      
     }
   } catch (error) {
     errorHandler(error, errorMessage)
@@ -547,13 +551,13 @@ onMounted(async () => {
             </thead>
 
             <tbody>
-              <tr v-for="order in bill.orders" :key="order.id">
+              <tr v-for="order in ordersByIds" :key="order.id">
                 <td>
                   <input
                     type="checkbox"
                     :id="order.id"
                     class="form-check"
-                    v-model="selectedOrdersIds"
+                    v-model="bill.orders"
                     :value="order.id"
                   />
                 </td>

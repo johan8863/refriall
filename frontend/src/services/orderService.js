@@ -36,6 +36,7 @@ export const orderService = {
     ) => apiBase.get(
         `${urlOrder}/orders-from-currency-customer-free-bill/${currencyId}/${providerId}/${customerId}/`
     ),
+    getOrdersByIds: (ordersIds) => apiBase.post(`${urlOrder}/get-orders-by-ids/`, { ordersIds })
 }
 
 
