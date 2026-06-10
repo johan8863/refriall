@@ -58,7 +58,8 @@ const customers = ref([])
 const providers = ref([])
 const orders = ref([])
 const currencies = ref([])
-const ordersByIds = ref([])
+const billProvider = ref(null)
+const billCustomer = ref(null)
 
 // routes utilities and handlers
 const router = useRouter()
@@ -145,6 +146,22 @@ const handleSubmit = async () => {
   }
 }
 
+// handle insertio of non existing providers
+const insertNonExistingProvider = () => {
+  const existProvider = providers.value.some(provider => provider.id === billProvider.value.id)
+    if (!existProvider) {
+      providers.value.push(billProvider.value)
+    }
+}
+
+// handle insertio of non existing customers
+const insertNonExistingCustomer = () => {
+  const existCustomer = customers.value.some(customer => customer.id === billCustomer.value.id)
+    if (!existCustomer) {
+      customers.value.push(billCustomer.value)
+    }
+}
+
 // function to load providers with free orders to match given a currency
 const chargeProviderNoBill = async () => {
   try {
@@ -154,12 +171,14 @@ const chargeProviderNoBill = async () => {
     errorMessage.value = null
     // reseting bill both provider and orders 
     // every time a new currency is selected
-    bill.value.provider = ''
+    bill.value.orders = []
+    customers.value = []
     providers.value = []
     orders.value = []
     // getting backend data
     const respProviders = await providerService.listProviderCurrencyOrderNoBill(bill.value.currency)
     providers.value = respProviders.data
+    insertNonExistingProvider()
   } catch (error) {
     error(error)
     errorHandler(error, errorMessage, 'Prestador', 'm')
@@ -238,13 +257,8 @@ const ordersFromCustomer = async () => {
 
 const pushAllOrders = (event) => {
   if (event.target.checked) {
-    if (bill.value.id) {
-      const ordersPush = bill.value.get_orders.map((item) => item.id)
-      bill.value.orders = ordersPush
-    } else {
-      const ordersPush = orders.value.map((item) => item.id)
-      bill.value.orders = ordersPush
-    }
+    const ordersPush = orders.value.map((item) => item.id)
+    bill.value.orders = ordersPush
   } else {
     bill.value.orders = []
   }
@@ -267,9 +281,12 @@ const loadData = async () => {
     ])
 
     providers.value = respProviders
-    providers.value.push(respBillProvider)
+    billProvider.value = respBillProvider
+    insertNonExistingProvider()
+
     customers.value = respCustomers
-    customers.value.push(respBillCustomer)
+    billCustomer.value = respBillCustomer
+    insertNonExistingCustomer()
 
   } catch (error) {
     errorHandler(error, errorMessage)
@@ -293,7 +310,7 @@ onMounted(async () => {
       console.log(bill.value.orders);
       
       const respOrdersByIds = await orderService.getOrdersByIds(bill.value.orders)
-      ordersByIds.value = respOrdersByIds.data
+      orders.value = respOrdersByIds.data
       console.log(ordersByIds.value);
       
     }
@@ -551,7 +568,7 @@ onMounted(async () => {
             </thead>
 
             <tbody>
-              <tr v-for="order in ordersByIds" :key="order.id">
+              <tr v-for="order in orders" :key="order.id">
                 <td>
                   <input
                     type="checkbox"
