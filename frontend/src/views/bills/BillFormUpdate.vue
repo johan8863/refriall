@@ -146,7 +146,7 @@ const handleSubmit = async () => {
   }
 }
 
-// handle insertio of non existing providers
+// handle insertion of non existing providers
 const insertNonExistingProvider = () => {
   const existProvider = providers.value.some(provider => provider.id === billProvider.value.id)
     if (!existProvider) {
@@ -154,7 +154,7 @@ const insertNonExistingProvider = () => {
     }
 }
 
-// handle insertio of non existing customers
+// handle insertion of non existing customers
 const insertNonExistingCustomer = () => {
   const existCustomer = customers.value.some(customer => customer.id === billCustomer.value.id)
     if (!existCustomer) {
