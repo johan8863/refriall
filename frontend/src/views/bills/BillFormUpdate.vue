@@ -57,6 +57,7 @@ const billBackendErrors = ref({
 const customers = ref([])
 const providers = ref([])
 const orders = ref([])
+const freeOrders = ref([])
 const currencies = ref([])
 const billProvider = ref(null)
 const billCustomer = ref(null)
@@ -272,20 +273,28 @@ const loadData = async () => {
       { data: respBillProvider },
       { data: respCustomers },
       { data: respBillCustomer },
+      { data: respOrdersByIds },
+      { data: respFreeorders },
     ] = await Promise.all([
       providerService.listProviderCurrencyOrderNoBill(bill.value.currency),
       providerService.detailProvider(bill.value.provider),
       customerService.listCustomerOrdersNoBill(bill.value.currency, bill.value.provider),
-      customerService.detailCustomer(bill.value.customer)
+      customerService.detailCustomer(bill.value.customer),
+      orderService.getOrdersByIds(bill.value.orders),
+      orderService.getOrdersFromCustomerNotMatched(bill.value.currency, bill.value.provider, bill.value.customer),
     ])
-
+    
     providers.value = respProviders
     billProvider.value = respBillProvider
     insertNonExistingProvider()
-
+    
     customers.value = respCustomers
     billCustomer.value = respBillCustomer
     insertNonExistingCustomer()
+
+    freeOrders.value = respFreeorders
+    orders.value = respOrdersByIds
+    orders.value.push(...freeOrders.value)
 
   } catch (error) {
     errorHandler(error, errorMessage)
@@ -306,12 +315,6 @@ onMounted(async () => {
       const { data } = await billService.getForUpdate(id)
       bill.value = data
       await loadData()
-      console.log(bill.value.orders);
-      
-      const respOrdersByIds = await orderService.getOrdersByIds(bill.value.orders)
-      orders.value = respOrdersByIds.data
-      console.log(ordersByIds.value);
-      
     }
   } catch (error) {
     errorHandler(error, errorMessage)
