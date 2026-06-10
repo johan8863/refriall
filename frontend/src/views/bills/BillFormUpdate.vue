@@ -179,6 +179,7 @@ const chargeProviderNoBill = async () => {
     // getting backend data
     const respProviders = await providerService.listProviderCurrencyOrderNoBill(bill.value.currency)
     providers.value = respProviders.data
+    await customersFromProvider()
   } catch (error) {
     error(error)
     errorHandler(error, errorMessage, 'Prestador', 'm')
