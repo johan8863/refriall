@@ -256,15 +256,6 @@ const ordersFromCustomer = async () => {
   }
 }
 
-const pushAllOrders = (event) => {
-  if (event.target.checked) {
-    const ordersPush = orders.value.map((item) => item.id)
-    bill.value.orders = ordersPush
-  } else {
-    bill.value.orders = []
-  }
-}
-
 const loadData = async () => {
   try {
     isLoading.value = true
@@ -561,7 +552,7 @@ onMounted(async () => {
             <thead>
               <tr>
                 <th>
-                  <input type="checkbox" name="" id="" class="form-check" @change="pushAllOrders" />
+                  <input type="checkbox" name="" id="" class="form-check" />
                 </th>
                 <th>Folio</th>
                 <th>Cliente</th>
