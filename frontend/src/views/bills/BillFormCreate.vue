@@ -1,6 +1,6 @@
 <script setup>
 // vue
-import { handleError, onMounted, ref } from 'vue'
+import { handleError, onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // third
@@ -15,6 +15,7 @@ import { providerService } from '../../services/providerService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { currencyService } from '../../services/currencyService'
 import { errorHandler } from '../../utils/errors/errorHandler'
+import { useCheckAllCheckboxes } from '../../composables/CheckAllCheckboxesComposable'
 
 const bill = ref({
   customer: '',
@@ -237,20 +238,6 @@ const ordersFromCustomer = async () => {
   }
 }
 
-const pushAllOrders = (event) => {
-  if (event.target.checked) {
-    if (bill.value.id) {
-      const ordersPush = bill.value.get_orders.map((item) => item.id)
-      bill.value.orders = ordersPush
-    } else {
-      const ordersPush = orders.value.map((item) => item.id)
-      bill.value.orders = ordersPush
-    }
-  } else {
-    bill.value.orders = []
-  }
-}
-
 const loadData = async () => {
   try {
     isLoading.value = true
@@ -278,6 +265,18 @@ const loadData = async () => {
     isLoading.value = false
   }
 }
+
+// bridge computed property:
+// bill.value.orders is not reactive on itself
+// this writable composable acts as the bidirectional bridge
+// that useCheckAllCheckboxes needs
+const selectedOrders = computed({
+  get: () => bill.value.orders,
+  set: (value) => bill.value.orders = value
+})
+
+// writable computed to select/deselect all orders
+const { checkAllCheckboxes } = useCheckAllCheckboxes(orders, selectedOrders)
 
 onMounted(async () => {
   try {
@@ -537,7 +536,7 @@ onMounted(async () => {
             <thead>
               <tr>
                 <th>
-                  <input type="checkbox" name="" id="" class="form-check" @input="pushAllOrders" />
+                  <input type="checkbox" name="" id="" class="form-check" v-model="checkAllCheckboxes" />
                 </th>
                 <th>Folio</th>
                 <th>Cliente</th>
