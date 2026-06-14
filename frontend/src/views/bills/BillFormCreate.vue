@@ -188,7 +188,9 @@ const chargeProviderNoBill = async () => {
   }
 }
 
-// get the customers with free orders given a currency and a provider
+/*
+* Get the customers with free orders given a currency and a provider
+*/
 const customersFromProvider = async () => {
   try {
     // start loading state
