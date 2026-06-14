@@ -26,7 +26,7 @@ const bill = ref({
   customer: '',
   currency: '',
   folio: '',
-  provider: "",
+  provider: '',
   provider_signature_date: '',
   customer_signature_date: '',
   orders: [],
