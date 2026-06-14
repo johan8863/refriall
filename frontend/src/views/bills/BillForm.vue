@@ -158,13 +158,9 @@ const updateBill = async () => {
 /*
 * Creates a new Bill and redirects to detail view
 */
-const handleSubmit = async () => {
-  if (bill.value.id) {
-    await updateBill(bill.value)
-  } else {
-    await createBill(bill.value)
-  }
-}
+const handleSubmit = async () => bill.value.id
+  ? await updateBill(bill.value)
+  : await createBill(bill.value)
 
 /*
 * Handles insertion of non existing providers
