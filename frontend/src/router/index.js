@@ -294,7 +294,7 @@ const router = createRouter({
                 {
                   path: 'create',
                   name: 'bills_create',
-                  component: () => import('../views/bills/BillFormCreate.vue')
+                  component: () => import('../views/bills/BillForm.vue')
                 },
                 {
                   path: ':id',
@@ -307,7 +307,7 @@ const router = createRouter({
                     {
                       path: 'update',
                       name: 'bills_update',
-                      component: () => import('../views/bills/BillFormUpdate.vue')
+                      component: () => import('../views/bills/BillForm.vue')
                     },
                     {
                       path: 'confirm/delete',

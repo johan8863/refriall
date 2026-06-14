@@ -1,6 +1,10 @@
 <script setup>
+/*
+* Bills creation form
+*/
+
 // vue
-import { computed, handleError, onMounted, ref } from 'vue'
+import { handleError, onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // third
@@ -17,11 +21,12 @@ import { currencyService } from '../../services/currencyService'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import { useCheckAllCheckboxes } from '../../composables/CheckAllCheckboxesComposable'
 
+// main reactive object
 const bill = ref({
   customer: '',
   currency: '',
   folio: '',
-  provider: "",
+  provider: '',
   provider_signature_date: '',
   customer_signature_date: '',
   orders: [],
@@ -36,6 +41,7 @@ const bill = ref({
   aproved_by: ''
 })
 
+// reactive object to be filled with backend errors
 const billBackendErrors = ref({
   non_field_errors: [],
   customer: '',
@@ -55,11 +61,12 @@ const billBackendErrors = ref({
   aproved_by: ''
 })
 
+// reactive objects to be rendered in form
 const customers = ref([])
 const providers = ref([])
 const orders = ref([])
-const freeOrders = ref([])
 const currencies = ref([])
+const freeOrders = ref([])
 const billProvider = ref(null)
 const billCustomer = ref(null)
 
@@ -108,6 +115,11 @@ const rules = {
 // vuelidate object
 const v$ = useVuelidate(rules, bill)
 
+/* methods */
+
+/*
+* Creates a new Bill and redirects to detail view
+*/
 const createBill = async () => {
   try {
     if (await v$.value.$validate()) {
@@ -124,6 +136,9 @@ const createBill = async () => {
   }
 }
 
+/*
+* Updates an existing Bill and redirects to detail view
+*/
 const updateBill = async () => {
   try {
     if (await v$.value.$validate()) {
@@ -140,6 +155,9 @@ const updateBill = async () => {
   }
 }
 
+/*
+* Creates a new Bill and redirects to detail view
+*/
 const handleSubmit = async () => {
   if (bill.value.id) {
     await updateBill(bill.value)
@@ -148,7 +166,9 @@ const handleSubmit = async () => {
   }
 }
 
-// handle insertion of non existing providers
+/*
+* Handles insertion of non existing providers
+*/
 const insertNonExistingProvider = () => {
   const existProvider = providers.value.some(provider => provider.id === billProvider.value.id)
     if (!existProvider) {
@@ -156,7 +176,9 @@ const insertNonExistingProvider = () => {
     }
 }
 
-// handle insertion of non existing customers
+/*
+* Handles insertion of non existing customers
+*/
 const insertNonExistingCustomer = () => {
   const existCustomer = customers.value.some(customer => customer.id === billCustomer.value.id)
     if (!existCustomer) {
@@ -164,7 +186,9 @@ const insertNonExistingCustomer = () => {
     }
 }
 
-// function to load providers with free orders to match given a currency
+/*
+* Function to load providers with free orders to match given a currency
+*/
 const chargeProviderNoBill = async () => {
   try {
     // start loading state
@@ -173,14 +197,12 @@ const chargeProviderNoBill = async () => {
     errorMessage.value = null
     // reseting bill both provider and orders 
     // every time a new currency is selected
-    bill.value.orders = []
-    customers.value = []
+    bill.value.provider = ''
     providers.value = []
     orders.value = []
     // getting backend data
     const respProviders = await providerService.listProviderCurrencyOrderNoBill(bill.value.currency)
     providers.value = respProviders.data
-    await customersFromProvider()
   } catch (error) {
     error(error)
     errorHandler(error, errorMessage, 'Prestador', 'm')
@@ -189,14 +211,18 @@ const chargeProviderNoBill = async () => {
   }
 }
 
-// get the customers with free orders given a currency and a provider
+/*
+* Get the customers with free orders given a currency and a provider
+*/
 const customersFromProvider = async () => {
   try {
     // start loading state
     isLoading.value = true
+    // reset orders objects
+    orders.value = []
+    bill.value.orders = []
     // if available both currency and provider, retrieve/update the list of customers
     if (bill.value.currency && bill.value.provider) {
-      orders.value = []
       customers.value = (
         await customerService.listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)
       ).data
@@ -225,13 +251,16 @@ const customersFromProvider = async () => {
   }
 }
 
-// get the available orders given a customer
+/*
+* Get the available orders given a currency, a provider and a customer
+*/
 const ordersFromCustomer = async () => {
   try {
     // start loading state
     isLoading.value = true
     // reset orders
     orders.value = []
+    bill.value.orders = []
     // if both currency and provider, retrieve/update the orders list
     if (bill.value.currency && bill.value.provider) {
       orders.value = (
@@ -242,6 +271,7 @@ const ordersFromCustomer = async () => {
         )
       ).data
     } else {
+      // clear orders list otherwise
       orders.value = []
     }
   } catch (error) {
@@ -257,6 +287,9 @@ const ordersFromCustomer = async () => {
   }
 }
 
+/*
+* Loads required data to pre populate bill edition form
+*/
 const loadData = async () => {
   try {
     isLoading.value = true
@@ -296,10 +329,12 @@ const loadData = async () => {
   }
 }
 
-// bridge computed property:
-// bill.value.orders is not reactive on itself
-// this writable composable acts as the bidirectional bridge
-// that useCheckAllCheckboxes needs
+/*
+* bridge computed property:
+* bill.value.orders is not reactive on itself
+* this writable composable acts as the bidirectional bridge
+* that useCheckAllCheckboxes needs
+*/
 const selectedOrders = computed({
   get: () => bill.value.orders,
   set: (value) => bill.value.orders = value
@@ -579,6 +614,7 @@ onMounted(async () => {
                 <td>
                   <input
                     type="checkbox"
+                    name=""
                     :id="order.id"
                     class="form-check"
                     v-model="bill.orders"
@@ -611,7 +647,6 @@ onMounted(async () => {
             </p>
           </span>
         </div>
-
         <!-- frontend validations -->
         <span v-if="bill.customer">
           <p class="form-text text-danger" v-for="error in v$.orders.$errors" :key="error.$uid">
