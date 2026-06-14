@@ -1,4 +1,8 @@
 <script setup>
+/*
+* Bills creation form
+*/
+
 // vue
 import { handleError, onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -17,6 +21,7 @@ import { currencyService } from '../../services/currencyService'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import { useCheckAllCheckboxes } from '../../composables/CheckAllCheckboxesComposable'
 
+// main reactive object
 const bill = ref({
   customer: '',
   currency: '',
@@ -36,6 +41,7 @@ const bill = ref({
   aproved_by: ''
 })
 
+// reactive object to be filled with backend errors
 const billBackendErrors = ref({
   non_field_errors: [],
   customer: '',
@@ -55,6 +61,7 @@ const billBackendErrors = ref({
   aproved_by: ''
 })
 
+// reactive objects to be rendered in form
 const customers = ref([])
 const providers = ref([])
 const orders = ref([])
