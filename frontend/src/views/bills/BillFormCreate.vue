@@ -66,7 +66,6 @@ const customers = ref([])
 const providers = ref([])
 const orders = ref([])
 const currencies = ref([])
-const selectedOrdersIds = ref([])
 
 // routes utilities and handlers
 const router = useRouter()
@@ -113,6 +112,11 @@ const rules = {
 // vuelidate object
 const v$ = useVuelidate(rules, bill)
 
+/* methods */
+
+/*
+* Creates a new Bill and redirects to detail view
+*/
 const createBill = async () => {
   try {
     if (await v$.value.$validate()) {
@@ -129,6 +133,9 @@ const createBill = async () => {
   }
 }
 
+/*
+* Updates an existing Bill and redirects to detail view
+*/
 const updateBill = async () => {
   try {
     if (await v$.value.$validate()) {
@@ -145,9 +152,11 @@ const updateBill = async () => {
   }
 }
 
+/*
+* Creates a new Bill and redirects to detail view
+*/
 const handleSubmit = async () => {
   if (bill.value.id) {
-    bill.value.orders = selectedOrdersIds.value
     await updateBill(bill.value)
   } else {
     await createBill(bill.value)
@@ -296,7 +305,6 @@ onMounted(async () => {
     if (id) {
       const { data } = await billService.getForUpdate(id)
       bill.value = data
-      selectedOrdersIds.value = bill.value.orders.map(order => order.id)
       await loadData()
     }
   } catch (error) {
