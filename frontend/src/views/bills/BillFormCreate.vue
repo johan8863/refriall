@@ -163,7 +163,9 @@ const handleSubmit = async () => {
   }
 }
 
-// function to load providers with free orders to match given a currency
+/*
+* Function to load providers with free orders to match given a currency
+*/
 const chargeProviderNoBill = async () => {
   try {
     // start loading state
