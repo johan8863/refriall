@@ -226,7 +226,9 @@ const customersFromProvider = async () => {
   }
 }
 
-// get the available orders given a customer
+/*
+* Get the available orders given a currency, a provider and a customer
+*/
 const ordersFromCustomer = async () => {
   try {
     // start loading state
@@ -243,6 +245,7 @@ const ordersFromCustomer = async () => {
         )
       ).data
     } else {
+      // clear orders list otherwise
       orders.value = []
     }
   } catch (error) {
