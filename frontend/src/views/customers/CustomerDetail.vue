@@ -8,7 +8,7 @@ import { customerService } from '../../services/customerService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 
-const route = useRoute()
+// main object
 const customer = ref({
   customer_type: '',
   name: '',
@@ -24,12 +24,17 @@ const customer = ref({
 // errors
 const customerBackendErrors = ref(null)
 
+// routing utilities
+const route = useRoute()
+
+// loading state
 const isLoading = ref(false)
 
 // search variables for dependencies
 const hasSearchedDependencies = ref(false)
 const searchDependencyTerm = ref('')
 
+// methods
 const filteredDependencies = computed(() => {
   if (!searchDependencyTerm.value.trim() || !hasSearchedDependencies.value) {
     return customer.value.get_dependencies
@@ -52,6 +57,7 @@ const clearDependencySearch = () => {
   hasSearchedDependencies.value = false
 }
 
+// lifecycle
 onMounted(async () => {
   isLoading.value = true
   try {
