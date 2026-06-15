@@ -8,6 +8,7 @@ import { useRoute, useRouter } from "vue-router";
 import { customerDependecyService } from "../../services/customerDependencyService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
+// routing utilities
 const route = useRoute()
 const router = useRouter()
 const dependency = ref({
@@ -19,7 +20,6 @@ const dependency = ref({
 });
 
 const errorMessage = ref(null);
-
 
 onMounted(async () => {
     try {
