@@ -45,6 +45,8 @@ const rules = {
 // vuelidate object
 const v$ = useVuelidate(rules, kit)
 
+// methods
+
 // create kit object function
 const createKit = async (kit) => {
   try {
@@ -66,6 +68,7 @@ const createKit = async (kit) => {
   }
 }
 
+// update kit object function
 const updateKit = async (kit) => {
   try {
     // if front validations run,
@@ -86,6 +89,7 @@ const updateKit = async (kit) => {
   }
 }
 
+// lifecycle
 onMounted(async () => {
   try {
     // start loading state
