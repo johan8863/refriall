@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('authStore', () => {
             // authentication state
             isAuthenticated.value = true
         } catch (error) {
-            // authemtication state
+            // authentication state
             isAuthenticated.value = false
             // tokens cleaning
             localStorage.removeItem('refriall_auth_access_token')
