@@ -41,6 +41,7 @@ const providerErrors = ref({
 const route = useRoute();
 const router = useRouter();
 
+// methods
 const delProvider = async (id) => {
     try {
         await providerService.deleteProvider(id);
@@ -61,6 +62,7 @@ const delProvider = async (id) => {
     }
 }
 
+// lifecycle
 onMounted(async () => {
     try {
         const resp = await providerService.detailProvider(route.params.id)

@@ -78,7 +78,6 @@ const rules = {
   },
 };
 
-
 // vuelidate object
 const v$ = useVuelidate(rules, provider);
 
@@ -98,6 +97,7 @@ const providerBackendErrors = ref({
   personal_id: [],
 });
 
+// methods
 const createProvider = async (provider) => {
 
   try {
@@ -141,6 +141,7 @@ const goBack = () => provider.value.id ?
                         router.push({name: 'providers_detail', params: {id: provider.value.id}}) :
                         router.push({name: 'providers'})
 
+// lifecycle
 onMounted(async () => {
     try {
         const id = route.params.id
@@ -157,8 +158,6 @@ onMounted(async () => {
         }
     }
 })
-
-
 </script>
 
 <template>

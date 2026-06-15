@@ -8,7 +8,7 @@ import { useRoute } from 'vue-router';
 import { providerService } from "../../services/providerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
-const route = useRoute();
+// main object
 const provider = ref({
     id: '',
     username: '',
@@ -22,8 +22,13 @@ const provider = ref({
     license_number: '',
 });
 
+// errors holder object
 const providerErrors = ref(null)
 
+// routing utilities
+const route = useRoute();
+
+// lifecycle
 onMounted(async () => {
     try {
         const resp = await providerService.detailProvider(route.params.id);

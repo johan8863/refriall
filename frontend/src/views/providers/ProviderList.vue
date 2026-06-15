@@ -7,12 +7,14 @@ import { ref, onMounted } from "vue";
 import { providerService } from "../../services/providerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
+// reactive objects
 const providers = ref([]);
 
 const currentPage = ref(1);
 const showNextButton = ref(false);
 const showPrevButton = ref(false);
 
+// methods
 const getProviders = async () => {
     const resp = (await providerService.listProvider(currentPage.value)).data;
     
@@ -39,12 +41,10 @@ const loadPrevItems = () => {
     getProviders()
 }
 
-
+// lifecycle
 onMounted(async () => {
     getProviders()
 });
-
-
 </script>
 
 <template>
