@@ -21,11 +21,14 @@ const customer = ref({
     bank_account: '',
 });
 
+// errors holder object
 const errorMessage = ref(null)
 
+// routing utilities
 const router = useRouter();
 const route = useRoute();
 
+// lifecycle
 onMounted(async () => {
     try {
         const resp = await customerService.detailCustomer(route.params.id);
@@ -43,6 +46,7 @@ onMounted(async () => {
     }
 });
 
+// methods
 const delCustomer = async (id) => {
     try {
         await customerService.deleteCustomer(id);
