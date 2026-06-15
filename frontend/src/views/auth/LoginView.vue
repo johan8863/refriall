@@ -41,7 +41,7 @@ const handleLogin = async () => {
     } else if (error.request) {
       authError.value = 'Servidor caído, consulte al desarrollador.'
     } else {
-      authError.value = 'Error inesperado, consulte al desarrollador'
+      authError.value = 'Error inesperado, consulte al desarrollador.'
     }
   }
 }
