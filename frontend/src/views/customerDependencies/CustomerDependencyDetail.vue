@@ -8,7 +8,7 @@ import { customerDependecyService } from '../../services/customerDependencyServi
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 
-const route = useRoute()
+// main object
 const dependency = ref({
   customer: 0,
   name: '',
@@ -17,7 +17,11 @@ const dependency = ref({
   township: ''
 })
 
+// errors holder object
 const customerDependencyBackendErrors = ref(null)
+
+// routing utilities
+const route = useRoute()
 
 // loading state
 const isLoading = ref(false)
