@@ -8,6 +8,7 @@ import { currencyService } from '../../services/currencyService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 
+// main object
 const currency = ref({
   name: '',
   description: ''
