@@ -1,7 +1,6 @@
 """stock views"""
 
 # django
-from django.http import Http404
 from django.db.models.deletion import ProtectedError
 
 # third
