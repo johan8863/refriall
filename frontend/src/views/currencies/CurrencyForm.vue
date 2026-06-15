@@ -71,7 +71,7 @@ const createCurrency = async () => {
   }
 }
 
-// update kit object function
+// update currency object function
 const updateCurrency = async () => {
   try {
     if (await v$.value.$validate()) {
