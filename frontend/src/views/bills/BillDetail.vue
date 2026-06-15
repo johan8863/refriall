@@ -11,6 +11,7 @@ import { errorHandler } from '../../utils/errors/errorHandler'
 // third
 import html2pdf from 'html2pdf.js'
 
+// main object
 const bill = ref({
   customer: '',
   customer_dependency: '',
@@ -38,16 +39,18 @@ const bill = ref({
   aproved_by: ''
 })
 
+// errors holder object
+const billBackendErrors = ref(null)
+
 // loading status
 const isLoading = ref(false)
 
-const billBackendErrors = ref(null)
-
+// pagination objects
 const billToPaginate = ref(null)
-
-const route = useRoute()
-
 const paginatedBills = ref([])
+
+// routing utulities
+const route = useRoute()
 
 onMounted(async () => {
   try {
