@@ -1,7 +1,10 @@
 import { computed } from 'vue'
 
-// to export a comuted as a composable, define the function
-// that'll return the composable object
+/* 
+to export a comuted as a composable, define the function
+that'll return the composable object
+*/
+
 export const useOrderTotalComputed = (order, items) => {
   const orderTotalComputed = computed(() => {
     return order.value.itemtime_set
