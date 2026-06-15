@@ -1,7 +1,10 @@
 <script setup>
+// vue
 import { useRoute } from 'vue-router'
-import NavBar from './components/NavBar.vue';
 import { computed, onMounted } from 'vue';
+
+// app
+import NavBar from './components/NavBar.vue';
 import { useAuthStore } from './stores/authStore';
 
 const authStore = useAuthStore()
