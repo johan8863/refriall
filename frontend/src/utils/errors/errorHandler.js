@@ -1,16 +1,3 @@
-export const objectNames = {
-  order: 'Orden',
-  bill: 'Factura',
-  kit: 'Equipo',
-  provider: 'Prestador',
-  customer: 'Cliente',
-  customerDependency: 'Dependencia',
-  gender: {
-    male: 'm',
-    female: 'f'
-  }
-}
-
 export const errorHandler = (sourceError, displayError, objectName = 'Objeto', gender = 'f') => {
   if (sourceError.response) {
     const { data, status } = sourceError.response
