@@ -10,6 +10,8 @@ from ..stock.models import Item, ItemOrder, Kit
 
 
 class Currency(models.Model):
+    """Class to handle currencies database operations"""
+
     name = models.CharField('Nombre', max_length=4, unique=True)
     description = models.CharField(max_length=22, blank=True, null=True)
 
@@ -75,6 +77,7 @@ class Bill(models.Model):
     @property
     def get_total_amount_revision(self):
         """Returns the Sum of the total price of products of the orders in this Bill"""
+
         orders_ids = self.get_orders.values("id")
         itemstimes_revision = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="revision")
 
@@ -92,6 +95,7 @@ class Bill(models.Model):
     @property
     def get_total_amount_prod(self):
         """Returns the Sum of the total price of products of the orders in this Bill"""
+
         orders_ids = self.get_orders.values("id")
         itemstimes_prod = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="prod")
 
@@ -110,6 +114,7 @@ class Bill(models.Model):
     @property
     def get_total_amount_concept(self):
         """Returns the Sum of the total price of concepts of the orders in this Bill"""
+
         orders_ids = self.get_orders.values("id")
         itemstimes_concept = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="concept")
 
@@ -127,6 +132,7 @@ class Bill(models.Model):
     @property
     def get_total_amount_repair(self):
         """Returns the Sum of the total price of repairs of the orders in this Bill"""
+
         orders_ids = self.get_orders.values("id")
         itemstimes_repair = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="repair")
 
@@ -144,6 +150,7 @@ class Bill(models.Model):
     @property
     def get_total_amount_maintenace(self):
         """Returns the Sum of the total price of maintenance of the orders in this Bill"""
+
         orders_ids = self.get_orders.values("id")
         itemstimes_maintenace = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="maintenace")
 
@@ -161,6 +168,7 @@ class Bill(models.Model):
     @property
     def get_total_amount_install(self):
         """Returns the Sum of the total price of installs of the orders in this Bill"""
+
         orders_ids = self.get_orders.values("id")
         itemstimes_install = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="install")
         
@@ -178,6 +186,7 @@ class Bill(models.Model):
     @property
     def get_total_amount_unmounting(self):
         """Returns the Sum of the total price of unmounting of the orders in this Bill"""
+
         orders_ids = self.get_orders.values("id")
         itemstimes_unmounting = ItemTimeOrder.objects.filter(order_id__in=orders_ids).filter(item__item_type="unmounting")
 
@@ -195,6 +204,7 @@ class Bill(models.Model):
 
 class Order(models.Model):
     """Pre Bill document to register job details performed"""
+
     SUPPORT_TYPE = [
         ('t', 'Taller'),
         ('i', 'In Situ'),
@@ -260,6 +270,7 @@ class Order(models.Model):
     
     def __str__(self):
         """Returns  the string object representation"""
+
         if self.customer:
             return self.customer.name
         else:
@@ -272,6 +283,7 @@ class Order(models.Model):
     @property
     def get_total_amount(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
+
         total_amount = self.itemtimeorder_set.all().aggregate(
             total=models.Sum(F('item__price') * F('times'))
         ).get('total')
@@ -281,6 +293,7 @@ class Order(models.Model):
     @property
     def get_total_amount_revision(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
+
         total_amount_revision = self.itemtimeorder_set.filter(item__item_type='revision').aggregate(
             total=Sum(F('item__price') * F('times'))
         ).get('total')
@@ -290,6 +303,7 @@ class Order(models.Model):
     @property
     def get_total_amount_prod(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
+
         total_amount_prod = self.itemtimeorder_set.filter(item__item_type='prod').aggregate(
             total=Sum(F('item__price') * F('times'))
         ).get('total')
@@ -299,6 +313,7 @@ class Order(models.Model):
     @property
     def get_total_amount_concept(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
+
         total_amount_concept = self.itemtimeorder_set.filter(item__item_type='concept').aggregate(
             total=Sum(F('item__price') * F('times'))
         ).get('total')
@@ -308,6 +323,7 @@ class Order(models.Model):
     @property
     def get_total_amount_repair(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
+
         total_amount_repair = self.itemtimeorder_set.filter(item__item_type='repair').aggregate(
             total=Sum(F('item__price') * F('times'))
         ).get('total')
@@ -317,6 +333,7 @@ class Order(models.Model):
     @property
     def get_total_amount_maintenace(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
+
         total_amount_maintenace = self.itemtimeorder_set.filter(item__item_type='maintenace').aggregate(
             total=Sum(F('item__price') * F('times'))
         ).get('total')
@@ -326,6 +343,7 @@ class Order(models.Model):
     @property
     def get_total_amount_install(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
+
         total_amount_install = self.itemtimeorder_set.filter(item__item_type='install').aggregate(
             total=Sum(F('item__price') * F('times'))
         ).get('total')
@@ -335,6 +353,7 @@ class Order(models.Model):
     @property
     def get_total_amount_unmounting(self):
         """Returns the Sum of the prices of the items multiplied by the times of the related object ItemTime related through ItemTime objects"""
+
         total_amount_unmounting = self.itemtimeorder_set.filter(item__item_type='unmounting').aggregate(
             total=Sum(F('item__price') * F('times'))
         ).get('total')
@@ -348,6 +367,7 @@ class Order(models.Model):
 
 class ItemTime(models.Model):
     """Class to register how many items go in an order"""
+
     item = models.ForeignKey(Item, on_delete=models.PROTECT, verbose_name="Artículo", null=True, blank=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
     times = models.FloatField('Cantidad', default=1)
@@ -357,11 +377,13 @@ class ItemTime(models.Model):
         verbose_name_plural = 'Cantidades de Artículo'
     
     def __str__(self):
-        """Returns  the string object representation"""
+        """Returns the string object representation"""
+
         return f'{self.item.name} - {self.order.customer.name}'
     
     def get_sub_total(self):
         """Multiplies the price of the item to the times attribute"""
+
         return self.item.price * self.times
 
 
@@ -370,6 +392,7 @@ class ItemTimeOrder(models.Model):
     Class to register how many items go in an order, it'll be related with the ItemOrder model
     to isolate the price updating
     """
+
     item = models.ForeignKey(ItemOrder, on_delete=models.CASCADE, verbose_name="Artículo", null=True, blank=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
     times = models.FloatField('Cantidad', default=1)
@@ -380,4 +403,5 @@ class ItemTimeOrder(models.Model):
     
     def __str__(self):
         """Returns  the string object representation"""
+        
         return f'{self.item.name} - {self.order.customer.name}'
