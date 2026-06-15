@@ -6,6 +6,7 @@ import { ref, onMounted } from "vue";
 import { kitService } from "../../services/kitService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
+// reactive objects
 const kits = ref([]);
 const currentPage = ref(1);
 const showNextButton = ref(false);
@@ -17,6 +18,7 @@ const isLoading = ref(false);
 const hasSearched = ref(false);
 const searchTerm = ref('');
 
+// methods
 const getKits = async (page = 1) => {
     isLoading.value = true;
     try {
@@ -127,6 +129,7 @@ const handleError = (error) => {
     }
 };
 
+// lifecycle
 onMounted(async () => {
     await getKits(1);
 });
