@@ -9,8 +9,7 @@ import { orderService } from '../../services/orderService'
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 import { errorHandler, objectNames } from "../../utils/errors/errorHandler";
 
-const route = useRoute();
-const router = useRouter()
+// main object
 const order = ref({
     customer: '',
     symptom: '',
@@ -40,14 +39,19 @@ const order = ref({
     aproved_by: ''
 });
 
+// errors objects
+const errorMessage = ref(null)
+const errorBillMessage = ref(null)
 const billDeleteErrorObject = ref({
   id: null,
   folio: null
 })
 
-const errorMessage = ref(null)
-const errorBillMessage = ref(null)
+// routing utilities
+const route = useRoute();
+const router = useRouter()
 
+// lifecycle
 onMounted(async () => {
   try {
     const resp = await orderService.detailOrder(route.params.id);
@@ -56,7 +60,6 @@ onMounted(async () => {
     errorHandler(error, errorMessage, objectNames.order)
   }
 });
-
 
 const delOrder = async (id) => {
   try {
