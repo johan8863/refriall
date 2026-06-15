@@ -12,30 +12,14 @@ const kit = ref({
     name: ''
 });
 
+// errors holder object
 const kitErrors = ref({
     name: ''
 });
 
-
 // router utilities to redirect the view and catch route params
 const route = useRoute();
 const router = useRouter();
-
-// loading the kit object
-onMounted(async () => {
-    try {
-        const resp = await kitService.detailKit(route.params.id);
-        kit.value = resp.data;
-    } catch (error) {
-        if (error.response) {
-            console.log("Error data: ", error.response.data);
-            console.log("Error status: ", error.response.status);
-            if (error.response.status === 404) {
-                kitErrors.value = { message404: 'El equipo que intenta eliminar no existe.' }
-            }
-        }
-    }
-});
 
 // delete the kit object
 const delKit = async (id) => {
@@ -58,6 +42,21 @@ const delKit = async (id) => {
     }
 };
 
+// loading the kit object
+onMounted(async () => {
+    try {
+        const resp = await kitService.detailKit(route.params.id);
+        kit.value = resp.data;
+    } catch (error) {
+        if (error.response) {
+            console.log("Error data: ", error.response.data);
+            console.log("Error status: ", error.response.status);
+            if (error.response.status === 404) {
+                kitErrors.value = { message404: 'El equipo que intenta eliminar no existe.' }
+            }
+        }
+    }
+});
 </script>
 
 <template>
