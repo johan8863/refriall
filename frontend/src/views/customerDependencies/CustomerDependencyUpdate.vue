@@ -28,6 +28,7 @@ const dependency = ref({
   township: ''
 })
 
+// errors holder object
 const dependencyErrors = ref({
   customer: [],
   name: [],
@@ -39,6 +40,7 @@ const dependencyErrors = ref({
 // loading state
 const isLoading = ref(false)
 
+// validation rules
 const rules = {
   name: {
     required: helpers.withMessage('El nombre es requerido.', required)
@@ -57,6 +59,7 @@ const rules = {
 // vuelidate object
 const v$ = useVuelidate(rules, dependency)
 
+// methods
 const updateDependency = async () => {
   try {
     if (await v$.value.$validate()) {
