@@ -6,6 +6,7 @@ import { ref, onMounted } from "vue";
 import { customerService } from "../../services/customerService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
+// reactive objects
 const customers = ref([]);
 const currentPage = ref(1);
 const showNextButton = ref(false);
@@ -17,6 +18,7 @@ const isLoading = ref(false);
 const hasSearched = ref(false);
 const searchTerm = ref('');
 
+// methods
 const getCustomers = async (page = 1) => {
     isLoading.value = true;
     try {
@@ -127,6 +129,7 @@ const handleError = (error) => {
     }
 };
 
+// lifecycle
 onMounted(async () => {
     await getCustomers(1);
 });
