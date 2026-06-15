@@ -26,7 +26,6 @@ const customer = ref({
     bank_account: '',
 });
 
-
 // customer backend errors
 const customerErrors = ref({
     customer_type: [],
@@ -82,7 +81,6 @@ const rules = {
     },
 }
 
-
 // vuelidate object
 const v$ = useVuelidate(rules, customer);
 
@@ -102,7 +100,6 @@ const createCustomer = async () => {
         errorHandler(error, errorMessage, 'Cliente', 'm')
     }
 };
-
 
 // update customer function
 const updateCustomer = async () => {
@@ -126,7 +123,6 @@ const handleSubmit = async () => {
         await updateCustomer() :
         await createCustomer()
 }
-
 
 // onMounted cycle to get the customer object 
 // if editing intended
