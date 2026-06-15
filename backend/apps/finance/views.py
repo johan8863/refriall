@@ -137,6 +137,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     @action(detail=True, url_path='order-detail')
     def get_order_detail(self, request, pk):
         """Return an Order serializer with inner serializers and property methods"""
+
         order = self.get_object()
         serializer = self.get_serializer(order)
         return Response(serializer.data)
@@ -150,6 +151,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'], url_path="get-orders-by-ids")
     def get_orders_by_ids(self, request):
         """Return orders given a list of ids"""
+        
         orders_ids = request.data.get("ordersIds", [])
         
         if orders_ids:
