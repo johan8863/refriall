@@ -18,7 +18,7 @@ const route = useRoute();
 
 const goToCustomers = () => router.push({name: 'customers'});
 
-// dependncy objects
+// dependency objects
 const dependency = ref({
     customer: '',
     name: '',
