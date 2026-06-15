@@ -107,7 +107,6 @@ class CustomerViewSet(viewsets.ModelViewSet):
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
     serializer_class = ProviderUpdateSerializer
-    # pagination_class = ProviderPagination
 
     def get_serializer_class(self):
         """
@@ -190,7 +189,7 @@ class ProviderViewSet(viewsets.ModelViewSet):
     @action(detail=False, url_path="get-providers-paginated")
     def get_providers_paginated(self, request, format=None):
         """Returns the list of providers pagianted."""
-        
+
         providers = self.get_queryset()
         
         # pagination
