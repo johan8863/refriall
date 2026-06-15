@@ -8,10 +8,8 @@ from django.db.models.deletion import ProtectedError
 # third
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 # local
 from .models import Customer, Provider, CustomerDependency
