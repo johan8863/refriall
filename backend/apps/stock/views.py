@@ -4,7 +4,7 @@
 from django.db.models.deletion import ProtectedError
 
 # third
-from rest_framework import status, viewsets, filters
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -17,7 +17,6 @@ from ...utils.base_paginator import BaseCustomPagination
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    filter_backends = [filters.SearchFilter]
 
     def destroy(self, request, *args, **kwargs):
         try:
