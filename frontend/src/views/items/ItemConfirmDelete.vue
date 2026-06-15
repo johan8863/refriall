@@ -1,13 +1,14 @@
 <script setup>
 
+// vue
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+
+// app
 import { itemService } from "../../services/itemService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
-
-const route = useRoute();
-const router = useRouter();
+// main object
 const item = ref({
     code: '',
     name: '',
@@ -16,8 +17,14 @@ const item = ref({
     price: '',
 });
 
+// errors holder object
 const errorMessage = ref(null)
 
+// routing utilities
+const route = useRoute();
+const router = useRouter();
+
+// lifecycle
 onMounted(async () => {
     try {
         const resp = await itemService.detailItem(route.params.id);
@@ -34,6 +41,8 @@ onMounted(async () => {
         }
     }
 });
+
+// methods
 
 // delete the item object
 const delItem = async (id) => {
