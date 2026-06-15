@@ -14,11 +14,13 @@ const currency = ref({
   description: ''
 })
 
+// errors holder object
+const currencyBackenderror = ref(null)
+
 // loading state
 const isLoading = ref(false)
 
-const currencyBackenderror = ref(null)
-
+// routing
 const route = useRoute()
 
 onMounted(async () => {
