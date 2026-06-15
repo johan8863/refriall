@@ -61,8 +61,6 @@ class ProviderUpdateSerializer(serializers.ModelSerializer):
         return instance
 
 
-# serializers.py
-
 class ProviderCreateSerializer(serializers.ModelSerializer):
     """
     Serializer for creating new providers with password confirmation.
