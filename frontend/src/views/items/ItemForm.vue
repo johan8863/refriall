@@ -67,6 +67,8 @@ const rules = {
 // vuelidate object
 const v$ = useVuelidate(rules, item)
 
+// methods
+
 // create item function
 const createItem = async (item) => {
   try {
