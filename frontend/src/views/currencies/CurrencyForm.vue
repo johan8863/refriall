@@ -53,9 +53,10 @@ const currenyNameUpper = () => (currency.value.name = currency.value.name.toUppe
 const createCurrency = async () => {
   try {
     if (await v$.value.$validate()) {
-      // if front validations run,
-      // set the currency name to upper case and
-      // post the object and redirect to its detail view
+      /* if front validations run,
+       set the currency name to upper case and
+       post the object and redirect to its detail view
+      */
       currenyNameUpper()
       const { data } = await currencyService.postCurrency(currency.value)
       router.push({ name: 'currency_detail', params: { id: data.id } })
