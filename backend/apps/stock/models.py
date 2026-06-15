@@ -10,6 +10,7 @@ class Item(models.Model):
     registered in service orders and bills. They can be six types as shown 
     in the item_type attribute.
     """
+
     ITEM_TYPES = [
         ('revision', 'Rev/Diag.'),
         ('prod', 'Producto'),
@@ -66,6 +67,7 @@ class ItemOrder(models.Model):
     History model to save relation with orders to keep the current price isolated
     from changes in the Item model.
     """
+
     ITEM_TYPES = [
         ('revision', 'Rev/Diag.'),
         ('prod', 'Producto'),
@@ -119,6 +121,7 @@ class ItemOrder(models.Model):
 
 class Kit(models.Model):
     """Kit model, it'll be used to select the kind of kit in the order"""
+    
     name = models.CharField('Nombre', max_length=50, unique=True)
 
     class Meta:
