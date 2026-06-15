@@ -6,7 +6,7 @@ export const useCheckAllCheckboxes = (sourceItems, selectedItems) => {
         // Returns true only when all items are selected.
         get: () => {
             // if no source items or selected items return false, 
-            // that'll prevent from main checkbox to be rendered
+            // that'll prevent from main checkbox to be rendered as
             // checked when data isn't loaded yet
             if (!sourceItems?.value?.length || !selectedItems?.value) return false
             return sourceItems.value.length === selectedItems.value.length
