@@ -8,9 +8,7 @@ import { useRoute, useRouter } from "vue-router";
 import { billService } from "../../services/billService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
 
-const route = useRoute();
-const router = useRouter();
-
+// main object
 const bill = ref({
     customer: '',
     folio: '',
@@ -29,8 +27,7 @@ const bill = ref({
     aproved_by: '' ,
 });
 
-
-
+// errors holder object
 const billBackendErrors = ref({
     non_field_errors: [],
     customer: '',
@@ -50,6 +47,9 @@ const billBackendErrors = ref({
     aproved_by: '' ,
 });
 
+// routing utilities
+const route = useRoute();
+const router = useRouter();
 
 onMounted(async () => {
     try {
@@ -89,7 +89,6 @@ const delBill = async (id) => {
         }
     }
 };
-
 
 </script>
 
