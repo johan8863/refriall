@@ -27,6 +27,7 @@ const dependency = ref({
     township: '',
 });
 
+// errors holder object
 const dependencyErrors = ref({
     customer: [],
     name: [],
@@ -35,6 +36,7 @@ const dependencyErrors = ref({
     township: [],
 });
 
+// validation rules
 const rules = {
     name: {
         required: helpers.withMessage('El nombre es requerido.', required)
@@ -53,6 +55,7 @@ const rules = {
 // vuelidate object
 const v$ = useVuelidate(rules, dependency);
 
+// methods
 const createDependency = async () => {
     try {
         if (await v$.value.$validate()) {
