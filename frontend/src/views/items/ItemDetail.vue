@@ -1,4 +1,5 @@
 <script setup>
+
 // vue
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
@@ -8,7 +9,7 @@ import { itemService } from '../../services/itemService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 
-const route = useRoute()
+// main object
 const item = ref({
   code: '',
   name: '',
@@ -17,11 +18,16 @@ const item = ref({
   price: 0
 })
 
+// // errors holder object
+const itemBackendErrors = ref(null)
+
+// routing utilities
+const route = useRoute()
+
 // loading state
 const isLoading = ref(false)
 
-const itemBackendErrors = ref(null)
-
+// lifecycle
 onMounted(async () => {
   try {
     // start loading state
