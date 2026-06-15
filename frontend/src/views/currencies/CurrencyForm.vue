@@ -49,7 +49,7 @@ const v$ = useVuelidate(rules, currency)
 // helper function to always set to upper case the name of the currency
 const currenyNameUpper = () => (currency.value.name = currency.value.name.toUpperCase())
 
-// create kit object function
+// create currency object function
 const createCurrency = async () => {
   try {
     if (await v$.value.$validate()) {
