@@ -5,7 +5,7 @@ import { ref, onMounted } from "vue";
 // app
 import { orderService } from "../../services/orderService";
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-import { errorHandler, objectNames } from "../../utils/errors/errorHandler";
+import { errorHandler } from "../../utils/errors/errorHandler";
 
 const orders = ref([]);
 const ordersCount = ref(0)
@@ -31,7 +31,7 @@ const getOrders = async (page = 1) => {
         orders.value = data.results;
         orderBackendErrors.value = null;
     } catch (error) {
-        errorHandler(error, orderBackendErrors, objectNames.order)
+        errorHandler(error, orderBackendErrors, "Orden")
     } finally {
         isLoading.value = false;
     }
@@ -66,7 +66,7 @@ const handleSearch = async () => {
         orderBackendErrors.value = null;
         
     } catch (error) {
-        errorHandler(error, orderBackendErrors, objectNames.order)
+        errorHandler(error, orderBackendErrors, "Orden")
     } finally {
         isLoading.value = false;
     }
