@@ -7,7 +7,7 @@ import { useRoute, useRouter } from "vue-router";
 // app
 import { orderService } from '../../services/orderService'
 import listGroup from "../../assets/js/bootstrap_classes/listGroup";
-import { errorHandler, objectNames } from "../../utils/errors/errorHandler";
+import { errorHandler } from "../../utils/errors/errorHandler";
 
 // main object
 const order = ref({
@@ -57,7 +57,7 @@ onMounted(async () => {
     const resp = await orderService.detailOrder(route.params.id);
     order.value = resp.data;
   } catch (error) {
-    errorHandler(error, errorMessage, objectNames.order)
+    errorHandler(error, errorMessage, "Orden")
   }
 });
 

@@ -18,7 +18,7 @@ import { customerDependecyService } from '../../services/customerDependencyServi
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { currencyService } from '../../services/currencyService'
 import { useOrderTotalComputed } from '../../composables/OrderComposable'
-import { errorHandler, objectNames } from '../../utils/errors/errorHandler'
+import { errorHandler } from '../../utils/errors/errorHandler'
 
 // main object
 const order = ref({
@@ -222,7 +222,7 @@ const updateOrder = async (order) => {
       router.push({ name: 'orders_detail', params: { id: data.id } })
     }
   } catch (error) {
-    errorHandler(error, orderBackendErrors, objectNames.order)
+    errorHandler(error, orderBackendErrors, "Orden")
   }
 }
 
@@ -235,7 +235,7 @@ const createOrder = async (order) => {
       router.push({ name: 'orders_detail', params: { id: data.id } })
     }
   } catch (error) {
-    errorHandler(error, orderBackendErrors, objectNames.order)
+    errorHandler(error, orderBackendErrors, "Orden")
   }
 }
 
@@ -299,7 +299,7 @@ onMounted(async () => {
         }
       })      
     } catch (error) {
-      errorHandler(error, orderBackendErrors, objectNames.order)
+      errorHandler(error, orderBackendErrors, "Orden")
     } finally {
       // finish loading order data
       isLoadingOrderData.value = false

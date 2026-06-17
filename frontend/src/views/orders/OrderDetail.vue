@@ -10,7 +10,7 @@ import { useOrderPaginate } from '../../composables/OrderComposable'
 
 // third
 import html2pdf from 'html2pdf.js'
-import { objectNames, errorHandler } from '../../utils/errors/errorHandler'
+import { errorHandler } from '../../utils/errors/errorHandler'
 
 const route = useRoute()
 const order = ref({
@@ -68,7 +68,7 @@ onMounted(async () => {
 
     paginatedOrders.value = paginate(order, 12)
   } catch (error) {
-    errorHandler(error, errorMessage, objectNames.order)
+    errorHandler(error, errorMessage, "Orden")
   } finally {
     // finish loading data
     isLoading.value = false
