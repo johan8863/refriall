@@ -41,6 +41,8 @@ class Item(models.Model):
         null=True,
         blank=True
     )
+    # consider to change this attribute and all the ones that requires
+    # financial precision to an integer attribute including cents
     price = models.FloatField('Precio')
 
 
