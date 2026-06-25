@@ -18,6 +18,8 @@ onMounted(() => authStore.initAuth())
 </script>
 
 <template>
-  <NavBar v-if="showNavBar" />
-  <RouterView />
+  <div class="container-fluid">
+    <NavBar v-if="showNavBar" />
+    <RouterView />
+  </div>
 </template>
