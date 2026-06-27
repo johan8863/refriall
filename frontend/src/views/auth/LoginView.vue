@@ -49,7 +49,7 @@ const handleLogin = async () => {
 <template>
     <!-- login form row -->
     <form
-      class="row pt-4 pt-sm-2 justify-content-sm-end align-items-center g-1"
+      class="row pt-4 pt-sm-2 justify-content-sm-center align-items-center g-1"
       @submit.prevent="handleLogin">
       <!-- username control -->
       <div class="col-6 col-sm-3 col-md-2 mx-auto mx-sm-0">
@@ -94,9 +94,11 @@ const handleLogin = async () => {
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-sm-6 col-md-6 d-none d-sm-flex justify-content-sm-center justify-content-md-center">
-        <h4 class="text-primary text-center fw-bolder">REFRIALL</h4>
+    <div class="row row-cols-1 pt-5">
+      <div class="col">
+        <h4 class="d-none d-sm-block text-primary text-center fw-bolder">REFRIALL</h4>
+      </div>
+      <div class="col d-none d-sm-flex justify-content-center align-content-center">
         <img src="../../assets/gear_only.png" class="img-fluid" alt="REFRIALL Logo" />
       </div>
     </div>
