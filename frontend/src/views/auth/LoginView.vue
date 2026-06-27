@@ -49,10 +49,10 @@ const handleLogin = async () => {
 <template>
     <!-- login form row -->
     <form
-      class="row pt-2 justify-content-sm-end align-items-center g-1"
+      class="row pt-4 pt-sm-2 justify-content-sm-end align-items-center g-1"
       @submit.prevent="handleLogin">
       <!-- username control -->
-      <div class="col-sm-3 col-md-2 mx-auto mx-sm-0">
+      <div class="col-6 col-sm-3 col-md-2 mx-auto mx-sm-0">
         <input
           type="text"
           v-model="user.username"
@@ -60,8 +60,10 @@ const handleLogin = async () => {
           class="form-control form-control-sm"
           placeholder="Usuario" />
       </div>
+      <!-- new column line under bootstrap sm breakpoint -->
+      <div class="d-block d-sm-none"></div>
       <!-- password control -->
-      <div class="col-sm-3 col-md-2 mx-auto mx-sm-0">
+      <div class="col-6 col-sm-3 col-md-2 mx-auto mx-sm-0">
         <input
           type="password"
           v-model="user.password"
@@ -69,8 +71,10 @@ const handleLogin = async () => {
           class="form-control form-control-sm"
           placeholder="Clave" />
       </div>
+      <!-- new column line under bootstrap sm breakpoint -->
+      <div class="d-block d-sm-none"></div>
       <!-- submit button -->
-      <div class="col-sm-2 col-md-1 d-grid mx-auto mx-sm-0">
+      <div class="col-6 col-sm-2 col-md-1 d-grid mx-auto mx-sm-0">
         <button v-if="!authStore.isLoadingAuth"
           type="submit"
           class="btn btn-sm btn-primary">Entrar</button>
