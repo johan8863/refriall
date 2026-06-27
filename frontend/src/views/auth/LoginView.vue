@@ -48,42 +48,47 @@ const handleLogin = async () => {
 </script>
 <template>
     <!-- login form row -->
-    <form class="row pt-1 justify-content-end align-items-center g-2" @submit.prevent="handleLogin">
+    <form
+      class="row pt-2 justify-content-sm-end align-items-center g-1"
+      @submit.prevent="handleLogin">
       <!-- username control -->
-      <div class="col-sm-3 col-md-2">
+      <div class="col-sm-3 col-md-2 mx-auto mx-sm-0">
         <input
           type="text"
           v-model="user.username"
           id="username"
-          class="form-control"
+          class="form-control form-control-sm"
           placeholder="Usuario" />
       </div>
       <!-- password control -->
-      <div class="col-sm-3 col-md-2">
+      <div class="col-sm-3 col-md-2 mx-auto mx-sm-0">
         <input
           type="password"
           v-model="user.password"
           id="password"
-          class="form-control"
+          class="form-control form-control-sm"
           placeholder="Clave" />
       </div>
       <!-- submit button -->
-      <div class="col-sm-2 col-md-1">
-        <button type="submit" :class="submitButtonClasses">
-          <div v-if="!authStore.isLoadingAuth">Entrar</div>
-          <div v-else>
-            <span role="status">Autenticando... </span>
-            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-          </div>
+      <div class="col-sm-2 col-md-1 d-grid mx-auto mx-sm-0">
+        <button v-if="!authStore.isLoadingAuth"
+          type="submit"
+          class="btn btn-sm btn-primary">Entrar</button>
+        <button v-else
+          type="submit"
+          class="btn btn-sm btn-success"
+          disabled>
+          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+          <span role="status"> Espere...</span>
         </button>
       </div>
-      <div>
-        <!-- messages -->
-        <div class="text-center" v-if="authError">
-          <span class="form-text text-danger">{{ authError }}</span>
-        </div>
-      </div>
     </form>
+    <div class="row">
+      <!-- messages -->
+      <div class="col text-center text-sm-end" v-if="authError">
+        <span class="form-text text-danger">{{ authError }}</span>
+      </div>
+    </div>
 
     <div class="row">
       <div class="col-sm-6 col-md-6 d-none d-sm-flex justify-content-sm-center justify-content-md-center">
