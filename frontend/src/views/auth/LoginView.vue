@@ -47,9 +47,8 @@ const handleLogin = async () => {
 }
 </script>
 <template>
-  <div class="container pt-4">
     <!-- main row -->
-    <div class="row">
+    <div class="row pt-5">
       <div class="col-12 col-sm-6 col-md-6 border-end border-2 border-primary">
         <!-- inner row for form -->
         <div class="row">
@@ -91,5 +90,4 @@ const handleLogin = async () => {
         <img src="../../assets/gear_only.png" class="img-fluid" alt="REFRIALL Logo" />
       </div>
     </div>
-  </div>
 </template>
