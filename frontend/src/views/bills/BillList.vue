@@ -138,8 +138,10 @@ onMounted(async () => {
         
         <!-- main content -->
         <div class="col-md-10">
+            <!-- main row content -->
             <div class="row">
                 <div class="col-md-12 mt-1">
+                    <!-- search form row -->
                     <form class="row g-2 align-items-center" @submit.prevent="handleSearch">
                         <div class="col-auto">
                             <label for="searchBillText" class="col-form-label">Búsqueda:</label>
@@ -176,7 +178,7 @@ onMounted(async () => {
                         </div>
                     </form>
                     
-                    <!-- Search indicator -->
+                    <!-- search indicator -->
                     <small class="text-muted" v-if="hasSearched && searchTerm">
                         🔍 Mostrando resultados para: "{{ searchTerm }}"
                     </small>
@@ -185,7 +187,7 @@ onMounted(async () => {
                 <div class="col-md-12">
                     <div class="row justify-content-center">
                         <div class="col-md-11">
-                            <!-- Loading state -->
+                            <!-- loading state -->
                             <div v-if="isLoading" class="text-center my-2">
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="visually-hidden">Cargando...</span>
@@ -198,7 +200,7 @@ onMounted(async () => {
                                 {{ billBackendErrors }}
                             </div>
 
-                            <!-- Results -->
+                            <!-- results -->
                             <div v-else-if="bills.length > 0" class="mt-2">
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover mb-1">
@@ -225,7 +227,7 @@ onMounted(async () => {
                                     </table>
                                 </div>
 
-                                <!-- Paginación -->
+                                <!-- pagination -->
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <button
                                         v-if="showPrevButton"
@@ -247,6 +249,7 @@ onMounted(async () => {
                                 </div>
                             </div>
 
+                            <!-- in case no bills -->
                             <div v-else class="text-center my-3">
                                 <p class="lead text-muted mb-1">
                                     {{ hasSearched ? 'No se encontraron facturas' : 'No hay facturas registradas' }}

@@ -143,8 +143,11 @@ onMounted(async () => {
         
         <!-- main content -->
         <div class="col-md-10">
+            <!-- main content row -->
             <div class="row">
+                <!-- search form col -->
                 <div class="col-md-12 mt-1">
+                    <!-- search form row -->
                     <form class="row g-2 align-items-center" @submit.prevent="handleSearch">
                         <div class="col-auto">
                             <label for="searchOrderText" class="col-form-label">Búsqueda:</label>
@@ -181,12 +184,13 @@ onMounted(async () => {
                         </div>
                     </form>
                     
-                    <!-- Indicador de búsqueda -->
+                    <!-- search indicator -->
                     <small class="text-muted" v-if="hasSearched && searchTerm">
                         🔍 Mostrando resultados para: "{{ searchTerm }}"
                     </small>
                 </div>
 
+                <!-- loading state -->
                 <div class="col-md-12">
                     <div class="row justify-content-center">
                         <div class="col-md-11">
@@ -203,7 +207,7 @@ onMounted(async () => {
                                 {{ orderBackendErrors }}
                             </div>
 
-                            <!-- Results -->
+                            <!-- results -->
                             <div v-else-if="ordersCount > 0" class="mt-2">
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover mb-1">
@@ -242,7 +246,7 @@ onMounted(async () => {
                                     </table>
                                 </div>
 
-                                <!-- Paginación -->
+                                <!-- pagination -->
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <button
                                         v-if="showPrevButton"
@@ -264,6 +268,7 @@ onMounted(async () => {
                                 </div>
                             </div>
 
+                            <!-- in case no orders -->
                             <div v-else class="text-center my-3">
                                 <p class="lead text-muted mb-1">
                                     {{ hasSearched ? 'No se encontraron órdenes' : 'No hay órdenes registradas' }}

@@ -151,8 +151,10 @@ onMounted(async () => {
         
         <!-- main content -->
         <div class="col-md-10">
+            <!-- main row content -->
             <div class="row">
                 <div class="col-md-12 mt-1">
+                    <!-- row search form -->
                     <form class="row g-2 align-items-center" @submit.prevent="handleSearch">
                         <div class="col-auto">
                             <label for="searchCustomerText" class="col-form-label">Búsqueda:</label>
@@ -189,14 +191,14 @@ onMounted(async () => {
                         </div>
                     </form>
                     
-                    <!-- Indicador de búsqueda -->
+                    <!-- search indicator -->
                     <small class="text-muted" v-if="hasSearched && searchTerm">
                         🔍 Mostrando resultados para: "{{ searchTerm }}"
                     </small>
                 </div>
 
                 <div class="col-md-12">
-                    <!-- Loading state -->
+                    <!-- loading state -->
                     <div v-if="isLoading" class="text-center my-2">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Cargando...</span>
@@ -209,7 +211,7 @@ onMounted(async () => {
                         {{ customerBackendErrors }}
                     </div>
 
-                    <!-- Results -->
+                    <!-- results -->
                     <div v-else-if="customers.length > 0" class="mt-2">
                         <table class="table table-striped table-hover mb-1">
                             <thead class="table-dark">
@@ -234,7 +236,7 @@ onMounted(async () => {
                             </tbody>
                         </table>
 
-                        <!-- Paginación -->
+                        <!-- pagination -->
                         <div class="d-flex justify-content-between align-items-center mt-2">
                             <button
                                 v-if="showPrevButton"
@@ -256,6 +258,7 @@ onMounted(async () => {
                         </div>
                     </div>
 
+                    <!-- in case no customers -->
                     <div v-else class="text-center my-3">
                         <p class="lead text-muted mb-1">
                             {{ hasSearched ? 'No se encontraron clientes' : 'No hay clientes registrados' }}

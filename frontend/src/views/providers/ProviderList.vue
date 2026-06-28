@@ -66,7 +66,7 @@ onMounted(async () => {
         <div class="col-md-10">
             <div class="row">
                 <div class="col-md-4">
-
+                    <!-- results -->
                     <div v-if="providers.length > 0">
 
                         <div id="tableContainer" style="height: 460px;">
@@ -102,7 +102,7 @@ onMounted(async () => {
                         </div>
 
                     </div>
-
+                    <!-- in case no providers -->
                     <div v-else>
                         <p class="lead text-center">Inserte un Proveedor.</p>
                     </div>

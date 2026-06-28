@@ -47,7 +47,7 @@ onMounted(async () => {
         <div class="col-md-10">
             <div class="row">
                 <div class="col-md-4">
-
+                    <!-- results -->
                     <div v-if="currencies.length > 0">
 
                         <div id="tableContainer">
@@ -73,6 +73,7 @@ onMounted(async () => {
 
                     </div>
 
+                    <!-- in case no currencies -->
                     <div v-else>
                         <p class="lead text-center">Inserte una Moneda.</p>
                     </div>
