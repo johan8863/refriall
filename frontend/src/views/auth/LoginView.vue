@@ -88,7 +88,7 @@ const handleLogin = async () => {
   </form>
   <div class="row">
     <!-- messages -->
-    <div class="col text-center text-sm-end" v-if="authError">
+    <div class="col text-center" v-if="authError">
       <span class="form-text text-danger">{{ authError }}</span>
     </div>
   </div>
