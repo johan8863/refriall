@@ -18,7 +18,7 @@ onMounted(() => authStore.initAuth())
 </script>
 
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid mb-4">
     <NavBar v-if="showNavBar" />
     <RouterView />
   </div>
