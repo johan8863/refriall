@@ -111,17 +111,6 @@ const loadPrevItems = async () => {
     }
 };
 
-const handleError = (error) => {
-    console.error('Error', error);
-    if (error.response) {
-        orderBackendErrors.value = `${error.response.data.detail || error.response.data} - ${error.response.status}`;
-    } else if (error.request) {
-        orderBackendErrors.value = 'El servidor back-end no responde, consulte al desarrollador.';
-    } else {
-        orderBackendErrors.value = 'Error inesperado, consulte al desarrollador';
-    }
-};
-
 onMounted(async () => {
     await getOrders();
 });
