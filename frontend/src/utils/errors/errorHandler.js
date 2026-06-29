@@ -20,7 +20,8 @@ export const errorHandler = (sourceError, displayError, objectName = 'Objeto', g
         break
     }
   } else if (sourceError.request) {
-    displayError.value = 'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
+    displayError.value =
+      'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
   } else {
     displayError.value = 'Error inesperado, consulte al desarrollador.'
   }

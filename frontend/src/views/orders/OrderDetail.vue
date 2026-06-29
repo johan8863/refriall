@@ -68,7 +68,7 @@ onMounted(async () => {
 
     paginatedOrders.value = paginate(order, 12)
   } catch (error) {
-    errorHandler(error, errorMessage, "Orden")
+    errorHandler(error, errorMessage, 'Orden')
   } finally {
     // finish loading data
     isLoading.value = false

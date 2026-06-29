@@ -1,87 +1,80 @@
 <script setup>
-
 // vue
-import { ref, onMounted } from "vue";
+import { ref, onMounted } from 'vue'
 
 // app
-import listGroup from '../../assets/js/bootstrap_classes/listGroup';
-import { currencyService } from "../../services/currencyService";
+import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import { currencyService } from '../../services/currencyService'
 
 const currencies = ref([])
 
-const currencyBackenderror = ref(null);
+const currencyBackenderror = ref(null)
 
 const getCurrencies = async () => {
-    try {
-        currencies.value = (await currencyService.listCurrencies()).data
-    } catch (error) {
-        console.error('General error: ', error);
-        if (error.response) {
-            currencyBackenderror.value = error.response.data
-        } else {
-            currencyBackenderror.value = { message: `Error inesperado: ${error}` }
-        }
+  try {
+    currencies.value = (await currencyService.listCurrencies()).data
+  } catch (error) {
+    console.error('General error: ', error)
+    if (error.response) {
+      currencyBackenderror.value = error.response.data
+    } else {
+      currencyBackenderror.value = { message: `Error inesperado: ${error}` }
     }
+  }
 }
 
 onMounted(async () => {
-    getCurrencies()
+  getCurrencies()
 })
-
 </script>
 
 <template>
-    <div class="row">
-        <!-- side menu -->
-        <div class="col-md-2">
-            <ul :class="listGroup.listGroup">
-                <li :class="listGroup.listGroupItem">
-                    <strong>Monedas</strong>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link :to="{name: 'currency_create'}">Nueva</router-link >
-                </li>
-            </ul>
-        </div>
-        <!-- main content -->
-        <div class="col-md-10">
-            <div class="row">
-                <div class="col-md-4">
-                    <!-- results -->
-                    <div v-if="currencies.length > 0">
-
-                        <div id="tableContainer">
-
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Moneda</th>
-                                        <th scope="col">Descripción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="currency in currencies" :key="currency.id">
-                                        <td>
-                                            <router-link :to="{name: 'currency_detail', params: {id: currency.id}}">{{ currency.name }}</router-link>
-                                        </td>
-                                        <td>{{ currency.description }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-
-                    </div>
-
-                    <!-- in case no currencies -->
-                    <div v-else>
-                        <p class="lead text-center">Inserte una Moneda.</p>
-                    </div>
-
-                    
-                </div>
-            </div>
-        </div>
-
+  <div class="row">
+    <!-- side menu -->
+    <div class="col-md-2">
+      <ul :class="listGroup.listGroup">
+        <li :class="listGroup.listGroupItem">
+          <strong>Monedas</strong>
+        </li>
+        <li :class="listGroup.listGroupItem">
+          <router-link :to="{ name: 'currency_create' }">Nueva</router-link>
+        </li>
+      </ul>
     </div>
+    <!-- main content -->
+    <div class="col-md-10">
+      <div class="row">
+        <div class="col-md-4">
+          <!-- results -->
+          <div v-if="currencies.length > 0">
+            <div id="tableContainer">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Moneda</th>
+                    <th scope="col">Descripción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="currency in currencies" :key="currency.id">
+                    <td>
+                      <router-link :to="{ name: 'currency_detail', params: { id: currency.id } }">{{
+                        currency.name
+                      }}</router-link>
+                    </td>
+                    <td>{{ currency.description }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- in case no currencies -->
+          <div v-else>
+            <p class="lead text-center">Inserte una Moneda.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

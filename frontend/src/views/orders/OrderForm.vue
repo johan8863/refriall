@@ -222,7 +222,7 @@ const updateOrder = async (order) => {
       router.push({ name: 'orders_detail', params: { id: data.id } })
     }
   } catch (error) {
-    errorHandler(error, orderBackendErrors, "Orden")
+    errorHandler(error, orderBackendErrors, 'Orden')
   }
 }
 
@@ -235,7 +235,7 @@ const createOrder = async (order) => {
       router.push({ name: 'orders_detail', params: { id: data.id } })
     }
   } catch (error) {
-    errorHandler(error, orderBackendErrors, "Orden")
+    errorHandler(error, orderBackendErrors, 'Orden')
   }
 }
 
@@ -297,9 +297,9 @@ onMounted(async () => {
           item: itemTime.item,
           times: itemTime.times
         }
-      })      
+      })
     } catch (error) {
-      errorHandler(error, orderBackendErrors, "Orden")
+      errorHandler(error, orderBackendErrors, 'Orden')
     } finally {
       // finish loading order data
       isLoadingOrderData.value = false
@@ -332,7 +332,7 @@ onMounted(async () => {
 
     <!-- Loading backend data -->
     <div class="col-md-10" v-if="isLoadingBackendData">
-      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
         <span role="status" class="text-primary">Cargando datos... </span>
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
@@ -340,7 +340,7 @@ onMounted(async () => {
 
     <!-- Loading order data -->
     <div class="col-md-10" v-else-if="isLoadingOrderData">
-      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
         <span role="status" class="text-primary">Cargando orden... </span>
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
@@ -375,12 +375,12 @@ onMounted(async () => {
             class="form-select form-select-sm"
             v-model.trim="order.provider"
             @blur="v$.provider.$touch"
-            >
+          >
             <option v-for="provider in providers" :key="provider.id" :value="provider.id">
               {{ provider.first_name }}
             </option>
           </select>
-          
+
           <!-- frontend validations -->
           <p class="form-text text-danger" v-for="error in v$.provider.$errors" :key="error.$uid">
             {{ error.$message }}
@@ -409,12 +409,12 @@ onMounted(async () => {
                 class="form-select form-select-sm"
                 v-model.trim="order.customer"
                 @blur="v$.customer.$touch"
-                >
+              >
                 <option v-for="customer in customers" :key="customer.id" :value="customer.id">
                   {{ customer.name }}
                 </option>
               </select>
-              
+
               <!-- frontend validations -->
               <p
                 class="form-text text-danger"
@@ -496,7 +496,7 @@ onMounted(async () => {
             v-model.trim="order.symptom"
             @blur="v$.symptom.$touch"
           />
-            
+
           <!-- frontend validations -->
           <p class="form-text text-danger" v-for="error in v$.symptom.$errors" :key="error.$uid">
             {{ error.$message }}
@@ -524,7 +524,7 @@ onMounted(async () => {
             v-model.trim="order.flaw"
             @blur="v$.flaw.$touch"
           />
-            
+
           <!-- frontend validations -->
           <p class="form-text text-danger" v-for="error in v$.flaw.$errors" :key="error.$uid">
             {{ error.$message }}
@@ -548,7 +548,7 @@ onMounted(async () => {
             v-model.trim="order.repair_description"
             @blur="v$.repair_description.$touch"
           />
-            
+
           <!-- frontend validations -->
           <p
             class="form-text text-danger"
@@ -580,7 +580,7 @@ onMounted(async () => {
             v-model.trim="order.folio"
             @blur="v$.folio.$touch"
           />
-            
+
           <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.folio.$errors" :key="error.$uid">
             {{ error.$message }}
@@ -609,7 +609,7 @@ onMounted(async () => {
             <option value="t">Taller</option>
             <option value="i">In Situ</option>
           </select>
-          
+
           <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.support.$errors" :key="error.$uid">
             {{ error.$message }}
@@ -704,15 +704,10 @@ onMounted(async () => {
         <!-- kit control -->
         <div class="col-md-3 mb-2">
           <label for="kit">Equipo</label>
-          <select
-            id="kit"
-            class="form-select"
-            v-model.trim="order.kit"
-            @blur="v$.kit.$touch"
-          >
+          <select id="kit" class="form-select" v-model.trim="order.kit" @blur="v$.kit.$touch">
             <option v-for="kit in kits" :key="kit.id" :value="kit.id">{{ kit.name }}</option>
           </select>
-          
+
           <!-- frontend validations -->
           <p class="form-text text-danger" v-for="error in v$.kit.$errors" :key="error.$uid">
             {{ error.$message }}
@@ -736,7 +731,7 @@ onMounted(async () => {
             v-model.trim="order.kit_brand"
             @blur="v$.kit_brand.$touch"
           />
-            
+
           <!-- frontend validations -->
           <p class="form-text text-danger" v-for="error in v$.kit_brand.$errors" :key="error.$uid">
             {{ error.$message }}
@@ -764,7 +759,7 @@ onMounted(async () => {
             v-model.trim="order.kit_model"
             @blur="v$.kit_model.$touch"
           />
-            
+
           <!-- frontend validations -->
           <p class="form-text text-danger" v-for="error in v$.kit_model.$errors" :key="error.$uid">
             {{ error.$message }}
@@ -792,7 +787,7 @@ onMounted(async () => {
             v-model.trim="order.kit_serial"
             @blur="v$.kit_serial.$touch"
           />
-            
+
           <!-- frontend validations -->
           <p class="form-text text-danger" v-for="error in v$.kit_serial.$errors" :key="error.$uid">
             {{ error.$message }}
@@ -926,7 +921,7 @@ onMounted(async () => {
             :disabled="order.id"
             @blur="v$.provider_signature_date.$touch"
           />
-            
+
           <!-- frontend validations -->
           <p
             class="form-text text-danger"

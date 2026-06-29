@@ -1,117 +1,109 @@
 <script setup>
-
 // vue
-import { ref, onMounted } from "vue";
+import { ref, onMounted } from 'vue'
 
 // app
-import { providerService } from "../../services/providerService";
-import listGroup from "../../assets/js/bootstrap_classes/listGroup";
+import { providerService } from '../../services/providerService'
+import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 
 // reactive objects
-const providers = ref([]);
+const providers = ref([])
 
-const currentPage = ref(1);
-const showNextButton = ref(false);
-const showPrevButton = ref(false);
+const currentPage = ref(1)
+const showNextButton = ref(false)
+const showPrevButton = ref(false)
 
 // methods
 const getProviders = async () => {
-    const resp = (await providerService.listProvider(currentPage.value)).data;
-    
-    showNextButton.value = false;
-    if (resp.next) {
-        showNextButton.value = true;
-    }
-    
-    showPrevButton.value = false;
-    if (resp.previous) {
-        showPrevButton.value = true;
-    }
+  const resp = (await providerService.listProvider(currentPage.value)).data
 
-    providers.value = resp.results;
-};
+  showNextButton.value = false
+  if (resp.next) {
+    showNextButton.value = true
+  }
+
+  showPrevButton.value = false
+  if (resp.previous) {
+    showPrevButton.value = true
+  }
+
+  providers.value = resp.results
+}
 
 const loadNextItems = () => {
-    currentPage.value += 1;
-    getProviders()
+  currentPage.value += 1
+  getProviders()
 }
 
 const loadPrevItems = () => {
-    currentPage.value -= 1;
-    getProviders()
+  currentPage.value -= 1
+  getProviders()
 }
 
 // lifecycle
 onMounted(async () => {
-    getProviders()
-});
+  getProviders()
+})
 </script>
 
 <template>
-
-    <div class="row">
-        <!-- side menu -->
-        <div class="col-md-2">
-            <ul :class="listGroup.listGroup">
-                <li :class="listGroup.listGroupItem">
-                    <strong>Prestadores</strong>
-                </li>
-                <li :class="listGroup.listGroupItem">
-                    <router-link :to="{name: 'providers_create'}">Nuevo</router-link >
-                </li>
-            </ul>
-        </div>
-        
-        <!-- main content -->
-        <div class="col-md-10">
-            <div class="row">
-                <div class="col-md-4">
-                    <!-- results -->
-                    <div v-if="providers.length > 0">
-
-                        <div id="tableContainer" style="height: 460px;">
-
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Nombre</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="provider in providers" :key="provider.id">
-                                        <td>
-                                            <router-link v-if="provider.id" :to="{name: 'providers_detail', params: {id: provider.id}}">{{ provider.first_name }}</router-link>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-
-                        <!-- buttons -->
-                        <div>
-                            <button
-                              v-if="showNextButton"
-                              class="btn btn-sm btn-primary"
-                              @click="loadNextItems()">Siguiente</button>
-                            
-                            <button
-                              v-if="showPrevButton"
-                              class="btn btn-sm btn-primary"
-                              @click="loadPrevItems()">Anterior</button>
-                        </div>
-
-                    </div>
-                    <!-- in case no providers -->
-                    <div v-else>
-                        <p class="lead text-center">Inserte un Proveedor.</p>
-                    </div>
-                    
-
-                </div>
-            </div>
-        </div>
-
+  <div class="row">
+    <!-- side menu -->
+    <div class="col-md-2">
+      <ul :class="listGroup.listGroup">
+        <li :class="listGroup.listGroupItem">
+          <strong>Prestadores</strong>
+        </li>
+        <li :class="listGroup.listGroupItem">
+          <router-link :to="{ name: 'providers_create' }">Nuevo</router-link>
+        </li>
+      </ul>
     </div>
 
+    <!-- main content -->
+    <div class="col-md-10">
+      <div class="row">
+        <div class="col-md-4">
+          <!-- results -->
+          <div v-if="providers.length > 0">
+            <div id="tableContainer" style="height: 460px">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Nombre</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="provider in providers" :key="provider.id">
+                    <td>
+                      <router-link
+                        v-if="provider.id"
+                        :to="{ name: 'providers_detail', params: { id: provider.id } }"
+                        >{{ provider.first_name }}</router-link
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- buttons -->
+            <div>
+              <button v-if="showNextButton" class="btn btn-sm btn-primary" @click="loadNextItems()">
+                Siguiente
+              </button>
+
+              <button v-if="showPrevButton" class="btn btn-sm btn-primary" @click="loadPrevItems()">
+                Anterior
+              </button>
+            </div>
+          </div>
+          <!-- in case no providers -->
+          <div v-else>
+            <p class="lead text-center">Inserte un Proveedor.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

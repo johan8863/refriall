@@ -1,38 +1,38 @@
 export const allEnvs = import.meta.env
 
 export const billsAPIEnvs = {
-    billUrl: allEnvs.VITE_BILL_URL,
+  billUrl: allEnvs.VITE_BILL_URL
 }
 
 export const currenciesAPIEnvs = {
-    currenciesUrl: allEnvs.VITE_CURRENCIES_URL
+  currenciesUrl: allEnvs.VITE_CURRENCIES_URL
 }
 
 export const customerAPIEnvs = {
-    customerUrl: allEnvs.VITE_CUSTOMER_URL,
+  customerUrl: allEnvs.VITE_CUSTOMER_URL
 }
 
 export const customerDependencyAPIEnvs = {
-    customerDependencyUrl: allEnvs.VITE_CUSTOMER_DEPENDENCY_URL
+  customerDependencyUrl: allEnvs.VITE_CUSTOMER_DEPENDENCY_URL
 }
 
 export const itemAPIEnvs = {
-    itemUrl: allEnvs.VITE_ITEM_URL,
+  itemUrl: allEnvs.VITE_ITEM_URL
 }
 
 export const kitAPIEnvs = {
-    kitUrl: allEnvs.VITE_KIT_URL,
+  kitUrl: allEnvs.VITE_KIT_URL
 }
 
 export const orderAPIEnvs = {
-    orderUrl: allEnvs.VITE_ORDER_URL,
+  orderUrl: allEnvs.VITE_ORDER_URL
 }
 
 export const providerAPIEnvs = {
-    providerUrl: allEnvs.VITE_PROVIDER_URL,
+  providerUrl: allEnvs.VITE_PROVIDER_URL
 }
 
 export const authAPIEnvs = {
-    tokenPairUrl: allEnvs.VITE_TOKEN_PAIR_URL,
-    refreshTokenUrl: allEnvs.VITE_REFRESH_TOKEN_URL,
+  tokenPairUrl: allEnvs.VITE_TOKEN_PAIR_URL,
+  refreshTokenUrl: allEnvs.VITE_REFRESH_TOKEN_URL
 }

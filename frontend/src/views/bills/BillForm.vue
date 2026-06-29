@@ -1,7 +1,7 @@
 <script setup>
 /*
-* Bills creation form
-*/
+ * Bills creation form
+ */
 
 // vue
 import { handleError, onMounted, ref, computed } from 'vue'
@@ -118,8 +118,8 @@ const v$ = useVuelidate(rules, bill)
 /* methods */
 
 /*
-* Creates a new Bill and redirects to detail view
-*/
+ * Creates a new Bill and redirects to detail view
+ */
 const createBill = async () => {
   try {
     if (await v$.value.$validate()) {
@@ -137,13 +137,13 @@ const createBill = async () => {
 }
 
 /*
-* Updates an existing Bill and redirects to detail view
-*/
+ * Updates an existing Bill and redirects to detail view
+ */
 const updateBill = async () => {
   try {
     if (await v$.value.$validate()) {
-        const { data } = await billService.putBill(bill.value)
-        router.push({ name: 'bills_detail', params: { id: data.id } })
+      const { data } = await billService.putBill(bill.value)
+      router.push({ name: 'bills_detail', params: { id: data.id } })
     }
   } catch (error) {
     console.error('General error', error)
@@ -156,42 +156,41 @@ const updateBill = async () => {
 }
 
 /*
-* Creates a new Bill and redirects to detail view
-*/
-const handleSubmit = async () => bill.value.id
-  ? await updateBill(bill.value)
-  : await createBill(bill.value)
+ * Creates a new Bill and redirects to detail view
+ */
+const handleSubmit = async () =>
+  bill.value.id ? await updateBill(bill.value) : await createBill(bill.value)
 
 /*
-* Handles insertion of non existing providers
-*/
+ * Handles insertion of non existing providers
+ */
 const insertNonExistingProvider = () => {
-  const existProvider = providers.value.some(provider => provider.id === billProvider.value.id)
-    if (!existProvider) {
-      providers.value.push(billProvider.value)
-    }
+  const existProvider = providers.value.some((provider) => provider.id === billProvider.value.id)
+  if (!existProvider) {
+    providers.value.push(billProvider.value)
+  }
 }
 
 /*
-* Handles insertion of non existing customers
-*/
+ * Handles insertion of non existing customers
+ */
 const insertNonExistingCustomer = () => {
-  const existCustomer = customers.value.some(customer => customer.id === billCustomer.value.id)
-    if (!existCustomer) {
-      customers.value.push(billCustomer.value)
-    }
+  const existCustomer = customers.value.some((customer) => customer.id === billCustomer.value.id)
+  if (!existCustomer) {
+    customers.value.push(billCustomer.value)
+  }
 }
 
 /*
-* Function to load providers with free orders to match given a currency
-*/
+ * Function to load providers with free orders to match given a currency
+ */
 const chargeProviderNoBill = async () => {
   try {
     // start loading state
     isLoading.value = true
     // reseting error state
     errorMessage.value = null
-    // reseting bill both provider and orders 
+    // reseting bill both provider and orders
     // every time a new currency is selected
     bill.value.provider = ''
     providers.value = []
@@ -208,8 +207,8 @@ const chargeProviderNoBill = async () => {
 }
 
 /*
-* Get the customers with free orders given a currency and a provider
-*/
+ * Get the customers with free orders given a currency and a provider
+ */
 const customersFromProvider = async () => {
   try {
     // start loading state
@@ -248,8 +247,8 @@ const customersFromProvider = async () => {
 }
 
 /*
-* Get the available orders given a currency, a provider and a customer
-*/
+ * Get the available orders given a currency, a provider and a customer
+ */
 const ordersFromCustomer = async () => {
   try {
     // start loading state
@@ -284,32 +283,36 @@ const ordersFromCustomer = async () => {
 }
 
 /*
-* Loads required data to pre populate bill edition form
-*/
+ * Loads required data to pre populate bill edition form
+ */
 const loadData = async () => {
   try {
     isLoading.value = true
-    
+
     const [
       { data: respProviders },
       { data: respBillProvider },
       { data: respCustomers },
       { data: respBillCustomer },
       { data: respOrdersByIds },
-      { data: respFreeorders },
+      { data: respFreeorders }
     ] = await Promise.all([
       providerService.listProviderCurrencyOrderNoBill(bill.value.currency),
       providerService.detailProvider(bill.value.provider),
       customerService.listCustomerOrdersNoBill(bill.value.currency, bill.value.provider),
       customerService.detailCustomer(bill.value.customer),
       orderService.getOrdersByIds(bill.value.orders),
-      orderService.getOrdersFromCustomerNotMatched(bill.value.currency, bill.value.provider, bill.value.customer),
+      orderService.getOrdersFromCustomerNotMatched(
+        bill.value.currency,
+        bill.value.provider,
+        bill.value.customer
+      )
     ])
-    
+
     providers.value = respProviders
     billProvider.value = respBillProvider
     insertNonExistingProvider()
-    
+
     customers.value = respCustomers
     billCustomer.value = respBillCustomer
     insertNonExistingCustomer()
@@ -317,7 +320,6 @@ const loadData = async () => {
     freeOrders.value = respFreeorders
     orders.value = respOrdersByIds
     orders.value.push(...freeOrders.value)
-
   } catch (error) {
     errorHandler(error, errorMessage)
   } finally {
@@ -326,14 +328,14 @@ const loadData = async () => {
 }
 
 /*
-* bridge computed property:
-* bill.value.orders is not reactive on itself
-* this writable composable acts as the bidirectional bridge
-* that useCheckAllCheckboxes needs
-*/
+ * bridge computed property:
+ * bill.value.orders is not reactive on itself
+ * this writable composable acts as the bidirectional bridge
+ * that useCheckAllCheckboxes needs
+ */
 const selectedOrders = computed({
   get: () => bill.value.orders,
-  set: (value) => bill.value.orders = value
+  set: (value) => (bill.value.orders = value)
 })
 
 // writable computed to select/deselect all orders
@@ -345,7 +347,7 @@ onMounted(async () => {
     // always load currencies whether the action is to create or update
     const respCurrencies = await currencyService.listCurrencies()
     currencies.value = respCurrencies.data
-    
+
     const id = route.params.id
     if (id) {
       const { data } = await billService.getForUpdate(id)
@@ -357,7 +359,6 @@ onMounted(async () => {
   } finally {
     isLoading.value = false
   }
-
 })
 </script>
 
@@ -596,7 +597,13 @@ onMounted(async () => {
             <thead>
               <tr>
                 <th>
-                  <input type="checkbox" name="" id="" class="form-check" v-model="checkAllCheckboxes" />
+                  <input
+                    type="checkbox"
+                    name=""
+                    id=""
+                    class="form-check"
+                    v-model="checkAllCheckboxes"
+                  />
                 </th>
                 <th>Folio</th>
                 <th>Cliente</th>

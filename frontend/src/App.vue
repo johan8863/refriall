@@ -1,15 +1,15 @@
 <script setup>
 // vue
 import { useRoute } from 'vue-router'
-import { computed, onMounted } from 'vue';
+import { computed, onMounted } from 'vue'
 
 // app
-import NavBar from './components/NavBar.vue';
-import { useAuthStore } from './stores/authStore';
+import NavBar from './components/NavBar.vue'
+import { useAuthStore } from './stores/authStore'
 
 const authStore = useAuthStore()
 
-const route = useRoute();
+const route = useRoute()
 
 // computed to show/hide navbar based on meta properties
 const showNavBar = computed(() => !route.meta.hideNavBar)
