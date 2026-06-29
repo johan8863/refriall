@@ -198,6 +198,7 @@ onMounted(async () => {
 
                             <!-- results -->
                             <div v-else-if="ordersCount > 0" class="mt-2">
+                                <!-- orders table -->
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover mb-1">
                                         <thead class="table-dark">
@@ -234,7 +235,6 @@ onMounted(async () => {
                                         </tbody>
                                     </table>
                                 </div>
-
                                 <!-- pagination -->
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <button
