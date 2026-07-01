@@ -6,7 +6,7 @@ import { ref, onMounted } from 'vue'
 import { orderService } from '../../services/orderService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
-import OrdersListTable from '../../components/OrdersListTable.vue'
+import OrdersListTable from '../../components/orders/OrdersListTable.vue'
 
 const orders = ref([])
 const ordersCount = ref(0)
