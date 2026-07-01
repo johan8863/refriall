@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { itemService } from '../../services/itemService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import ItemConfirmDeleteMenu from '../../components/items/menus/ItemConfirmDeleteMenu.vue'
 
 // main object
 const item = ref({
@@ -69,14 +69,7 @@ const delItem = async (id) => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Artículos</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'items' }">Artículos</RouterLink>
-        </li>
-      </ul>
+      <ItemConfirmDeleteMenu />
     </div>
 
     <!-- main content -->
