@@ -5,12 +5,12 @@ import { ref, onMounted } from 'vue'
 
 // app
 import { orderService } from '../../services/orderService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { useOrderPaginate } from '../../composables/OrderComposable'
 
 // third
 import html2pdf from 'html2pdf.js'
 import { errorHandler } from '../../utils/errors/errorHandler'
+import OrderDetailMenu from '../../components/orders/menus/OrderDetailMenu.vue'
 
 const route = useRoute()
 const order = ref({
@@ -99,30 +99,7 @@ function pdf() {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Órdenes</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'orders' }">Órdenes</router-link>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'orders_create' }">Nueva</router-link>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'orders_update', params: { id: order.id } }"
-            >Editar</router-link
-          >
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <a href="#" @click="pdf">PDF</a>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'orders_confirm_delete', params: { id: order.id } }"
-            >Eliminar</router-link
-          >
-        </li>
-      </ul>
+      <OrderDetailMenu :order="order" @on-p-d-f="pdf" />
     </div>
 
     <!-- main content -->
