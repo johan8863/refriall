@@ -5,11 +5,11 @@ import { useRoute } from 'vue-router'
 
 // app
 import { billService } from '../../services/billService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 
 // third
 import html2pdf from 'html2pdf.js'
+import BillDetailMenu from '../../components/bills/menus/BillDetailMenu.vue'
 
 // main object
 const bill = ref({
@@ -132,28 +132,7 @@ function pdf() {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Facturas</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'bills' }">Facturas</router-link>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'bills_create' }">Nueva</router-link>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'bills_update', params: { id: bill.id } }">Editar</router-link>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <a href="#" @click="pdf()">PDF</a>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'bills_delete', params: { id: bill.id } }"
-            >Eliminar</router-link
-          >
-        </li>
-      </ul>
+      <bill-detail-menu :bill="bill" @on-p-d-f="pdf" />
     </div>
 
     <!-- main content -->
