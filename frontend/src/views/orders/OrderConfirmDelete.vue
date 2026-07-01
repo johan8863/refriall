@@ -7,6 +7,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { orderService } from '../../services/orderService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
+import ConfirmDeleteMenu from '../../components/orders/menus/ConfirmDeleteMenu.vue'
 
 // main object
 const order = ref({
@@ -84,14 +85,7 @@ const delOrder = async (id) => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Artículos</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'orders' }">Órdenes</RouterLink>
-        </li>
-      </ul>
+      <ConfirmDeleteMenu />
     </div>
 
     <!-- main content -->
