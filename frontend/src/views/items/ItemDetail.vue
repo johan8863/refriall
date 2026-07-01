@@ -5,8 +5,8 @@ import { useRoute } from 'vue-router'
 
 // app
 import { itemService } from '../../services/itemService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
+import ItemDetailMenu from '../../components/items/menus/ItemDetailMenu.vue'
 
 // main object
 const item = ref({
@@ -48,25 +48,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Artículos</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'items' }">Artículos</RouterLink>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'items_create' }">Nuevo</RouterLink>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'items_update', params: { id: item.id } }">Editar</RouterLink>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'items_confirm_delete', params: { id: item.id } }"
-            >Eliminar</RouterLink
-          >
-        </li>
-      </ul>
+      <ItemDetailMenu :item="item" />
     </div>
 
     <!-- main content -->
