@@ -8,6 +8,7 @@ import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import OrdersListTable from '../../components/orders/OrdersListTable.vue'
 import OrdersListPagination from '../../components/orders/OrdersListPagination.vue'
+import OrderListSearchForm from '../../components/orders/OrderListSearchForm.vue'
 
 const orders = ref([])
 const ordersCount = ref(0)
@@ -136,42 +137,12 @@ onMounted(async () => {
         <!-- search form col -->
         <div class="col-md-12 mt-1">
           <!-- search form row -->
-          <form class="row g-2 align-items-center" @submit.prevent="handleSearch">
-            <div class="col-auto">
-              <label for="searchOrderText" class="col-form-label">Búsqueda:</label>
-            </div>
-            <div class="col-auto">
-              <input
-                type="search"
-                class="form-control"
-                id="searchOrderText"
-                v-model="searchTerm"
-                placeholder="Folio, cliente o dependencia..."
-                :disabled="isLoading"
-                @keyup.enter="handleSearch"
-              />
-            </div>
-            <div class="col-auto">
-              <button
-                type="submit"
-                class="btn btn-primary"
-                :disabled="isLoading || !searchTerm.trim()"
-              >
-                <span v-if="isLoading" class="spinner-border spinner-border-sm me-1"></span>
-                Buscar
-              </button>
-              <button
-                type="button"
-                @click="clearSearch"
-                class="btn btn-secondary ms-1"
-                :disabled="isLoading"
-                v-if="hasSearched"
-              >
-                Limpiar
-              </button>
-            </div>
-          </form>
-
+          <OrderListSearchForm
+            v-model="searchTerm"
+            :is-loading="isLoading"
+            @on-handle-search="handleSearch"
+            @on-clear-search="clearSearch"
+          />
           <!-- search indicator -->
           <small class="text-muted" v-if="hasSearched && searchTerm">
             🔍 Mostrando resultados para: "{{ searchTerm }}"
