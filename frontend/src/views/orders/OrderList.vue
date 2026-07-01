@@ -76,6 +76,7 @@ const handleSearch = async () => {
 const clearSearch = async () => {
   showNextButton.value = false
   showPrevButton.value = false
+  searchTerm.value = ''
 
   restartSearchFlags()
   await getOrders(1)
@@ -140,13 +141,10 @@ onMounted(async () => {
           <OrderListSearchForm
             v-model="searchTerm"
             :is-loading="isLoading"
+            :has-searched="hasSearched"
             @on-handle-search="handleSearch"
             @on-clear-search="clearSearch"
           />
-          <!-- search indicator -->
-          <small class="text-muted" v-if="hasSearched && searchTerm">
-            🔍 Mostrando resultados para: "{{ searchTerm }}"
-          </small>
         </div>
 
         <!-- loading state -->

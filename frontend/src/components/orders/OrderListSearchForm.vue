@@ -4,6 +4,10 @@ defineProps({
   isLoading: {
     type: Boolean,
     required: true
+  },
+  hasSearched: {
+    type: Boolean,
+    required: true
   }
 })
 defineEmits(['onHandleSearch', 'onClearSearch'])
@@ -40,4 +44,8 @@ defineEmits(['onHandleSearch', 'onClearSearch'])
       </button>
     </div>
   </form>
+  <!-- search indicator -->
+  <small class="text-muted" v-if="hasSearched && searchTerm">
+    🔍 Mostrando resultados para: "{{ searchTerm }}"
+  </small>
 </template>
