@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { billService } from '../../services/billService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import BillConfirmDeleteMenu from '../../components/bills/menus/BillConfirmDeleteMenu.vue'
 
 // main object
 const bill = ref({
@@ -93,14 +93,7 @@ const delBill = async (id) => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Facturas</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'bills' }">Facturas</RouterLink>
-        </li>
-      </ul>
+      <BillConfirmDeleteMenu />
     </div>
 
     <!-- main content -->
