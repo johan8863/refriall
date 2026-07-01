@@ -6,6 +6,7 @@ import { ref, onMounted } from 'vue'
 import { orderService } from '../../services/orderService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
+import OrdersListTable from '../../components/OrdersListTable.vue'
 
 const orders = ref([])
 const ordersCount = ref(0)
@@ -196,44 +197,7 @@ onMounted(async () => {
               <!-- results -->
               <div v-else-if="ordersCount > 0" class="mt-2">
                 <!-- orders table -->
-                <div class="table-responsive">
-                  <table class="table table-striped table-hover mb-1">
-                    <thead class="table-dark">
-                      <tr>
-                        <th scope="col">Orden</th>
-                        <th scope="col">Cliente/Dependencia</th>
-                        <th scope="col">Importe</th>
-                        <th scope="col">Prefactura</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="order in orders" :key="order.id">
-                        <td>
-                          <RouterLink :to="{ name: 'orders_detail', params: { id: order.id } }">
-                            {{ order.folio }}
-                          </RouterLink>
-                        </td>
-                        <td>
-                          {{
-                            order.customer ? order.customer.name : order.customer_dependency.name
-                          }}
-                        </td>
-                        <td>
-                          {{ order.get_total_amount.toFixed(2) }}
-                        </td>
-                        <td>
-                          <RouterLink
-                            :to="{ name: 'orders_detail_pre_order', params: { id: order.id } }"
-                            class="btn btn-sm btn-outline-primary py-0 px-2"
-                            title="Ver prefactura detallada"
-                          >
-                            📄 Ver
-                          </RouterLink>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <OrdersListTable :orders="orders" />
                 <!-- pagination -->
                 <div class="d-flex justify-content-between align-items-center mt-2">
                   <button
@@ -276,19 +240,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.table {
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-}
-.table th {
-  font-weight: 600;
-  text-align: center;
-  padding: 0.5rem;
-}
-.table td {
-  text-align: center;
-  padding: 0.5rem;
-}
-</style>
