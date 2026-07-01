@@ -9,6 +9,7 @@ import { errorHandler } from '../../utils/errors/errorHandler'
 import OrdersListTable from '../../components/orders/OrdersListTable.vue'
 import OrdersListPagination from '../../components/orders/OrdersListPagination.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
+import OrderListMenu from '../../components/orders/menus/OrderListMenu.vue'
 
 const orders = ref([])
 const ordersCount = ref(0)
@@ -121,14 +122,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Órdenes</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'orders_create' }">Nueva</RouterLink>
-        </li>
-      </ul>
+      <OrderListMenu />
     </div>
 
     <!-- main content -->
