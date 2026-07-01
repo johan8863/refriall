@@ -8,7 +8,7 @@ import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import OrdersListTable from '../../components/orders/OrdersListTable.vue'
 import OrdersListPagination from '../../components/orders/OrdersListPagination.vue'
-import OrderListSearchForm from '../../components/orders/OrderListSearchForm.vue'
+import SearchFormListTable from '../../components/SearchFormListTable.vue'
 
 const orders = ref([])
 const ordersCount = ref(0)
@@ -138,10 +138,11 @@ onMounted(async () => {
         <!-- search form col -->
         <div class="col-md-12 mt-1">
           <!-- search form row -->
-          <OrderListSearchForm
+          <SearchFormListTable
             v-model="searchTerm"
             :is-loading="isLoading"
             :has-searched="hasSearched"
+            input-placeholder="Folio, cliente o dependencia..."
             @on-handle-search="handleSearch"
             @on-clear-search="clearSearch"
           />

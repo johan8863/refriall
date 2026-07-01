@@ -1,5 +1,8 @@
 <script setup>
-const searchTerm = defineModel()
+const searchTerm = defineModel({
+  type: String,
+  default: ''
+})
 defineProps({
   isLoading: {
     type: Boolean,
@@ -8,6 +11,9 @@ defineProps({
   hasSearched: {
     type: Boolean,
     required: true
+  },
+  inputPlaceholder: {
+    type: String
   }
 })
 defineEmits(['onHandleSearch', 'onClearSearch'])
@@ -23,7 +29,7 @@ defineEmits(['onHandleSearch', 'onClearSearch'])
         class="form-control"
         id="searchOrderText"
         v-model="searchTerm"
-        placeholder="Folio, cliente o dependencia..."
+        :placeholder="inputPlaceholder"
         :disabled="isLoading"
         @keyup.enter="$emit('onHandleSearch')"
       />
