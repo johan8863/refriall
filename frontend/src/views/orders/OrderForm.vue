@@ -15,10 +15,10 @@ import { providerService } from '../../services/providerService'
 import ItemTime from '../../components/orders/ItemTime.vue'
 import { orderService } from '../../services/orderService'
 import { customerDependecyService } from '../../services/customerDependencyService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { currencyService } from '../../services/currencyService'
 import { useOrderTotalComputed } from '../../composables/OrderComposable'
 import { errorHandler } from '../../utils/errors/errorHandler'
+import OrderFormMenu from '../../components/orders/menus/OrderFormMenu.vue'
 
 // main object
 const order = ref({
@@ -315,17 +315,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Órdenes</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'orders' }">Órdenes</router-link>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <a href="#" @click="loadData()">Recargar Datos</a>
-        </li>
-      </ul>
+      <order-form-menu @on-load-data="loadData" />
     </div>
 
     <!-- main content -->
