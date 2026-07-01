@@ -5,7 +5,6 @@ import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { orderService } from '../../services/orderService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import ConfirmDeleteMenu from '../../components/orders/menus/ConfirmDeleteMenu.vue'
 
