@@ -7,6 +7,7 @@ import { orderService } from '../../services/orderService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import OrdersListTable from '../../components/orders/OrdersListTable.vue'
+import OrdersListPagination from '../../components/orders/OrdersListPagination.vue'
 
 const orders = ref([])
 const ordersCount = ref(0)
@@ -199,25 +200,14 @@ onMounted(async () => {
                 <!-- orders table -->
                 <OrdersListTable :orders="orders" />
                 <!-- pagination -->
-                <div class="d-flex justify-content-between align-items-center mt-2">
-                  <button
-                    v-if="showPrevButton"
-                    class="btn btn-outline-primary btn-sm"
-                    @click="loadPrevItems"
-                    :disabled="isLoading"
-                  >
-                    ← Anterior
-                  </button>
-                  <span class="text-muted">Página {{ currentPage }}</span>
-                  <button
-                    v-if="showNextButton"
-                    class="btn btn-outline-primary btn-sm"
-                    @click="loadNextItems"
-                    :disabled="isLoading"
-                  >
-                    Siguiente →
-                  </button>
-                </div>
+                <OrdersListPagination
+                  :show-prev-button="showPrevButton"
+                  :show-next-button="showNextButton"
+                  :is-loading="isLoading"
+                  :current-page="currentPage"
+                  @on-load-prev-items="loadPrevItems"
+                  @on-load-next-items="loadNextItems"
+                />
               </div>
 
               <!-- in case no orders -->
