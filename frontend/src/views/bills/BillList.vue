@@ -7,6 +7,7 @@ import { billService } from '../../services/billService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import BillListTable from '../../components/bills/BillListTable.vue'
 import BillListPaginatin from '../../components/bills/BillListPaginatin.vue'
+import SearchFormListTable from '../../components/SearchFormListTable.vue'
 
 const bills = ref([])
 const currentPage = ref(1)
@@ -141,46 +142,14 @@ onMounted(async () => {
       <div class="row">
         <div class="col-md-12 mt-1">
           <!-- search form row -->
-          <form class="row g-2 align-items-center" @submit.prevent="handleSearch">
-            <div class="col-auto">
-              <label for="searchBillText" class="col-form-label">Búsqueda:</label>
-            </div>
-            <div class="col-auto">
-              <input
-                type="search"
-                class="form-control"
-                id="searchBillText"
-                v-model="searchTerm"
-                placeholder="Folio o cliente..."
-                :disabled="isLoading"
-                @keyup.enter="handleSearch"
-              />
-            </div>
-            <div class="col-auto">
-              <button
-                type="submit"
-                class="btn btn-primary"
-                :disabled="isLoading || !searchTerm.trim()"
-              >
-                <span v-if="isLoading" class="spinner-border spinner-border-sm me-1"></span>
-                Buscar
-              </button>
-              <button
-                type="button"
-                @click="clearSearch"
-                class="btn btn-secondary ms-1"
-                :disabled="isLoading"
-                v-if="hasSearched"
-              >
-                Limpiar
-              </button>
-            </div>
-          </form>
-
-          <!-- search indicator -->
-          <small class="text-muted" v-if="hasSearched && searchTerm">
-            🔍 Mostrando resultados para: "{{ searchTerm }}"
-          </small>
+          <SearchFormListTable
+            v-model="searchTerm"
+            :is-loading="isLoading"
+            :has-searched="hasSearched"
+            input-placeholder="Folio o cliente..."
+            @on-handle-search="handleSearch"
+            @on-clear-search="clearSearch"
+          />
         </div>
 
         <div class="col-md-12">

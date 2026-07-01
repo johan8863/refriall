@@ -7,6 +7,7 @@ import { kitService } from '../../services/kitService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import KitsListTable from '../../components/kits/KitsListTable.vue'
 import KitListPagination from '../../components/kits/KitListPagination.vue'
+import SearchFormListTable from '../../components/SearchFormListTable.vue'
 
 // reactive objects
 const kits = ref([])
@@ -154,46 +155,14 @@ onMounted(async () => {
       <div class="row">
         <div class="col-md-12 mt-2">
           <!-- search form row -->
-          <form class="row g-3 align-items-center" @submit.prevent="handleSearch">
-            <div class="col-auto">
-              <label for="searchKitText" class="col-form-label">Búsqueda:</label>
-            </div>
-            <div class="col-auto">
-              <input
-                type="search"
-                class="form-control"
-                id="searchKitText"
-                v-model="searchTerm"
-                placeholder="Nombre del equipo..."
-                :disabled="isLoading"
-                @keyup.enter="handleSearch"
-              />
-            </div>
-            <div class="col-auto">
-              <button
-                type="submit"
-                class="btn btn-primary"
-                :disabled="isLoading || !searchTerm.trim()"
-              >
-                <span v-if="isLoading" class="spinner-border spinner-border-sm me-1"></span>
-                Buscar
-              </button>
-              <button
-                type="button"
-                @click="clearSearch"
-                class="btn btn-secondary ms-2"
-                :disabled="isLoading"
-                v-if="hasSearched"
-              >
-                Limpiar
-              </button>
-            </div>
-          </form>
-
-          <!-- seacrh indicator -->
-          <small class="text-muted" v-if="hasSearched && searchTerm">
-            🔍 Mostrando resultados para: "{{ searchTerm }}"
-          </small>
+          <SearchFormListTable
+            v-model="searchTerm"
+            :is-loading="isLoading"
+            :has-searched="hasSearched"
+            input-placeholder="Nombre del equipo..."
+            @on-handle-search="handleSearch"
+            @on-clear-search="clearSearch"
+          />
         </div>
 
         <!-- Loading state -->
