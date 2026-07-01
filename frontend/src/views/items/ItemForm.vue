@@ -5,12 +5,12 @@ import { ref, onMounted } from 'vue'
 
 // app
 import { itemService } from '../../services/itemService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 
 // third
 import { useVuelidate } from '@vuelidate/core'
 import { required, minValue, helpers } from '@vuelidate/validators'
 import { errorHandler } from '../../utils/errors/errorHandler'
+import ItemFormMenu from '../../components/items/menus/ItemFormMenu.vue'
 
 // item object to be created or updated
 const item = ref({
@@ -129,14 +129,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Artículos</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'items' }">Artículos</RouterLink>
-        </li>
-      </ul>
+      <ItemFormMenu />
     </div>
 
     <!-- main content -->
