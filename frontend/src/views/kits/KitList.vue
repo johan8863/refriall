@@ -5,6 +5,7 @@ import { ref, onMounted } from 'vue'
 // app
 import { kitService } from '../../services/kitService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import KitsListTable from '../../components/kits/KitsListTable.vue'
 
 // reactive objects
 const kits = ref([])
@@ -210,22 +211,8 @@ onMounted(async () => {
 
           <!-- results -->
           <div v-else-if="kits.length > 0" class="mt-3">
-            <table class="table table-striped table-hover">
-              <thead class="table-dark">
-                <tr>
-                  <th scope="col">Nombre del Equipo</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="kit in kits" :key="kit.id">
-                  <td>
-                    <RouterLink :to="{ name: 'kits_detail', params: { id: kit.id } }">
-                      {{ kit.name }}
-                    </RouterLink>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <!-- kits list table -->
+            <KitsListTable :kits="kits" />
 
             <!-- pagination -->
             <div class="d-flex justify-content-between align-items-center mt-3">
@@ -263,16 +250,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.table {
-  font-size: 0.9rem;
-}
-.table th {
-  font-weight: 600;
-  text-align: center;
-}
-.table td {
-  text-align: center;
-}
-</style>
