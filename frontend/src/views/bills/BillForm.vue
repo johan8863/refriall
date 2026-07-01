@@ -16,10 +16,10 @@ import { billService } from '../../services/billService'
 import { customerService } from '../../services/customerService'
 import { orderService } from '../../services/orderService'
 import { providerService } from '../../services/providerService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { currencyService } from '../../services/currencyService'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import { useCheckAllCheckboxes } from '../../composables/CheckAllCheckboxesComposable'
+import BillFormMenu from '../../components/bills/menus/BillFormMenu.vue'
 
 // main reactive object
 const bill = ref({
@@ -366,14 +366,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Facturas</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'bills' }">Facturas</router-link>
-        </li>
-      </ul>
+      <bill-form-menu />
     </div>
 
     <!-- main content -->
