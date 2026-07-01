@@ -6,6 +6,7 @@ import { ref, onMounted } from 'vue'
 import { billService } from '../../services/billService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import BillListTable from '../../components/bills/BillListTable.vue'
+import BillListPaginatin from '../../components/bills/BillListPaginatin.vue'
 
 const bills = ref([])
 const currentPage = ref(1)
@@ -204,25 +205,14 @@ onMounted(async () => {
                 <BillListTable :bills="bills" />
 
                 <!-- pagination -->
-                <div class="d-flex justify-content-between align-items-center mt-2">
-                  <button
-                    v-if="showPrevButton"
-                    class="btn btn-outline-primary btn-sm"
-                    @click="loadPrevItems"
-                    :disabled="isLoading"
-                  >
-                    ← Anterior
-                  </button>
-                  <span class="text-muted">Página {{ currentPage }}</span>
-                  <button
-                    v-if="showNextButton"
-                    class="btn btn-outline-primary btn-sm"
-                    @click="loadNextItems"
-                    :disabled="isLoading"
-                  >
-                    Siguiente →
-                  </button>
-                </div>
+                <BillListPaginatin
+                  :show-prev-button="showPrevButton"
+                  :show-next-button="showNextButton"
+                  :current-page="currentPage"
+                  :is-loading="isLoading"
+                  @on-load-prev-items="loadPrevItems"
+                  @on-load-next-items="loadNextItems"
+                />
               </div>
 
               <!-- in case no bills -->
