@@ -6,6 +6,7 @@ import { ref, onMounted } from 'vue'
 import { itemService } from '../../services/itemService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import ItemListTable from '../../components/items/ItemListTable.vue'
+import ItemListPagination from '../../components/items/ItemListPagination.vue'
 
 // reactive objects
 const items = ref([])
@@ -215,25 +216,14 @@ onMounted(async () => {
             <ItemListTable :items="items" />
 
             <!-- pagination -->
-            <div class="d-flex justify-content-between align-items-center mt-3">
-              <button
-                v-if="showPrevButton"
-                class="btn btn-outline-primary"
-                @click="loadPrevItems"
-                :disabled="isLoading"
-              >
-                ← Anterior
-              </button>
-              <span class="text-muted">Página {{ currentPage }}</span>
-              <button
-                v-if="showNextButton"
-                class="btn btn-outline-primary"
-                @click="loadNextItems"
-                :disabled="isLoading"
-              >
-                Siguiente →
-              </button>
-            </div>
+            <ItemListPagination
+              :show-prev-button="showPrevButton"
+              :is-loading="isLoading"
+              :current-page="currentPage"
+              :show-next-button="showNextButton"
+              @on-load-prev-items="loadPrevItems"
+              @on-load-next-items="loadNextItems"
+            />
           </div>
 
           <!-- in case no items -->
