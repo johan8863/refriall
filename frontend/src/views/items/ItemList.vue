@@ -5,6 +5,7 @@ import { ref, onMounted } from 'vue'
 // app
 import { itemService } from '../../services/itemService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import ItemListTable from '../../components/items/ItemListTable.vue'
 
 // reactive objects
 const items = ref([])
@@ -210,30 +211,8 @@ onMounted(async () => {
 
           <!-- results -->
           <div v-else-if="items.length > 0" class="mt-3">
-            <table class="table table-striped table-hover">
-              <thead class="table-dark">
-                <tr>
-                  <th scope="col">Código</th>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Tipo</th>
-                  <th scope="col">U/M</th>
-                  <th scope="col">Precio</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in items" :key="item.id">
-                  <td>
-                    <RouterLink :to="{ name: 'items_detail', params: { id: item.id } }">
-                      {{ item.code }}
-                    </RouterLink>
-                  </td>
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.get_item_type }}</td>
-                  <td>{{ item.get_measurement }}</td>
-                  <td>$ {{ item.price.toFixed(2) }}</td>
-                </tr>
-              </tbody>
-            </table>
+            <!-- items list table -->
+            <ItemListTable :items="items" />
 
             <!-- pagination -->
             <div class="d-flex justify-content-between align-items-center mt-3">
