@@ -235,19 +235,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.table {
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-}
-.table th {
-  font-weight: 600;
-  text-align: center;
-  padding: 0.5rem;
-}
-.table td {
-  text-align: center;
-  padding: 0.5rem;
-}
-</style>
