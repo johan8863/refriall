@@ -4,10 +4,10 @@ import { ref, onMounted } from 'vue'
 
 // app
 import { billService } from '../../services/billService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import BillListTable from '../../components/bills/BillListTable.vue'
 import BillListPaginatin from '../../components/bills/BillListPaginatin.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
+import BillListMenu from '../../components/bills/menus/BillListMenu.vue'
 
 const bills = ref([])
 const currentPage = ref(1)
@@ -126,14 +126,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Facturas</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'bills_create' }">Nueva</RouterLink>
-        </li>
-      </ul>
+      <BillListMenu />
     </div>
 
     <!-- main content -->
