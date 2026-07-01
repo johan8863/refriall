@@ -6,6 +6,7 @@ import { ref, onMounted } from 'vue'
 import { customerService } from '../../services/customerService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import CustomerListTable from '../../components/customers/CustomerListTable.vue'
+import CustomerListPagination from '../../components/customers/CustomerListPagination.vue'
 
 // reactive objects
 const customers = ref([])
@@ -215,25 +216,14 @@ onMounted(async () => {
             <CustomerListTable :customers="customers" />
 
             <!-- pagination -->
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <button
-                v-if="showPrevButton"
-                class="btn btn-outline-primary btn-sm"
-                @click="loadPrevItems"
-                :disabled="isLoading"
-              >
-                ← Anterior
-              </button>
-              <span class="text-muted">Página {{ currentPage }}</span>
-              <button
-                v-if="showNextButton"
-                class="btn btn-outline-primary btn-sm"
-                @click="loadNextItems"
-                :disabled="isLoading"
-              >
-                Siguiente →
-              </button>
-            </div>
+            <CustomerListPagination
+              :show-prev-button="showPrevButton"
+              :is-loading="isLoading"
+              :current-page="currentPage"
+              :show-next-button="showNextButton"
+              @on-load-prev-items="loadPrevItems"
+              @on-load-next-items="loadNextItems"
+            />
           </div>
 
           <!-- in case no customers -->
