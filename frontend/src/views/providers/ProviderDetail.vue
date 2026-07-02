@@ -6,6 +6,7 @@ import { useRoute } from 'vue-router'
 // app
 import { providerService } from '../../services/providerService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import ProviderDetailMenu from '../../components/providers/menus/ProviderDetailMenu.vue'
 
 // main object
 const provider = ref({
@@ -31,7 +32,9 @@ const route = useRoute()
 onMounted(async () => {
   try {
     const resp = await providerService.detailProvider(route.params.id)
-    provider.value = await resp.data
+    console.log(route.params.id)
+
+    provider.value = resp.data
   } catch (error) {
     console.error('General error', error)
     if (error.response) {
@@ -49,28 +52,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Prestadores</strong>
-        </li>
-        <li class="list-group-item">
-          <router-link :to="{ name: 'providers' }">Prestadores</router-link>
-        </li>
-        <li class="list-group-item">
-          <router-link
-            v-if="provider.id"
-            :to="{ name: 'providers_update', params: { id: provider.id } }"
-            >Editar</router-link
-          >
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link
-            v-if="provider.id"
-            :to="{ name: 'providers_confirm_delete', params: { id: provider.id } }"
-            >Eliminar</router-link
-          >
-        </li>
-      </ul>
+      <provider-detail-menu :provider="provider" />
     </div>
 
     <!-- main content -->
