@@ -31,11 +31,11 @@ const logout = () => {
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div :class="navBar.navBarCollapse" id="navbarSupportedContent">
-        <ul :class="navBar.navBarNav">
-          <li :class="navBar.navItemDropDown">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item dropdown">
             <a
-              :class="navBar.navLinkDropDownToggle"
+              class="nav-link dropdown-toggle"
               href="#"
               role="button"
               data-bs-toggle="dropdown"
@@ -43,27 +43,21 @@ const logout = () => {
             >
               Facturación
             </a>
-            <ul :class="navBar.navDropDownMenu">
+            <ul class="dropdown-menu">
               <li>
-                <RouterLink :class="navBar.navDropDownItem" :to="{ name: 'orders' }"
-                  >Órdenes</RouterLink
-                >
+                <RouterLink class="dropdown-item" :to="{ name: 'orders' }">Órdenes</RouterLink>
               </li>
               <li>
-                <RouterLink :class="navBar.navDropDownItem" :to="{ name: 'bills' }"
-                  >Facturas</RouterLink
-                >
+                <RouterLink class="dropdown-item" :to="{ name: 'bills' }">Facturas</RouterLink>
               </li>
               <li>
-                <RouterLink :class="navBar.navDropDownItem" :to="{ name: 'currencies' }"
-                  >Monedas</RouterLink
-                >
+                <RouterLink class="dropdown-item" :to="{ name: 'currencies' }">Monedas</RouterLink>
               </li>
             </ul>
           </li>
-          <li :class="navBar.navItemDropDown">
+          <li class="nav-item dropdown">
             <a
-              :class="navBar.navLinkDropDownToggle"
+              class="nav-link dropdown-toggle"
               href="#"
               role="button"
               data-bs-toggle="dropdown"
@@ -71,22 +65,18 @@ const logout = () => {
             >
               Almacén
             </a>
-            <ul :class="navBar.navDropDownMenu">
+            <ul class="dropdown-menu">
               <li>
-                <RouterLink :class="navBar.navDropDownItem" :to="{ name: 'items' }"
-                  >Artículos</RouterLink
-                >
+                <RouterLink class="dropdown-item" :to="{ name: 'items' }">Artículos</RouterLink>
               </li>
               <li>
-                <RouterLink :class="navBar.navDropDownItem" :to="{ name: 'kits' }"
-                  >Equipos</RouterLink
-                >
+                <RouterLink class="dropdown-item" :to="{ name: 'kits' }">Equipos</RouterLink>
               </li>
             </ul>
           </li>
-          <li :class="navBar.navItemDropDown">
+          <li class="nav-item dropdown">
             <a
-              :class="navBar.navLinkDropDownToggle"
+              class="nav-link dropdown-toggle"
               href="#"
               role="button"
               data-bs-toggle="dropdown"
@@ -94,16 +84,14 @@ const logout = () => {
             >
               RRHH
             </a>
-            <ul :class="navBar.navDropDownMenu">
+            <ul class="dropdown-menu">
               <li>
-                <RouterLink :class="navBar.navDropDownItem" :to="{ name: 'providers' }"
+                <RouterLink class="dropdown-item" :to="{ name: 'providers' }"
                   >Prestadores</RouterLink
                 >
               </li>
               <li>
-                <RouterLink :class="navBar.navDropDownItem" :to="{ name: 'customers' }"
-                  >Clientes</RouterLink
-                >
+                <RouterLink class="dropdown-item" :to="{ name: 'customers' }">Clientes</RouterLink>
               </li>
             </ul>
           </li>
