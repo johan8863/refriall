@@ -5,6 +5,7 @@ import { ref, onMounted } from 'vue'
 // app
 import { providerService } from '../../services/providerService'
 import ProviderListMenu from '../../components/providers/menus/ProviderListMenu.vue'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 // reactive objects
 const providers = ref([])
@@ -13,21 +14,35 @@ const currentPage = ref(1)
 const showNextButton = ref(false)
 const showPrevButton = ref(false)
 
+// loading state
+const isLoading = ref(false)
+
+// errors
+const errorMessage = ref('')
+
 // methods
 const getProviders = async () => {
-  const resp = (await providerService.listProvider(currentPage.value)).data
+  try {
+    isLoading.value = true
 
-  showNextButton.value = false
-  if (resp.next) {
-    showNextButton.value = true
+    const resp = (await providerService.listProvider(currentPage.value)).data
+
+    showNextButton.value = false
+    if (resp.next) {
+      showNextButton.value = true
+    }
+
+    showPrevButton.value = false
+    if (resp.previous) {
+      showPrevButton.value = true
+    }
+
+    providers.value = resp.results
+  } catch (error) {
+    errorHandler(error, errorMessage, 'Prestador', 'm')
+  } finally {
+    isLoading.value = false
   }
-
-  showPrevButton.value = false
-  if (resp.previous) {
-    showPrevButton.value = true
-  }
-
-  providers.value = resp.results
 }
 
 const loadNextItems = () => {
@@ -56,8 +71,21 @@ onMounted(async () => {
     <!-- main content -->
     <div class="col-md-10">
       <div class="row">
-        <div class="col-md-4">
-          <!-- results -->
+        <div v-if="isLoading" class="text-center my-4">
+          <!-- loading state -->
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="mt-2">Buscando equipos...</p>
+        </div>
+
+        <!-- error message -->
+        <div v-else-if="errorMessage" class="alert alert-danger mt-3">
+          {{ errorMessage }}
+        </div>
+
+        <!-- results -->
+        <div v-else class="col-md-4">
           <div v-if="providers.length > 0">
             <div id="tableContainer" style="height: 460px">
               <table class="table">
