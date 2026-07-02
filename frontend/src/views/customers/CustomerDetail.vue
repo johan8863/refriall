@@ -5,8 +5,8 @@ import { useRoute } from 'vue-router'
 
 // app
 import { customerService } from '../../services/customerService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
+import CustomerDetailMenu from '../../components/customers/menus/CustomerDetailMenu.vue'
 
 // main object
 const customer = ref({
@@ -75,32 +75,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Clientes</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'customers' }">Clientes</RouterLink>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'customers_create' }">Nuevo</RouterLink>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'customers_update', params: { id: customer.id } }"
-            >Editar</RouterLink
-          >
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'customer_dependecy_create', params: { id: customer.id } }"
-            >Nueva dependencia</RouterLink
-          >
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'customers_confirm_delete', params: { id: customer.id } }"
-            >Eliminar</RouterLink
-          >
-        </li>
-      </ul>
+      <CustomerDetailMenu :customer="customer" />
     </div>
 
     <!-- main content -->
