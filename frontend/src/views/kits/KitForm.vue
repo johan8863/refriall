@@ -5,12 +5,12 @@ import { useRouter, useRoute } from 'vue-router'
 
 // local
 import { kitService } from '../../services/kitService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 
 // third
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { errorHandler } from '../../utils/errors/errorHandler'
+import KitFormMenu from '../../components/kits/menus/KitFormMenu.vue'
 
 // kit object for post and put requests
 const kit = ref({
@@ -113,14 +113,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Equipos</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'kits' }">Equipos</router-link>
-        </li>
-      </ul>
+      <kit-form-menu />
     </div>
 
     <!-- main content -->
