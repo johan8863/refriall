@@ -8,8 +8,8 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, helpers, numeric } from '@vuelidate/validators'
 
 // app
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { providerService } from '../../services/providerService'
+import ProviderFormMenu from '../../components/providers/menus/ProviderFormMenu.vue'
 
 // router utilities and handlers
 const router = useRouter()
@@ -166,14 +166,7 @@ onMounted(async () => {
   <div class="row mb-2">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Prestadores</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'providers' }">Prestadores</router-link>
-        </li>
-      </ul>
+      <provider-form-menu />
     </div>
 
     <!-- main content -->
