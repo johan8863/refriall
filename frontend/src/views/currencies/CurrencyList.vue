@@ -3,8 +3,8 @@
 import { ref, onMounted } from 'vue'
 
 // app
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { currencyService } from '../../services/currencyService'
+import CurrencyListMenu from '../../components/currencies/menus/CurrencyListMenu.vue'
 
 const currencies = ref([])
 
@@ -32,14 +32,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Monedas</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'currency_create' }">Nueva</router-link>
-        </li>
-      </ul>
+      <currency-list-menu />
     </div>
     <!-- main content -->
     <div class="col-md-10">
