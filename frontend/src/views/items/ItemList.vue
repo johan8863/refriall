@@ -4,10 +4,10 @@ import { ref, onMounted } from 'vue'
 
 // app
 import { itemService } from '../../services/itemService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import ItemListTable from '../../components/items/ItemListTable.vue'
 import ItemListPagination from '../../components/items/ItemListPagination.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
+import ItemListMenu from '../../components/items/menus/ItemListMenu.vue'
 
 // reactive objects
 const items = ref([])
@@ -139,14 +139,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Artículos</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'items_create' }">Nuevo</RouterLink>
-        </li>
-      </ul>
+      <ItemListMenu />
     </div>
 
     <!-- main content -->
