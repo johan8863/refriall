@@ -5,8 +5,8 @@ import { useRoute } from 'vue-router'
 
 // app
 import { customerDependecyService } from '../../services/customerDependencyService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
+import CustomerDependencyDetailMenu from '../../components/customerDependencies/menus/CustomerDependencyDetailMenu.vue'
 
 // main object
 const dependency = ref({
@@ -47,29 +47,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Dependencias</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customers' }">Clientes</router-link>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customers_detail', params: { id: dependency.customer } }"
-            >Cliente</router-link
-          >
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customer_dependecy_update', params: { id: dependency.id } }"
-            >Editar</router-link
-          >
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customer_dependecy_delete', params: { id: dependency.id } }"
-            >Eliminar</router-link
-          >
-        </li>
-      </ul>
+      <customer-dependency-detail-menu :dependency="dependency" />
     </div>
 
     <!-- main content -->
