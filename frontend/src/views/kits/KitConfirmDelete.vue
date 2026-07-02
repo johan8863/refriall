@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { kitService } from '../../services/kitService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import KitConfirmDeleteMenu from '../../components/kits/menus/KitConfirmDeleteMenu.vue'
 
 // kit object
 const kit = ref({
@@ -65,14 +65,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Equipos</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'kits' }">Equipos</router-link>
-        </li>
-      </ul>
+      <KitConfirmDeleteMenu />
     </div>
 
     <!-- main content -->
