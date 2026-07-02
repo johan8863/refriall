@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { providerService } from '../../services/providerService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import ProviderConfirmDeleteMenu from '../../components/providers/menus/ProviderConfirmDeleteMenu.vue'
 
 // main object
 const provider = ref({
@@ -83,14 +83,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Prestadores</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'providers' }">Equipos</router-link>
-        </li>
-      </ul>
+      <ProviderConfirmDeleteMenu />
     </div>
 
     <!-- main content -->
