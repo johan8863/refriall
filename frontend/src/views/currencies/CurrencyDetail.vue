@@ -5,8 +5,8 @@ import { useRoute } from 'vue-router'
 
 // app
 import { currencyService } from '../../services/currencyService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
+import CurrencyDetailMenu from '../../components/currencies/menus/CurrencyDetailMenu.vue'
 
 // main object
 const currency = ref({
@@ -45,24 +45,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Monedas</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'currencies' }">Monedas</router-link>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'currency_update', params: { id: currency.id } }"
-            >Actualizar</router-link
-          >
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'currency_delete', params: { id: currency.id } }"
-            >Eliminar</router-link
-          >
-        </li>
-      </ul>
+      <currency-detail-menu :currency="currency" />
     </div>
 
     <!-- main content -->
