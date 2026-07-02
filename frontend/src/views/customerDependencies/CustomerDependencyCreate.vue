@@ -5,11 +5,11 @@ import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { customerDependecyService } from '../../services/customerDependencyService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 
 // third
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
+import CustomerDependencyCreateMenu from '../../components/customerDependencies/menus/CustomerDependencyCreateMenu.vue'
 
 // router utilities and handlers
 const router = useRouter()
@@ -82,14 +82,7 @@ const createDependency = async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Dependencias</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customers' }">Clientes</router-link>
-        </li>
-      </ul>
+      <customer-dependency-create-menu />
     </div>
 
     <!-- main content -->
