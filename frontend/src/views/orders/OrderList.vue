@@ -4,7 +4,6 @@ import { ref, onMounted } from 'vue'
 
 // app
 import { orderService } from '../../services/orderService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import OrdersListTable from '../../components/orders/OrdersListTable.vue'
 import OrdersListPagination from '../../components/orders/OrdersListPagination.vue'
