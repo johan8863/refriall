@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue'
 
 // app
 import { providerService } from '../../services/providerService'
+import ProviderListMenu from '../../components/providers/menus/ProviderListMenu.vue'
 
 // reactive objects
 const providers = ref([])
@@ -49,14 +50,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Prestadores</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'providers_create' }">Nuevo</router-link>
-        </li>
-      </ul>
+      <provider-list-menu />
     </div>
 
     <!-- main content -->
