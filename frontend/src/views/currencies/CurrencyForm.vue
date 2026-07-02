@@ -8,8 +8,8 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 
 // app
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { currencyService } from '../../services/currencyService'
+import CurrencyFormMenu from '../../components/currencies/menus/CurrencyFormMenu.vue'
 
 // router utilities and handlers
 const router = useRouter()
@@ -122,14 +122,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Monedas</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'currencies' }">Monedas</router-link>
-        </li>
-      </ul>
+      <currency-form-menu />
     </div>
 
     <!-- main content -->
