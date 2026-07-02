@@ -11,6 +11,7 @@ import { errorHandler } from '../../utils/errors/errorHandler'
 // third
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
+import CustomerDependencyUpdateMenu from '../../components/customerDependencies/menus/CustomerDependencyUpdateMenu.vue'
 
 // router utilities and handlers
 const router = useRouter()
@@ -102,14 +103,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Dependencias</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customers' }">Clientes</router-link>
-        </li>
-      </ul>
+      <customer-dependency-update-menu />
     </div>
 
     <!-- main content -->
