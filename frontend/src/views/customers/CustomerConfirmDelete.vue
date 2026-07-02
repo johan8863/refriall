@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { customerService } from '../../services/customerService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import CustomerConfirmDeleteMenu from '../../components/customers/menus/CustomerConfirmDeleteMenu.vue'
 
 // customer object to be filled
 const customer = ref({
@@ -71,24 +71,7 @@ const delCustomer = async (id) => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Clientes</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customers' }">Clientes</router-link>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customers_update', params: { id: customer.id } }"
-            >Editar</router-link
-          >
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customers_confirm_delete', params: { id: customer.id } }"
-            >Eliminar</router-link
-          >
-        </li>
-      </ul>
+      <CustomerConfirmDeleteMenu :customer="customer" />
     </div>
 
     <!-- main content -->
