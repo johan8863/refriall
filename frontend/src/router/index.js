@@ -130,7 +130,7 @@ const router = createRouter({
                     {
                       path: 'confirm/delete',
                       name: 'providers_confirm_delete',
-                      component: () => import('../views/providers/ProviderConfirmDelte.vue')
+                      component: () => import('../views/providers/ProviderConfirmDelete.vue/index.js')
                     }
                   ]
                 }

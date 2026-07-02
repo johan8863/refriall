@@ -4,7 +4,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
-import { providerService } from '../../services/providerService'
+import { providerService } from '../../services/providerService.js'
 import ProviderConfirmDeleteMenu from '../../components/providers/menus/ProviderConfirmDeleteMenu.vue'
 
 // main object
