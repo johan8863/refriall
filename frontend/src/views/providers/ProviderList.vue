@@ -4,7 +4,6 @@ import { ref, onMounted } from 'vue'
 
 // app
 import { providerService } from '../../services/providerService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 
 // reactive objects
 const providers = ref([])

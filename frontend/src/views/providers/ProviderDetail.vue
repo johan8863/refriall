@@ -5,7 +5,6 @@ import { useRoute } from 'vue-router'
 
 // app
 import { providerService } from '../../services/providerService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import ProviderDetailMenu from '../../components/providers/menus/ProviderDetailMenu.vue'
 
 // main object
