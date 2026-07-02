@@ -4,10 +4,10 @@ import { ref, onMounted } from 'vue'
 
 // app
 import { kitService } from '../../services/kitService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import KitsListTable from '../../components/kits/KitsListTable.vue'
 import KitListPagination from '../../components/kits/KitListPagination.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
+import KitListMenu from '../../components/kits/menus/KitListMenu.vue'
 
 // reactive objects
 const kits = ref([])
@@ -139,14 +139,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Equipos</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'kits_create' }">Nuevo</RouterLink>
-        </li>
-      </ul>
+      <KitListMenu />
     </div>
 
     <!-- main content -->
