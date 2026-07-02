@@ -23,9 +23,11 @@ const router = createRouter({
           name: 'home',
           component: OrderList
         },
+        // stock module
         {
           path: 'stock',
           children: [
+            // kits
             {
               path: 'kits',
               children: [
@@ -61,6 +63,7 @@ const router = createRouter({
                 }
               ]
             },
+            // items
             {
               path: 'items',
               children: [
@@ -98,9 +101,11 @@ const router = createRouter({
             }
           ]
         },
+        // hr module
         {
           path: 'hr',
           children: [
+            // providers
             {
               path: 'providers',
               children: [
@@ -136,6 +141,7 @@ const router = createRouter({
                 }
               ]
             },
+            // customers
             {
               path: 'customers',
               children: [
@@ -167,6 +173,7 @@ const router = createRouter({
                       name: 'customers_confirm_delete',
                       component: () => import('../views/customers/CustomerConfirmDelete.vue')
                     },
+                    // dependencies
                     {
                       path: 'dependencies',
                       children: [
@@ -202,9 +209,11 @@ const router = createRouter({
             }
           ]
         },
+        // finance module
         {
           path: 'finance',
           children: [
+            // currencies
             {
               path: 'currencies',
               children: [
@@ -240,6 +249,7 @@ const router = createRouter({
                 }
               ]
             },
+            // orders
             {
               path: 'orders',
               children: [
@@ -283,6 +293,7 @@ const router = createRouter({
                 }
               ]
             },
+            // bills
             {
               path: 'bills',
               children: [
