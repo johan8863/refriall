@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 // app
 import { customerDependecyService } from '../../services/customerDependencyService'
 import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import CustomerDependencyConfirmDeleteMenu from '../../components/customerDependencies/menus/CustomerDependencyConfirmDeleteMenu.vue'
 
 // routing utilities
 const route = useRoute()
@@ -70,19 +71,7 @@ const delDependency = async (id) => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Clientes</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customers' }">Clientes</router-link>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customer_dependecy_update', params: { id: dependency.id } }"
-            >Editar</router-link
-          >
-        </li>
-      </ul>
+      <CustomerDependencyConfirmDeleteMenu :dependency="dependency" />
     </div>
 
     <!-- main content -->
