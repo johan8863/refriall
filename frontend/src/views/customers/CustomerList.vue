@@ -4,10 +4,10 @@ import { ref, onMounted } from 'vue'
 
 // app
 import { customerService } from '../../services/customerService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import CustomerListTable from '../../components/customers/CustomerListTable.vue'
 import CustomerListPagination from '../../components/customers/CustomerListPagination.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
+import CustomerListMenu from '../../components/customers/menus/CustomerListMenu.vue'
 
 // reactive objects
 const customers = ref([])
@@ -139,14 +139,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Clientes</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <RouterLink :to="{ name: 'customers_create' }">Nuevo</RouterLink>
-        </li>
-      </ul>
+      <CustomerListMenu />
     </div>
 
     <!-- main content -->
