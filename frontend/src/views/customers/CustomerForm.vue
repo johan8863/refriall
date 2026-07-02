@@ -5,12 +5,12 @@ import { ref, onMounted } from 'vue'
 
 // app
 import { customerService } from '../../services/customerService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 
 // third
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
+import CustomerFormMenu from '../../components/customers/menus/CustomerFormMenu.vue'
 
 // customer object to be created or updated
 const customer = ref({
@@ -147,14 +147,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Clientes</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'customers' }">Clientes</router-link>
-        </li>
-      </ul>
+      <customer-form-menu />
     </div>
 
     <!-- main content -->
