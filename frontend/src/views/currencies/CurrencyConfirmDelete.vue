@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { currencyService } from '../../services/currencyService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
+import CurrencyConfirmDeleteMenu from '../../components/currencies/menus/CurrencyConfirmDeleteMenu.vue'
 
 // router utilities to redirect the view and catch route params
 const route = useRoute()
@@ -68,19 +68,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ul :class="listGroup.listGroup">
-        <li :class="listGroup.listGroupItem">
-          <strong>Monedas</strong>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'currencies' }">Monedas</router-link>
-        </li>
-        <li :class="listGroup.listGroupItem">
-          <router-link :to="{ name: 'currency_update', params: { id: currency.id } }"
-            >Actualizar</router-link
-          >
-        </li>
-      </ul>
+      <CurrencyConfirmDeleteMenu :currency="currency" />
     </div>
     <!-- main content -->
     <div class="col-md-4">
