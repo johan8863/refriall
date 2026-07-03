@@ -356,7 +356,7 @@ onMounted(async () => {
       await loadData()
     }
   } catch (error) {
-    errorHandler(error, errorMessage)
+    errorHandler(error, errorMessage, 'Factura')
   } finally {
     isLoading.value = false
   }
@@ -378,6 +378,13 @@ onMounted(async () => {
         <span role="status" class="text-primary">Cargando datos... </span>
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
+    </div>
+
+    <!-- error message -->
+    <div v-else-if="errorMessage" class="col-md-4">
+      <span class="form-text text-danger">
+        {{ errorMessage }}
+      </span>
     </div>
 
     <!-- displaying form -->
