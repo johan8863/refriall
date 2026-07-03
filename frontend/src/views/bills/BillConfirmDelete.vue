@@ -6,12 +6,14 @@ import { useRoute, useRouter } from 'vue-router'
 // app
 import { billService } from '../../services/billService'
 import BillConfirmDeleteMenu from '../../components/bills/menus/BillConfirmDeleteMenu.vue'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 // main object
 const bill = ref({
+  id: '',
   customer: '',
   folio: '',
-  provider: 1,
+  provider: '',
   provider_signature_date: '',
   customer_signature_date: '',
   orders: [],
@@ -27,28 +29,14 @@ const bill = ref({
 })
 
 // errors holder object
-const billBackendErrors = ref({
-  non_field_errors: [],
-  customer: '',
-  currency: '',
-  folio: '',
-  provider: '',
-  provider_signature_date: '',
-  customer_signature_date: '',
-  orders: [],
-  check_number: '',
-  charge_aprove: '',
-  charge_check: '',
-  customer_charge: '',
-  customer_name: '',
-  customer_personal_id: '',
-  checked_by: '',
-  aproved_by: ''
-})
+const errorMessage = ref('')
 
 // routing utilities
 const route = useRoute()
 const router = useRouter()
+
+// loading state
+const isLoading = ref(false)
 
 onMounted(async () => {
   try {
@@ -68,23 +56,19 @@ onMounted(async () => {
 })
 
 // delete the bill object
-const delBill = async (id) => {
+const delBill = async () => {
   try {
-    await billService.deleteBill(id)
+    // start lading state
+    isLoading.value = true
+
+    await billService.deleteBill(bill.value.id)
     router.push({ name: 'bills' })
   } catch (error) {
     console.error('General error', error)
-    if (error.response) {
-      console.log('Error status: ', error.response.status)
-      console.log('Error code: ', error.response.code)
-      billBackendErrors.value = error.response.data
-      if (error.response.status === 404) {
-        billBackendErrors.value = { not_found: 'Factura no encontrada.' }
-        console.log(billBackendErrors.value)
-      }
-    } else {
-      billBackendErrors.value = { general_error: 'Error inesperado, consulte al desarrollador' }
-    }
+    errorHandler(error, errorMessage)
+  } finally {
+    // finish lading state
+    isLoading.value = false
   }
 }
 </script>
@@ -96,31 +80,23 @@ const delBill = async (id) => {
       <BillConfirmDeleteMenu />
     </div>
 
-    <!-- main content -->
-    <div class="col-md-6">
-      <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="billBackendErrors.non_field_errors">
-        <p
-          class="form-text text-danger"
-          v-for="(error, index) in billBackendErrors.non_field_errors"
-          :key="index"
-        >
-          {{ error }}
-        </p>
-      </span>
-      <!-- backend general errors -->
-      <span v-if="billBackendErrors.general_error">
-        <p class="form-text text-danger">
-          {{ billBackendErrors.general_error }}
-        </p>
-      </span>
-      <!-- backend not found errors -->
-      <span v-if="billBackendErrors.not_found">
-        <p class="form-text text-danger">
-          {{ billBackendErrors.not_found }}
-        </p>
-      </span>
+    <!-- loading state -->
+    <div v-if="isLoading" class="col-md-6">
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+        <span role="status" class="text-primary">Cargando datos... </span>
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+      </div>
+    </div>
 
+    <!-- error message -->
+    <div v-else-if="errorMessage" class="col-md-4">
+      <span class="form-text text-danger">
+        {{ errorMessage }}
+      </span>
+    </div>
+
+    <!-- main content -->
+    <div v-else class="col-md-6">
       <p>Está seguro que desea eliminar la siguiente factura?</p>
       <table class="table">
         <thead>
@@ -138,8 +114,9 @@ const delBill = async (id) => {
           </tr>
         </tbody>
       </table>
-      <button class="btn btn-sm btn-danger" @click="delBill(bill.id)">Eliminar</button>
+      <button class="btn btn-sm btn-danger" @click="delBill">Eliminar</button>
       <RouterLink
+        v-if="bill.id"
         :to="{ name: 'bills_detail', params: { id: bill.id } }"
         class="btn btn-sm btn-secondary"
         >Cancelar</RouterLink
