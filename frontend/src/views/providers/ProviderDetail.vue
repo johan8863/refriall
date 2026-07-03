@@ -23,7 +23,7 @@ const provider = ref({
 })
 
 // loading state
-const isLoading = ref(true)
+const isLoading = ref(false)
 
 const errorMessage = ref(null)
 
@@ -51,7 +51,7 @@ onMounted(async () => {
 <template>
   <div class="row">
     <!-- side menu -->
-    <div v-if="provider.id" class="col-md-2">
+    <div class="col-md-2">
       <provider-detail-menu :provider="provider" />
     </div>
 
@@ -62,12 +62,12 @@ onMounted(async () => {
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
     </div>
-    
+
     <!-- error message -->
     <div v-else-if="errorMessage" class="col-md-4">
       <span class="form-text text-danger">
-          {{ errorMessage }}
-        </span>
+        {{ errorMessage }}
+      </span>
     </div>
 
     <!-- main content -->
