@@ -13,6 +13,7 @@ import BillDetailMenu from '../../components/bills/menus/BillDetailMenu.vue'
 
 // main object
 const bill = ref({
+  id: '',
   customer: '',
   customer_dependency: '',
   folio: '',
@@ -145,14 +146,15 @@ function pdf() {
       </div>
     </div>
 
+    <!-- error message -->
+    <div v-else-if="billBackendErrors" class="col-md-4">
+      <span class="form-text text-danger">
+        {{ billBackendErrors }}
+      </span>
+    </div>
+
     <!-- displaying bill data -->
     <div v-else class="col-md-9">
-      <!-- backend general errors -->
-      <span v-if="billBackendErrors">
-        <p class="form-text text-danger">
-          {{ billBackendErrors }}
-        </p>
-      </span>
       <!-- bill info -->
       <div id="bill-to-pdf">
         <!-- paginated bills -->
