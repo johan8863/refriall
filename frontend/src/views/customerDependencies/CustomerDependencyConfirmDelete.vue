@@ -5,13 +5,16 @@ import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { customerDependecyService } from '../../services/customerDependencyService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import CustomerDependencyConfirmDeleteMenu from '../../components/customerDependencies/menus/CustomerDependencyConfirmDeleteMenu.vue'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 // routing utilities
 const route = useRoute()
 const router = useRouter()
+
+// main object
 const dependency = ref({
+  id: '',
   customer: '',
   name: '',
   address: '',
@@ -19,6 +22,10 @@ const dependency = ref({
   township: ''
 })
 
+// loadin state
+const isLoading = ref(false)
+
+// error message
 const errorMessage = ref(null)
 
 onMounted(async () => {
@@ -26,24 +33,13 @@ onMounted(async () => {
     const resp = await customerDependecyService.detailCustomerDependecy(route.params.id)
     dependency.value = resp.data
   } catch (error) {
-    if (error.response) {
-      console.log('Error status:', error.response.status)
-      console.log('Error data:', error.response.data)
-      if (error.response.status === 404) {
-        errorMessage.value = 'Dependencia no encontrada.'
-      }
-      if (error.response.status === 400) {
-        errorMessage.value = 'Dependencia asociada.'
-      }
-    } else if (error.request) {
-      errorMessage.value = 'Error del Servidor, póngase en contacto con el desarrollador.'
-    }
+    errorHandler(error, errorMessage)
   }
 })
 
-const delDependency = async (id) => {
+const delDependency = async () => {
   try {
-    await customerDependecyService.deleteCustomerDependency(id)
+    await customerDependecyService.deleteCustomerDependency(dependency.value.id)
     router.push({
       name: 'customers_detail',
       params: {
@@ -51,18 +47,7 @@ const delDependency = async (id) => {
       }
     })
   } catch (error) {
-    if (error.response) {
-      console.log('Error status:', error.response.status)
-      console.log('Error data:', error.response.data)
-      if (error.response.status === 404) {
-        errorMessage.value = 'Dependencia no encontrada.'
-      }
-      if (error.response.status === 400) {
-        errorMessage.value = 'Dependencia asociada.'
-      }
-    } else if (error.request) {
-      errorMessage.value = 'Error del Servidor, póngase en contacto con el desarrollador.'
-    }
+    errorHandler(error, errorMessage)
   }
 }
 </script>
@@ -75,19 +60,26 @@ const delDependency = async (id) => {
     </div>
 
     <!-- main content -->
-    <div class="col-md-4">
-      <!-- backend general errors -->
-      <span v-if="errorMessage">
+    <div class="col-md-4" v-if="isLoading">
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+        <span role="status" class="text-primary">Cargando datos... </span>
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div v-else-if="errorMessage" class="col-md-4">
+      <span>
         <p class="form-text text-danger">
           {{ errorMessage }}
         </p>
       </span>
+    </div>
+    <div v-else class="col-md-4">
+      <!-- backend general errors -->
       <p>Está seguro que desea eliminar la dependencia: {{ dependency.name }}?</p>
       <div>
-        <button class="btn btn-sm btn-danger" @click="delDependency(dependency.id)">
-          Eliminar
-        </button>
+        <button class="btn btn-sm btn-danger" @click="delDependency">Eliminar</button>
         <RouterLink
+          v-if="dependency.id"
           :to="{ name: 'customer_dependecy_detail', params: { id: dependency.id } }"
           class="btn btn-sm btn-secondary"
           >Cancelar</RouterLink
