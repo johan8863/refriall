@@ -13,11 +13,11 @@ import BillDetailMenu from '../../components/bills/menus/BillDetailMenu.vue'
 
 // main object
 const bill = ref({
-  id: '',
-  customer: '',
-  customer_dependency: '',
+  id: null,
+  customer: null,
+  customer_dependency: null,
   folio: '',
-  provider: '',
+  provider: null,
   provider_signature_date: '',
   customer_signature_date: '',
   get_orders: [],

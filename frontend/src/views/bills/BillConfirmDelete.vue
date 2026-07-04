@@ -10,10 +10,10 @@ import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 // main object
 const bill = ref({
-  id: '',
-  customer: '',
+  id: null,
+  customer: null,
   folio: '',
-  provider: '',
+  provider: null,
   provider_signature_date: '',
   customer_signature_date: '',
   orders: [],
@@ -109,7 +109,7 @@ const delBill = async () => {
         <tbody>
           <tr>
             <td>{{ bill.folio }}</td>
-            <td>{{ bill.customer.name }}</td>
+            <td v-if="bill.customer">{{ bill.customer.name }}</td>
             <td>{{ bill.get_total_amount }}</td>
           </tr>
         </tbody>

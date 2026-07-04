@@ -23,11 +23,11 @@ import BillFormMenu from '../../components/bills/menus/BillFormMenu.vue'
 
 // main reactive object
 const bill = ref({
-  id: '',
-  customer: '',
+  id: null,
+  customer: null,
   currency: '',
   folio: '',
-  provider: '',
+  provider: null,
   provider_signature_date: '',
   customer_signature_date: '',
   orders: [],
