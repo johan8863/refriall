@@ -58,7 +58,7 @@ const v$ = useVuelidate(rules, dependency)
 const createDependency = async () => {
   try {
     if (await v$.value.$validate()) {
-      dependency.customer = route.params.id
+      dependency.value.customer = route.params.id
       const { data } = await customerDependecyService.postCustomerDependency(dependency.value)
       router.push({
         name: 'customers_detail',
