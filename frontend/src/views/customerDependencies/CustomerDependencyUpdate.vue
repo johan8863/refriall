@@ -75,11 +75,7 @@ const updateDependency = async () => {
     }
   } catch (error) {
     console.error('General error', error)
-    if (error.response) {
-      dependencyErrors.value = error.response.data
-    } else {
-      dependencyErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
+    errorHandler(error, dependencyErrors, 'Dependencia')
   }
 }
 
