@@ -22,7 +22,8 @@ const goToCustomerDependecyDetail = () =>
 
 // dependecy object
 const dependency = ref({
-  customer: '',
+  id: null,
+  customer: null,
   name: '',
   address: '',
   province: '',
