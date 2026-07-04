@@ -5,7 +5,6 @@ import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { customerDependecyService } from '../../services/customerDependencyService'
-import listGroup from '../../assets/js/bootstrap_classes/listGroup'
 import { errorHandler } from '../../utils/errors/errorHandler'
 
 // third
@@ -112,10 +111,9 @@ onMounted(async () => {
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
     </div>
-    <!-- displaying dependency data -->
-    <div v-else class="col-md-4">
-      <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="dependencyErrors.non_field_errors">
+    <!-- errors -->
+    <div v-else-if="dependencyErrors.non_field_errors" class="col-md-4">
+      <span>
         <p
           class="form-text text-danger"
           v-for="(error, index) in dependencyErrors.non_field_errors"
@@ -130,6 +128,9 @@ onMounted(async () => {
           {{ dependencyErrors.message }}
         </p>
       </span>
+    </div>
+    <!-- displaying dependency data -->
+    <div v-else class="col-md-4">
       <!-- form -->
       <form @submit.prevent="updateDependency">
         <span v-if="dependencyErrors.non_field_errors">
