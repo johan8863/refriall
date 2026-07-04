@@ -10,7 +10,8 @@ import CustomerDependencyDetailMenu from '../../components/customerDependencies/
 
 // main object
 const dependency = ref({
-  customer: 0,
+  id: null,
+  customer: null,
   name: '',
   address: '',
   province: '',
@@ -59,15 +60,16 @@ onMounted(async () => {
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
     </div>
-    <!-- displaying dependency data -->
-    <div v-else class="col-md-4">
-      <!-- backend general errors -->
-      <span v-if="customerDependencyBackendErrors">
+    <!-- errors -->
+    <div v-else-if="customerDependencyBackendErrors" class="col-md-4">
+      <span>
         <p class="form-text text-danger">
           {{ customerDependencyBackendErrors }}
         </p>
       </span>
-
+    </div>
+    <!-- displaying dependency data -->
+    <div v-else class="col-md-4">
       <h3>{{ dependency.name }}</h3>
       <hr />
       <p>{{ dependency.name }}</p>
