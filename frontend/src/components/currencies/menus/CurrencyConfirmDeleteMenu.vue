@@ -14,10 +14,5 @@ defineProps({
     <li class="list-group-item">
       <router-link :to="{ name: 'currencies' }">Monedas</router-link>
     </li>
-    <li class="list-group-item">
-      <router-link :to="{ name: 'currency_update', params: { id: currency.id } }"
-        >Actualizar</router-link
-      >
-    </li>
   </ul>
 </template>

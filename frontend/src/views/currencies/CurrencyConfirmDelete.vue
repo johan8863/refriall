@@ -13,6 +13,7 @@ const router = useRouter()
 
 // currency object meant to be deleted
 const currency = ref({
+  id: null,
   name: '',
   description: ''
 })
@@ -82,6 +83,7 @@ onMounted(async () => {
         <p>Está seguro que desea eliminar la moneda: {{ currency.name }}</p>
         <button class="btn btn-sm btn-danger" @click="delCurrency(currency.id)">Eliminar</button>
         <RouterLink
+          v-if="currency.id"
           :to="{ name: 'currency_detail', params: { id: currency.id } }"
           class="btn btn-sm btn-secondary"
           >Cancelar</RouterLink
