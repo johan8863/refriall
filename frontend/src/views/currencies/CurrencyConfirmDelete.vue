@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 // app
 import { currencyService } from '../../services/currencyService'
 import CurrencyConfirmDeleteMenu from '../../components/currencies/menus/CurrencyConfirmDeleteMenu.vue'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 // router utilities to redirect the view and catch route params
 const route = useRoute()
@@ -26,21 +27,7 @@ const delCurrency = async (id) => {
     await currencyService.deleteCurrency(id)
     router.push({ name: 'currencies' })
   } catch (error) {
-    console.error('General error: ', error)
-    if (error.response) {
-      console.log('Error status:', error.response.status)
-      console.log('Error data:', error.response.data)
-      if (error.response.status === 404) {
-        errorMessage.value = 'Moneda no encontrada'
-      }
-      if (error.response.status === 400) {
-        errorMessage.value = 'Moneda asociada'
-      }
-    } else {
-      errorMessage.value = `Error inesperado, ${error}`
-    }
-    // in case of backend errors, log to the console... for now
-    console.log(error)
+    errorHandler(error, errorMessage, 'Moneda')
   }
 }
 
@@ -48,19 +35,7 @@ onMounted(async () => {
   try {
     currency.value = (await currencyService.detailCurrency(route.params.id)).data
   } catch (error) {
-    if (error.response) {
-      console.log('Error status:', error.response.status)
-      console.log('Error data:', error.response.data)
-      if (error.response.status === 404) {
-        errorMessage.value = 'Moneda no encontrada.'
-      }
-      if (error.response.status === 400) {
-        errorMessage.value = 'Moneda asociada.'
-      }
-    } else if (error.request) {
-      errorMessage.value = 'Error de Servidor, póngase en contacto con el desarrollador.'
-      console.log(error.request)
-    }
+    errorHandler(error, errorMessage, 'Moneda')
   }
 })
 </script>
