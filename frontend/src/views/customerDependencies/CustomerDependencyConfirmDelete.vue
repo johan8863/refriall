@@ -14,7 +14,7 @@ const router = useRouter()
 
 // main object
 const dependency = ref({
-  id: '',
+  id: null,
   customer: '',
   name: '',
   address: '',
