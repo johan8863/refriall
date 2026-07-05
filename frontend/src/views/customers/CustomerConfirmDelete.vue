@@ -89,7 +89,7 @@ const delCustomer = async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <CustomerConfirmDeleteMenu :customer="customer" />
+      <CustomerConfirmDeleteMenu :is-loading="isLoading" :customer="customer" />
     </div>
 
     <!-- loading state -->
