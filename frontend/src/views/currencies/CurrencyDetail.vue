@@ -7,7 +7,6 @@ import { useRoute } from 'vue-router'
 import { currencyService } from '../../services/currencyService'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import CurrencyDetailMenu from '../../components/currencies/menus/CurrencyDetailMenu.vue'
-import { useRouting } from '../../composables/routingFunctions.js'
 
 // main object
 const currency = ref({
@@ -24,28 +23,6 @@ const isLoading = ref(false)
 
 // routing
 const route = useRoute()
-const { goToListPost, goToDetail } = useRouting()
-const handleGoToList = () => {
-  try {
-    goToListPost('currencies')
-  } catch (error) {
-    console.error(error)
-  }
-}
-const handleGoToDetail = () => {
-  try {
-    goToDetail('currency_update', currency.value.id)
-  } catch (error) {
-    console.error(error)
-  }
-}
-const handleGoToDelete = () => {
-  try {
-    goToDetail('currency_delete', currency.value.id)
-  } catch (error) {
-    console.error(error)
-  }
-}
 
 onMounted(async () => {
   try {
@@ -66,13 +43,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <currency-detail-menu
-        :is-loading="isLoading"
-        :currency="currency"
-        @on-go-to-currencies="handleGoToList"
-        @on-go-to-update-currency="handleGoToDetail"
-        @on-go-to-delete="handleGoToDelete"
-      />
+      <currency-detail-menu :is-loading="isLoading" :currency="currency" />
     </div>
 
     <!-- main content -->

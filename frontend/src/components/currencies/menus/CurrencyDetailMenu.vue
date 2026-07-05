@@ -1,4 +1,6 @@
 <script setup>
+import { RouterLink } from 'vue-router'
+
 defineProps({
   currency: {
     type: Object,
@@ -9,7 +11,6 @@ defineProps({
     required: true
   }
 })
-defineEmits(['onGoToCurrencies', 'onGoToUpdateCurrency', 'onGoToDelete'])
 </script>
 <template>
   <ul class="list-group list-group-flush">
@@ -18,7 +19,7 @@ defineEmits(['onGoToCurrencies', 'onGoToUpdateCurrency', 'onGoToDelete'])
     </li>
     <!-- currencies -->
     <li class="list-group-item">
-      <a href="#" @click.prevent="$emit('onGoToCurrencies')">Monedas</a>
+      <RouterLink :to="{ name: 'currencies' }">Monedas</RouterLink>
     </li>
     <!-- update currency -->
     <li v-if="isLoading" class="list-group-item text-muted">
@@ -26,7 +27,9 @@ defineEmits(['onGoToCurrencies', 'onGoToUpdateCurrency', 'onGoToDelete'])
       Cargando...
     </li>
     <li v-else class="list-group-item">
-      <a href="#" @click.prevent="$emit('onGoToUpdateCurrency')">Actualizar</a>
+      <RouterLink :to="{ name: 'currency_update', params: { id: currency.id } }"
+        >Actualizar</RouterLink
+      >
     </li>
     <!-- delete currency -->
     <li v-if="isLoading" class="list-group-item text-muted">
@@ -34,7 +37,9 @@ defineEmits(['onGoToCurrencies', 'onGoToUpdateCurrency', 'onGoToDelete'])
       Cargando...
     </li>
     <li class="list-group-item">
-      <a href="#" @click.prevent="$emit('onGoToDelete')">Eliminar</a>
+      <RouterLink :to="{ name: 'currency_delete', params: { id: currency.id } }"
+        >Eliminar</RouterLink
+      >
     </li>
   </ul>
 </template>

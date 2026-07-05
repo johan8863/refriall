@@ -7,26 +7,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { currencyService } from '../../services/currencyService'
 import CurrencyConfirmDeleteMenu from '../../components/currencies/menus/CurrencyConfirmDeleteMenu.vue'
 import { errorHandler } from '../../utils/errors/errorHandler.js'
-import { useRouting } from '../../composables/routingFunctions.js'
 
 // router utilities to redirect the view and catch route params
 const route = useRoute()
 const router = useRouter()
-const { goBack, goToListPost } = useRouting()
-const handleGoBack = () => {
-  try {
-    goBack('currencies', 'currency_detail', currency.value.id)
-  } catch (error) {
-    console.error(error)
-  }
-}
-const handleGoToCurrencies = () => {
-  try {
-    goToListPost('currencies')
-  } catch (error) {
-    console.error(error)
-  }
-}
 
 // currency object meant to be deleted
 const currency = ref({
@@ -60,7 +44,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <CurrencyConfirmDeleteMenu :currency="currency" @on-go-to-currencies="handleGoToCurrencies" />
+      <CurrencyConfirmDeleteMenu :currency="currency" />
     </div>
     <!-- main content -->
     <div class="col-md-4">
