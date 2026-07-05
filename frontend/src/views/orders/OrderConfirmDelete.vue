@@ -10,6 +10,7 @@ import ConfirmDeleteMenu from '../../components/orders/menus/ConfirmDeleteMenu.v
 
 // main object
 const order = ref({
+  id: null,
   customer: '',
   symptom: '',
   flaw: '',
