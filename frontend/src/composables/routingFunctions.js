@@ -22,6 +22,7 @@ export const useRouting = () => {
   }
   // object id for go back function
   const validateObjectIDGoBack = (objectID, functionName) => {
+    // goBack may not need id when called from creation form
     if (objectID) {
       if (typeof objectID !== 'number') {
         throw new Error(
