@@ -100,7 +100,7 @@ function pdf() {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <OrderDetailMenu :order="order" @on-p-d-f="pdf" />
+      <OrderDetailMenu :is-loading="isLoading" :order="order" @on-p-d-f="pdf" />
     </div>
 
     <!-- main content -->
