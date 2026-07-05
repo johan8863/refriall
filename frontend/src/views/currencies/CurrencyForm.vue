@@ -10,19 +10,17 @@ import { required, helpers } from '@vuelidate/validators'
 // app
 import { currencyService } from '../../services/currencyService'
 import CurrencyFormMenu from '../../components/currencies/menus/CurrencyFormMenu.vue'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // router utilities and handlers
 const router = useRouter()
 const route = useRoute()
-
-const goToCurrencies = () => router.push({ name: 'currencies' })
-const goToCurrencyDetail = () =>
-  router.push({ name: 'currency_detail', params: { id: currency.value.id } })
-const goBack = () => (!currency.value.id ? goToCurrencies() : goToCurrencyDetail())
+const { goBack } = useRouting()
+const handleGoBack = () => goBack('currencies', 'currency_detail', currency.value.id)
 
 // currency object for post and put requests
 const currency = ref({
-  id: '',
+  id: null,
   name: '',
   description: ''
 })
@@ -205,13 +203,15 @@ onMounted(async () => {
         <!-- buttons -->
         <div>
           <!-- 
-                        the order in the ternary operator is due to the fact that 
-                        this form is more often used to create than to update 
-                    -->
+            the order in the ternary operator is due to the fact that 
+            this form is more often used to create than to update 
+          -->
           <button type="submit" class="btn btn-primary btn-sm">
             {{ !currency.id ? 'Guardar' : 'Actualizar' }}
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" @click="goBack">Cancelar</button>
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
+            Cancelar
+          </button>
         </div>
       </form>
     </div>
