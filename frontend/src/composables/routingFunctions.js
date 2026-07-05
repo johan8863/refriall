@@ -12,12 +12,22 @@ export const useRouting = () => {
       )
     }
   }
-  // object id
+  // object id for detail function
   const validateObjectID = (objectID, functionName) => {
     if (typeof objectID == undefined || typeof objectID == null || typeof objectID !== 'number') {
       throw new Error(
         `[${functionName}] Object ID must be a non empty valid integer. Provided: ${objectID}`
       )
+    }
+  }
+  // object id for go back function
+  const validateObjectIDGoBack = (objectID, functionName) => {
+    if (objectID) {
+      if (typeof objectID !== 'number') {
+        throw new Error(
+          `[${functionName}] Object ID must be a non empty valid integer. Provided: ${objectID}`
+        )
+      }
     }
   }
 
@@ -35,7 +45,7 @@ export const useRouting = () => {
   const goBack = (routeListName, routeDetailName, objectID) => {
     validateRouteName(routeListName, 'goBack')
     validateRouteName(routeDetailName, 'goBack')
-    validateObjectID(objectID, 'goBack')
+    validateObjectIDGoBack(objectID, 'goBack')
     return !objectID ? goToListPost(routeListName) : goToDetail(routeDetailName, objectID)
   }
 
