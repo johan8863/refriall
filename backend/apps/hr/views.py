@@ -112,7 +112,6 @@ class ProviderViewSet(viewsets.ModelViewSet):
         """
         Returns different serializers based on the actions
         """
-
         if self.action == 'create':
             return ProviderCreateSerializer
         elif self.action in ['update', 'partial_update', 'get_provider_order_currency_no_bill']:
