@@ -7,10 +7,13 @@ import { useRoute, useRouter } from 'vue-router'
 import { currencyService } from '../../services/currencyService'
 import CurrencyConfirmDeleteMenu from '../../components/currencies/menus/CurrencyConfirmDeleteMenu.vue'
 import { errorHandler } from '../../utils/errors/errorHandler.js'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // router utilities to redirect the view and catch route params
 const route = useRoute()
 const router = useRouter()
+const routing = useRouting()
+const handleGoBack = () => routing.goBack('currencies', 'currency_detail', currency.value.id)
 
 // currency object meant to be deleted
 const currency = ref({
@@ -57,12 +60,7 @@ onMounted(async () => {
       <div>
         <p>Está seguro que desea eliminar la moneda: {{ currency.name }}</p>
         <button class="btn btn-sm btn-danger" @click="delCurrency">Eliminar</button>
-        <RouterLink
-          v-if="currency.id"
-          :to="{ name: 'currency_detail', params: { id: currency.id } }"
-          class="btn btn-sm btn-secondary"
-          >Cancelar</RouterLink
-        >
+        <button class="btn btn-sm btn-secondary" @click="handleGoBack">Cancelar</button>
       </div>
     </div>
   </div>
