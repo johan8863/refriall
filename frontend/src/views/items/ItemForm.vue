@@ -14,6 +14,7 @@ import ItemFormMenu from '../../components/items/menus/ItemFormMenu.vue'
 
 // item object to be created or updated
 const item = ref({
+  id: null,
   code: '',
   name: '',
   item_type: '',
