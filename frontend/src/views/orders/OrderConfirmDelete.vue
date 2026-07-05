@@ -7,6 +7,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { orderService } from '../../services/orderService'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import ConfirmDeleteMenu from '../../components/orders/menus/ConfirmDeleteMenu.vue'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // main object
 const order = ref({
@@ -47,17 +48,35 @@ const billDeleteErrorObject = ref({
   folio: null
 })
 
+// loading state
+const isLoading = ref(false)
+
 // routing utilities
 const route = useRoute()
 const router = useRouter()
 
+const { goToDetail } = useRouting()
+const handleGoToDetail = () => {
+  try {
+    goToDetail('orders_detail', order.value.id)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 // lifecycle
 onMounted(async () => {
   try {
+    // start loading state
+    isLoading.value = true
+
     const resp = await orderService.detailOrder(route.params.id)
     order.value = resp.data
   } catch (error) {
     errorHandler(error, errorMessage, 'Orden')
+  } finally {
+    // stop loading state
+    isLoading.value = false
   }
 })
 
@@ -89,7 +108,22 @@ const delOrder = async (id) => {
     </div>
 
     <!-- main content -->
-    <div class="col-md-6">
+    <!-- loading state -->
+    <div v-if="isLoading" class="col-md-6">
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+        <span role="status" class="text-primary">Cargando datos... </span>
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <!-- error message -->
+    <div v-else-if="errorMessage" class="col-md-6">
+      <span class="form-text text-danger">
+        {{ errorMessage }}
+      </span>
+    </div>
+
+    <div v-else class="col-md-6">
       <p>Está seguro que desea eliminar la orden?</p>
 
       <div v-if="errorMessage">
