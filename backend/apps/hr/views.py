@@ -135,7 +135,6 @@ class ProviderViewSet(viewsets.ModelViewSet):
         Custom endpoint for users to change their own password.
         POST /api/providers/change-password/
         """
-
         serializer = ProviderPasswordUpdateSerializer(
             data=request.data,
             context={'request': request}
@@ -158,7 +157,6 @@ class ProviderViewSet(viewsets.ModelViewSet):
         Admin endpoint to reset ANY user's password.
         POST /api/providers/{id}/admin-reset-password/
         """
-        
         user = self.get_object()
 
         serializer = ProviderAdminPasswordResetSerializer(
@@ -178,7 +176,6 @@ class ProviderViewSet(viewsets.ModelViewSet):
     @action(detail=False, url_path="get-provider-order-currency-no-bill/(?P<currency>[0-9]+)")
     def get_provider_order_currency_no_bill(self, request, currency):
         """Returns provider with free orders to associate given a currency."""
-
         orders_without_bill = Order.objects.filter(bill__isnull=True, currency=currency)
         unique_providers = orders_without_bill.values('provider').distinct()
         providers = Provider.objects.filter(id__in=unique_providers)
@@ -188,7 +185,6 @@ class ProviderViewSet(viewsets.ModelViewSet):
     @action(detail=False, url_path="get-providers-paginated")
     def get_providers_paginated(self, request, format=None):
         """Returns the list of providers pagianted."""
-
         providers = self.get_queryset()
         
         # pagination
