@@ -14,6 +14,7 @@ import OrderDetailMenu from '../../components/orders/menus/OrderDetailMenu.vue'
 
 const route = useRoute()
 const order = ref({
+  id: null,
   customer: '',
   customer_dependency: '',
   symptom: '',
