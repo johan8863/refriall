@@ -26,7 +26,7 @@ export const useRouting = () => {
     if (objectID) {
       if (typeof objectID !== 'number') {
         throw new Error(
-          `[${functionName}] Object ID must be a non empty valid integer. Provided: ${objectID}`
+          `[${functionName}] Object ID must be a valid integer. Provided: ${objectID}`
         )
       }
     }
