@@ -80,9 +80,9 @@ onMounted(async () => {
   }
 })
 
-const delOrder = async (id) => {
+const delOrder = async () => {
   try {
-    await orderService.deleteOrder(id)
+    await orderService.deleteOrder(order.value.id)
     router.push({ name: 'orders' })
   } catch (error) {
     if (error.response) {
@@ -142,10 +142,10 @@ const delOrder = async (id) => {
         >
       </div>
 
-      <button class="btn btn-sm btn-danger" @click="delOrder(order.id, router, errorMessage)">
+      <button class="btn btn-sm btn-danger" @click="delOrder"">
         Eliminar
       </button>
-      <RouterLink :to="{ name: 'orders' }" class="btn btn-sm btn-secondary">Cancelar</RouterLink>
+      <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Cancelar</button>
     </div>
   </div>
   <!-- end row -->
