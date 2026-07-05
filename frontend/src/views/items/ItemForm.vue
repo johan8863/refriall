@@ -11,6 +11,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, minValue, helpers } from '@vuelidate/validators'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import ItemFormMenu from '../../components/items/menus/ItemFormMenu.vue'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // item object to be created or updated
 const item = ref({
@@ -38,9 +39,19 @@ const errorMessage = ref(null)
 const router = useRouter()
 const route = useRoute()
 
-const goToItems = () => router.push({ name: 'items' })
-const goToItemDetail = () => router.push({ name: 'items_detail', params: { id: item.value.id } })
-const goBack = () => (!item.value.id ? goToItems() : goToItemDetail())
+const { goBack } = useRouting()
+
+const handleGoBack = () => {
+  try {
+    goBack('items', 'items_detail', item.value.id)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+// const goToItems = () => router.push({ name: 'items' })
+// const goToItemDetail = () => router.push({ name: 'items_detail', params: { id: item.value.id } })
+// const goBack = () => (!item.value.id ? goToItems() : goToItemDetail())
 
 // loading state
 const isLoading = ref(false)
@@ -306,14 +317,16 @@ onMounted(async () => {
         <!-- buttons -->
         <div>
           <!-- 
-                        the order in the ternary operator is due to the fact that 
-                        this form is more often used to create than to update 
-                    -->
+            the order in the ternary operator is due to the fact that 
+            this form is more often used to create than to update 
+          -->
           <button type="submit" class="btn btn-sm btn-primary">
             {{ !item.id ? 'Guardar' : 'Actualizar' }}
           </button>
 
-          <button type="button" class="btn btn-sm btn-secondary" @click="goBack">Cancelar</button>
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
+            Cancelar
+          </button>
         </div>
       </form>
     </div>
