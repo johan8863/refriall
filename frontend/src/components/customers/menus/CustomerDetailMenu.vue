@@ -25,7 +25,8 @@ defineProps({
     </li>
     <!-- update customer -->
     <li v-if="isLoading" class="list-group-item text-muted">
-      <span class="spinner-border spinner-border-sm"> Cargando... </span>
+      <span class="spinner-border spinner-border-sm"></span>
+      Cargando...
     </li>
 
     <li v-else class="list-group-item">
@@ -35,7 +36,8 @@ defineProps({
     </li>
     <!-- create customer dependency -->
     <li v-if="isLoading" class="list-group-item text-muted">
-      <span class="spinner-border spinner-border-sm"> Cargando... </span>
+      <span class="spinner-border spinner-border-sm"></span>
+      Cargando...
     </li>
 
     <li v-else class="list-group-item">
@@ -45,7 +47,8 @@ defineProps({
     </li>
     <!-- delete customer -->
     <li v-if="isLoading" class="list-group-item text-muted">
-      <span class="spinner-border spinner-border-sm"> Cargando... </span>
+      <span class="spinner-border spinner-border-sm"></span>
+      Cargando...
     </li>
 
     <li v-else class="list-group-item">
