@@ -22,6 +22,7 @@ import OrderFormMenu from '../../components/orders/menus/OrderFormMenu.vue'
 
 // main object
 const order = ref({
+  id: null,
   customer: '',
   currency: '',
   customer_dependency: '',
