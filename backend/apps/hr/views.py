@@ -125,7 +125,7 @@ class ProviderViewSet(viewsets.ModelViewSet):
             provider_pk = kwargs['pk']
             provider = Provider.objects.get(pk=provider_pk)
             return Response(
-                data=ProviderUpdateSerializer(provider),
+                data=ProviderUpdateSerializer(provider).data,
                 status=status.HTTP_400_BAD_REQUEST
             )
     
