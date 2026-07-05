@@ -7,6 +7,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { billService } from '../../services/billService'
 import BillConfirmDeleteMenu from '../../components/bills/menus/BillConfirmDeleteMenu.vue'
 import { errorHandler } from '../../utils/errors/errorHandler.js'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // main object
 const bill = ref({
@@ -34,6 +35,16 @@ const errorMessage = ref('')
 // routing utilities
 const route = useRoute()
 const router = useRouter()
+
+const { goToDetail } = useRouting()
+
+const handleGoToDetail = () => {
+  try {
+    goToDetail('bills_detail', bill.value.id)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 // loading state
 const isLoading = ref(false)
@@ -115,12 +126,7 @@ const delBill = async () => {
         </tbody>
       </table>
       <button class="btn btn-sm btn-danger" @click="delBill">Eliminar</button>
-      <RouterLink
-        v-if="bill.id"
-        :to="{ name: 'bills_detail', params: { id: bill.id } }"
-        class="btn btn-sm btn-secondary"
-        >Cancelar</RouterLink
-      >
+      <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Cancelar</button>
     </div>
   </div>
 </template>
