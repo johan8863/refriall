@@ -22,9 +22,9 @@ const currency = ref({
 const errorMessage = ref(null)
 
 // delete the currency object
-const delCurrency = async (id) => {
+const delCurrency = async () => {
   try {
-    await currencyService.deleteCurrency(id)
+    await currencyService.deleteCurrency(currency.value.id)
     router.push({ name: 'currencies' })
   } catch (error) {
     errorHandler(error, errorMessage, 'Moneda')
@@ -56,7 +56,7 @@ onMounted(async () => {
       </span>
       <div>
         <p>Está seguro que desea eliminar la moneda: {{ currency.name }}</p>
-        <button class="btn btn-sm btn-danger" @click="delCurrency(currency.id)">Eliminar</button>
+        <button class="btn btn-sm btn-danger" @click="delCurrency">Eliminar</button>
         <RouterLink
           v-if="currency.id"
           :to="{ name: 'currency_detail', params: { id: currency.id } }"
