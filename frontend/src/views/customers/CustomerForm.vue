@@ -11,9 +11,11 @@ import { errorHandler } from '../../utils/errors/errorHandler'
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import CustomerFormMenu from '../../components/customers/menus/CustomerFormMenu.vue'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // customer object to be created or updated
 const customer = ref({
+  id: null,
   customer_type: 'es',
   name: '',
   address: '',
@@ -45,10 +47,13 @@ const errorMessage = ref(null)
 const router = useRouter()
 const route = useRoute()
 
-const goToCustomers = () => router.push({ name: 'customers' })
-const goToCustomerDetail = () =>
-  router.push({ name: 'customers_detail', params: { id: customer.value.id } })
-const goBack = () => (!customer.value.id ? goToCustomers() : goToCustomerDetail())
+const { goBack } = useRouting()
+
+const handlegGoBack = () => {
+  try {
+    goBack('customers', 'customers_detail', customer.value.id)
+  } catch (error) {}
+}
 
 // loading state
 const isLoading = ref(false)
@@ -388,13 +393,15 @@ onMounted(async () => {
         <!-- buttons -->
         <div>
           <!-- 
-                        the order in the ternary operator is due to the fact that 
-                        this form is more often used to create than to update 
-                    -->
+            the order in the ternary operator is due to the fact that 
+            this form is more often used to create than to update 
+          -->
           <button type="submit" class="btn btn-sm btn-primary">
             {{ !customer.id ? 'Guardar' : 'Actualizar' }}
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" @click="goBack">Cancelar</button>
+          <button type="button" class="btn btn-sm btn-secondary" @click="handlegGoBack">
+            Cancelar
+          </button>
         </div>
       </form>
     </div>
