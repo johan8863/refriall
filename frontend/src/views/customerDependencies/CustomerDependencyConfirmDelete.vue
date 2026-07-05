@@ -7,10 +7,21 @@ import { useRoute, useRouter } from 'vue-router'
 import { customerDependecyService } from '../../services/customerDependencyService'
 import CustomerDependencyConfirmDeleteMenu from '../../components/customerDependencies/menus/CustomerDependencyConfirmDeleteMenu.vue'
 import { errorHandler } from '../../utils/errors/errorHandler.js'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // routing utilities
 const route = useRoute()
 const router = useRouter()
+
+const { goToDetail } = useRouting()
+
+const handleGoToDetail = () => {
+  try {
+    goToDetail('customer_dependecy_detail', dependency.value.id)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 // main object
 const dependency = ref({
@@ -78,12 +89,7 @@ const delDependency = async () => {
       <p>Está seguro que desea eliminar la dependencia: {{ dependency.name }}?</p>
       <div>
         <button class="btn btn-sm btn-danger" @click="delDependency">Eliminar</button>
-        <RouterLink
-          v-if="dependency.id"
-          :to="{ name: 'customer_dependecy_detail', params: { id: dependency.id } }"
-          class="btn btn-sm btn-secondary"
-          >Cancelar</RouterLink
-        >
+        <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Cancelar</button>
       </div>
     </div>
   </div>
