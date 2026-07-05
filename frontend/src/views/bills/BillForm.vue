@@ -20,6 +20,7 @@ import { currencyService } from '../../services/currencyService'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import { useCheckAllCheckboxes } from '../../composables/CheckAllCheckboxesComposable'
 import BillFormMenu from '../../components/bills/menus/BillFormMenu.vue'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // main reactive object
 const bill = ref({
@@ -75,9 +76,15 @@ const billCustomer = ref(null)
 const router = useRouter()
 const route = useRoute()
 
-const goToBills = () => router.push({ name: 'bills' })
-const goToBillDetail = () => router.push({ name: 'bills_detail', params: { id: bill.value.id } })
-const goBack = () => (!bill.value.id ? goToBills() : goToBillDetail())
+const { goBack } = useRouting()
+
+const handleGoBack = () => {
+  try {
+    goBack('bills', 'bills_detail', bill.value.id)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 // loading status
 const isLoading = ref(false)
@@ -824,7 +831,9 @@ onMounted(async () => {
           <button type="submit" class="btn btn-sm btn-primary">
             {{ !bill.id ? 'Guardar' : 'Actualizar' }}
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" @click="goBack">Cancelar</button>
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
+            Cancelar
+          </button>
         </div>
         <!-- end form -->
       </form>
