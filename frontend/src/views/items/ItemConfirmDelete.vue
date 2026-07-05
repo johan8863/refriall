@@ -9,6 +9,7 @@ import ItemConfirmDeleteMenu from '../../components/items/menus/ItemConfirmDelet
 
 // main object
 const item = ref({
+  id: null,
   code: '',
   name: '',
   item_type: '',
