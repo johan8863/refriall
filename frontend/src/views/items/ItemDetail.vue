@@ -49,7 +49,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ItemDetailMenu :item="item" />
+      <ItemDetailMenu :is-loading="isLoading" :item="item" />
     </div>
 
     <!-- main content -->
