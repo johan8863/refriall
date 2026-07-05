@@ -45,9 +45,9 @@ onMounted(async () => {
 // methods
 
 // delete the item object
-const delItem = async (id) => {
+const delItem = async () => {
   try {
-    await itemService.deleteItem(id)
+    await itemService.deleteItem(item.value.id)
     router.push({ name: 'items' })
   } catch (error) {
     console.log('Error status:', error.response.status)
@@ -82,7 +82,7 @@ const delItem = async (id) => {
         </p>
       </span>
       <p>Está seguro que desea eliminar el artículo: {{ item.name }}?</p>
-      <button class="btn btn-sm btn-danger" @click="delItem(item.id)">Eliminar</button>
+      <button class="btn btn-sm btn-danger" @click="delItem">Eliminar</button>
       <RouterLink
         :to="{ name: 'items_detail', params: { id: item.id } }"
         class="btn btn-sm btn-secondary"
