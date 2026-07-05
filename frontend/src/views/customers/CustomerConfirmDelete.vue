@@ -9,6 +9,7 @@ import CustomerConfirmDeleteMenu from '../../components/customers/menus/Customer
 
 // customer object to be filled
 const customer = ref({
+  id: null,
   customer_type: '',
   name: '',
   address: '',
