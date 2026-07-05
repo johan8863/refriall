@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 // app
 import { customerService } from '../../services/customerService'
 import CustomerConfirmDeleteMenu from '../../components/customers/menus/CustomerConfirmDeleteMenu.vue'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // customer object to be filled
 const customer = ref({
@@ -29,6 +30,14 @@ const errorMessage = ref(null)
 // routing utilities
 const router = useRouter()
 const route = useRoute()
+
+const { goToDetail } = useRouting()
+
+const handleGoToDetail = () => {
+  try {
+    goToDetail('customers_detail', customer.value.id)
+  } catch (error) {}
+}
 
 // lifecycle
 onMounted(async () => {
@@ -104,11 +113,7 @@ const delCustomer = async (id) => {
       <p>Está seguro que desea eliminar el cliente: {{ customer.name }}?</p>
       <div>
         <button class="btn btn-sm btn-danger" @click="delCustomer(customer.id)">Eliminar</button>
-        <RouterLink
-          :to="{ name: 'customers_detail', params: { id: customer.id } }"
-          class="btn btn-sm btn-secondary"
-          >Cancelar</RouterLink
-        >
+        <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Eliminar</button>
       </div>
     </div>
   </div>
