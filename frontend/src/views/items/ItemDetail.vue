@@ -10,6 +10,7 @@ import ItemDetailMenu from '../../components/items/menus/ItemDetailMenu.vue'
 
 // main object
 const item = ref({
+  id: null,
   code: '',
   name: '',
   get_item_type: '',
