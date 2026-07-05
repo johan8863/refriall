@@ -10,12 +10,21 @@ import { customerDependecyService } from '../../services/customerDependencyServi
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import CustomerDependencyCreateMenu from '../../components/customerDependencies/menus/CustomerDependencyCreateMenu.vue'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // router utilities and handlers
 const router = useRouter()
 const route = useRoute()
 
-const goToCustomers = () => router.push({ name: 'customers' })
+const { goToListPost } = useRouting()
+
+const handleGoToListPost = () => {
+  try {
+    goToListPost('customers')
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 // dependency objects
 const dependency = ref({
@@ -218,7 +227,7 @@ const createDependency = async () => {
         <!-- buttons -->
         <div class="mb-2">
           <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
-          <button type="button" class="btn btn-sm btn-secondary" @click="goToCustomers">
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoToListPost">
             Cancelar
           </button>
         </div>
