@@ -19,6 +19,7 @@ import { currencyService } from '../../services/currencyService'
 import { useOrderTotalComputed } from '../../composables/OrderComposable'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import OrderFormMenu from '../../components/orders/menus/OrderFormMenu.vue'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // main object
 const order = ref({
@@ -66,9 +67,17 @@ const providers = ref([])
 const router = useRouter()
 const route = useRoute()
 
-const goToOrders = () => router.push({ name: 'orders' })
-const goToOrderDetail = () => router.push({ name: 'orders_detail', params: { id: order.value.id } })
-const goBack = () => (!order.value.id ? goToOrders() : goToOrderDetail())
+const { goBack } = useRouting()
+
+const handleGoBack = () => {
+  try {
+    goBack('orders', 'orders_detail', order.value.id)
+  } catch (error) {}
+}
+
+// const goToOrders = () => router.push({ name: 'orders' })
+// const goToOrderDetail = () => router.push({ name: 'orders_detail', params: { id: order.value.id } })
+// const goBack = () => (!order.value.id ? goToOrders() : goToOrderDetail())
 
 // loading status
 const isLoadingBackendData = ref(false)
@@ -974,7 +983,9 @@ onMounted(async () => {
           <button type="submit" class="btn btn-sm btn-primary">
             {{ !order.id ? 'Guardar' : 'Actualizar' }}
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" @click="goBack">Cancelar</button>
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
+            Cancelar
+          </button>
         </div>
       </form>
     </div>
