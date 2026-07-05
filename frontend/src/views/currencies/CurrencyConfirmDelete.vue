@@ -12,8 +12,9 @@ import { useRouting } from '../../composables/routingFunctions.js'
 // router utilities to redirect the view and catch route params
 const route = useRoute()
 const router = useRouter()
-const routing = useRouting()
-const handleGoBack = () => routing.goBack('currencies', 'currency_detail', currency.value.id)
+const { goBack, goToListPost } = useRouting()
+const handleGoBack = () => goBack('currencies', 'currency_detail', currency.value.id)
+const handleGoToCurrencies = () => goToListPost('currencies')
 
 // currency object meant to be deleted
 const currency = ref({
@@ -47,7 +48,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <CurrencyConfirmDeleteMenu :currency="currency" />
+      <CurrencyConfirmDeleteMenu :currency="currency" @on-go-to-currencies="handleGoToCurrencies" />
     </div>
     <!-- main content -->
     <div class="col-md-4">

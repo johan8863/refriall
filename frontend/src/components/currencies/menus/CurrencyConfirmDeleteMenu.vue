@@ -5,6 +5,7 @@ defineProps({
     required: true
   }
 })
+defineEmits(['onGoToCurrencies'])
 </script>
 <template>
   <ul class="list-group list-group-flush">
@@ -12,7 +13,7 @@ defineProps({
       <strong>Monedas</strong>
     </li>
     <li class="list-group-item">
-      <router-link :to="{ name: 'currencies' }">Monedas</router-link>
+      <a href="#" @click.prevent="$emit('onGoToCurrencies')">Monedas</a>
     </li>
   </ul>
 </template>
