@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 // app
 import { itemService } from '../../services/itemService'
 import ItemConfirmDeleteMenu from '../../components/items/menus/ItemConfirmDeleteMenu.vue'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 // main object
 const item = ref({
@@ -30,15 +31,7 @@ onMounted(async () => {
     const resp = await itemService.detailItem(route.params.id)
     item.value = resp.data
   } catch (error) {
-    console.log('Error status:', error.response.status)
-    console.log('Error data:', error.response.data)
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage.value = 'Artículo no encontrado.'
-      }
-    } else if (error.request) {
-      errorMessage.value = 'Error de Servidor, consulte al desarrollador.'
-    }
+    errorHandler(error, errorMessage)
   }
 })
 
@@ -50,18 +43,7 @@ const delItem = async () => {
     await itemService.deleteItem(item.value.id)
     router.push({ name: 'items' })
   } catch (error) {
-    console.log('Error status:', error.response.status)
-    console.log('Error data:', error.response.data)
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage.value = 'Artículo no encontrado.'
-      }
-      if (error.response.status === 400) {
-        errorMessage.value = 'Artículo asociado.'
-      }
-    } else if (error.request) {
-      errorMessage.value = 'Error de Servidor, consulte al desarrollador.'
-    }
+    errorHandler(error, errorMessage)
   }
 }
 </script>
