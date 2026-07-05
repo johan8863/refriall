@@ -9,7 +9,7 @@ export const useRouting = () => {
     router.push({ name: routeDetailName, params: { id: objectID } })
 
   const goBack = (routeListName, routeDetailName, objectID) => {
-    return !objectID ? goToList() : goToDetail(routeDetailName, objectID)
+    return !objectID ? goToListPost(routeListName) : goToDetail(routeDetailName, objectID)
   }
 
   return {
