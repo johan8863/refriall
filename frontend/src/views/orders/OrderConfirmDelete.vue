@@ -124,7 +124,11 @@ const delOrder = async (id) => {
     </div>
 
     <div v-else class="col-md-6">
-      <p>Está seguro que desea eliminar la orden?</p>
+      <p>
+        Está seguro que desea eliminar la orden con folio
+        <span class="text-primary">{{ order.folio }}</span
+        >?
+      </p>
 
       <div v-if="errorMessage">
         <span class="form-text text-danger">{{ errorMessage }}</span>
