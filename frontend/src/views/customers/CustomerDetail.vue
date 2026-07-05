@@ -10,6 +10,7 @@ import CustomerDetailMenu from '../../components/customers/menus/CustomerDetailM
 
 // main object
 const customer = ref({
+  id: null,
   customer_type: '',
   name: '',
   address: '',
@@ -75,7 +76,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <CustomerDetailMenu :customer="customer" />
+      <CustomerDetailMenu :is-loading="isLoading" :customer="customer" />
     </div>
 
     <!-- main content -->
