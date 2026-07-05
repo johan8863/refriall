@@ -37,10 +37,7 @@ onMounted(async () => {
     const response = await currencyService.detailCurrency(route.params.id)
     currency.value = response.data
   } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      errorHandler(error, currencyBackenderror, 'Moneda')
-    }
+    errorHandler(error, currencyBackenderror, 'Moneda')
   } finally {
     isLoading.value = false
   }
