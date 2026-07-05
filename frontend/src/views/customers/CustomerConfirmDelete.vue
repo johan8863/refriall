@@ -64,9 +64,9 @@ onMounted(async () => {
 })
 
 // methods
-const delCustomer = async (id) => {
+const delCustomer = async () => {
   try {
-    await customerService.deleteCustomer(id)
+    await customerService.deleteCustomer(customer.value.id)
     router.push({ name: 'customers' })
   } catch (error) {
     console.log('Error status:', error.response.status)
@@ -112,7 +112,7 @@ const delCustomer = async (id) => {
     <div v-else class="col-md-4">
       <p>Está seguro que desea eliminar el cliente: {{ customer.name }}?</p>
       <div>
-        <button class="btn btn-sm btn-danger" @click="delCustomer(customer.id)">Eliminar</button>
+        <button class="btn btn-sm btn-danger" @click="delCustomer">Eliminar</button>
         <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Eliminar</button>
       </div>
     </div>
