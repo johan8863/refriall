@@ -11,13 +11,21 @@ import { errorHandler } from '../../utils/errors/errorHandler'
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import CustomerDependencyUpdateMenu from '../../components/customerDependencies/menus/CustomerDependencyUpdateMenu.vue'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // router utilities and handlers
 const router = useRouter()
 const route = useRoute()
 
-const goToCustomerDependecyDetail = () =>
-  router.push({ name: 'customer_dependecy_detail', params: { id: dependency.value.id } })
+const { goToDetail } = useRouting()
+
+const handleGoToDetail = () => {
+  try {
+    goToDetail('customer_dependecy_detail', dependency.value.id)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 // dependecy object
 const dependency = ref({
@@ -247,11 +255,7 @@ onMounted(async () => {
         <!-- buttons -->
         <div class="mb-2">
           <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
-          <button
-            type="button"
-            class="btn btn-sm btn-secondary"
-            @click="goToCustomerDependecyDetail"
-          >
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoToDetail">
             Cancelar
           </button>
         </div>
