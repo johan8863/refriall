@@ -25,9 +25,27 @@ const isLoading = ref(false)
 // routing
 const route = useRoute()
 const { goToListPost, goToDetail } = useRouting()
-const handleGoToList = () => goToListPost('currencies')
-const handleGoToDetail = () => goToDetail('currency_update', currency.value.id)
-const handleGoToDelete = () => goToDetail('currency_delete', currency.value.id)
+const handleGoToList = () => {
+  try {
+    goToListPost('currencies')
+  } catch (error) {
+    console.error(error)
+  }
+}
+const handleGoToDetail = () => {
+  try {
+    goToDetail('currency_update', currency.value.id)
+  } catch (error) {
+    console.error(error)
+  }
+}
+const handleGoToDelete = () => {
+  try {
+    goToDetail('currency_delete', currency.value.id)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 onMounted(async () => {
   try {

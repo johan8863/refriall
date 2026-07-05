@@ -16,7 +16,13 @@ import { useRouting } from '../../composables/routingFunctions.js'
 const router = useRouter()
 const route = useRoute()
 const { goBack } = useRouting()
-const handleGoBack = () => goBack('currencies', 'currency_detail', currency.value.id)
+const handleGoBack = () => {
+  try {
+    goBack('currencies', 'currency_detail', currency.value.id)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 // currency object for post and put requests
 const currency = ref({
