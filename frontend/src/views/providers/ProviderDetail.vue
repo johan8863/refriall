@@ -33,14 +33,16 @@ const route = useRoute()
 // lifecycle
 onMounted(async () => {
   try {
+    // start loading state
     isLoading.value = true
-
+    // fetch user from backend
     const resp = await providerService.detailProvider(route.params.id)
     provider.value = resp.data
   } catch (error) {
     console.error('General error', error)
     errorHandler(error, errorMessage)
   } finally {
+    // stop loading state
     isLoading.value = false
   }
 })
