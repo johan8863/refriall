@@ -36,8 +36,6 @@ onMounted(async () => {
     isLoading.value = true
 
     const resp = await providerService.detailProvider(route.params.id)
-    console.log(route.params.id)
-
     provider.value = resp.data
   } catch (error) {
     console.error('General error', error)
