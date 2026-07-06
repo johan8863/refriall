@@ -28,6 +28,7 @@ const provider = ref({
   activity: '',
   license_number: '',
   password: '',
+  confirm_password: '',
   personal_id: ''
 })
 
@@ -107,6 +108,7 @@ const providerBackendErrors = ref({
   activity: [],
   license_number: [],
   password: [],
+  confirm_password: [],
   personal_id: []
 })
 
@@ -512,6 +514,40 @@ onMounted(async () => {
               <p
                 class="form-text text-danger"
                 v-for="(error, i) in providerBackendErrors.password"
+                :key="i"
+              >
+                {{ error }}
+              </p>
+            </span>
+          </div>
+        </div>
+
+        <!-- confirm password control -->
+        <div v-if="!provider.id" class="col-md-3 mb-2">
+          <div class="mb-2">
+            <label for="password" class="form-label">Clave</label>
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              v-model.trim="provider.confirm_password"
+              @blur="v$.password.$touch"
+            />
+
+            <!-- frontend validations -->
+            <p
+              class="form-text text-danger"
+              v-for="error in v$.confirm_password.$errors"
+              :key="error.$uid"
+            >
+              {{ error.$message }}
+            </p>
+
+            <!-- backend validations -->
+            <span v-if="providerBackendErrors.confirm_password">
+              <p
+                class="form-text text-danger"
+                v-for="(error, i) in providerBackendErrors.confirm_password"
                 :key="i"
               >
                 {{ error }}
