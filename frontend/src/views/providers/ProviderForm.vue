@@ -17,7 +17,7 @@ const route = useRoute()
 
 // main object
 const provider = ref({
-  id: '',
+  id: null,
   username: '',
   first_name: '',
   last_name: '',
