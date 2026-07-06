@@ -1,6 +1,6 @@
 <script setup>
 // vue
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 // third
@@ -37,7 +37,7 @@ const provider = ref({
 const requiredlength = (lenData) => (value) => value.length === lenData
 
 // object rules
-const rules = {
+const rules = computed(() => ({
   username: {
     required: helpers.withMessage('El Usuario es requerido.', required)
   },
@@ -70,15 +70,26 @@ const rules = {
   license_number: {
     required: helpers.withMessage('La Licencia es requerida.', required)
   },
+  // both password and confirm_password rules will only be executed
+  // on creation form
   password: {
-    required: helpers.withMessage('La Clave es requerida.', required)
+    required: helpers.withMessage('La Clave es requerida.', (value) => {
+      if (provider.value.id) return true
+      return required.$validator(value)
+    })
+  },
+  confirm_password: {
+    required: helpers.withMessage('La confirmación es requerida.', (value) => {
+      if (provider.value.id) return true
+      return required.$validator(value)
+    })
   },
   personal_id: {
     required: helpers.withMessage('El CI es requerido.', required),
     numeric: helpers.withMessage('El CI debe contener sólo números.', numeric),
     requiredlength: helpers.withMessage('El CI debe contener 11 caracteres.', requiredlength(11))
   }
-}
+}))
 
 // vuelidate object
 const v$ = useVuelidate(rules, provider)
