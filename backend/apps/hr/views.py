@@ -106,7 +106,6 @@ class CustomerViewSet(viewsets.ModelViewSet):
 
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
-    serializer_class = ProviderUpdateSerializer
 
     def get_serializer_class(self):
         """
@@ -114,8 +113,13 @@ class ProviderViewSet(viewsets.ModelViewSet):
         """
         if self.action == 'create':
             return ProviderCreateSerializer
-        elif self.action in ['update', 'partial_update', 'get_provider_order_currency_no_bill']:
+        if self.action in ['update', 'partial_update', 'get_provider_order_currency_no_bill']:
             return ProviderUpdateSerializer
+        if self.action in ['change_password']:
+            return ProviderPasswordUpdateSerializer
+        if self.action in ['admin_reset_password']:
+            return ProviderAdminPasswordResetSerializer
+        # remaining action will be 'retrieve', 'list', 'destroy' and 'get_providers_paginated'
         return ProviderUpdateSerializer
     
     def destroy(self, request, *args, **kwargs):
@@ -135,10 +139,7 @@ class ProviderViewSet(viewsets.ModelViewSet):
         Custom endpoint for users to change their own password.
         POST /api/providers/change-password/
         """
-        serializer = ProviderPasswordUpdateSerializer(
-            data=request.data,
-            context={'request': request}
-        )
+        serializer = self.get_serializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(
@@ -159,10 +160,7 @@ class ProviderViewSet(viewsets.ModelViewSet):
         """
         user = self.get_object()
 
-        serializer = ProviderAdminPasswordResetSerializer(
-            data=request.data,
-            context={'user': user}
-        )
+        serializer = self.get_serializer(data=request.data, context={'user': user})
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
