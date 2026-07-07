@@ -3,7 +3,7 @@ export const errorHandler = (sourceError, displayError, objectName = 'Objeto', g
     const { data, status } = sourceError.response
     switch (status) {
       case 400:
-        displayError.value = data || data.detail
+        displayError.value = `${objectName} con información asociada o datos incorrectos.`
         break
       case 401:
         displayError.value = 'No autorizado, inicie sesión nuevamente.'

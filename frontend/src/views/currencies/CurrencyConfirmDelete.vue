@@ -12,6 +12,8 @@ import { errorHandler } from '../../utils/errors/errorHandler.js'
 const route = useRoute()
 const router = useRouter()
 
+
+
 // currency object meant to be deleted
 const currency = ref({
   id: null,
@@ -63,12 +65,6 @@ onMounted(async () => {
         <span role="status" class="text-primary">Cargando datos... </span>
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
-    </div>
-    <!-- error message -->
-    <div v-else-if="errorMessage" class="col-md-4">
-      <span class="form-text text-danger">
-        {{ errorMessage }}
-      </span>
     </div>
     <div v-else class="col-md-4">
       <!-- backend general errors -->
