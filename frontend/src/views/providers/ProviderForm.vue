@@ -118,6 +118,12 @@ const createProvider = async (provider) => {
     if (await v$.value.$validate()) {
       const { data } = await providerService.postProvider(provider)
       router.push({ name: 'providers_detail', params: { id: data.id } })
+    } else {
+      // always log vuelidate erros to de console
+      // just in case of unexpected behavior
+      console.error(v$.value.$errors.map(err => ({
+        property: err.$property, message: err.$message
+      })))
     }
   } catch (error) {
     console.error('General error', error)
@@ -136,6 +142,12 @@ const updateProvider = async (provider) => {
     if (await v$.value.$validate()) {
       const { data } = await providerService.putProvider(provider)
       router.push({ name: 'providers_detail', params: { id: data.id } })
+    } else {
+      // always log vuelidate erros to de console
+      // just in case of unexpected behavior
+      console.error(v$.value.$errors.map(err => ({
+        property: err.$property, message: err.$message
+      })))
     }
   } catch (error) {
     console.error('General error', error)

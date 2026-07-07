@@ -64,6 +64,12 @@ const createCurrency = async () => {
       currenyNameUpper()
       const { data } = await currencyService.postCurrency(currency.value)
       router.push({ name: 'currency_detail', params: { id: data.id } })
+    } else {
+      // always log vuelidate erros to de console
+      // just in case of unexpected behavior
+      console.error(v$.value.$errors.map(err => ({
+        property: err.$property, message: err.$message
+      })))
     }
   } catch (error) {
     console.error('General error: ', error)
@@ -85,6 +91,12 @@ const updateCurrency = async () => {
       currenyNameUpper()
       const { data } = await currencyService.putCurrency(currency.value)
       router.push({ name: 'currency_detail', params: { id: data.id } })
+    } else {
+      // always log vuelidate erros to de console
+      // just in case of unexpected behavior
+      console.error(v$.value.$errors.map(err => ({
+        property: err.$property, message: err.$message
+      })))
     }
   } catch (error) {
     console.error('General error: ', error)

@@ -75,6 +75,12 @@ const createDependency = async () => {
           id: data.customer
         }
       })
+    } else {
+      // always log vuelidate erros to de console
+      // just in case of unexpected behavior
+      console.error(v$.value.$errors.map(err => ({
+        property: err.$property, message: err.$message
+      })))
     }
   } catch (error) {
     console.error('General error', error)

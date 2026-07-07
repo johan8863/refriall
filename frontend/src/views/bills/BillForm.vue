@@ -133,6 +133,12 @@ const createBill = async () => {
     if (await v$.value.$validate()) {
       const { data } = await billService.postBill(bill.value)
       router.push({ name: 'bills_detail', params: { id: data.id } })
+    } else {
+      // always log vuelidate erros to de console
+      // just in case of unexpected behavior
+      console.error(v$.value.$errors.map(err => ({
+        property: err.$property, message: err.$message
+      })))
     }
   } catch (error) {
     console.error('General error', error)
@@ -152,6 +158,12 @@ const updateBill = async () => {
     if (await v$.value.$validate()) {
       const { data } = await billService.putBill(bill.value)
       router.push({ name: 'bills_detail', params: { id: data.id } })
+    } else {
+      // always log vuelidate erros to de console
+      // just in case of unexpected behavior
+      console.error(v$.value.$errors.map(err => ({
+        property: err.$property, message: err.$message
+      })))
     }
   } catch (error) {
     console.error('General error', error)

@@ -97,6 +97,12 @@ const createCustomer = async () => {
       // and redirect to its detail view
       const { data } = await customerService.postCustomer(customer.value)
       router.push({ name: 'customers_detail', params: { id: data.id } })
+    } else {
+      // always log vuelidate erros to de console
+      // just in case of unexpected behavior
+      console.error(v$.value.$errors.map(err => ({
+        property: err.$property, message: err.$message
+      })))
     }
   } catch (error) {
     // in case of backend exceptions, fill the corresponding ones in the
@@ -114,6 +120,12 @@ const updateCustomer = async () => {
       // and redirect to its detail view
       const { data } = await customerService.putCustomer(customer.value)
       router.push({ name: 'customers_detail', params: { id: data.id } })
+    } else {
+      // always log vuelidate erros to de console
+      // just in case of unexpected behavior
+      console.error(v$.value.$errors.map(err => ({
+        property: err.$property, message: err.$message
+      })))
     }
   } catch (error) {
     // in case of backend exceptions, fill the corresponding ones in the

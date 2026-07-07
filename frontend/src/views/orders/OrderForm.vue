@@ -230,6 +230,12 @@ const updateOrder = async (order) => {
       order.value.itemtime_set = order.value.itemtime_set.filter((x) => x.item > 0)
       const { data } = await orderService.putOrder(order.value)
       router.push({ name: 'orders_detail', params: { id: data.id } })
+    } else {
+      // always log vuelidate erros to de console
+      // just in case of unexpected behavior
+      console.error(v$.value.$errors.map(err => ({
+        property: err.$property, message: err.$message
+      })))
     }
   } catch (error) {
     errorHandler(error, orderBackendErrors, 'Orden')
@@ -243,6 +249,12 @@ const createOrder = async (order) => {
     if (await v$.value.$validate()) {
       const { data } = await orderService.postOrder(order.value)
       router.push({ name: 'orders_detail', params: { id: data.id } })
+    } else {
+      // always log vuelidate erros to de console
+      // just in case of unexpected behavior
+      console.error(v$.value.$errors.map(err => ({
+        property: err.$property, message: err.$message
+      })))
     }
   } catch (error) {
     errorHandler(error, orderBackendErrors, 'Orden')
