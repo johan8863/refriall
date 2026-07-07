@@ -19,6 +19,7 @@ const currency = ref({
   description: ''
 })
 
+// erros
 const errorMessage = ref(null)
 
 // delete the currency object
