@@ -73,6 +73,7 @@ onMounted(async () => {
     const resp = await orderService.detailOrder(route.params.id)
     order.value = resp.data
   } catch (error) {
+    console.error(error)
     errorHandler(error, errorMessage, 'Orden')
   } finally {
     // stop loading state
@@ -85,6 +86,7 @@ const delOrder = async () => {
     await orderService.deleteOrder(order.value.id)
     router.push({ name: 'orders' })
   } catch (error) {
+    console.error(error)
     if (error.response) {
       if (error.response.status === 404) {
         errorMessage.value = 'Orden no encontrada'

@@ -34,6 +34,7 @@ const getOrders = async (page = 1) => {
     orders.value = data.results
     orderBackendErrors.value = null
   } catch (error) {
+    console.error(error)
     errorHandler(error, orderBackendErrors, 'Orden')
   } finally {
     isLoading.value = false
@@ -67,6 +68,7 @@ const handleSearch = async () => {
     showPrevButton.value = !!data.previous
     orderBackendErrors.value = null
   } catch (error) {
+    console.error(error)
     errorHandler(error, orderBackendErrors, 'Orden')
   } finally {
     isLoading.value = false

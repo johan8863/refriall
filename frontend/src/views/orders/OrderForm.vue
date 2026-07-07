@@ -238,6 +238,7 @@ const updateOrder = async (order) => {
       })))
     }
   } catch (error) {
+    console.error(error)
     errorHandler(error, orderBackendErrors, 'Orden')
   }
 }
@@ -257,6 +258,7 @@ const createOrder = async (order) => {
       })))
     }
   } catch (error) {
+    console.error(error)
     errorHandler(error, orderBackendErrors, 'Orden')
   }
 }
