@@ -57,15 +57,8 @@ onMounted(async () => {
     const resp = await billService.detailBill(route.params.id)
     bill.value = resp.data
   } catch (error) {
-    if (error.response) {
-      console.log('Error data: ', error.response.data)
-      console.log('Error status: ', error.response.status)
-      if (error.response.status === 404) {
-        billBackendErrors.value = { not_found: 'Factura no encontrada.' }
-      }
-    } else {
-      billBackendErrors.value = { general_error: 'Error inesperado, consulte al desarrollador' }
-    }
+    console.error('General error', error)
+    errorHandler(error, errorMessage)
   } finally {
     // stop lading state
     isLoading.value = false
