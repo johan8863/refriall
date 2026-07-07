@@ -10,7 +10,6 @@ import { required, helpers } from '@vuelidate/validators'
 // app
 import ProviderChangeSelfPasswordMenu from '../../components/providers/menus/ProviderChangeSelfPasswordMenu.vue';
 import { providerService } from '../../services/providerService.js';
-import { errorHandler } from '../../utils/errors/errorHandler.js';
 import { useRouting } from '../../composables/routingFunctions.js';
 
 // main object
@@ -20,14 +19,18 @@ const providerChangePassword = ref({
   confirm_new_password: ''
 })
 
+// object backend errors
+const backendErrors = ref({
+  current_password: [],
+  new_password: [],
+  confirm_new_password: []
+})
+
 // routing utilities
 const router = useRouter()
 const { goToListPost } = useRouting()
 
 const handleGoToList = () => goToListPost('providers')
-
-
-const errorMessage = ref(null)
 
 // rules to manage front validations
 const rules = {
@@ -59,8 +62,10 @@ const handleChangeSelfPassword = async () => {
       })))
     }
   } catch (error) {
-    console.error(error)
-    errorHandler(error, errorMessage)
+    console.error({error})
+    if (error.response) {
+      backendErrors.value = error.response.data
+    }
   }
 }
 
@@ -75,11 +80,16 @@ const handleChangeSelfPassword = async () => {
 
     <!-- main content -->
     <div class="col-md-2 col-sm-3">
-      <div v-if="errorMessage">
-        <span class="form-text text-danger">
-          {{ errorMessage }}
-        </span>
-      </div>
+      <!-- backend errors from non_field_errors dictionary -->
+      <span v-if="backendErrors.non_field_errors">
+        <p
+          class="form-text text-danger"
+          v-for="(error, index) in kitErrors.non_field_errors"
+          :key="index"
+        >
+          {{ error }}
+        </p>
+      </span>
       <form @submit.prevent="handleChangeSelfPassword">
         <!-- current_password control -->
         <div class="mb-3">
@@ -95,6 +105,12 @@ const handleChangeSelfPassword = async () => {
           <p class="form-text text-danger" v-for="error in v$.current_password.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
+          <!-- backend validations -->
+          <span v-if="backendErrors.current_password">
+            <p class="form-text text-danger" v-for="(error, index) in backendErrors.current_password" :key="index">
+              {{ error }}
+            </p>
+          </span>
         </div>
         <!-- new_password control -->
         <div class="mb-3">
@@ -109,6 +125,12 @@ const handleChangeSelfPassword = async () => {
           <p class="form-text text-danger" v-for="error in v$.new_password.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
+          <!-- backend validations -->
+            <span v-if="backendErrors.new_password">
+              <p class="form-text text-danger" v-for="(error, index) in backendErrors.new_password" :key="index">
+                {{ error }}
+              </p>
+            </span>
         </div>
         <!-- confirm_new_password control -->
         <div class="mb-3">
@@ -124,6 +146,12 @@ const handleChangeSelfPassword = async () => {
           <p class="form-text text-danger" v-for="error in v$.confirm_new_password.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
+          <!-- backend validations -->
+          <span v-if="backendErrors.confirm_new_password">
+            <p class="form-text text-danger" v-for="(error, index) in backendErrors.confirm_new_password" :key="index">
+              {{ error }}
+            </p>
+          </span>
         </div>
         <!-- buttons -->
         <div>
