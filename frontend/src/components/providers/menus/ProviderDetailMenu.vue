@@ -24,6 +24,13 @@ defineProps({
     <li class="list-group-item">
       <router-link
         v-if="provider.id"
+        :to="{ name: 'providers_change_password', params: { id: provider.id } }"
+        >Cambiar clave</router-link
+      >
+    </li>
+    <li class="list-group-item">
+      <router-link
+        v-if="provider.id"
         :to="{ name: 'providers_confirm_delete', params: { id: provider.id } }"
         >Eliminar</router-link
       >

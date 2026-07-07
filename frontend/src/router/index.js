@@ -141,6 +141,11 @@ const router = createRouter({
                       path: 'confirm/delete',
                       name: 'providers_confirm_delete',
                       component: () => import('../views/providers/ProviderConfirmDelete.vue')
+                    },
+                    {
+                      path: 'change/self/password',
+                      name: 'providers_change_password',
+                      component: () => import('../views/providers/ProviderChangePassword.vue')
                     }
                   ]
                 }
