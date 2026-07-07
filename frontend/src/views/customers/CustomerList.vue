@@ -8,6 +8,7 @@ import CustomerListTable from '../../components/customers/CustomerListTable.vue'
 import CustomerListPagination from '../../components/customers/CustomerListPagination.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import CustomerListMenu from '../../components/customers/menus/CustomerListMenu.vue'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 // reactive objects
 const customers = ref([])
@@ -33,7 +34,8 @@ const getCustomers = async (page = 1) => {
     customers.value = data.results
     customerBackendErrors.value = null
   } catch (error) {
-    handleError(error)
+    console.error(error)
+    errorHandler(error, customerBackendErrors)
   } finally {
     isLoading.value = false
   }
@@ -66,7 +68,8 @@ const handleSearch = async () => {
     showPrevButton.value = !!data.previous
     customerBackendErrors.value = null
   } catch (error) {
-    handleError(error)
+    console.error(error)
+    errorHandler(error, customerBackendErrors)
   } finally {
     isLoading.value = false
   }
@@ -91,7 +94,8 @@ const loadNextItems = async () => {
       showNextButton.value = !!data.next
       showPrevButton.value = !!data.previous
     } catch (error) {
-      handleError(error)
+      console.error(error)
+      errorHandler(error, customerBackendErrors)
     } finally {
       isLoading.value = false
     }
@@ -111,21 +115,13 @@ const loadPrevItems = async () => {
       showNextButton.value = !!data.next
       showPrevButton.value = !!data.previous
     } catch (error) {
-      handleError(error)
+      console.error(error)
+      errorHandler(error, customerBackendErrors)
     } finally {
       isLoading.value = false
     }
   } else {
     await getCustomers(currentPage.value)
-  }
-}
-
-const handleError = (error) => {
-  console.error('Error', error)
-  if (error.response) {
-    customerBackendErrors.value = `${error.response.data.detail || error.response.data} - ${error.response.status}`
-  } else {
-    customerBackendErrors.value = 'Error inesperado, consulte al desarrollador'
   }
 }
 
