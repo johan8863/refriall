@@ -7,12 +7,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { currencyService } from '../../services/currencyService'
 import CurrencyConfirmDeleteMenu from '../../components/currencies/menus/CurrencyConfirmDeleteMenu.vue'
 import { errorHandler } from '../../utils/errors/errorHandler.js'
-
-// router utilities to redirect the view and catch route params
-const route = useRoute()
-const router = useRouter()
-
-
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // currency object meant to be deleted
 const currency = ref({
@@ -20,6 +15,20 @@ const currency = ref({
   name: '',
   description: ''
 })
+
+// routing utilities
+const route = useRoute()
+const router = useRouter()
+
+const { goToDetail } = useRouting()
+
+const handleGoBack = () => {
+  try {
+    goToDetail('currency_detail', currency.value.id)
+  } catch (error) {
+    
+  }
+}
 
 // loading state
 const isLoading = ref(false)
