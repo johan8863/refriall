@@ -120,6 +120,11 @@ const router = createRouter({
                   component: () => import('../views/providers/ProviderForm.vue')
                 },
                 {
+                  path: 'create',
+                  name: 'providers_change_self_password',
+                  component: () => import('../views/providers/ProviderChangeSelfPassword.vue')
+                },
+                {
                   path: ':id',
                   children: [
                     {
