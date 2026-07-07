@@ -95,7 +95,7 @@ const createItem = async (item) => {
       })))
     }
   } catch (error) {
-    console.error('General erro', error)
+    console.error('General error', error)
     if (error.response) {
       itemErrors.value = error.response.data
     } else {
@@ -119,7 +119,7 @@ const updateItem = async (item) => {
       })))
     }
   } catch (error) {
-    console.error('General erro', error)
+    console.error('General error', error)
     if (error.response) {
       itemErrors.value = error.response.data
     } else {
