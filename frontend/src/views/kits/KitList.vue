@@ -8,6 +8,7 @@ import KitsListTable from '../../components/kits/KitsListTable.vue'
 import KitListPagination from '../../components/kits/KitListPagination.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import KitListMenu from '../../components/kits/menus/KitListMenu.vue'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 // reactive objects
 const kits = ref([])
@@ -33,7 +34,8 @@ const getKits = async (page = 1) => {
     kits.value = data.results
     kitsErrors.value = null
   } catch (error) {
-    handleError(error)
+    console.error(error)
+    errorHandler(error, kitsErrors)
   } finally {
     isLoading.value = false
   }
@@ -66,7 +68,8 @@ const handleSearch = async () => {
     showPrevButton.value = !!data.previous
     kitsErrors.value = null
   } catch (error) {
-    handleError(error)
+    console.error(error)
+    errorHandler(error, kitsErrors)
   } finally {
     isLoading.value = false
   }
@@ -91,7 +94,8 @@ const loadNextItems = async () => {
       showNextButton.value = !!data.next
       showPrevButton.value = !!data.previous
     } catch (error) {
-      handleError(error)
+      console.error(error)
+      errorHandler(error, kitsErrors)
     } finally {
       isLoading.value = false
     }
@@ -111,21 +115,13 @@ const loadPrevItems = async () => {
       showNextButton.value = !!data.next
       showPrevButton.value = !!data.previous
     } catch (error) {
-      handleError(error)
+      console.error(error)
+      errorHandler(error, kitsErrors)
     } finally {
       isLoading.value = false
     }
   } else {
     await getKits(currentPage.value)
-  }
-}
-
-const handleError = (error) => {
-  console.error('Error', error)
-  if (error.response) {
-    kitsErrors.value = `${error.response.data.detail || error.response.data} - ${error.response.status}`
-  } else {
-    kitsErrors.value = 'Error inesperado, consulte al desarrollador'
   }
 }
 

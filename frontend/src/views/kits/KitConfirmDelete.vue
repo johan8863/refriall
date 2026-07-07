@@ -50,6 +50,7 @@ onMounted(async () => {
     const resp = await kitService.detailKit(route.params.id)
     kit.value = resp.data
   } catch (error) {
+    console.error('General error', error)
     if (error.response) {
       console.log('Error data: ', error.response.data)
       console.log('Error status: ', error.response.status)

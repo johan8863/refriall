@@ -33,6 +33,7 @@ onMounted(async () => {
     const resp = await kitService.detailKit(route.params.id)
     kit.value = resp.data
   } catch (error) {
+    console.error(error)
     errorHandler(error, kitErrors, 'Equipo', 'm')
   } finally {
     // stop loading state
