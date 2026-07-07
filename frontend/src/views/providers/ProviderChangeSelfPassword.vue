@@ -23,7 +23,8 @@ const providerChangePassword = ref({
 const backendErrors = ref({
   current_password: [],
   new_password: [],
-  confirm_new_password: []
+  confirm_new_password: [],
+  network: ''
 })
 
 // routing utilities
@@ -66,6 +67,9 @@ const handleChangeSelfPassword = async () => {
     if (error.response) {
       backendErrors.value = error.response.data
     }
+    if (error.code === 'ERR_NETWORK') {
+      backendErrors.value.network = 'Servidor caído, consulte al desarrollador.'
+    }
   }
 }
 
@@ -89,6 +93,10 @@ const handleChangeSelfPassword = async () => {
         >
           {{ error }}
         </p>
+      </span>
+      <!-- network error -->
+      <span v-if="backendErrors.network">
+        <p class="form-text text-danger">{{ backendErrors.network }}</p>
       </span>
       <form @submit.prevent="handleChangeSelfPassword">
         <!-- current_password control -->
