@@ -48,7 +48,7 @@ onMounted(async () => {
     const resp = await customerService.detailCustomer(route.params.id)
     customer.value = resp.data
   } catch (error) {
-    onsole.log('Error status:', error.response.status)
+    console.log('Error status:', error.response.status)
     console.log('Error data:', error.response.data)
     if (error.response) {
       if (error.response.status === 404) {
