@@ -375,6 +375,7 @@ onMounted(async () => {
       await loadData()
     }
   } catch (error) {
+    console.error(error)
     errorHandler(error, errorMessage, 'Factura')
   } finally {
     isLoading.value = false

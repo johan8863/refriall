@@ -71,6 +71,7 @@ const handleSearch = async () => {
     showPrevButton.value = !!data.previous
     billBackendErrors.value = null
   } catch (error) {
+    console.error(error)
     errorHandler(error, billBackendErrors)
   } finally {
     // stop loading state
@@ -104,6 +105,7 @@ const loadNextItems = async () => {
       await getBills(currentPage.value)
     }
   } catch (error) {
+    console.error(error)
     errorHandler(error, billBackendErrors)
   } finally {
     // stop loading state
@@ -129,6 +131,7 @@ const loadPrevItems = async () => {
       await getBills(currentPage.value)
     }
   } catch (error) {
+    console.error(error)
     errorHandler(error, billBackendErrors)
   } finally {
     // stop loading state
