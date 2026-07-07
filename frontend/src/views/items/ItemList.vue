@@ -8,6 +8,7 @@ import ItemListTable from '../../components/items/ItemListTable.vue'
 import ItemListPagination from '../../components/items/ItemListPagination.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import ItemListMenu from '../../components/items/menus/ItemListMenu.vue'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 // reactive objects
 const items = ref([])
@@ -33,7 +34,8 @@ const getItems = async (page = 1) => {
     items.value = data.results
     itemBackendErrors.value = null
   } catch (error) {
-    handleError(error)
+    console.error(error)
+    errorHandler(error, itemBackendErrors)
   } finally {
     isLoading.value = false
   }
@@ -66,7 +68,8 @@ const handleSearch = async () => {
     showPrevButton.value = !!data.previous
     itemBackendErrors.value = null
   } catch (error) {
-    handleError(error)
+    console.error(error)
+    errorHandler(error, itemBackendErrors)
   } finally {
     isLoading.value = false
   }
@@ -91,7 +94,8 @@ const loadNextItems = async () => {
       showNextButton.value = !!data.next
       showPrevButton.value = !!data.previous
     } catch (error) {
-      handleError(error)
+      console.error(error)
+      errorHandler(error, itemBackendErrors)
     } finally {
       isLoading.value = false
     }
@@ -111,21 +115,13 @@ const loadPrevItems = async () => {
       showNextButton.value = !!data.next
       showPrevButton.value = !!data.previous
     } catch (error) {
-      handleError(error)
+      console.error(error)
+      errorHandler(error, itemBackendErrors)
     } finally {
       isLoading.value = false
     }
   } else {
     await getItems(currentPage.value)
-  }
-}
-
-const handleError = (error) => {
-  console.error('Error', error)
-  if (error.response) {
-    itemBackendErrors.value = `${error.response.data.detail || error.response.data} - ${error.response.status}`
-  } else {
-    itemBackendErrors.value = 'Error inesperado, consulte al desarrollador'
   }
 }
 

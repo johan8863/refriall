@@ -31,6 +31,7 @@ onMounted(async () => {
     const resp = await itemService.detailItem(route.params.id)
     item.value = resp.data
   } catch (error) {
+    console.error(error)
     errorHandler(error, errorMessage)
   }
 })
@@ -43,6 +44,7 @@ const delItem = async () => {
     await itemService.deleteItem(item.value.id)
     router.push({ name: 'items' })
   } catch (error) {
+    console.error(error)
     errorHandler(error, errorMessage)
   }
 }
