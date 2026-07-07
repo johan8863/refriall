@@ -21,8 +21,10 @@ const hasSearched = ref(false)
 const searchTerm = ref('')
 
 const getBills = async (page = 1) => {
-  isLoading.value = true
   try {
+    // start loading state
+    isLoading.value = true
+
     const resp = await billService.listBillsPagination(page)
     const data = resp.data
 
@@ -33,6 +35,7 @@ const getBills = async (page = 1) => {
   } catch (error) {
     handleError(error)
   } finally {
+    // stop loading state
     isLoading.value = false
   }
 }
