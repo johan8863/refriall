@@ -12,5 +12,6 @@ export const providerService = {
   detailProvider: (id) => apiBase.get(`${urlProvider}/${id}/`),
   postProvider: (provider) => apiBase.post(`${urlProvider}/`, provider),
   putProvider: (provider) => apiBase.put(`${urlProvider}/${provider.id}/`, provider),
-  deleteProvider: (id) => apiBase.delete(`${urlProvider}/${id}/`)
+  deleteProvider: (id) => apiBase.delete(`${urlProvider}/${id}/`),
+  changeSelfPassword: (credentials) => apiBase.post(`${urlProvider}/change-password/`, credentials)
 }
