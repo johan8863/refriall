@@ -44,6 +44,7 @@ onMounted(async () => {
     const resp = await customerDependecyService.detailCustomerDependecy(route.params.id)
     dependency.value = resp.data
   } catch (error) {
+    console.error(error)
     errorHandler(error, errorMessage)
   }
 })
@@ -58,6 +59,7 @@ const delDependency = async () => {
       }
     })
   } catch (error) {
+    console.error(error)
     errorHandler(error, errorMessage)
   }
 }
