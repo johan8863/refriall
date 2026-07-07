@@ -8,6 +8,7 @@ import BillListTable from '../../components/bills/BillListTable.vue'
 import BillListPaginatin from '../../components/bills/BillListPaginatin.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import BillListMenu from '../../components/bills/menus/BillListMenu.vue'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 const bills = ref([])
 const currentPage = ref(1)
@@ -24,16 +25,17 @@ const getBills = async (page = 1) => {
   try {
     // start loading state
     isLoading.value = true
-
+    // getting data from backend
     const resp = await billService.listBillsPagination(page)
     const data = resp.data
-
+    // properties restarting
     showNextButton.value = !!data.next
     showPrevButton.value = !!data.previous
     bills.value = data.results
     billBackendErrors.value = null
   } catch (error) {
-    handleError(error)
+    console.error(error)
+    errorHandler(error, billBackendErrors)
   } finally {
     // stop loading state
     isLoading.value = false
@@ -55,20 +57,23 @@ const handleSearch = async () => {
 
   restartSearchFlags()
 
+  // start loading state
   isLoading.value = true
   hasSearched.value = true
 
   try {
+    // getting data from backend
     const resp = await billService.searchBills(searchTerm.value)
     const data = resp.data
-
+    // charge properties
     bills.value = data.results
     showNextButton.value = !!data.next
     showPrevButton.value = !!data.previous
     billBackendErrors.value = null
   } catch (error) {
-    handleError(error)
+    errorHandler(error, billBackendErrors)
   } finally {
+    // stop loading state
     isLoading.value = false
   }
 }
@@ -82,41 +87,52 @@ const clearSearch = async () => {
 }
 
 const loadNextItems = async () => {
-  currentPage.value += 1
-  if (hasSearched.value && searchTerm.value.trim()) {
-    // Search purpose
-    const resp = await billService.searchBills(searchTerm.value, currentPage.value)
-    const data = resp.data
-    bills.value = data.results // o bills.value
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-  } else {
-    // whole pagination list
-    await getBills(currentPage.value)
+  try {
+    // start loading state
+    isLoading.value = true
+
+    currentPage.value += 1
+    if (hasSearched.value && searchTerm.value.trim()) {
+      // Search purpose
+      const resp = await billService.searchBills(searchTerm.value, currentPage.value)
+      const data = resp.data
+      bills.value = data.results // o bills.value
+      showNextButton.value = !!data.next
+      showPrevButton.value = !!data.previous
+    } else {
+      // whole pagination list
+      await getBills(currentPage.value)
+    }
+  } catch (error) {
+    errorHandler(error, billBackendErrors)
+  } finally {
+    // stop loading state
+    isLoading.value = false
   }
 }
 
 const loadPrevItems = async () => {
-  currentPage.value -= 1
-  if (hasSearched.value && searchTerm.value.trim()) {
-    // search purpose
-    const resp = await billService.searchBills(searchTerm.value, currentPage.value)
-    const data = resp.data
-    bills.value = data.results // o bills.value
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-  } else {
-    // whole pagination list
-    await getBills(currentPage.value)
-  }
-}
+  try {
+    // start loading state
+    isLoading.value = true
 
-const handleError = (error) => {
-  console.error('Error', error)
-  if (error.response) {
-    billBackendErrors.value = `${error.response.data.detail || error.response.data} - ${error.response.status}`
-  } else {
-    billBackendErrors.value = 'Error inesperado, consulte al desarrollador'
+    currentPage.value -= 1
+    if (hasSearched.value && searchTerm.value.trim()) {
+      // search purpose
+      const resp = await billService.searchBills(searchTerm.value, currentPage.value)
+      const data = resp.data
+      bills.value = data.results // o bills.value
+      showNextButton.value = !!data.next
+      showPrevButton.value = !!data.previous
+    } else {
+      // whole pagination list
+      await getBills(currentPage.value)
+    }
+  } catch (error) {
+    errorHandler(error, billBackendErrors)
+  } finally {
+    // stop loading state
+    isLoading.value = false
   }
 }
 
