@@ -51,6 +51,9 @@ const isLoading = ref(false)
 
 onMounted(async () => {
   try {
+    // start lading state
+    isLoading.value = true
+
     const resp = await billService.detailBill(route.params.id)
     bill.value = resp.data
   } catch (error) {
@@ -63,6 +66,9 @@ onMounted(async () => {
     } else {
       billBackendErrors.value = { general_error: 'Error inesperado, consulte al desarrollador' }
     }
+  } finally {
+    // stop lading state
+    isLoading.value = false
   }
 })
 
