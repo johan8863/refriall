@@ -126,6 +126,7 @@ onMounted(async () => {
       currency.value = (await currencyService.detailCurrency(id)).data
     }
   } catch (error) {
+    console.error(error)
     currencyBackendErrors.value = error.response.data
   } finally {
     // stop loading state

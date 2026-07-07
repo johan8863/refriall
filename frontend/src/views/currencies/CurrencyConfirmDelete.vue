@@ -26,7 +26,7 @@ const handleGoBack = () => {
   try {
     goToDetail('currency_detail', currency.value.id)
   } catch (error) {
-    
+    console.error(error)
   }
 }
 
@@ -42,6 +42,7 @@ const delCurrency = async () => {
     await currencyService.deleteCurrency(currency.value.id)
     router.push({ name: 'currencies' })
   } catch (error) {
+    console.error(error)
     errorHandler(error, errorMessage, 'Moneda')
   }
 }
@@ -53,6 +54,7 @@ onMounted(async () => {
     // getting data from backend
     currency.value = (await currencyService.detailCurrency(route.params.id)).data
   } catch (error) {
+    console.error(error)
     errorHandler(error, errorMessage, 'Moneda')
   } finally {
     // stop loading state
