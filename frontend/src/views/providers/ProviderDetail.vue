@@ -55,7 +55,7 @@ onMounted(async () => {
       <provider-detail-menu :provider="provider" />
     </div>
 
-    <!-- loading order data -->
+    <!-- loading provider data -->
     <div v-if="isLoading" class="col-md-4">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
         <span role="status" class="text-primary">Cargando datos... </span>
