@@ -77,12 +77,12 @@ const handleLogin = async () => {
     <div class="d-block d-sm-none"></div>
     <!-- submit button -->
     <div class="col-6 col-sm-2 col-md-1 d-grid mx-auto mx-sm-0">
-      <button v-if="!authStore.isLoadingAuth" type="submit" class="btn btn-sm btn-primary">
-        Entrar
-      </button>
-      <button v-else type="submit" class="btn btn-sm btn-success" disabled>
-        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-        <span role="status"> Espere...</span>
+      <button type="submit" :class="submitButtonClasses">
+        <span v-if="!authStore.isLoadingAuth">Entrar</span>
+        <div v-else>
+          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+          <span role="status"> Espere...</span>
+        </div>
       </button>
     </div>
   </form>
