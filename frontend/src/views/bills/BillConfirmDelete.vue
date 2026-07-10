@@ -71,7 +71,18 @@ const delBill = async () => {
     router.push({ name: 'bills' })
   } catch (error) {
     console.error('General error', error)
-    errorHandler(error, errorMessage)
+    if (error.response) {
+      if (error.response.status === 404) {
+        errorMessage.value = 'Factura no encontrada'
+      }
+      if (error.response.status === 500) {
+        errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
+      }
+    } else if (error.request) {
+      errorMessage.value = 'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
+    } else {
+      errorMessage.value = 'Error inesperado, consulte al desarrollador.'
+    }
   } finally {
     // finish lading state
     isLoading.value = false
