@@ -405,3 +405,9 @@ class BillGetForUpdateSerializer(serializers.ModelSerializer):
             })
         return super().validate(attrs)
 
+
+class BillGetForDeleteSerializer(serializers.ModelSerializer):
+    """Serializer with minimun data to load in a deletion view"""
+    class Meta:
+        model = Bill
+        fields = ['id', 'folio']

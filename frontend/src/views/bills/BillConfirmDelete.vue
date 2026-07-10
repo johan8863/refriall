@@ -54,7 +54,7 @@ onMounted(async () => {
     // start lading state
     isLoading.value = true
 
-    const resp = await billService.detailBill(route.params.id)
+    const resp = await billService.getForDelete(route.params.id)
     bill.value = resp.data
   } catch (error) {
     console.error('General error', error)

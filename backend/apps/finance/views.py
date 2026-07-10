@@ -20,6 +20,7 @@ from .serializers import (
     BillSerializerForReadOnly,
     BillGetForUpdateSerializer,
     BillSerializerReadListView,
+    BillGetForDeleteSerializer,
     CurrencySerializer,
     OrderSerializerForReadOnly,
     OrderSerializer,
@@ -58,6 +59,8 @@ class BillViewSet(viewsets.ModelViewSet):
             return BillSerializerForReadOnly
         elif self.action == 'get_for_update':
             return BillGetForUpdateSerializer
+        elif self.action == 'get_for_delete':
+            return BillGetForDeleteSerializer
         return BillSerializer
     
     @action(detail=False, url_path='bill-list-pagination')
@@ -84,6 +87,12 @@ class BillViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, url_path="get-for-update")
     def get_for_update(self, request, pk):
+        bill = self.get_object()
+        serializer = self.get_serializer(bill)
+        return Response(serializer.data)
+    
+    @action(detail=True, url_path="get-for-delete")
+    def get_for_delete(self, request, pk):
         bill = self.get_object()
         serializer = self.get_serializer(bill)
         return Response(serializer.data)
