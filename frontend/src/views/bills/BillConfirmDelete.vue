@@ -104,22 +104,7 @@ const delBill = async () => {
     <!-- main content -->
     <div v-else class="col-md-6">
       <p>Está seguro que desea eliminar la siguiente factura?</p>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Folio</th>
-            <th>Cliente</th>
-            <th>Importe total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ bill.folio }}</td>
-            <td v-if="bill.customer">{{ bill.customer.name }}</td>
-            <td>{{ bill.get_total_amount }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <p><strong>Folio: </strong> {{ bill.folio }}</p>
       <button class="btn btn-sm btn-danger" @click="delBill">Eliminar</button>
       <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Cancelar</button>
     </div>
