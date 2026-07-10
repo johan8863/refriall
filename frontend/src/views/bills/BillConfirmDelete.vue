@@ -12,21 +12,7 @@ import { useRouting } from '../../composables/routingFunctions.js'
 // main object
 const bill = ref({
   id: null,
-  customer: null,
   folio: '',
-  provider: null,
-  provider_signature_date: '',
-  customer_signature_date: '',
-  orders: [],
-  get_orders: [],
-  check_number: '',
-  charge_aprove: '',
-  charge_check: '',
-  customer_charge: '',
-  customer_name: '',
-  customer_personal_id: '',
-  checked_by: '',
-  aproved_by: ''
 })
 
 // errors holder object
