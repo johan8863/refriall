@@ -6,7 +6,6 @@ import { useRoute, useRouter } from 'vue-router'
 // app
 import { billService } from '../../services/billService'
 import BillConfirmDeleteMenu from '../../components/bills/menus/BillConfirmDeleteMenu.vue'
-import { errorHandler } from '../../utils/errors/errorHandler.js'
 import { useRouting } from '../../composables/routingFunctions.js'
 
 // main object
@@ -39,12 +38,23 @@ onMounted(async () => {
   try {
     // start lading state
     isLoading.value = true
-
+    // getting data from backend
     const resp = await billService.getForDelete(route.params.id)
     bill.value = resp.data
   } catch (error) {
     console.error('General error', error)
-    errorHandler(error, errorMessage)
+    if (error.response) {
+      if (error.response.status === 404) {
+        errorMessage.value = 'Factura no encontrada'
+      }
+      if (error.response.status === 500) {
+        errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
+      }
+    } else if (error.request) {
+      errorMessage.value = 'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
+    } else {
+      errorMessage.value = 'Error inesperado, consulte al desarrollador.'
+    }
   } finally {
     // stop lading state
     isLoading.value = false
