@@ -66,7 +66,7 @@ const delBill = async () => {
   try {
     // start lading state
     isLoading.value = true
-
+    // performing deletion
     await billService.deleteBill(bill.value.id)
     router.push({ name: 'bills' })
   } catch (error) {
