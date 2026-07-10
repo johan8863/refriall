@@ -5,7 +5,6 @@ import { useRoute } from 'vue-router'
 
 // app
 import { billService } from '../../services/billService'
-import { errorHandler } from '../../utils/errors/errorHandler'
 
 // third
 import html2pdf from 'html2pdf.js'
@@ -67,7 +66,18 @@ onMounted(async () => {
     paginatedBills.value = paginate(billToPaginate, 12)
   } catch (error) {
     console.error('General error', error)
-    errorHandler(error, billBackendErrors, 'Factura')
+    if (error.response) {
+      if (error.response.status === 404) {
+        errorMessage.value = 'Factura no encontrada'
+      }
+      if (error.response.status === 500) {
+        errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
+      }
+    } else if (error.request) {
+      errorMessage.value = 'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
+    } else {
+      errorMessage.value = 'Error inesperado, consulte al desarrollador.'
+    }
   } finally {
     // stop loading state
     isLoading.value = false
