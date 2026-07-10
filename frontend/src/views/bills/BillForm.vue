@@ -553,7 +553,7 @@ onMounted(async () => {
             name="provider_signature_date"
             id="provider_signature_date"
             class="form-control"
-            :disabled="bill.id !== ''"
+            :disabled="bill.id !== null"
             v-model.trim="bill.provider_signature_date"
             @blur="v$.provider_signature_date.$touch"
           />
