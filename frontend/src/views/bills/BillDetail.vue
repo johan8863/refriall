@@ -88,7 +88,7 @@ const mergeItemsTimes = (itemsTimes) => {
   return Object.values(
     itemsTimes.reduce(
       (acc, { item: { code, get_item_type, get_measurement, name, price }, times }) => {
-        ;(acc[code] ??= {
+        (acc[code] ??= {
           item: { code, get_item_type, get_measurement, name, price },
           times: 0
         }).times += times
