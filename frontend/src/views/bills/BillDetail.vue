@@ -45,6 +45,9 @@ const billBackendErrors = ref(null)
 // loading status
 const isLoading = ref(false)
 
+// errors
+const errorMessage = ref(null)
+
 // pagination objects
 const billToPaginate = ref(null)
 const paginatedBills = ref([])
@@ -74,7 +77,8 @@ onMounted(async () => {
         errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
       }
     } else if (error.request) {
-      errorMessage.value = 'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
+      errorMessage.value =
+        'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
     } else {
       errorMessage.value = 'Error inesperado, consulte al desarrollador.'
     }
@@ -85,18 +89,32 @@ onMounted(async () => {
 })
 
 const mergeItemsTimes = (itemsTimes) => {
-  return Object.values(
-    itemsTimes.reduce(
-      (acc, { item: { code, get_item_type, get_measurement, name, price }, times }) => {
-        (acc[code] ??= {
-          item: { code, get_item_type, get_measurement, name, price },
-          times: 0
-        }).times += times
-        return acc
-      },
-      {}
+  try {
+    return Object.values(
+      // the final resilt of reduce will be an object of objects
+      // therefore let's split it into an array
+      itemsTimes.reduce(
+        (acc, { item: { code, get_item_type, get_measurement, name, price }, times }) => {
+          // Prettier autocompletes this semicolon to prevent execution risks
+          // if doesn't exists an object with the key 'code', create it,
+          // otherwise just crease times attr
+          ;(acc[code] ??= {
+            item: { code, get_item_type, get_measurement, name, price },
+            times: 0
+          }).times += times
+          return acc
+        },
+        // initial empty object as recommended at
+        //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce#sum_of_values_in_an_object_array
+        {}
+      )
     )
-  )
+  } catch (error) {
+    console.error('General error:', error)
+    if (error instanceof TypeError) {
+      console.error("Array must contain values if initial value isn't provided")
+    }
+  }
 }
 
 const prepareBillToPaginate = (billToPaginate, bill) => {
