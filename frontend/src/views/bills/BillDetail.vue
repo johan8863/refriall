@@ -126,7 +126,7 @@ const prepareBillToPaginate = (billToPaginate, bill) => {
 
   // second assign the billToPaginate object all bill attrs but the get_orders one
   billToPaginate.value = rest
-  // create an aitems attr to the object and fill it
+  // create an items attr to the object and fill it
   billToPaginate.value.items = []
   get_orders.forEach((element) =>
     element.itemtime_set.forEach((item) => billToPaginate.value.items.push(item))
