@@ -91,13 +91,14 @@ onMounted(async () => {
 const mergeItemsTimes = (itemsTimes) => {
   try {
     return Object.values(
-      // the final resilt of reduce will be an object of objects
+      // the final result of reduce will be an object of objects
       // therefore let's split it into an array
       itemsTimes.reduce(
         (acc, { item: { code, get_item_type, get_measurement, name, price }, times }) => {
-          // Prettier autocompletes this semicolon to prevent execution risks
-          // if doesn't exists an object with the key 'code', create it,
-          // otherwise just crease times attr
+          // Prettier autocompletes this semicolon to prevent execution risks.
+
+          // If doesn't exists an object with the key 'code', create it,
+          // otherwise just crease times attr.
           ;(acc[code] ??= {
             item: { code, get_item_type, get_measurement, name, price },
             times: 0
