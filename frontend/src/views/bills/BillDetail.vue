@@ -122,7 +122,7 @@ const prepareBillToPaginate = (billToPaginate, bill) => {
   // fill the billToPaginate items attrs with all the items from
   // all the orders of the current bill
 
-  // first sepparate the orders from the bill to take advamtage of the destructuring
+  // first sepparate the orders from the bill to take advantage of the destructuring
   const { get_orders, ...rest } = bill.value
 
   // second assign the billToPaginate object all bill attrs but the get_orders one
