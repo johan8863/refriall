@@ -97,8 +97,8 @@ const mergeItemsTimes = (itemsTimes) => {
         (acc, { item: { code, get_item_type, get_measurement, name, price }, times }) => {
           // Prettier autocompletes this semicolon to prevent execution risks.
 
-          // If doesn't exists an object with the key 'code', create it,
-          // otherwise just crease times attr.
+          // If doesn't exists an object with the key 'from code', create it,
+          // otherwise just increase times attr.
           ;(acc[code] ??= {
             item: { code, get_item_type, get_measurement, name, price },
             times: 0
