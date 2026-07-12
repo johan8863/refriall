@@ -164,7 +164,7 @@ onMounted(async () => await getBill())
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <bill-detail-menu :bill="bill" @on-p-d-f="pdf" />
+      <bill-detail-menu :is-loading="isLoading" :bill="bill" @on-p-d-f="pdf" />
     </div>
 
     <!-- main content -->
