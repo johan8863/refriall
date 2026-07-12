@@ -55,39 +55,6 @@ const paginatedBills = ref([])
 // routing utulities
 const route = useRoute()
 
-onMounted(async () => {
-  try {
-    // start loading state
-    isLoading.value = true
-
-    // get order data
-    const resp = await billService.detailBill(route.params.id)
-    bill.value = resp.data
-
-    // pagination logic
-    prepareBillToPaginate(billToPaginate, bill)
-    paginatedBills.value = paginate(billToPaginate, 12)
-  } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage.value = 'Factura no encontrada'
-      }
-      if (error.response.status === 500) {
-        errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      errorMessage.value =
-        'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
-    } else {
-      errorMessage.value = 'Error inesperado, consulte al desarrollador.'
-    }
-  } finally {
-    // stop loading state
-    isLoading.value = false
-  }
-})
-
 const mergeItemsTimes = (itemsTimes) => {
   try {
     return Object.values(
@@ -156,6 +123,39 @@ function pdf() {
 
   html2pdf().from(element).set(opt).save()
 }
+
+onMounted(async () => {
+  try {
+    // start loading state
+    isLoading.value = true
+
+    // get order data
+    const resp = await billService.detailBill(route.params.id)
+    bill.value = resp.data
+
+    // pagination logic
+    prepareBillToPaginate(billToPaginate, bill)
+    paginatedBills.value = paginate(billToPaginate, 12)
+  } catch (error) {
+    console.error('General error', error)
+    if (error.response) {
+      if (error.response.status === 404) {
+        errorMessage.value = 'Factura no encontrada'
+      }
+      if (error.response.status === 500) {
+        errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
+      }
+    } else if (error.request) {
+      errorMessage.value =
+        'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
+    } else {
+      errorMessage.value = 'Error inesperado, consulte al desarrollador.'
+    }
+  } finally {
+    // stop loading state
+    isLoading.value = false
+  }
+})
 </script>
 
 <template>
