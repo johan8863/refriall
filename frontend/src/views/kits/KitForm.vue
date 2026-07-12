@@ -58,9 +58,12 @@ const createKit = async (kit) => {
     } else {
       // always log vuelidate erros to de console
       // just in case of unexpected behavior
-      console.error(v$.value.$errors.map(err => ({
-        property: err.$property, message: err.$message
-      })))
+      console.error(
+        v$.value.$errors.map((err) => ({
+          property: err.$property,
+          message: err.$message
+        }))
+      )
     }
   } catch (error) {
     // in case of backend errors, assign the errors dictionary
@@ -85,9 +88,12 @@ const updateKit = async (kit) => {
     } else {
       // always log vuelidate erros to de console
       // just in case of unexpected behavior
-      console.error(v$.value.$errors.map(err => ({
-        property: err.$property, message: err.$message
-      })))
+      console.error(
+        v$.value.$errors.map((err) => ({
+          property: err.$property,
+          message: err.$message
+        }))
+      )
     }
   } catch (error) {
     // in case of backend errors, assign the errors dictionary

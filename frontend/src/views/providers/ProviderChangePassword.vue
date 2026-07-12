@@ -1,16 +1,16 @@
 <script setup>
 // vue
-import { onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 // third
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 
 // app
-import ProviderChangeSelfPasswordMenu from '../../components/providers/menus/ProviderChangeSelfPasswordMenu.vue';
-import { providerService } from '../../services/providerService.js';
-import { useRouting } from '../../composables/routingFunctions.js';
+import ProviderChangeSelfPasswordMenu from '../../components/providers/menus/ProviderChangeSelfPasswordMenu.vue'
+import { providerService } from '../../services/providerService.js'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // main object
 const providerChangePassword = ref({
@@ -36,7 +36,7 @@ const rules = {
   },
   confirm_new_password: {
     required: helpers.withMessage('La confirmación es requerida.', required)
-  },
+  }
 }
 
 // vuelidate object
@@ -47,16 +47,19 @@ const handleChangePassword = async () => {
   try {
     if (await v$.value.$validate()) {
       await providerService.changePassword(route.params.id, providerChangePassword.value)
-      router.push({name: 'providers_detail', params: {id: route.params.id}})
+      router.push({ name: 'providers_detail', params: { id: route.params.id } })
     } else {
       // always log vuelidate erros to de console
       // just in case of unexpected behavior
-      console.error(v$.value.$errors.map(err => ({
-        property: err.$property, message: err.$message
-      })))
+      console.error(
+        v$.value.$errors.map((err) => ({
+          property: err.$property,
+          message: err.$message
+        }))
+      )
     }
   } catch (error) {
-    console.error({error})
+    console.error({ error })
     if (error.response) {
       backendErrors.value = error.response.data
     }
@@ -67,7 +70,6 @@ const handleChangePassword = async () => {
 }
 
 onMounted(() => console.log(route.params.id))
-
 </script>
 
 <template>
@@ -103,17 +105,26 @@ onMounted(() => console.log(route.params.id))
             id="new_password"
             class="form-control form-control-sm"
             v-model="providerChangePassword.new_password"
-            @blur="v$.new_password.$touch">
+            @blur="v$.new_password.$touch"
+          />
           <!-- frontend validations -->
-          <p class="form-text text-danger" v-for="error in v$.new_password.$errors" :key="error.$uid">
+          <p
+            class="form-text text-danger"
+            v-for="error in v$.new_password.$errors"
+            :key="error.$uid"
+          >
             {{ error.$message }}
           </p>
           <!-- backend validations -->
-            <span v-if="backendErrors.new_password">
-              <p class="form-text text-danger" v-for="(error, index) in backendErrors.new_password" :key="index">
-                {{ error }}
-              </p>
-            </span>
+          <span v-if="backendErrors.new_password">
+            <p
+              class="form-text text-danger"
+              v-for="(error, index) in backendErrors.new_password"
+              :key="index"
+            >
+              {{ error }}
+            </p>
+          </span>
         </div>
         <!-- confirm_new_password control -->
         <div class="mb-3">
@@ -123,14 +134,23 @@ onMounted(() => console.log(route.params.id))
             id="confirm_new_password"
             class="form-control form-control-sm"
             v-model="providerChangePassword.confirm_new_password"
-            @blur="v$.confirm_new_password.$touch">
+            @blur="v$.confirm_new_password.$touch"
+          />
           <!-- frontend validations -->
-          <p class="form-text text-danger" v-for="error in v$.confirm_new_password.$errors" :key="error.$uid">
+          <p
+            class="form-text text-danger"
+            v-for="error in v$.confirm_new_password.$errors"
+            :key="error.$uid"
+          >
             {{ error.$message }}
           </p>
           <!-- backend validations -->
           <span v-if="backendErrors.confirm_new_password">
-            <p class="form-text text-danger" v-for="(error, index) in backendErrors.confirm_new_password" :key="index">
+            <p
+              class="form-text text-danger"
+              v-for="(error, index) in backendErrors.confirm_new_password"
+              :key="index"
+            >
               {{ error }}
             </p>
           </span>
@@ -138,7 +158,11 @@ onMounted(() => console.log(route.params.id))
         <!-- buttons -->
         <div>
           <button class="btn btn-sm btn-primary">Cambiar</button>
-          <router-link class="btn btn-sm btn-secondary" :to="{name: 'providers_detail', params: {id: route.params.id}}">Cancelar</router-link>
+          <router-link
+            class="btn btn-sm btn-secondary"
+            :to="{ name: 'providers_detail', params: { id: route.params.id } }"
+            >Cancelar</router-link
+          >
         </div>
       </form>
     </div>

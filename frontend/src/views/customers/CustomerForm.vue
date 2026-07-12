@@ -100,9 +100,12 @@ const createCustomer = async () => {
     } else {
       // always log vuelidate erros to de console
       // just in case of unexpected behavior
-      console.error(v$.value.$errors.map(err => ({
-        property: err.$property, message: err.$message
-      })))
+      console.error(
+        v$.value.$errors.map((err) => ({
+          property: err.$property,
+          message: err.$message
+        }))
+      )
     }
   } catch (error) {
     // in case of backend exceptions, fill the corresponding ones in the
@@ -123,9 +126,12 @@ const updateCustomer = async () => {
     } else {
       // always log vuelidate erros to de console
       // just in case of unexpected behavior
-      console.error(v$.value.$errors.map(err => ({
-        property: err.$property, message: err.$message
-      })))
+      console.error(
+        v$.value.$errors.map((err) => ({
+          property: err.$property,
+          message: err.$message
+        }))
+      )
     }
   } catch (error) {
     // in case of backend exceptions, fill the corresponding ones in the

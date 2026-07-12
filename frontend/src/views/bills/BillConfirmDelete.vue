@@ -11,7 +11,7 @@ import { useRouting } from '../../composables/routingFunctions.js'
 // main object
 const bill = ref({
   id: null,
-  folio: '',
+  folio: ''
 })
 
 // errors holder object
@@ -51,7 +51,8 @@ onMounted(async () => {
         errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
       }
     } else if (error.request) {
-      errorMessage.value = 'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
+      errorMessage.value =
+        'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
     } else {
       errorMessage.value = 'Error inesperado, consulte al desarrollador.'
     }
@@ -79,7 +80,8 @@ const delBill = async () => {
         errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
       }
     } else if (error.request) {
-      errorMessage.value = 'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
+      errorMessage.value =
+        'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
     } else {
       errorMessage.value = 'Error inesperado, consulte al desarrollador.'
     }
