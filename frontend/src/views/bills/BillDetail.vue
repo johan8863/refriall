@@ -124,7 +124,7 @@ function pdf() {
   html2pdf().from(element).set(opt).save()
 }
 
-onMounted(async () => {
+const getBill = async () => {
   try {
     // start loading state
     isLoading.value = true
@@ -155,7 +155,9 @@ onMounted(async () => {
     // stop loading state
     isLoading.value = false
   }
-})
+}
+
+onMounted(async () => await getBill())
 </script>
 
 <template>
