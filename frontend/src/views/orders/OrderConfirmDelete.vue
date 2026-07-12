@@ -144,9 +144,7 @@ const delOrder = async () => {
         >
       </div>
 
-      <button class="btn btn-sm btn-danger" @click="delOrder"">
-        Eliminar
-      </button>
+      <button class="btn btn-sm btn-danger" @click="delOrder">Eliminar</button>
       <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Cancelar</button>
     </div>
   </div>
