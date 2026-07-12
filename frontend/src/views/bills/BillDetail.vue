@@ -122,18 +122,18 @@ const prepareBillToPaginate = (billToPaginate, bill) => {
   // fill the billToPaginate items attrs with all the items from
   // all the orders of the current bill
 
-  // first sepparate the orders from the bill to take advantage of the destructuring
+  // sepparate the orders from the bill to take advantage of the destructuring
   const { get_orders, ...rest } = bill.value
 
-  // second assign the billToPaginate object all bill attrs but the get_orders one
-  billToPaginate.value = rest
-  // create an items attr to the object and fill it
-  billToPaginate.value.items = []
-  get_orders.forEach((element) =>
-    element.itemtime_set.forEach((item) => billToPaginate.value.items.push(item))
-  )
+  // merge items by flattening get_orders
+  const allItems = get_orders.flatMap((order) => order.itemtime_set)
+  const mergedItems = mergeItemsTimes(allItems)
 
-  billToPaginate.value.items = mergeItemsTimes(billToPaginate.value.items)
+  // create new billToPaginate object values
+  billToPaginate.value = {
+    items: mergedItems,
+    ...rest
+  }
 }
 
 const paginate = (bill, itemsPerPage, start = 0, pages = []) => {
