@@ -26,7 +26,7 @@ import { useRouting } from '../../composables/routingFunctions.js'
 const bill = ref({
   id: null,
   customer: null,
-  currency: '',
+  currency: null,
   folio: '',
   provider: null,
   provider_signature_date: '',
@@ -46,10 +46,10 @@ const bill = ref({
 // reactive object to be filled with backend errors
 const billBackendErrors = ref({
   non_field_errors: [],
-  customer: '',
-  currency: '',
+  customer: null,
+  currency: null,
   folio: '',
-  provider: '',
+  provider: null,
   provider_signature_date: '',
   customer_signature_date: '',
   orders: [],
