@@ -28,7 +28,7 @@ class ItemViewSet(viewsets.ModelViewSet):
                 data={
                     'item': ItemSerializer(item).data
                 },
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_406_NOT_ACCEPTABLE
             )
     
     @action(detail=False, methods=['get'], url_path='item-list-pagination')
@@ -69,7 +69,7 @@ class KitViewSet(viewsets.ModelViewSet):
             kit = Kit.objects.get(pk=kit_pk)
             return Response(data={
                     "kit": KitSerializer(kit).data
-                }, status=status.HTTP_400_BAD_REQUEST
+                }, status=status.HTTP_406_NOT_ACCEPTABLE
             )
     
     @action(detail=False, url_path='kits-list-paginated')
