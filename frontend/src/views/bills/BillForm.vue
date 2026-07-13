@@ -4,7 +4,7 @@
  */
 
 // vue
-import { handleError, onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // third
