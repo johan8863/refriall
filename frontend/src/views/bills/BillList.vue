@@ -77,7 +77,13 @@ const handleSearch = async () => {
     billBackendErrors.value = null
   } catch (error) {
     console.error(error)
-    errorHandler(error, billBackendErrors)
+    if (error.respnse) {
+      if (error.respnse.status === 500) {
+        billBackendErrors.value = 'Error en servidor, consulte al desarrollador.'
+      }
+    } else if (error.request) {
+      billBackendErrors.value = 'Servidor no responde, consulte al desarrollador.'
+    }
   } finally {
     // stop loading state
     isLoading.value = false
@@ -111,7 +117,13 @@ const loadNextItems = async () => {
     }
   } catch (error) {
     console.error(error)
-    errorHandler(error, billBackendErrors)
+    if (error.respnse) {
+      if (error.respnse.status === 500) {
+        billBackendErrors.value = 'Error en servidor, consulte al desarrollador.'
+      }
+    } else if (error.request) {
+      billBackendErrors.value = 'Servidor no responde, consulte al desarrollador.'
+    }
   } finally {
     // stop loading state
     isLoading.value = false
@@ -137,7 +149,13 @@ const loadPrevItems = async () => {
     }
   } catch (error) {
     console.error(error)
-    errorHandler(error, billBackendErrors)
+    if (error.respnse) {
+      if (error.respnse.status === 500) {
+        billBackendErrors.value = 'Error en servidor, consulte al desarrollador.'
+      }
+    } else if (error.request) {
+      billBackendErrors.value = 'Servidor no responde, consulte al desarrollador.'
+    }
   } finally {
     // stop loading state
     isLoading.value = false
