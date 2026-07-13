@@ -26,20 +26,22 @@ defineProps({
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
     </li>
-    <li v-else class="list-group-item">
+    <li v-else-if="currency.id" class="list-group-item">
       <RouterLink :to="{ name: 'currency_update', params: { id: currency.id } }"
         >Actualizar</RouterLink
       >
     </li>
+    <li v-else class="list-group-item text-muted">No disponible</li>
     <!-- delete currency -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
     </li>
-    <li class="list-group-item">
+    <li v-else-if="currency.id" class="list-group-item">
       <RouterLink :to="{ name: 'currency_delete', params: { id: currency.id } }"
         >Eliminar</RouterLink
       >
     </li>
+    <li v-else class="list-group-item text-muted">No disponible</li>
   </ul>
 </template>
