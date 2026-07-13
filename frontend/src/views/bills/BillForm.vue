@@ -17,7 +17,6 @@ import { customerService } from '../../services/customerService'
 import { orderService } from '../../services/orderService'
 import { providerService } from '../../services/providerService'
 import { currencyService } from '../../services/currencyService'
-import { errorHandler } from '../../utils/errors/errorHandler'
 import { useCheckAllCheckboxes } from '../../composables/CheckAllCheckboxesComposable'
 import BillFormMenu from '../../components/bills/menus/BillFormMenu.vue'
 import { useRouting } from '../../composables/routingFunctions.js'
@@ -347,7 +346,7 @@ const loadData = async () => {
     orders.value = respOrdersByIds
     orders.value.push(...freeOrders.value)
   } catch (error) {
-    errorHandler(error, errorMessage)
+    errorMessage.value = 'Error cargando datos.'
   } finally {
     isLoading.value = false
   }
@@ -382,7 +381,7 @@ onMounted(async () => {
     }
   } catch (error) {
     console.error(error)
-    errorHandler(error, errorMessage, 'Factura')
+    errorMessage.value = 'Error cargando datos.'
   } finally {
     isLoading.value = false
   }
