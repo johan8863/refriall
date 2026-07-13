@@ -8,7 +8,6 @@ import BillListTable from '../../components/bills/BillListTable.vue'
 import BillListPaginatin from '../../components/bills/BillListPaginatin.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import BillListMenu from '../../components/bills/menus/BillListMenu.vue'
-import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 const bills = ref([])
 const currentPage = ref(1)
@@ -35,7 +34,13 @@ const getBills = async (page = 1) => {
     billBackendErrors.value = null
   } catch (error) {
     console.error(error)
-    errorHandler(error, billBackendErrors)
+    if (error.respnse) {
+      if (error.respnse.status === 500) {
+        billBackendErrors.value = 'Error en servidor, consulte al desarrollador.'
+      }
+    } else if (error.request) {
+      billBackendErrors.value = 'Servidor no responde, consulte al desarrollador.'
+    }
   } finally {
     // stop loading state
     isLoading.value = false
