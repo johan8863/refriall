@@ -41,6 +41,7 @@ const delCurrency = async () => {
   try {
     // start loading state
     isLoading.value = true
+    // currency deletion
     await currencyService.deleteCurrency(currency.value.id)
     router.push({ name: 'currencies' })
   } catch (error) {
