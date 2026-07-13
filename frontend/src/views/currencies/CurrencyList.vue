@@ -24,7 +24,7 @@ const getCurrencies = async () => {
 }
 
 onMounted(async () => {
-  getCurrencies()
+  await getCurrencies()
 })
 </script>
 
