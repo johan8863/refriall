@@ -79,14 +79,14 @@ const delDependency = async () => {
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
     </div>
-    <div v-else-if="errorMessage" class="col-md-4">
-      <span>
-        <p class="form-text text-danger">
-          {{ errorMessage }}
-        </p>
-      </span>
-    </div>
     <div v-else class="col-md-4">
+      <div if="errorMessage">
+        <span>
+          <p class="form-text text-danger">
+            {{ errorMessage }}
+          </p>
+        </span>
+      </div>
       <!-- backend general errors -->
       <p>Está seguro que desea eliminar la dependencia: {{ dependency.name }}?</p>
       <div>
