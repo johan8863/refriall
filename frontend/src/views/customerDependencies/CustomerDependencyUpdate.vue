@@ -37,7 +37,7 @@ const dependency = ref({
   township: ''
 })
 
-// errors holder object
+// errors backend holder object
 const dependencyErrors = ref({
   customer: [],
   name: [],
@@ -45,6 +45,9 @@ const dependencyErrors = ref({
   province: [],
   township: []
 })
+
+// errors ref
+const errorMessage = ref(null)
 
 // loading state
 const isLoading = ref(false)
@@ -104,7 +107,12 @@ onMounted(async () => {
     const resp = await customerDependecyService.detailCustomerDependecy(route.params.id)
     dependency.value = resp.data
   } catch (error) {
-    errorHandler(error, dependencyErrors, 'Dependencia')
+    errorHandler(error, errorMessage, 'Dependencia')
+    if (error.response) {
+      if (error.response.data) {
+        dependency.value = error.response.data
+      }
+    }
   } finally {
     // stop loading state
     isLoading.value = false
@@ -140,9 +148,9 @@ onMounted(async () => {
         </p>
       </span>
       <!-- backend general errors -->
-      <span v-if="dependencyErrors.message">
+      <span v-if="errorMessage">
         <p class="form-text text-danger">
-          {{ dependencyErrors.message }}
+          {{ errorMessage }}
         </p>
       </span>
     </div>
