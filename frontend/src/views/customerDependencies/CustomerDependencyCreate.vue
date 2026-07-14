@@ -11,6 +11,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import CustomerDependencyCreateMenu from '../../components/customerDependencies/menus/CustomerDependencyCreateMenu.vue'
 import { useRouting } from '../../composables/routingFunctions.js'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 
 // router utilities and handlers
 const router = useRouter()
@@ -43,6 +44,9 @@ const dependencyErrors = ref({
   province: [],
   township: []
 })
+
+// error ref
+const errorMessage = ref(null)
 
 // validation rules
 const rules = {
@@ -87,6 +91,7 @@ const createDependency = async () => {
     }
   } catch (error) {
     console.error('General error', error)
+    errorHandler(error, errorMessage, 'Dependencia')
     if (error.response) {
       dependencyErrors.value = error.response.data
     } else {
