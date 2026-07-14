@@ -93,7 +93,9 @@ const createDependency = async () => {
     console.error('General error', error)
     errorHandler(error, errorMessage, 'Dependencia')
     if (error.response) {
-      dependencyErrors.value = error.response.data
+      if (error.response.data) {
+        dependencyErrors.value = error.response.data
+      }
     } else {
       dependencyErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
     }
