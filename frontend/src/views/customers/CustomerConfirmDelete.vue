@@ -49,7 +49,7 @@ onMounted(async () => {
     const resp = await customerService.detailCustomer(route.params.id)
     customer.value = resp.data
   } catch (error) {
-    console.error('General error:', error)
+    console.error('General error:', { error })
     errorHandler(error, errorMessage, 'Cliente', 'm')
   } finally {
     // stop loading state
@@ -63,7 +63,7 @@ const delCustomer = async () => {
     await customerService.deleteCustomer(customer.value.id)
     router.push({ name: 'customers' })
   } catch (error) {
-    console.error('General error:', error)
+    console.error('General error:', { error })
     errorHandler(error, errorMessage, 'Cliente', 'm')
   }
 }
