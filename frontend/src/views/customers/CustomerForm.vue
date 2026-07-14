@@ -225,6 +225,7 @@ onMounted(async () => {
             <option value="es">ESTATAL</option>
             <option value="pr">PARTICULAR</option>
           </select>
+          <!-- frontend errors -->
           <span v-if="v$.customer_type.$error">
             <p
               class="form-text text-danger"
@@ -234,6 +235,7 @@ onMounted(async () => {
               {{ error.$message }}
             </p>
           </span>
+          <!-- backend errors -->
           <span v-if="customerErrors.customer_type">
             <p
               class="form-text text-danger"
@@ -254,11 +256,11 @@ onMounted(async () => {
             v-model.trim="customer.name"
             @blur="v$.name.$touch"
           />
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.name.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <!-- backend errors -->
           <span v-if="customerErrors.name">
             <p class="form-text text-danger" v-for="(error, i) in customerErrors.name" :key="i">
               {{ error }}
@@ -277,11 +279,11 @@ onMounted(async () => {
             @blur="v$.address.$touch"
           >
           </textarea>
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.address.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <!-- backend errors -->
           <span v-if="customerErrors.address">
             <p class="form-text text-danger" v-for="(error, i) in customerErrors.address" :key="i">
               {{ error }}
@@ -298,11 +300,11 @@ onMounted(async () => {
             v-model.trim="customer.province"
             @blur="v$.province.$touch"
           />
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.province.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <!-- backend errors -->
           <span v-if="customerErrors.province">
             <p class="form-text text-danger" v-for="(error, i) in customerErrors.province" :key="i">
               {{ error }}
@@ -319,11 +321,11 @@ onMounted(async () => {
             v-model.trim="customer.township"
             @blur="v$.township.$touch"
           />
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.township.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <<!-- backend errors -->
           <span v-if="customerErrors.township">
             <p class="form-text text-danger" v-for="(error, i) in customerErrors.township" :key="i">
               {{ error }}
@@ -340,11 +342,11 @@ onMounted(async () => {
             v-model.trim="customer.code"
             @blur="v$.code.$touch"
           />
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.code.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <!-- backend errors -->
           <span v-if="customerErrors.code">
             <p class="form-text text-danger" v-for="(error, i) in customerErrors.code" :key="i">
               {{ error }}
@@ -371,7 +373,7 @@ onMounted(async () => {
             v-model.trim="customer.bank_account_header"
             @blur="v$.bank_account_header.$touch"
           />
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p
             class="form-text text-danger"
             v-for="error in v$.bank_account_header.$errors"
@@ -379,7 +381,7 @@ onMounted(async () => {
           >
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <!-- backend errors -->
           <span v-if="customerErrors.bank_account_header">
             <p
               class="form-text text-danger"
@@ -400,7 +402,7 @@ onMounted(async () => {
             v-model.trim="customer.bank_account"
             @blur="v$.bank_account.$touch"
           />
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p
             class="form-text text-danger"
             v-for="error in v$.bank_account.$errors"
@@ -408,7 +410,7 @@ onMounted(async () => {
           >
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <!-- backend errors -->
           <span v-if="customerErrors.bank_account">
             <p
               class="form-text text-danger"
