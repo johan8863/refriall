@@ -84,16 +84,16 @@ const delCustomer = async () => {
       </div>
     </div>
 
-    <!-- error message -->
-    <div v-else-if="errorMessage" class="col-md-4">
-      <span v-if="errorMessage">
-        <p class="form-text text-danger">
-          {{ errorMessage }}
-        </p>
-      </span>
-    </div>
-
     <div v-else class="col-md-4">
+      <!-- error message -->
+      <div v-if="errorMessage">
+        <span v-if="errorMessage">
+          <p class="form-text text-danger">
+            {{ errorMessage }}
+          </p>
+        </span>
+      </div>
+
       <p>Está seguro que desea eliminar el cliente: {{ customer.name }}?</p>
       <div>
         <button class="btn btn-sm btn-danger" @click="delCustomer">Eliminar</button>
