@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 // app
 import { customerService } from '../../services/customerService'
 import CustomerConfirmDeleteMenu from '../../components/customers/menus/CustomerConfirmDeleteMenu.vue'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 import { useRouting } from '../../composables/routingFunctions.js'
 
 // customer object to be filled
@@ -48,15 +49,8 @@ onMounted(async () => {
     const resp = await customerService.detailCustomer(route.params.id)
     customer.value = resp.data
   } catch (error) {
-    console.log('Error status:', error.response.status)
-    console.log('Error data:', error.response.data)
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage.value = 'Cliente no encontrado.'
-      }
-    } else if (error.request) {
-      errorMessage.value = 'Error del Servidor, consulte al desarrollador.'
-    }
+    console.error('General error:', error)
+    errorHandler(error, errorMessage, 'Cliente', 'm')
   } finally {
     // stop loading state
     isLoading.value = false
@@ -69,18 +63,8 @@ const delCustomer = async () => {
     await customerService.deleteCustomer(customer.value.id)
     router.push({ name: 'customers' })
   } catch (error) {
-    console.log('Error status:', error.response.status)
-    console.log('Error data:', error.response.data)
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage.value = 'Cliente no encontrado.'
-      }
-      if (error.response.status === 400) {
-        errorMessage.value = 'Cliente asociado.'
-      }
-    } else if (error.request) {
-      errorMessage.value = 'Error del Servidor, consulte al desarrollador.'
-    }
+    console.error('General error:', error)
+    errorHandler(error, errorMessage, 'Cliente', 'm')
   }
 }
 </script>
