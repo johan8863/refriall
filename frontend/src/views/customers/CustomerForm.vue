@@ -37,7 +37,8 @@ const customerErrors = ref({
   code: [],
   client_nit: [],
   bank_account_header: [],
-  bank_account: []
+  bank_account: [],
+  non_field_errors: []
 })
 
 // error message
@@ -112,6 +113,11 @@ const createCustomer = async () => {
     // customerErrors object
     console.error('General error', error)
     errorHandler(error, errorMessage, 'Cliente', 'm')
+    if (error.response) {
+      if (error.response.data) {
+        customerErrors.value = error.response.data
+      }
+    }
   }
 }
 
@@ -138,6 +144,11 @@ const updateCustomer = async () => {
     // customerErrors object
     console.error('General error', error)
     errorHandler(error, errorMessage, 'Cliente', 'm')
+    if (error.response) {
+      if (error.response.data) {
+        customerErrors.value = error.response.data
+      }
+    }
   }
 }
 
