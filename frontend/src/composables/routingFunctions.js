@@ -14,10 +14,8 @@ export const useRouting = () => {
   }
   // object id for detail function
   const validateObjectID = (objectID, functionName) => {
-    if (typeof objectID == undefined || typeof objectID == null || typeof objectID !== 'number') {
-      throw new Error(
-        `[${functionName}] Object ID must be a non empty valid integer. Provided: ${objectID}`
-      )
+    if (typeof objectID == undefined || typeof objectID == null) {
+      throw new Error(`[${functionName}] Object ID must be a non empty value.`)
     }
   }
   // object id for go back function
