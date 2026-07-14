@@ -17,11 +17,11 @@ import { errorHandler } from '../../utils/errors/errorHandler.js'
 const router = useRouter()
 const route = useRoute()
 
-const { goToListPost } = useRouting()
+const { goToDetail } = useRouting()
 
-const handleGoToListPost = () => {
+const handleGoToDetail = () => {
   try {
-    goToListPost('customers')
+    goToDetail('customers_detail', route.params.id)
   } catch (error) {
     console.error(error)
   }
@@ -257,7 +257,7 @@ const createDependency = async () => {
         <!-- buttons -->
         <div class="mb-2">
           <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
-          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoToListPost">
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoToDetail">
             Cancelar
           </button>
         </div>
