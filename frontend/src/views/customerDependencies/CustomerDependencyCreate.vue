@@ -35,7 +35,7 @@ const dependency = ref({
   township: ''
 })
 
-// errors holder object
+// dependency errors holder object
 const dependencyErrors = ref({
   customer: [],
   name: [],
