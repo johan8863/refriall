@@ -128,6 +128,12 @@ const createDependency = async () => {
           {{ dependencyErrors.message }}
         </p>
       </span>
+      <!-- non object backend general errors -->
+      <span v-if="errorMessage">
+        <p class="form-text text-danger">
+          {{ errorMessage }}
+        </p>
+      </span>
       <!-- form -->
       <form @submit.prevent="createDependency">
         <span v-if="dependencyErrors.non_field_errors">
