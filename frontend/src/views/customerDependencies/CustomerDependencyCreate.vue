@@ -155,11 +155,13 @@ const createDependency = async () => {
             v-model.trim="dependency.name"
             @blur="v$.name.$touch"
           />
+          <!-- frontend errors -->
           <span v-if="v$.name.$error">
             <p class="form-text text-danger" v-for="error in v$.name.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
           </span>
+          <!-- backend errors -->
           <span v-if="dependencyErrors.name">
             <p class="form-text text-danger" v-for="(error, i) in dependencyErrors.name" :key="i">
               {{ error }}
@@ -179,11 +181,13 @@ const createDependency = async () => {
             cols="5"
             rows="5"
           ></textarea>
+          <!-- frontend errors -->
           <span v-if="v$.address.$error">
             <p class="form-text text-danger" v-for="error in v$.address.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
           </span>
+          <!-- backend errors -->
           <span v-if="dependencyErrors.address">
             <p
               class="form-text text-danger"
@@ -205,11 +209,13 @@ const createDependency = async () => {
             v-model.trim="dependency.province"
             @blur="v$.province.$touch"
           />
+          <!-- frontend errors -->
           <span v-if="v$.province.$error">
             <p class="form-text text-danger" v-for="error in v$.province.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
           </span>
+          <!-- backend errors -->
           <span v-if="dependencyErrors.customer_type">
             <p
               class="form-text text-danger"
@@ -230,11 +236,13 @@ const createDependency = async () => {
             class="form-control"
             v-model.trim="dependency.township"
           />
+          <!-- frontend errors -->
           <span v-if="v$.township.$error">
             <p class="form-text text-danger" v-for="error in v$.township.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
           </span>
+          <!-- backend errors -->
           <span v-if="dependencyErrors.customer_type">
             <p
               class="form-text text-danger"
