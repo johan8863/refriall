@@ -48,7 +48,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <customer-dependency-detail-menu :dependency="dependency" />
+      <customer-dependency-detail-menu :is-loading="isLoading" :dependency="dependency" />
     </div>
 
     <!-- main content -->
