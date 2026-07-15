@@ -13,6 +13,9 @@ const kit = ref({
   name: ''
 })
 
+// loading status
+const isLoading = ref(false)
+
 // errors holder object
 const kitErrors = ref({
   name: ''
@@ -35,9 +38,11 @@ const delKit = async (id) => {
   }
 }
 
-// loading the kit object
-onMounted(async () => {
+const getKit = async () => {
   try {
+    // start loading status
+    isLoading.value = true
+    // getting object from backend
     const resp = await kitService.detailKit(route.params.id)
     kit.value = resp.data
   } catch (error) {
@@ -49,8 +54,14 @@ onMounted(async () => {
         kitErrors.value = { message404: 'El equipo que intenta eliminar no existe.' }
       }
     }
+  } finally {
+    // stpop loading status
+    isLoading.value = false
   }
-})
+}
+
+// loading the kit object
+onMounted(async () => await getKit())
 </script>
 
 <template>
@@ -61,17 +72,14 @@ onMounted(async () => {
     </div>
 
     <!-- main content -->
-    <div class="col-md-4">
-      <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="kitErrors.non_field_errors">
-        <p
-          class="form-text text-danger"
-          v-for="(error, index) in kitErrors.non_field_errors"
-          :key="index"
-        >
-          {{ error }}
-        </p>
-      </span>
+    <!-- loading kit data -->
+    <div v-if="isLoading" class="col-md-4">
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+        <span role="status" class="text-primary">Cargando datos... </span>
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div v-else class="col-md-4">
       <!-- backend general errors -->
       <span v-if="errorMessage">
         <p class="form-text text-danger">
