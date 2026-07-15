@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 import { kitService } from '../../services/kitService'
 import KitConfirmDeleteMenu from '../../components/kits/menus/KitConfirmDeleteMenu.vue'
 
@@ -17,6 +18,8 @@ const kitErrors = ref({
   name: ''
 })
 
+const errorMessage = ref(null)
+
 // router utilities to redirect the view and catch route params
 const route = useRoute()
 const router = useRouter()
@@ -27,20 +30,8 @@ const delKit = async (id) => {
     await kitService.deleteKit(id)
     router.push({ name: 'kits' })
   } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      console.log('Error data: ', error.response.data)
-      console.log('Error status: ', error.response.status)
-      if (error.response.status === 400) {
-        kitErrors.value = {
-          message: 'El equipo no se puede eliminar porque tiene órdenes asociadas.'
-        }
-      } else if (error.response.status === 404) {
-        kitErrors.value = { message404: 'El equipo que intenta eliminar no existe.' }
-      }
-    } else {
-      kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
+    console.error('General error:', { error })
+    errorHandler(error, errorMessage, 'Equipo', 'm')
   }
 }
 
@@ -82,14 +73,9 @@ onMounted(async () => {
         </p>
       </span>
       <!-- backend general errors -->
-      <span v-if="kitErrors.message">
+      <span v-if="errorMessage">
         <p class="form-text text-danger">
-          {{ kitErrors.message }}
-        </p>
-      </span>
-      <span v-if="kitErrors.message404">
-        <p class="form-text text-danger">
-          {{ kitErrors.message404 }}
+          {{ errorMessage }}
         </p>
       </span>
       <div>
