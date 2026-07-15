@@ -21,7 +21,8 @@ defineProps({
     </li>
     <!-- update customer -->
     <li v-if="isLoading" class="list-group-item text-muted">
-      <span class="spinner-border spinner-border-sm"> Cargando... </span>
+      <span class="spinner-border spinner-border-sm"></span>
+      Cargando...
     </li>
     <li v-else class="list-group-item">
       <router-link :to="{ name: 'customers_update', params: { id: customer.id } }"
