@@ -38,6 +38,7 @@ const delKit = async (id) => {
   }
 }
 
+// loading the kit object
 const getKit = async () => {
   try {
     // start loading status
@@ -54,7 +55,6 @@ const getKit = async () => {
   }
 }
 
-// loading the kit object
 onMounted(async () => await getKit())
 </script>
 
