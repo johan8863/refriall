@@ -3,132 +3,86 @@
 import { ref, onMounted } from 'vue'
 
 // app
-import { customerService } from '../../services/customerService'
-import CustomerListTable from '../../components/customers/CustomerListTable.vue'
-import CustomerListPagination from '../../components/customers/CustomerListPagination.vue'
-import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import CustomerListMenu from '../../components/customers/menus/CustomerListMenu.vue'
-import { errorHandler } from '../../utils/errors/errorHandler.js'
+import CustomerListPagination from '../../components/customers/CustomerListPagination.vue'
+import CustomerListTable from '../../components/customers/CustomerListTable.vue'
+import { customerService } from '../../services/customerService'
+import SearchFormListTable from '../../components/SearchFormListTable.vue'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // reactive objects
 const customers = ref([])
 const currentPage = ref(1)
 const showNextButton = ref(false)
 const showPrevButton = ref(false)
-const customerBackendErrors = ref(null)
 const isLoading = ref(false)
 
 // search variables
 const hasSearched = ref(false)
 const searchTerm = ref('')
 
+// errors objects
+const { errorMessage, handleError, clearErrors } = useErrorHandler({
+  objectName: 'Clientes',
+  gender: 'm'
+})
+
 // methods
-const getCustomers = async (page = 1) => {
+const loadCustomers = async (page = 1, search = '') => {
   isLoading.value = true
+  clearErrors()
+
   try {
-    const resp = await customerService.listCustomer(page)
+    const resp = search
+      ? await customerService.searchCustomers(search, page)
+      : await customerService.listCustomer(page)
+
     const data = resp.data
+    customers.value = data.results
 
     showNextButton.value = !!data.next
     showPrevButton.value = !!data.previous
-    customers.value = data.results
-    customerBackendErrors.value = null
   } catch (error) {
-    console.error(error)
-    errorHandler(error, customerBackendErrors)
+    handleError(error)
   } finally {
     isLoading.value = false
   }
 }
 
-const restartSearchFlags = () => {
-  currentPage.value = 1
-  showNextButton.value = false
-  showPrevButton.value = false
-}
+const getCustomers = (page) => loadCustomers(page, '')
 
 const handleSearch = async () => {
   if (!searchTerm.value.trim()) {
-    await getCustomers(1)
+    await loadCustomers(1, '')
     hasSearched.value = false
     return
   }
-
-  restartSearchFlags()
-
-  isLoading.value = true
   hasSearched.value = true
+  currentPage.value = 1
+  await loadCustomers(1, searchTerm.value)
+}
 
-  try {
-    const resp = await customerService.searchCustomers(searchTerm.value)
-    const data = resp.data
+const loadNextItems = async () => {
+  currentPage.value += 1
+  const search = hasSearched.value ? searchTerm.value : ''
+  await loadCustomers(currentPage.value, search)
+}
 
-    customers.value = data.results
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-    customerBackendErrors.value = null
-  } catch (error) {
-    console.error(error)
-    errorHandler(error, customerBackendErrors)
-  } finally {
-    isLoading.value = false
-  }
+const loadPrevItems = async () => {
+  currentPage.value -= 1
+  const search = hasSearched.value ? searchTerm.value : ''
+  await loadCustomers(currentPage.value, search)
 }
 
 const clearSearch = async () => {
   searchTerm.value = ''
   hasSearched.value = false
-
-  restartSearchFlags()
-  await getCustomers(1)
-}
-
-const loadNextItems = async () => {
-  currentPage.value += 1
-  if (hasSearched.value && searchTerm.value.trim()) {
-    isLoading.value = true
-    try {
-      const resp = await customerService.searchCustomers(searchTerm.value, currentPage.value)
-      const data = resp.data
-      customers.value = data.results
-      showNextButton.value = !!data.next
-      showPrevButton.value = !!data.previous
-    } catch (error) {
-      console.error(error)
-      errorHandler(error, customerBackendErrors)
-    } finally {
-      isLoading.value = false
-    }
-  } else {
-    await getCustomers(currentPage.value)
-  }
-}
-
-const loadPrevItems = async () => {
-  currentPage.value -= 1
-  if (hasSearched.value && searchTerm.value.trim()) {
-    isLoading.value = true
-    try {
-      const resp = await customerService.searchCustomers(searchTerm.value, currentPage.value)
-      const data = resp.data
-      customers.value = data.results
-      showNextButton.value = !!data.next
-      showPrevButton.value = !!data.previous
-    } catch (error) {
-      console.error(error)
-      errorHandler(error, customerBackendErrors)
-    } finally {
-      isLoading.value = false
-    }
-  } else {
-    await getCustomers(currentPage.value)
-  }
+  currentPage.value = 1
+  customers.value = loadCustomers(1, '')
 }
 
 // lifecycle
-onMounted(async () => {
-  await getCustomers(1)
-})
+onMounted(async () => await loadCustomers(1, ''))
 </script>
 
 <template>
@@ -164,8 +118,8 @@ onMounted(async () => {
           </div>
 
           <!-- backend errors -->
-          <div v-else-if="customerBackendErrors" class="alert alert-danger mt-2">
-            {{ customerBackendErrors }}
+          <div v-else-if="errorMessage" class="alert alert-danger mt-2">
+            {{ errorMessage }}
           </div>
 
           <!-- results -->
