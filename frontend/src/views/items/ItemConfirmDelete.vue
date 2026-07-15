@@ -25,17 +25,6 @@ const errorMessage = ref(null)
 const route = useRoute()
 const router = useRouter()
 
-// lifecycle
-onMounted(async () => {
-  try {
-    const resp = await itemService.detailItem(route.params.id)
-    item.value = resp.data
-  } catch (error) {
-    console.error(error)
-    errorHandler(error, errorMessage)
-  }
-})
-
 // methods
 
 // delete the item object
@@ -45,9 +34,23 @@ const delItem = async () => {
     router.push({ name: 'items' })
   } catch (error) {
     console.error(error)
-    errorHandler(error, errorMessage)
+    errorHandler(error, errorMessage, 'Artículo', 'm')
   }
 }
+
+// get item object
+const getItem = async () => {
+  try {
+    const resp = await itemService.detailItem(route.params.id)
+    item.value = resp.data
+  } catch (error) {
+    console.error(error)
+    errorHandler(error, errorMessage, 'Artículo', 'm')
+  }
+}
+
+// lifecycle
+onMounted(async () => await getItem())
 </script>
 
 <template>
