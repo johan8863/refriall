@@ -35,22 +35,6 @@ const handleGoToDetail = () => {
 // loading state
 const isLoading = ref(false)
 
-onMounted(async () => {
-  try {
-    // start lading state
-    isLoading.value = true
-    // getting data from backend
-    const resp = await billService.getForDelete(route.params.id)
-    bill.value = resp.data
-  } catch (error) {
-    console.error('General error', error)
-    errorHandler(error, errorMessage, 'Factura')
-  } finally {
-    // stop lading state
-    isLoading.value = false
-  }
-})
-
 // delete the bill object
 const delBill = async () => {
   try {
@@ -67,6 +51,25 @@ const delBill = async () => {
     isLoading.value = false
   }
 }
+
+// get bill object
+const getBill = async () => {
+  try {
+    // start lading state
+    isLoading.value = true
+    // getting data from backend
+    const resp = await billService.getForDelete(route.params.id)
+    bill.value = resp.data
+  } catch (error) {
+    console.error('General error', error)
+    errorHandler(error, errorMessage, 'Factura')
+  } finally {
+    // stop lading state
+    isLoading.value = false
+  }
+}
+
+onMounted(async () => await getBill())
 </script>
 
 <template>
