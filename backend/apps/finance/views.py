@@ -39,12 +39,10 @@ class CurrencyViewSet(viewsets.ModelViewSet):
         try:
             return super().destroy(request, *args, **kwargs)
         except ProtectedError:
-            currency_pk = kwargs['pk']
-            currency = Currency.objects.get(pk=currency_pk)
+            currency = self.get_object()
+            serializer = CurrencySerializer(currency)
             return Response(
-                data={
-                    'currency': CurrencySerializer(currency).data
-                },
+                data=serializer.data,
                 status=status.HTTP_400_BAD_REQUEST
             )
 

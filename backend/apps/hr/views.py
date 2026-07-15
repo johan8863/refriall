@@ -39,12 +39,10 @@ class CustomerViewSet(viewsets.ModelViewSet):
         try:
             return super().destroy(request, *args, **kwargs)
         except ProtectedError:
-            customer_pk = kwargs['pk']
-            customer = Customer.objects.get(pk=customer_pk)
+            customer = self.get_object()
+            serializer = CustomerSerializer(customer)
             return Response(
-                data={
-                    'customer': CustomerSerializer(customer).data
-                },
+                data=serializer.data,
                 status=status.HTTP_400_BAD_REQUEST
             )
     
@@ -125,10 +123,10 @@ class ProviderViewSet(viewsets.ModelViewSet):
         try:
             return super().destroy(request, *args, **kwargs)
         except ProtectedError:
-            provider_pk = kwargs['pk']
-            provider = Provider.objects.get(pk=provider_pk)
+            provider = self.get_object()
+            serializer = ProviderUpdateSerializer(provider)
             return Response(
-                data=ProviderUpdateSerializer(provider).data,
+                data=serializer.data,
                 status=status.HTTP_400_BAD_REQUEST
             )
     

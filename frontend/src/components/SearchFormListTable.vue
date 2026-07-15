@@ -32,6 +32,7 @@ defineEmits(['onHandleSearch', 'onClearSearch'])
         :placeholder="inputPlaceholder"
         :disabled="isLoading"
         @keyup.enter="$emit('onHandleSearch')"
+        @search="$emit('onClearSearch')"
       />
     </div>
     <div class="col-auto">

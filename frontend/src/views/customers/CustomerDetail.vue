@@ -5,8 +5,8 @@ import { useRoute } from 'vue-router'
 
 // app
 import { customerService } from '../../services/customerService'
-import { errorHandler } from '../../utils/errors/errorHandler'
 import CustomerDetailMenu from '../../components/customers/menus/CustomerDetailMenu.vue'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // main object
 const customer = ref({
@@ -23,7 +23,10 @@ const customer = ref({
   get_dependencies: []
 })
 // errors
-const customerBackendErrors = ref(null)
+const { errorMessage, handleError } = useErrorHandler({
+  objectName: 'Cliente',
+  gender: 'm'
+})
 
 // routing utilities
 const route = useRoute()
@@ -65,8 +68,8 @@ onMounted(async () => {
     const resp = await customerService.detailCustomer(route.params.id)
     customer.value = resp.data
   } catch (error) {
-    console.error(error)
-    errorHandler(error, customerBackendErrors, 'Cliente', 'm')
+    console.error('General error:', error)
+    handleError(error)
   } finally {
     isLoading.value = false
   }
@@ -93,8 +96,8 @@ onMounted(async () => {
     <!-- displaying customer data -->
     <div class="col-md-4">
       <!-- backend general errors -->
-      <span v-if="customerBackendErrors">
-        <p class="form-text text-danger">{{ customerBackendErrors }}</p>
+      <span v-if="errorMessage">
+        <p class="form-text text-danger">{{ errorMessage }}</p>
       </span>
 
       <div v-else>
