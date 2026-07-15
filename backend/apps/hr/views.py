@@ -52,7 +52,6 @@ class CustomerViewSet(viewsets.ModelViewSet):
     def get_customer_list_pagination(self, request):
         """List customers paginated"""
 
-        print('here')
         customers = self.get_queryset()
 
         # search term
