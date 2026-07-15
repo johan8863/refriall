@@ -45,7 +45,7 @@ const delCurrency = async () => {
     await currencyService.deleteCurrency(currency.value.id)
     router.push({ name: 'currencies' })
   } catch (error) {
-    console.error(error)
+    console.error('General error:', { error })
     errorHandler(error, errorMessage, 'Moneda')
   } finally {
     // stop loading state
