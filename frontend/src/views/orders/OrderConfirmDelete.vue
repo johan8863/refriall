@@ -64,23 +64,9 @@ const handleGoToDetail = () => {
   }
 }
 
-// lifecycle
-onMounted(async () => {
-  try {
-    // start loading state
-    isLoading.value = true
+// methods
 
-    const resp = await orderService.detailOrder(route.params.id)
-    order.value = resp.data
-  } catch (error) {
-    console.error(error)
-    errorHandler(error, errorMessage, 'Orden')
-  } finally {
-    // stop loading state
-    isLoading.value = false
-  }
-})
-
+// delete order
 const delOrder = async () => {
   try {
     await orderService.deleteOrder(order.value.id)
@@ -100,6 +86,26 @@ const delOrder = async () => {
     }
   }
 }
+
+// get order
+const getOrder = async () => {
+  try {
+    // start loading state
+    isLoading.value = true
+
+    const resp = await orderService.detailOrder(route.params.id)
+    order.value = resp.data
+  } catch (error) {
+    console.error(error)
+    errorHandler(error, errorMessage, 'Orden')
+  } finally {
+    // stop loading state
+    isLoading.value = false
+  }
+}
+
+// lifecycle
+onMounted(async () => await getOrder())
 </script>
 
 <template>
