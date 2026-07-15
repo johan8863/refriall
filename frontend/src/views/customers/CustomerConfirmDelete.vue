@@ -97,7 +97,7 @@ const delCustomer = async () => {
       <p>Está seguro que desea eliminar el cliente: {{ customer.name }}?</p>
       <div>
         <button class="btn btn-sm btn-danger" @click="delCustomer">Eliminar</button>
-        <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Eliminar</button>
+        <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Cancelar</button>
       </div>
     </div>
   </div>
