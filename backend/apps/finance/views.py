@@ -45,7 +45,7 @@ class CurrencyViewSet(viewsets.ModelViewSet):
                 data={
                     'currency': CurrencySerializer(currency).data
                 },
-                status=status.HTTP_406_NOT_ACCEPTABLE
+                status=status.HTTP_400_BAD_REQUEST
             )
 
 
@@ -116,7 +116,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         else:
             bill = Bill.objects.get(pk=order.bill_id)
             serializer = BillSerializerDeleteError(bill)
-            return Response(data=serializer.data, status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
     
     @action(detail=False, url_path='orders-list-pagination')
     def get_orders_list_pagination(self, request):

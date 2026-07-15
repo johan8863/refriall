@@ -45,7 +45,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
                 data={
                     'customer': CustomerSerializer(customer).data
                 },
-                status=status.HTTP_406_NOT_ACCEPTABLE
+                status=status.HTTP_400_BAD_REQUEST
             )
     
     @action(detail=False, url_path='customers-list-pagination')
@@ -129,7 +129,7 @@ class ProviderViewSet(viewsets.ModelViewSet):
             provider = Provider.objects.get(pk=provider_pk)
             return Response(
                 data=ProviderUpdateSerializer(provider).data,
-                status=status.HTTP_406_NOT_ACCEPTABLE
+                status=status.HTTP_400_BAD_REQUEST
             )
     
     @action(detail=False, methods=['post'], url_path='change-password')
@@ -220,5 +220,5 @@ class CustomerDependencyViewSet(viewsets.ModelViewSet):
                 data={
                     'dependency': CustomerDependencySerializer(dependency).data
                 },
-                status=status.HTTP_406_NOT_ACCEPTABLE
+                status=status.HTTP_400_BAD_REQUEST
             )
