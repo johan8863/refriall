@@ -47,13 +47,7 @@ const getKit = async () => {
     kit.value = resp.data
   } catch (error) {
     console.error('General error', error)
-    if (error.response) {
-      console.log('Error data: ', error.response.data)
-      console.log('Error status: ', error.response.status)
-      if (error.response.status === 404) {
-        kitErrors.value = { message404: 'El equipo que intenta eliminar no existe.' }
-      }
-    }
+    errorHandler(error, errorMessage, 'Equipo', 'm')
   } finally {
     // stpop loading status
     isLoading.value = false
