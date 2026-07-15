@@ -5,13 +5,13 @@ import { ref, onMounted } from 'vue'
 
 // app
 import { customerService } from '../../services/customerService'
-import { errorHandler } from '../../utils/errors/errorHandler'
+import CustomerFormMenu from '../../components/customers/menus/CustomerFormMenu.vue'
+import { useRouting } from '../../composables/routingFunctions.js'
+import { useFormErrorHandler } from '../../composables/useErrorFormHandler.js'
 
 // third
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
-import CustomerFormMenu from '../../components/customers/menus/CustomerFormMenu.vue'
-import { useRouting } from '../../composables/routingFunctions.js'
 
 // customer object to be created or updated
 const customer = ref({
@@ -27,22 +27,19 @@ const customer = ref({
   bank_account: ''
 })
 
-// customer backend errors
-const customerErrors = ref({
-  customer_type: [],
-  name: [],
-  address: [],
-  province: [],
-  township: [],
-  code: [],
-  client_nit: [],
-  bank_account_header: [],
-  bank_account: [],
-  non_field_errors: []
+// composable errors objects
+const {
+  errorMessage,
+  backendErrors,
+  handleError,
+  clearErrors,
+  getFieldErrors,
+  hasFieldError,
+  getFieldClass
+} = useFormErrorHandler({
+  objectName: 'Cliente',
+  gender: 'm'
 })
-
-// error message
-const errorMessage = ref(null)
 
 // router utilities and handlers
 const router = useRouter()
@@ -90,91 +87,47 @@ const rules = {
 // vuelidate object
 const v$ = useVuelidate(rules, customer)
 
-// create customer function
-const createCustomer = async () => {
-  try {
-    if (await v$.value.$validate()) {
-      // if front validations run, insert a customer
-      // and redirect to its detail view
-      const { data } = await customerService.postCustomer(customer.value)
-      router.push({ name: 'customers_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
-    }
-  } catch (error) {
-    // in case of backend exceptions, fill the corresponding ones in the
-    // customerErrors object
-    console.error('General error', error)
-    errorHandler(error, errorMessage, 'Cliente', 'm')
-    if (error.response) {
-      if (error.response.data) {
-        customerErrors.value = error.response.data
-      }
-    }
-  }
-}
-
-// update customer function
-const updateCustomer = async () => {
-  try {
-    if (await v$.value.$validate()) {
-      // if front validations run, update a customer
-      // and redirect to its detail view
-      const { data } = await customerService.putCustomer(customer.value)
-      router.push({ name: 'customers_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
-    }
-  } catch (error) {
-    // in case of backend exceptions, fill the corresponding ones in the
-    // customerErrors object
-    console.error('General error', error)
-    errorHandler(error, errorMessage, 'Cliente', 'm')
-    if (error.response) {
-      if (error.response.data) {
-        customerErrors.value = error.response.data
-      }
-    }
-  }
-}
-
 const handleSubmit = async () => {
-  customer.value.id ? await updateCustomer() : await createCustomer()
+  // vuelidate validations
+  if (!(await v$.value.$validate())) {
+    // always log vuelidate errors
+    // just in case an unexpected behavior
+    console.error('Errores de validación:', v$.value.$errors)
+    return
+  }
+
+  try {
+    // update or create related to customer.id
+    const isUpdate = !!customer.value.id
+    const method = isUpdate
+      ? customerService.putCustomer(customer.value)
+      : customerService.postCustomer(customer.value)
+
+    // on success return to customer detail view
+    const { data } = await method
+    router.push({ name: 'customers_detail', params: { id: data.id } })
+  } catch (error) {
+    handleError(error)
+  }
 }
 
-// onMounted cycle to get the customer object
-// if editing intended
-onMounted(async () => {
+const getCustomerIfID = async () => {
   const id = route.params.id
-  if (id) {
-    try {
-      // start loading state
-      isLoading.value = true
-      // get customer data
-      const { data } = await customerService.detailCustomer(id)
-      customer.value = data
-    } catch (error) {
-      errorHandler(error, errorMessage, 'Cliente', 'm')
-    } finally {
-      // stop loading state
-      isLoading.value = false
-    }
+
+  if (!id) return
+  isLoading.value = true
+  try {
+    const { data } = await customerService.detailCustomer(id)
+    customer.value = data
+  } catch (error) {
+    handleError(error)
+  } finally {
+    isLoading.value = false
   }
-})
+}
+
+// lifecycle
+onMounted(async () => await getCustomerIfID())
 </script>
 
 <template>
@@ -194,23 +147,21 @@ onMounted(async () => {
     </div>
     <!-- displaying customer data -->
     <div v-else class="col-md-4">
-      <!-- form -->
+      <!-- backend general errors -->
+      <div v-if="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
       <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="customerErrors.non_field_errors">
+      <div v-if="backendErrors.non_field_errors">
         <p
-          class="form-text text-danger"
-          v-for="(error, index) in customerErrors.non_field_errors"
+          v-for="(error, index) in backendErrors.non_field_errors"
           :key="index"
+          class="form-text text-danger"
         >
           {{ error }}
         </p>
-      </span>
-      <!-- backend general errors -->
-      <span v-if="customerErrors.message">
-        <p class="form-text text-danger">
-          {{ customerErrors.message }}
-        </p>
-      </span>
+      </div>
+      <!-- form -->
       <form @submit.prevent="handleSubmit">
         <!-- customer_type control -->
         <div class="mb-2">
@@ -236,15 +187,13 @@ onMounted(async () => {
             </p>
           </span>
           <!-- backend errors -->
-          <span v-if="customerErrors.customer_type">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in customerErrors.customer_type"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('customer_type')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- name control -->
         <div class="mb-2">
@@ -261,11 +210,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend errors -->
-          <span v-if="customerErrors.name">
-            <p class="form-text text-danger" v-for="(error, i) in customerErrors.name" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('name')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- address control -->
         <div class="mb-2">
@@ -284,11 +235,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend errors -->
-          <span v-if="customerErrors.address">
-            <p class="form-text text-danger" v-for="(error, i) in customerErrors.address" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('address')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- province control -->
         <div class="mb-2">
@@ -305,11 +258,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend errors -->
-          <span v-if="customerErrors.province">
-            <p class="form-text text-danger" v-for="(error, i) in customerErrors.province" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('province')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- township control -->
         <div class="mb-2">
@@ -325,12 +280,14 @@ onMounted(async () => {
           <p class="form-text text-danger" v-for="error in v$.township.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <<!-- backend errors -->
-          <span v-if="customerErrors.township">
-            <p class="form-text text-danger" v-for="(error, i) in customerErrors.township" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('township')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- code control -->
         <div class="mb-2">
@@ -347,11 +304,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend errors -->
-          <span v-if="customerErrors.code">
-            <p class="form-text text-danger" v-for="(error, i) in customerErrors.code" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('code')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- client_nit control -->
         <div class="mb-2">
@@ -382,15 +341,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend errors -->
-          <span v-if="customerErrors.bank_account_header">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in customerErrors.bank_account_header"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('bank_account_header')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- bank_account control -->
         <div class="mb-2">
@@ -411,15 +368,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend errors -->
-          <span v-if="customerErrors.bank_account">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in customerErrors.bank_account"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('bank_account')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- buttons -->
         <div>
