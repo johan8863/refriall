@@ -4,9 +4,9 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
-import { customerService } from '../../services/customerService'
 import CustomerConfirmDeleteMenu from '../../components/customers/menus/CustomerConfirmDeleteMenu.vue'
-import { errorHandler } from '../../utils/errors/errorHandler.js'
+import { customerService } from '../../services/customerService'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 import { useRouting } from '../../composables/routingFunctions.js'
 
 // customer object to be filled
@@ -23,10 +23,14 @@ const customer = ref({
   bank_account: ''
 })
 
+// loading status
 const isLoading = ref(false)
 
 // errors holder object
-const errorMessage = ref(null)
+const { errorMessage, handleError } = useErrorHandler({
+  objectName: 'Cliente',
+  gender: 'm'
+})
 
 // routing utilities
 const router = useRouter()
@@ -40,33 +44,41 @@ const handleGoToDetail = () => {
   } catch (error) {}
 }
 
-// lifecycle
-onMounted(async () => {
+// methods
+const getCustomer = async () => {
+  // start loading state
+  isLoading.value = true
   try {
-    // start loading state
-    isLoading.value = true
-
+    // getting data from backend
     const resp = await customerService.detailCustomer(route.params.id)
     customer.value = resp.data
   } catch (error) {
     console.error('General error:', { error })
-    errorHandler(error, errorMessage, 'Cliente', 'm')
+    handleError(error)
   } finally {
     // stop loading state
     isLoading.value = false
   }
-})
+}
 
-// methods
 const delCustomer = async () => {
+  // start loading state
+  isLoading.value = true
   try {
+    // performing deletion
     await customerService.deleteCustomer(customer.value.id)
     router.push({ name: 'customers' })
   } catch (error) {
     console.error('General error:', { error })
-    errorHandler(error, errorMessage, 'Cliente', 'm')
+    handleError(error)
+  } finally {
+    // stop loading state
+    isLoading.value = false
   }
 }
+
+// lifecycle
+onMounted(async () => await getCustomer())
 </script>
 
 <template>
