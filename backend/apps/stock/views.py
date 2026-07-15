@@ -22,12 +22,10 @@ class ItemViewSet(viewsets.ModelViewSet):
         try:
             return super().destroy(request, *args, **kwargs)
         except ProtectedError:
-            item_pk = kwargs['pk']
-            item = Item.objects.get(pk=item_pk)
+            item = self.get_object()
+            serializer = ItemSerializer(item)
             return Response(
-                data={
-                    'item': ItemSerializer(item).data
-                },
+                data=serializer.data,
                 status=status.HTTP_400_BAD_REQUEST
             )
     
@@ -65,11 +63,11 @@ class KitViewSet(viewsets.ModelViewSet):
         try:
             return super().destroy(request, *args, **kwargs)
         except ProtectedError:
-            kit_pk = kwargs['pk']
-            kit = Kit.objects.get(pk=kit_pk)
-            return Response(data={
-                    "kit": KitSerializer(kit).data
-                }, status=status.HTTP_400_BAD_REQUEST
+            kit = self.get_object()
+            serializer = KitSerializer(kit)
+            return Response(
+                data=serializer.data,
+                status=status.HTTP_400_BAD_REQUEST
             )
     
     @action(detail=False, url_path='kits-list-paginated')
