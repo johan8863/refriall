@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 // app
 import { billService } from '../../services/billService'
 import BillConfirmDeleteMenu from '../../components/bills/menus/BillConfirmDeleteMenu.vue'
+import { errorHandler } from '../../utils/errors/errorHandler.js'
 import { useRouting } from '../../composables/routingFunctions.js'
 
 // main object
@@ -15,7 +16,7 @@ const bill = ref({
 })
 
 // errors holder object
-const errorMessage = ref('')
+const errorMessage = ref(null)
 
 // routing utilities
 const route = useRoute()
@@ -43,19 +44,7 @@ onMounted(async () => {
     bill.value = resp.data
   } catch (error) {
     console.error('General error', error)
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage.value = 'Factura no encontrada'
-      }
-      if (error.response.status === 500) {
-        errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      errorMessage.value =
-        'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
-    } else {
-      errorMessage.value = 'Error inesperado, consulte al desarrollador.'
-    }
+    errorHandler(error, errorMessage, 'Factura')
   } finally {
     // stop lading state
     isLoading.value = false
@@ -72,19 +61,7 @@ const delBill = async () => {
     router.push({ name: 'bills' })
   } catch (error) {
     console.error('General error', error)
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage.value = 'Factura no encontrada'
-      }
-      if (error.response.status === 500) {
-        errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      errorMessage.value =
-        'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
-    } else {
-      errorMessage.value = 'Error inesperado, consulte al desarrollador.'
-    }
+    errorHandler(error, errorMessage, 'Factura')
   } finally {
     // finish lading state
     isLoading.value = false
