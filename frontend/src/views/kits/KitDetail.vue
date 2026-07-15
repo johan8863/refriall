@@ -18,6 +18,8 @@ const kitErrors = ref({
   name: ''
 })
 
+const errorMessage = ref(null)
+
 // router utilities to redirect the view and catch route params
 const route = useRoute()
 
@@ -34,7 +36,7 @@ onMounted(async () => {
     kit.value = resp.data
   } catch (error) {
     console.error(error)
-    errorHandler(error, kitErrors, 'Equipo', 'm')
+    errorHandler(error, errorMessage, 'Equipo', 'm')
   } finally {
     // stop loading state
     isLoading.value = false
@@ -62,9 +64,9 @@ onMounted(async () => {
     <!-- displaying kit data -->
     <div v-else class="col-md-4">
       <!-- backend general errors -->
-      <span v-if="kitErrors.name">
+      <span v-if="errorMessage">
         <p class="form-text text-danger">
-          {{ kitErrors.name }}
+          {{ errorMessage }}
         </p>
       </span>
       <h3>{{ kit.name }}</h3>
