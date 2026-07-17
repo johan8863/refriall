@@ -5,8 +5,8 @@ import { useRoute } from 'vue-router'
 
 // app
 import { currencyService } from '../../services/currencyService'
-import { errorHandler } from '../../utils/errors/errorHandler'
 import CurrencyDetailMenu from '../../components/currencies/menus/CurrencyDetailMenu.vue'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // main object
 const currency = ref({
@@ -16,7 +16,9 @@ const currency = ref({
 })
 
 // errors holder object
-const currencyBackenderror = ref(null)
+const { errorMessage, handleError} = useErrorHandler({
+  objectName: 'Moneda'
+})
 
 // loading state
 const isLoading = ref(false)
@@ -32,8 +34,8 @@ onMounted(async () => {
     const response = await currencyService.detailCurrency(route.params.id)
     currency.value = response.data
   } catch (error) {
-    console.error(error)
-    errorHandler(error, currencyBackenderror, 'Moneda')
+    console.error('General error:', error)
+    handleError(error)
   } finally {
     isLoading.value = false
   }
@@ -60,9 +62,9 @@ onMounted(async () => {
     <!-- displaying currency data -->
     <div v-else class="col-md-4">
       <!-- backend general errors -->
-      <span v-if="currencyBackenderror">
+      <span v-if="errorMessage">
         <p class="form-text text-danger">
-          {{ currencyBackenderror }}
+          {{ errorMessage }}
         </p>
       </span>
       <h3>{{ currency.name }}</h3>

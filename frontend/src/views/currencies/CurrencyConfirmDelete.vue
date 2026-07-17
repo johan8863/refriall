@@ -8,6 +8,7 @@ import { currencyService } from '../../services/currencyService'
 import CurrencyConfirmDeleteMenu from '../../components/currencies/menus/CurrencyConfirmDeleteMenu.vue'
 import { errorHandler } from '../../utils/errors/errorHandler.js'
 import { useRouting } from '../../composables/routingFunctions.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // currency object meant to be deleted
 const currency = ref({
@@ -34,7 +35,9 @@ const handleGoBack = () => {
 const isLoading = ref(false)
 
 // errors
-const errorMessage = ref(null)
+const { errorMessage, handleError } = useErrorHandler({
+  objectName: 'Moneda'
+})
 
 // delete the currency object
 const delCurrency = async () => {
@@ -46,7 +49,7 @@ const delCurrency = async () => {
     router.push({ name: 'currencies' })
   } catch (error) {
     console.error('General error:', { error })
-    errorHandler(error, errorMessage, 'Moneda')
+    handleError(error)
   } finally {
     // stop loading state
     isLoading.value = false
@@ -61,7 +64,7 @@ onMounted(async () => {
     currency.value = (await currencyService.detailCurrency(route.params.id)).data
   } catch (error) {
     console.error(error)
-    errorHandler(error, errorMessage, 'Moneda')
+    handleError(error)
   } finally {
     // stop loading state
     isLoading.value = false
