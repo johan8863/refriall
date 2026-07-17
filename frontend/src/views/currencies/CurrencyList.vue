@@ -5,21 +5,28 @@ import { ref, onMounted } from 'vue'
 // app
 import { currencyService } from '../../services/currencyService'
 import CurrencyListMenu from '../../components/currencies/menus/CurrencyListMenu.vue'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
+// main object
 const currencies = ref([])
 
-const currencyBackenderror = ref(null)
+// loading status
+const isLoading = ref(false)
+
+// errors objects
+const { errorMessage, handleError } = useErrorHandler({
+  objectName: 'Monedas'
+})
 
 const getCurrencies = async () => {
+  isLoading.value = true
   try {
     currencies.value = (await currencyService.listCurrencies()).data
   } catch (error) {
     console.error('General error: ', error)
-    if (error.response) {
-      currencyBackenderror.value = error.response.data
-    } else {
-      currencyBackenderror.value = { message: `Error inesperado: ${error}` }
-    }
+    handleError(error)
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -38,8 +45,20 @@ onMounted(async () => {
     <div class="col-md-10">
       <div class="row">
         <div class="col-md-4">
+          <!-- loading state -->
+          <div v-if="isLoading" class="text-center my-2">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-1">Cargando Monedas...</p>
+          </div>
+
+          <!-- backend errors -->
+          <div v-else-if="errorMessage" class="alert alert-danger mt-2">
+            {{ errorMessage }}
+          </div>
           <!-- results -->
-          <div v-if="currencies.length > 0">
+          <div v-else-if="currencies.length > 0">
             <div id="tableContainer">
               <table class="table">
                 <thead>
