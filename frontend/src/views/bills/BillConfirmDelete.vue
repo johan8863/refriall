@@ -7,6 +7,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { billService } from '../../services/billService'
 import BillConfirmDeleteMenu from '../../components/bills/menus/BillConfirmDeleteMenu.vue'
 import { useRouting } from '../../composables/routingFunctions.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // main object
 const bill = ref({
@@ -15,7 +16,9 @@ const bill = ref({
 })
 
 // errors holder object
-const errorMessage = ref('')
+const { errorMessage, handleError } = useErrorHandler({
+  objectName: 'Factura'
+})
 
 // routing utilities
 const route = useRoute()
@@ -42,20 +45,8 @@ onMounted(async () => {
     const resp = await billService.getForDelete(route.params.id)
     bill.value = resp.data
   } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage.value = 'Factura no encontrada'
-      }
-      if (error.response.status === 500) {
-        errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      errorMessage.value =
-        'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
-    } else {
-      errorMessage.value = 'Error inesperado, consulte al desarrollador.'
-    }
+    console.error('General error:', error)
+    handleError(error)
   } finally {
     // stop lading state
     isLoading.value = false
@@ -71,20 +62,8 @@ const delBill = async () => {
     await billService.deleteBill(bill.value.id)
     router.push({ name: 'bills' })
   } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage.value = 'Factura no encontrada'
-      }
-      if (error.response.status === 500) {
-        errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      errorMessage.value =
-        'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
-    } else {
-      errorMessage.value = 'Error inesperado, consulte al desarrollador.'
-    }
+    console.error('General error:', error)
+    handleError(error)
   } finally {
     // finish lading state
     isLoading.value = false
@@ -107,19 +86,21 @@ const delBill = async () => {
       </div>
     </div>
 
-    <!-- error message -->
-    <div v-else-if="errorMessage" class="col-md-4">
-      <span class="form-text text-danger">
-        {{ errorMessage }}
-      </span>
-    </div>
-
     <!-- main content -->
     <div v-else class="col-md-6">
-      <p>Está seguro que desea eliminar la siguiente factura?</p>
-      <p><strong>Folio: </strong> {{ bill.folio }}</p>
-      <button class="btn btn-sm btn-danger" @click="delBill">Eliminar</button>
-      <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Cancelar</button>
+      <!-- error message -->
+      <div v-if="errorMessage" class="col-md-4">
+        <span class="form-text text-danger">
+          {{ errorMessage }}
+        </span>
+      </div>
+      <!-- content -->
+      <div>
+        <p>Está seguro que desea eliminar la siguiente factura?</p>
+        <p v-if="bill.folio"><strong>Folio: </strong> {{ bill.folio }}</p>
+        <button class="btn btn-sm btn-danger" @click="delBill">Eliminar</button>
+        <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Cancelar</button>
+      </div>
     </div>
   </div>
 </template>
