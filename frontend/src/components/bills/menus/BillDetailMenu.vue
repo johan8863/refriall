@@ -36,9 +36,14 @@ defineEmits(['onPDF'])
     </li>
     <li v-else class="list-group-item text-muted">No disponible</li>
     <!-- generate bill pdf -->
-    <li class="list-group-item">
+    <li v-if="isLoading" class="list-group-item text-muted">
+      <span class="spinner-border spinner-border-sm"></span>
+      Cargando...
+    </li>
+    <li v-else-if="bill.id" class="list-group-item">
       <a href="#" @click="$emit('onPDF')">PDF</a>
     </li>
+    <li v-else class="list-group-item text-muted">No disponible</li>
     <!-- delete bill -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
