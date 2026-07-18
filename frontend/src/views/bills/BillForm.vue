@@ -20,6 +20,7 @@ import { currencyService } from '../../services/currencyService'
 import { useCheckAllCheckboxes } from '../../composables/CheckAllCheckboxesComposable'
 import BillFormMenu from '../../components/bills/menus/BillFormMenu.vue'
 import { useRouting } from '../../composables/routingFunctions.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // main reactive object
 const bill = ref({
@@ -32,26 +33,6 @@ const bill = ref({
   customer_signature_date: '',
   orders: [],
   get_orders: [],
-  check_number: '',
-  charge_aprove: '',
-  charge_check: '',
-  customer_charge: '',
-  customer_name: '',
-  customer_personal_id: '',
-  checked_by: '',
-  aproved_by: ''
-})
-
-// reactive object to be filled with backend errors
-const billBackendErrors = ref({
-  non_field_errors: [],
-  customer: null,
-  currency: null,
-  folio: '',
-  provider: null,
-  provider_signature_date: '',
-  customer_signature_date: '',
-  orders: [],
   check_number: '',
   charge_aprove: '',
   charge_check: '',
@@ -88,8 +69,10 @@ const handleGoBack = () => {
 // loading status
 const isLoading = ref(false)
 
-// error message
-const errorMessage = ref(null)
+// composable errors objects
+const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
+  objectName: 'Factura'
+})
 
 // custom rules
 const atLeastOneOrder = () => bill.value.orders.length > 0
@@ -125,66 +108,30 @@ const v$ = useVuelidate(rules, bill)
 /* methods */
 
 /*
- * Creates a new Bill and redirects to detail view
+ * Handles form submission to create or update a bill
  */
-const createBill = async () => {
-  try {
-    if (await v$.value.$validate()) {
-      const { data } = await billService.postBill(bill.value)
+const handleSubmit = async () => {
+  // vuelidate validations
+  if (await v$.value.$validate()) {
+    try {
+      // update or create related to bill.value.id
+      const isUpdate = !!bill.value.id
+      const method = isUpdate ? billService.putBill(bill.value) : billService.postBill(bill.value)
+
+      // on success return to customer detail view
+      const { data } = await method
       router.push({ name: 'bills_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
+    } catch (error) {
+      console.error('General error:', error)
+      handleError(error)
     }
-  } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      billBackendErrors.value = error.response.data
-    } else {
-      billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
+  } else {
+    // always log vuelidate errors
+    // just in case an unexpected behavior
+    console.error('Vuelidate errors:', v$.value.$errors)
+    return
   }
 }
-
-/*
- * Updates an existing Bill and redirects to detail view
- */
-const updateBill = async () => {
-  try {
-    if (await v$.value.$validate()) {
-      const { data } = await billService.putBill(bill.value)
-      router.push({ name: 'bills_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
-    }
-  } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      billBackendErrors.value = error.response.data
-    } else {
-      billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
-  }
-}
-
-/*
- * Creates a new Bill and redirects to detail view
- */
-const handleSubmit = async () =>
-  bill.value.id ? await updateBill(bill.value) : await createBill(bill.value)
 
 /*
  * Handles insertion of non existing providers
@@ -224,8 +171,8 @@ const chargeProviderNoBill = async () => {
     const respProviders = await providerService.listProviderCurrencyOrderNoBill(bill.value.currency)
     providers.value = respProviders.data
   } catch (error) {
-    error(error)
-    errorHandler(error, errorMessage, 'Prestador', 'm')
+    error('General error:', error)
+    handleError(error)
   } finally {
     isLoading.value = false
   }
@@ -258,13 +205,8 @@ const customersFromProvider = async () => {
       }
     }
   } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      billBackendErrors.value = error.response.data
-    } else {
-      billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
-    console.log(billBackendErrors.value)
+    error('General error:', error)
+    handleError(error)
   } finally {
     // finish loading state
     isLoading.value = false
@@ -295,13 +237,8 @@ const ordersFromCustomer = async () => {
       orders.value = []
     }
   } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      billBackendErrors.value = error.response.data
-    } else {
-      billBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
-    console.log(billBackendErrors.value)
+    error('General error:', error)
+    handleError(error)
   } finally {
     isLoading.value = false
   }
@@ -346,7 +283,8 @@ const loadData = async () => {
     orders.value = respOrdersByIds
     orders.value.push(...freeOrders.value)
   } catch (error) {
-    errorMessage.value = 'Error cargando datos.'
+    error('General error:', error)
+    handleError(error)
   } finally {
     isLoading.value = false
   }
@@ -421,22 +359,15 @@ onMounted(async () => {
       <!-- form -->
       <form @submit.prevent="handleSubmit" class="row">
         <!-- backend errors from non_field_errors dictionary -->
-        <span v-if="billBackendErrors.non_field_errors">
+        <span v-if="backendErrors.non_field_errors">
           <p
             class="form-text text-danger"
-            v-for="(error, index) in billBackendErrors.non_field_errors"
+            v-for="(error, index) in backendErrors.non_field_errors"
             :key="index"
           >
             {{ error }}
           </p>
         </span>
-        <!-- backend general errors -->
-        <span v-if="billBackendErrors.message">
-          <p class="form-text text-danger">
-            {{ billBackendErrors.message }}
-          </p>
-        </span>
-
         <!-- currency control -->
         <div class="col-md-3 mb-2">
           <label for="currency">Moneda</label>
@@ -458,11 +389,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend validations -->
-          <span v-if="billBackendErrors.currency">
-            <p class="form-text text-danger" v-for="error in billBackendErrors.currency">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('currency')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- provider control -->
@@ -481,15 +414,13 @@ onMounted(async () => {
             </option>
           </select>
           <!-- backend errors -->
-          <span v-if="billBackendErrors.provider">
-            <p
-              v-for="(error, index) in billBackendErrors.provider"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('provider')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- customer control -->
@@ -509,16 +440,18 @@ onMounted(async () => {
               {{ customer.name }}
             </option>
           </select>
+          <!-- frontend validations -->
+          <p class="form-text text-danger" v-for="error in v$.customer.$errors" :key="error.$uid">
+            {{ error.$message }}
+          </p>
           <!-- backend errors -->
-          <span v-if="billBackendErrors.customer">
-            <p
-              v-for="(error, index) in billBackendErrors.customer"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('customer')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- folio control -->
@@ -538,15 +471,13 @@ onMounted(async () => {
           </p>
 
           <!-- backend validations -->
-          <span v-if="billBackendErrors.folio">
-            <p
-              v-for="(error, index) in billBackendErrors.folio"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('folio')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <div class="col-md-3 mb-2"></div>
 
@@ -571,17 +502,14 @@ onMounted(async () => {
           >
             {{ error.$message }}
           </p>
-
           <!-- backend validations -->
-          <span v-if="billBackendErrors.provider_signature_date">
-            <p
-              v-for="(error, index) in billBackendErrors.provider_signature_date"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('provider_signature_date')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- customer_signature_date control -->
@@ -606,15 +534,13 @@ onMounted(async () => {
           </p>
 
           <!-- backend validations -->
-          <span v-if="billBackendErrors.customer_signature_date">
-            <p
-              v-for="(error, index) in billBackendErrors.customer_signature_date"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('customer_signature_date')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- orders control -->
@@ -665,23 +591,19 @@ onMounted(async () => {
               </tr>
             </tbody>
           </table>
-          <!-- backend validations -->
-          <span v-if="billBackendErrors.orders">
-            <p
-              v-for="(error, index) in billBackendErrors.orders"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
-        </div>
-        <!-- frontend validations -->
-        <span v-if="bill.customer">
+          <!-- frontend validations -->
           <p class="form-text text-danger" v-for="error in v$.orders.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-        </span>
+          <!-- backend validations -->
+          <p
+            v-for="(error, i) in getFieldErrors('orders')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
+        </div>
         <!-- check_number control -->
         <div class="col-md-3 mb-2">
           <label for="check_number">Nro. de Cheque</label>
@@ -692,15 +614,13 @@ onMounted(async () => {
             v-model.trim="bill.check_number"
           />
           <!-- backend validations -->
-          <span v-if="billBackendErrors.check_number">
-            <p
-              v-for="(error, index) in billBackendErrors.check_number"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('check_number')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- charge_aprove control -->
@@ -713,15 +633,13 @@ onMounted(async () => {
             v-model.trim="bill.charge_aprove"
           />
           <!-- backend validations -->
-          <span v-if="billBackendErrors.charge_aprove">
-            <p
-              v-for="(error, index) in billBackendErrors.charge_aprove"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('charge_aprove')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- charge_check control -->
@@ -734,15 +652,13 @@ onMounted(async () => {
             v-model.trim="bill.charge_check"
           />
           <!-- backend validations -->
-          <span v-if="billBackendErrors.charge_check">
-            <p
-              v-for="(error, index) in billBackendErrors.charge_check"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('charge_check')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- customer_charge control -->
@@ -755,15 +671,13 @@ onMounted(async () => {
             v-model.trim="bill.customer_charge"
           />
           <!-- backend validations -->
-          <span v-if="billBackendErrors.customer_charge">
-            <p
-              v-for="(error, index) in billBackendErrors.customer_charge"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('customer_charge')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- customer_name control -->
@@ -776,15 +690,13 @@ onMounted(async () => {
             v-model.trim="bill.customer_name"
           />
           <!-- backend validations -->
-          <span v-if="billBackendErrors.customer_name">
-            <p
-              v-for="(error, index) in billBackendErrors.customer_name"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('customer_name')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- customer_personal_id control -->
@@ -797,15 +709,13 @@ onMounted(async () => {
             v-model.trim="bill.customer_personal_id"
           />
           <!-- backend validations -->
-          <span v-if="billBackendErrors.customer_personal_id">
-            <p
-              v-for="(error, index) in billBackendErrors.customer_personal_id"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('customer_personal_id')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- checked_by control -->
@@ -813,15 +723,13 @@ onMounted(async () => {
           <label for="checked_by">Revisado por</label>
           <input type="text" class="form-control" id="checked_by" v-model.trim="bill.checked_by" />
           <!-- backend validations -->
-          <span v-if="billBackendErrors.checked_by">
-            <p
-              v-for="(error, index) in billBackendErrors.checked_by"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('checked_by')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- aproved_by control -->
@@ -829,23 +737,21 @@ onMounted(async () => {
           <label for="aproved_by">Cargo del Cliente</label>
           <input type="text" class="form-control" id="aproved_by" v-model.trim="bill.aproved_by" />
           <!-- backend validations -->
-          <span v-if="billBackendErrors.aproved_by">
-            <p
-              v-for="(error, index) in billBackendErrors.aproved_by"
-              :key="index"
-              class="form-text text-danger"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('aproved_by')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- buttons -->
         <div class="mb-5">
           <!-- 
-                        the order in the ternary operator is due to the fact that 
-                        this form is more often used to create than to update 
-                    -->
+            the order in the ternary operator is due to the fact that 
+            this form is more often used to create than to update 
+          -->
           <button type="submit" class="btn btn-sm btn-primary">
             {{ !bill.id ? 'Guardar' : 'Actualizar' }}
           </button>

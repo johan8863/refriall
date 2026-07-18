@@ -9,6 +9,7 @@ import { billService } from '../../services/billService'
 // third
 import html2pdf from 'html2pdf.js'
 import BillDetailMenu from '../../components/bills/menus/BillDetailMenu.vue'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // main object
 const bill = ref({
@@ -39,14 +40,13 @@ const bill = ref({
   aproved_by: ''
 })
 
-// errors holder object
-const billBackendErrors = ref(null)
-
 // loading status
 const isLoading = ref(false)
 
 // errors
-const errorMessage = ref(null)
+const { errorMessage, handleError } = useErrorHandler({
+  objectName: 'Factura'
+})
 
 // pagination objects
 const billToPaginate = ref(null)
@@ -137,20 +137,8 @@ const getBill = async () => {
     prepareBillToPaginate(billToPaginate, bill)
     paginatedBills.value = paginate(billToPaginate, 12)
   } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      if (error.response.status === 404) {
-        errorMessage.value = 'Factura no encontrada'
-      }
-      if (error.response.status === 500) {
-        errorMessage.value = 'Error interno del servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      errorMessage.value =
-        'Servidor no responde, intente más tarde, si el problema persiste, consulte al desarrollador.'
-    } else {
-      errorMessage.value = 'Error inesperado, consulte al desarrollador.'
-    }
+    console.error('General error:', error)
+    handleError(error)
   } finally {
     // stop loading state
     isLoading.value = false
@@ -178,9 +166,9 @@ onMounted(async () => await getBill())
     </div>
 
     <!-- error message -->
-    <div v-else-if="billBackendErrors" class="col-md-4">
+    <div v-else-if="errorMessage" class="col-md-4">
       <span class="form-text text-danger">
-        {{ billBackendErrors }}
+        {{ errorMessage }}
       </span>
     </div>
 

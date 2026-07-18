@@ -8,6 +8,7 @@ import { billService } from '../../services/billService'
 import BillConfirmDeleteMenu from '../../components/bills/menus/BillConfirmDeleteMenu.vue'
 import { errorHandler } from '../../utils/errors/errorHandler.js'
 import { useRouting } from '../../composables/routingFunctions.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // main object
 const bill = ref({
@@ -16,7 +17,9 @@ const bill = ref({
 })
 
 // errors holder object
-const errorMessage = ref(null)
+const { errorMessage, handleError } = useErrorHandler({
+  objectName: 'Factura'
+})
 
 // routing utilities
 const route = useRoute()
@@ -35,6 +38,22 @@ const handleGoToDetail = () => {
 // loading state
 const isLoading = ref(false)
 
+onMounted(async () => {
+  try {
+    // start lading state
+    isLoading.value = true
+    // getting data from backend
+    const resp = await billService.getForDelete(route.params.id)
+    bill.value = resp.data
+  } catch (error) {
+    console.error('General error:', error)
+    handleError(error)
+  } finally {
+    // stop lading state
+    isLoading.value = false
+  }
+})
+
 // delete the bill object
 const delBill = async () => {
   try {
@@ -44,8 +63,8 @@ const delBill = async () => {
     await billService.deleteBill(bill.value.id)
     router.push({ name: 'bills' })
   } catch (error) {
-    console.error('General error', error)
-    errorHandler(error, errorMessage, 'Factura')
+    console.error('General error:', error)
+    handleError(error)
   } finally {
     // finish lading state
     isLoading.value = false
@@ -87,19 +106,21 @@ onMounted(async () => await getBill())
       </div>
     </div>
 
-    <!-- error message -->
-    <div v-else-if="errorMessage" class="col-md-4">
-      <span class="form-text text-danger">
-        {{ errorMessage }}
-      </span>
-    </div>
-
     <!-- main content -->
     <div v-else class="col-md-6">
-      <p>Está seguro que desea eliminar la siguiente factura?</p>
-      <p><strong>Folio: </strong> {{ bill.folio }}</p>
-      <button class="btn btn-sm btn-danger" @click="delBill">Eliminar</button>
-      <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Cancelar</button>
+      <!-- error message -->
+      <div v-if="errorMessage" class="col-md-4">
+        <span class="form-text text-danger">
+          {{ errorMessage }}
+        </span>
+      </div>
+      <!-- content -->
+      <div>
+        <p>Está seguro que desea eliminar la siguiente factura?</p>
+        <p v-if="bill.folio"><strong>Folio: </strong> {{ bill.folio }}</p>
+        <button class="btn btn-sm btn-danger" @click="delBill">Eliminar</button>
+        <button class="btn btn-sm btn-secondary" @click="handleGoToDetail">Cancelar</button>
+      </div>
     </div>
   </div>
 </template>
