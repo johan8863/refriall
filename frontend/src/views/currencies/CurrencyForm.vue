@@ -11,6 +11,7 @@ import { required, helpers } from '@vuelidate/validators'
 import { currencyService } from '../../services/currencyService'
 import CurrencyFormMenu from '../../components/currencies/menus/CurrencyFormMenu.vue'
 import { useRouting } from '../../composables/routingFunctions.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // router utilities and handlers
 const router = useRouter()
@@ -31,10 +32,9 @@ const currency = ref({
   description: ''
 })
 
-// currency object to store backend errors
-const currencyBackendErrors = ref({
-  name: [],
-  description: []
+// errors oobjects holders
+const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
+  objectName: 'Moneda'
 })
 
 // loading state
@@ -51,94 +51,58 @@ const rules = {
 const v$ = useVuelidate(rules, currency)
 
 // helper function to always set to upper case the name of the currency
-const currenyNameUpper = () => (currency.value.name = currency.value.name.toUpperCase())
-
-// create currency object function
-const createCurrency = async () => {
-  try {
-    if (await v$.value.$validate()) {
-      /* if front validations run,
-       set the currency name to upper case and
-       post the object and redirect to its detail view
-      */
-      currenyNameUpper()
-      const { data } = await currencyService.postCurrency(currency.value)
-      router.push({ name: 'currency_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
-    }
-  } catch (error) {
-    console.error('General error: ', error)
-    if (error.response) {
-      currencyBackendErrors.value = error.response.data
-    } else {
-      currencyBackendErrors.value = { message: `Error inesperado: ${error}` }
-    }
-  }
-}
-
-// update currency object function
-const updateCurrency = async () => {
-  try {
-    if (await v$.value.$validate()) {
-      // if front validations run,
-      // set the currency name to upper case and
-      // put the object and redirect to its detail view
-      currenyNameUpper()
-      const { data } = await currencyService.putCurrency(currency.value)
-      router.push({ name: 'currency_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
-    }
-  } catch (error) {
-    console.error('General error: ', error)
-    if (error.response) {
-      currencyBackendErrors.value = error.response.data
-    } else {
-      currencyBackendErrors.value = { message: `Error inesperado: ${error}` }
-    }
-  }
-}
+const currenyNameUpper = () =>
+  (currency.value.name = currency.value.name ? currency.value.name.toUpperCase() : '')
 
 // submit handler
 const handleSubmit = async () => {
-  currency.value.id ? await updateCurrency() : await createCurrency()
+  // vuelidate validation
+  if (!(await v$.value.$validate)) {
+    // always log vuelidate errors
+    // just in case an unexpected behavior
+    console.error('Vuelidate errors:', v$.value.$errors)
+    return // end the operation
+  }
+
+  try {
+    // update or create related to currency.value.id
+    currenyNameUpper()
+    const isUpdate = !!currency.value.id
+    const method = isUpdate
+      ? currencyService.putCurrency(currency.value)
+      : currencyService.postCurrency(currency.value)
+
+    // on success return to currency detail view
+    const { data } = await method
+    router.push({ name: 'currency_detail', params: { id: data.id } })
+  } catch (error) {
+    console.error('General error:', error)
+    handleError(error)
+  }
+}
+
+const getCurrencyIfID = async () => {
+  // create use case
+  const id = route.params.id
+  if (!id) return
+
+  // update use case
+  // start loading state
+  isLoading.value = true
+  try {
+    const { data } = await currencyService.detailCurrency(id)
+    currency.value = data
+  } catch (error) {
+    console.error('General error:', error)
+    handleError(error)
+  } finally {
+    // stop loading status
+    isLoading.value = false
+  }
 }
 
 // onMounted life cycle
-onMounted(async () => {
-  try {
-    // start loading state
-    isLoading.value = true
-    // get currency data
-    const id = route.params.id
-    // if id, it means the view was accessed to update the currency attrs,
-    // therefore, the matching id object is loaded
-    if (id) {
-      currency.value = (await currencyService.detailCurrency(id)).data
-    }
-  } catch (error) {
-    console.error(error)
-    currencyBackendErrors.value = error.response.data
-  } finally {
-    // stop loading state
-    isLoading.value = false
-  }
-})
+onMounted(async () => await getCurrencyIfID())
 </script>
 
 <template>
@@ -160,22 +124,20 @@ onMounted(async () => {
 
     <!-- displaying form -->
     <div v-else class="col-md-4">
+      <!-- backend general errors -->
+      <div v-if="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
       <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="currencyBackendErrors.non_field_errors">
+      <div v-if="backendErrors.non_field_errors">
         <p
-          class="form-text text-danger"
-          v-for="(error, index) in currencyBackendErrors.non_field_errors"
+          v-for="(error, index) in backendErrors.non_field_errors"
           :key="index"
+          class="form-text text-danger"
         >
           {{ error }}
         </p>
-      </span>
-      <!-- backend general errors -->
-      <span v-if="currencyBackendErrors.message">
-        <p class="form-text text-danger">
-          {{ currencyBackendErrors.message }}
-        </p>
-      </span>
+      </div>
       <!-- form -->
       <form @submit.prevent="handleSubmit" class="row">
         <!-- name control -->
@@ -194,15 +156,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend errors -->
-          <span v-if="currencyBackendErrors.name">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in currencyBackendErrors.name"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('name')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- filling container -->
         <div class="col-md-6"></div>
@@ -215,15 +175,13 @@ onMounted(async () => {
             id="description"
             v-model.trim="currency.description"
           />
-          <span v-if="currencyBackendErrors.description">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in currencyBackendErrors.description"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('description')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- buttons -->
         <div>

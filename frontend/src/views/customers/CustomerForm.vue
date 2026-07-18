@@ -28,15 +28,7 @@ const customer = ref({
 })
 
 // composable errors objects
-const {
-  errorMessage,
-  backendErrors,
-  handleError,
-  clearErrors,
-  getFieldErrors,
-  hasFieldError,
-  getFieldClass
-} = useFormErrorHandler({
+const { errorMessage, backendErrors, handleError, getFieldErrors } = useFormErrorHandler({
   objectName: 'Cliente',
   gender: 'm'
 })
