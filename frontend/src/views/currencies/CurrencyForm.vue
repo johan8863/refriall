@@ -175,6 +175,7 @@ onMounted(async () => await getCurrencyIfID())
             id="description"
             v-model.trim="currency.description"
           />
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('description')"
             :key="`backend-${i}`"
