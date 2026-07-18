@@ -28,11 +28,10 @@ const customer = ref({
 })
 
 // composable errors objects
-const { errorMessage, backendErrors, handleError, clearErrors, getFieldErrors } =
-  useFormErrorHandler({
-    objectName: 'Cliente',
-    gender: 'm'
-  })
+const { errorMessage, backendErrors, handleError, getFieldErrors } = useFormErrorHandler({
+  objectName: 'Cliente',
+  gender: 'm'
+})
 
 // router utilities and handlers
 const router = useRouter()
