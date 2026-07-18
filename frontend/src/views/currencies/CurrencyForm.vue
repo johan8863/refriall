@@ -5,7 +5,7 @@ import { useRouter, useRoute } from 'vue-router'
 
 // third
 import { useVuelidate } from '@vuelidate/core'
-import { required, helpers } from '@vuelidate/validators'
+import { required, helpers, maxLength, minLength } from '@vuelidate/validators'
 
 // app
 import { currencyService } from '../../services/currencyService'
@@ -44,6 +44,10 @@ const isLoading = ref(false)
 const rules = {
   name: {
     required: helpers.withMessage('El nombre es requerido.', required)
+  },
+  description: {
+    minLength: helpers.withMessage('La descripción debe tener al menos 5 caracteres', minLength(5)),
+    maxLength: helpers.withMessage('La descripción debe tener máximo 22 caracteres', maxLength(22))
   }
 }
 
@@ -57,7 +61,7 @@ const currenyNameUpper = () =>
 // submit handler
 const handleSubmit = async () => {
   // vuelidate validation
-  if (!(await v$.value.$validate)) {
+  if (!(await v$.value.$validate())) {
     // always log vuelidate errors
     // just in case an unexpected behavior
     console.error('Vuelidate errors:', v$.value.$errors)
@@ -175,6 +179,14 @@ onMounted(async () => await getCurrencyIfID())
             id="description"
             v-model.trim="currency.description"
           />
+          <!-- frontend errors -->
+          <p
+            class="form-text text-danger"
+            v-for="error in v$.description.$errors"
+            :key="error.$uid"
+          >
+            {{ error.$message }}
+          </p>
           <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('description')"
