@@ -8,19 +8,19 @@ def currency_to_orders(apps, schema_editor):
     Currency = apps.get_model("finance", "Currency")
 
     # execute logic only if exist orders in the database
-    if Order.objects.exists():
-        currency = Currency.objects.create(
-            name='CUP',
-            description='Peso Cubano'
-        )
-
-        with transaction.atomic():
-            for order in Order.objects.all():
-                order.currency = currency
-                order.save()
-    else:
+    if not Order.objects.exists():
         print("No Order objects in the database, RunPython operation not executed ")
         return
+    
+    currency = Currency.objects.create(
+        name='CUP',
+        description='Peso Cubano'
+    )
+
+    with transaction.atomic():
+        for order in Order.objects.all():
+            order.currency = currency
+            order.save()
 
 
 class Migration(migrations.Migration):
