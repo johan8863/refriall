@@ -1,24 +1,26 @@
 """Data migration required due to the existence of information in the database by the time the change was requested"""
 
 # django
-from django.db import migrations, models
+from django.db import migrations, models, transaction
 
 def currency_to_orders(apps, schema_editor):
     Order = apps.get_model("finance", "Order")
     Currency = apps.get_model("finance", "Currency")
 
-    orders = Order.objects.all()
-    
-
-    if orders.count() > 0:
+    # execute logic only if exist orders in the database
+    if Order.objects.exists():
         currency = Currency.objects.create(
             name='CUP',
             description='Peso Cubano'
         )
 
-        for order in orders:
-            order.currency = currency
-            order.save()
+        with transaction.atomic():
+            for order in Order.objects.all():
+                order.currency = currency
+                order.save()
+    else:
+        print("No Order objects in the database, RunPython operation not executed ")
+        return
 
 
 class Migration(migrations.Migration):
