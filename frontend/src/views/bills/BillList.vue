@@ -8,13 +8,18 @@ import BillListTable from '../../components/bills/BillListTable.vue'
 import BillListPaginatin from '../../components/bills/BillListPaginatin.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import BillListMenu from '../../components/bills/menus/BillListMenu.vue'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 const bills = ref([])
 const currentPage = ref(1)
 const showNextButton = ref(false)
 const showPrevButton = ref(false)
-const billBackendErrors = ref(null)
 const isLoading = ref(false)
+
+// error objects
+const { errorMessage, handleError, clearErrors } = useErrorHandler({
+  objectName: 'Factura'
+})
 
 // search variables
 const hasSearched = ref(false)
@@ -24,6 +29,7 @@ const getBills = async (page = 1) => {
   try {
     // start loading state
     isLoading.value = true
+    clearErrors()
     // getting data from backend
     const resp = await billService.listBillsPagination(page)
     const data = resp.data
@@ -31,16 +37,9 @@ const getBills = async (page = 1) => {
     showNextButton.value = !!data.next
     showPrevButton.value = !!data.previous
     bills.value = data.results
-    billBackendErrors.value = null
   } catch (error) {
-    console.error(error)
-    if (error.respnse) {
-      if (error.respnse.status === 500) {
-        billBackendErrors.value = 'Error en servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      billBackendErrors.value = 'Servidor no responde, consulte al desarrollador.'
-    }
+    console.error('General error:', { error })
+    handleError(error)
   } finally {
     // stop loading state
     isLoading.value = false
@@ -202,8 +201,8 @@ onMounted(async () => {
               </div>
 
               <!-- backend errors -->
-              <div v-else-if="billBackendErrors" class="alert alert-danger mt-2">
-                {{ billBackendErrors }}
+              <div v-else-if="errorMessage" class="alert alert-danger mt-2">
+                {{ errorMessage }}
               </div>
 
               <!-- results -->
