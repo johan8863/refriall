@@ -25,18 +25,23 @@ const { errorMessage, handleError, clearErrors } = useErrorHandler({
 const hasSearched = ref(false)
 const searchTerm = ref('')
 
-const getBills = async (page = 1) => {
+const getBills = async (page = 1, search = '') => {
+  // start loading state
+  isLoading.value = true
+  clearErrors()
+
   try {
-    // start loading state
-    isLoading.value = true
-    clearErrors()
-    // getting data from backend
-    const resp = await billService.listBillsPagination(page)
+    // ternary to decide whether to search or list bills
+    const resp = search
+      ? await billService.searchBills(search, page)
+      : await billService.listBillsPagination(page)
+    // general data
     const data = resp.data
+    // bill ref value
+    bills.value = data.results
     // properties restarting
     showNextButton.value = !!data.next
     showPrevButton.value = !!data.previous
-    bills.value = data.results
   } catch (error) {
     console.error('General error:', { error })
     handleError(error)
@@ -60,33 +65,9 @@ const handleSearch = async () => {
   }
 
   restartSearchFlags()
-
-  // start loading state
-  isLoading.value = true
   hasSearched.value = true
 
-  try {
-    // getting data from backend
-    const resp = await billService.searchBills(searchTerm.value)
-    const data = resp.data
-    // charge properties
-    bills.value = data.results
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-    billBackendErrors.value = null
-  } catch (error) {
-    console.error(error)
-    if (error.respnse) {
-      if (error.respnse.status === 500) {
-        billBackendErrors.value = 'Error en servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      billBackendErrors.value = 'Servidor no responde, consulte al desarrollador.'
-    }
-  } finally {
-    // stop loading state
-    isLoading.value = false
-  }
+  await getBills(1, searchTerm.value)
 }
 
 const clearSearch = async () => {
@@ -98,67 +79,15 @@ const clearSearch = async () => {
 }
 
 const loadNextItems = async () => {
-  try {
-    // start loading state
-    isLoading.value = true
-
-    currentPage.value += 1
-    if (hasSearched.value && searchTerm.value.trim()) {
-      // Search purpose
-      const resp = await billService.searchBills(searchTerm.value, currentPage.value)
-      const data = resp.data
-      bills.value = data.results // o bills.value
-      showNextButton.value = !!data.next
-      showPrevButton.value = !!data.previous
-    } else {
-      // whole pagination list
-      await getBills(currentPage.value)
-    }
-  } catch (error) {
-    console.error(error)
-    if (error.respnse) {
-      if (error.respnse.status === 500) {
-        billBackendErrors.value = 'Error en servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      billBackendErrors.value = 'Servidor no responde, consulte al desarrollador.'
-    }
-  } finally {
-    // stop loading state
-    isLoading.value = false
-  }
+  currentPage.value += 1
+  const search = hasSearched.value ? searchTerm.value : ''
+  await getBills(currentPage.value, search)
 }
 
 const loadPrevItems = async () => {
-  try {
-    // start loading state
-    isLoading.value = true
-
-    currentPage.value -= 1
-    if (hasSearched.value && searchTerm.value.trim()) {
-      // search purpose
-      const resp = await billService.searchBills(searchTerm.value, currentPage.value)
-      const data = resp.data
-      bills.value = data.results // o bills.value
-      showNextButton.value = !!data.next
-      showPrevButton.value = !!data.previous
-    } else {
-      // whole pagination list
-      await getBills(currentPage.value)
-    }
-  } catch (error) {
-    console.error(error)
-    if (error.respnse) {
-      if (error.respnse.status === 500) {
-        billBackendErrors.value = 'Error en servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      billBackendErrors.value = 'Servidor no responde, consulte al desarrollador.'
-    }
-  } finally {
-    // stop loading state
-    isLoading.value = false
-  }
+  currentPage.value -= 1
+  const search = hasSearched.value ? searchTerm.value : ''
+  await getBills(currentPage.value, search)
 }
 
 onMounted(async () => {
