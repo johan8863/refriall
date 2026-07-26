@@ -79,67 +79,15 @@ const clearSearch = async () => {
 }
 
 const loadNextItems = async () => {
-  try {
-    // start loading state
-    isLoading.value = true
-
-    currentPage.value += 1
-    if (hasSearched.value && searchTerm.value.trim()) {
-      // Search purpose
-      const resp = await billService.searchBills(searchTerm.value, currentPage.value)
-      const data = resp.data
-      bills.value = data.results // o bills.value
-      showNextButton.value = !!data.next
-      showPrevButton.value = !!data.previous
-    } else {
-      // whole pagination list
-      await getBills(currentPage.value)
-    }
-  } catch (error) {
-    console.error(error)
-    if (error.respnse) {
-      if (error.respnse.status === 500) {
-        billBackendErrors.value = 'Error en servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      billBackendErrors.value = 'Servidor no responde, consulte al desarrollador.'
-    }
-  } finally {
-    // stop loading state
-    isLoading.value = false
-  }
+  currentPage.value += 1
+  const search = hasSearched.value ? searchTerm.value : ''
+  await getBills(currentPage.value, search)
 }
 
 const loadPrevItems = async () => {
-  try {
-    // start loading state
-    isLoading.value = true
-
-    currentPage.value -= 1
-    if (hasSearched.value && searchTerm.value.trim()) {
-      // search purpose
-      const resp = await billService.searchBills(searchTerm.value, currentPage.value)
-      const data = resp.data
-      bills.value = data.results // o bills.value
-      showNextButton.value = !!data.next
-      showPrevButton.value = !!data.previous
-    } else {
-      // whole pagination list
-      await getBills(currentPage.value)
-    }
-  } catch (error) {
-    console.error(error)
-    if (error.respnse) {
-      if (error.respnse.status === 500) {
-        billBackendErrors.value = 'Error en servidor, consulte al desarrollador.'
-      }
-    } else if (error.request) {
-      billBackendErrors.value = 'Servidor no responde, consulte al desarrollador.'
-    }
-  } finally {
-    // stop loading state
-    isLoading.value = false
-  }
+  currentPage.value -= 1
+  const search = hasSearched.value ? searchTerm.value : ''
+  await getBills(currentPage.value, search)
 }
 
 onMounted(async () => {
