@@ -4,7 +4,7 @@ from django.db import migrations, models
 
 def ensure_bills_have_customer(apps, schema_editor):
     """
-    Assigns the first customer to bill that don't have any,
+    Assigns the first customer to bill that doesn't have any,
     creates a default one in case there's None.
     """
     Bill = apps.get_model('finance', 'Bill')
