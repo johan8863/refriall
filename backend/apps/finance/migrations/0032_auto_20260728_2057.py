@@ -34,7 +34,6 @@ def ensure_bills_have_providers(apps, schema_editor):
         Bill.objects.filter(provider__isnull=True).update(provider=default_provider)
 
 
-
 class Migration(migrations.Migration):
 
     dependencies = [
