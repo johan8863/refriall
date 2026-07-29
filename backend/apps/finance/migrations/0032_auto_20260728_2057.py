@@ -8,7 +8,7 @@ from decouple import config
 
 def ensure_bills_have_provider(apps, schema_editor):
     """
-    Assigns the first provider to bill that don't have any,
+    Assigns the first provider to bill that doesn't have any,
     creates a default one in case there's None(shouldn't happen)
     """
     Bill = apps.get_model('finance', 'Bill')
