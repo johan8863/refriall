@@ -26,7 +26,7 @@ class Currency(models.Model):
 class Bill(models.Model):
     """Final document to register the business income"""
 
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True, verbose_name="Cliente")
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, verbose_name="Cliente")
     folio = models.CharField('No. folio', max_length=10, unique=True)
     provider = models.ForeignKey(
         Provider,
