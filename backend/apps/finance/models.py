@@ -31,7 +31,6 @@ class Bill(models.Model):
     provider = models.ForeignKey(
         Provider,
         on_delete=models.PROTECT,
-        null=True,
         verbose_name='Prestador'
     )
     provider_signature_date = models.DateField('Firma del proveedor')
