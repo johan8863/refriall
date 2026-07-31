@@ -287,12 +287,13 @@ Enjoy using this software as much as I love to develop and maintain it.
 
 #### Troubleshooting (Windows)
 
-| Problem                   | Suggestion                                              |
-| ------------------------- | ------------------------------------------------------- |
-| `uv` not recognized       | Close and reopen terminal after installation            |
-| Port 8000 already in use  | Run `netstat -ano \| findstr :8000` to find the process |
-| Service fails to start    | Check `service.log` for error details                   |
-| Database connection error | Verify MariaDB service is running: `services.msc`       |
+| Problem | Suggestion |
+| --------- | ------------ |
+| `uv` not recognized | Close and reopen terminal after installation |
+| Port 8000 already in use | Run `netstat -ano \| findstr :8000` to find the process |
+| Service fails to start | Check `service.log` for error details |
+| Database connection error | Verify MariaDB service is running: `services.msc` |
+| **decouple.UndefinedValueError** | **Ensure `provider_migration_password` is set in your `.env` file** |
 
 ## Backups
 
