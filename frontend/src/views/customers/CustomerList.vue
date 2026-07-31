@@ -49,8 +49,6 @@ const loadCustomers = async (page = 1, search = '') => {
   }
 }
 
-const getCustomers = (page) => loadCustomers(page, '')
-
 const handleSearch = async () => {
   if (!searchTerm.value.trim()) {
     await loadCustomers(1, '')
