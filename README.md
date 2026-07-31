@@ -9,6 +9,7 @@ Refriall is **custom software** that I constantly develop and maintain. It is es
 - [Features](#features)
 - [Requirements](#requirements)
 - [Stack](#stack)
+- [Environment Variables](#environment-variables)
 - [Deployment](#deployment)
   - [Common](#common)
   - [On macOS/Linux](#on-macoslinux)
@@ -76,6 +77,26 @@ The software is a fullstack application built with the following technologies:
 
 > **Exact versions:** See `uv.lock` or backend dependencies and, `package.json` for frontend dependencies.
 
+## Environment Variables
+
+The following environment variables are required in the root `.env` file:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `MARIADB_DATABASE_DEV` | Development database name | `mariadb_refriall_dev` |
+| `MARIADB_DATABASE` | Production database name | `mariadb_refriall_prod` |
+| `MARIADB_USER` | Database user | `root` |
+| `MARIADB_ROOT_PASSWORD` | Database password | `secret` |
+| `MARIADB_HOST` | Database host | `127.0.0.1` (or `mariadb_refriall` for Docker) |
+| `MARIADB_PORT` | Database port | `3306` |
+| `SECRET_KEY` | Django secret key | (generate a secure key) |
+| `DJANGO_SETTINGS_MODULE` | Settings module | `backend.settings.prod` or `backend.settings.dev` |
+| `ACCESS_TOKEN_LIFETIME` | JWT access token lifetime (minutes) | `15` |
+| `REFRESH_TOKEN_LIFETIME` | JWT refresh token lifetime (days) | `1` |
+| `provider_migration_password` | Password for default provider created during migrations | (set a secure password) |
+
+> **Note:** The `provider_migration_password` is only used during the migration that ensures all `Bill` records have a `provider` assigned. This is a one-time operation during deployment or database setup.
+
 ## Deployment
 
 ### Common
@@ -99,6 +120,8 @@ secure_password = ''.join(secrets.choice(characters) for _ in range(63))
 
 print(secure_password)
 ```
+
+> Important: The `.env` file now includes a `provider_migration_password` variable. This password is used during database migrations to create a default provider if none exists. Ensure you set a secure value for this variable. This is required for the migration that makes the `provider` field on `Bill` non-nullable.
 
 After that `cd frontend` and repeat the process with the inner `.env.sample` file, in this one there's no password to recreate.
 
