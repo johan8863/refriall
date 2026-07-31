@@ -20,6 +20,7 @@ Refriall is **custom software** that I constantly develop and maintain. It is es
     - [3. Set up the database schema](#3-set-up-the-database-schema)
     - [4. Install frontend dependencies](#4-install-frontend-dependencies)
     - [5. Automate startup as a Windows service](#5-automate-startup-as-a-windows-service)
+- [Troubleshooting](#troubleshooting)
 - [Backups](#backups)
   - [macOS/linux Backups](#macoslinux-backups)
   - [Windows Backups](#windows-backups)
@@ -287,13 +288,24 @@ Enjoy using this software as much as I love to develop and maintain it.
 
 #### Troubleshooting (Windows)
 
-| Problem | Suggestion |
-| --------- | ------------ |
-| `uv` not recognized | Close and reopen terminal after installation |
-| Port 8000 already in use | Run `netstat -ano \| findstr :8000` to find the process |
-| Service fails to start | Check `service.log` for error details |
-| Database connection error | Verify MariaDB service is running: `services.msc` |
-| **decouple.UndefinedValueError** | **Ensure `provider_migration_password` is set in your `.env` file** |
+## Troubleshooting
+
+| Platform | Problem | Suggestion |
+| ---------- | --------- | ------------ |
+| **Windows** | `uv` not recognized | Close and reopen terminal after installation |
+| **Windows** | Port 8000 already in use | Run `netstat -ano \| findstr :8000` to find the process |
+| **Windows** | Service fails to start | Check `service.log` for error details |
+| **Windows** | Database connection error | Verify MariaDB service is running: `services.msc` |
+| **Windows** | Static files not loading (404) | Run `uv run python manage.py collectstatic` after building the frontend with `pnpm build` |
+| **Windows** | Frontend changes not reflecting | Rebuild the frontend with `pnpm build` and restart the service with `nssm restart refriall` |
+| **macOS/Linux** | Port already in use | Check if another container is using the port: `docker ps` and `docker stop <container_id>` |
+| **macOS/Linux** | `docker compose` command not found | Ensure Docker is installed and running. Check with `docker --version` |
+| **macOS/Linux** | Database connection error | Verify the MariaDB container is running: `docker compose ps` |
+| **macOS/Linux** | `decouple.UndefinedValueError: provider_migration_password` | Ensure `provider_migration_password` is set in your `.env` file |
+| **macOS/Linux** | Migrations not applying | Run `docker compose exec backend python manage.py migrate` manually |
+| **macOS/Linux** | Static files not loading | Rebuild containers with `docker compose up --build -d` and ensure the frontend is built |
+| **macOS/Linux** | phpMyAdmin not accessible | Verify the port `8080` is not in use. Check `docker compose ps` to ensure the service is running |
+| **All** | `decouple.UndefinedValueError: provider_migration_password` | This error occurs during migration `0032_alter_bill_provider` when the variable is missing. Add `provider_migration_password=your_secure_password` to `.env` and re-run migrations |
 
 ## Backups
 
