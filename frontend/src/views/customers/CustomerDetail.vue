@@ -35,12 +35,11 @@ const route = useRoute()
 const isLoading = ref(false)
 
 // search variables for dependencies
-const hasSearchedDependencies = ref(false)
 const searchDependencyTerm = ref('')
 
 // methods
 const filteredDependencies = computed(() => {
-  if (!searchDependencyTerm.value.trim() || !hasSearchedDependencies.value) {
+  if (!searchDependencyTerm.value.trim()) {
     return customer.value.get_dependencies
   }
 
@@ -52,13 +51,12 @@ const filteredDependencies = computed(() => {
 
 const handleDependencySearch = () => {
   if (searchDependencyTerm.value.trim()) {
-    hasSearchedDependencies.value = true
+    return filteredDependencies()
   }
 }
 
 const clearDependencySearch = () => {
   searchDependencyTerm.value = ''
-  hasSearchedDependencies.value = false
 }
 
 // lifecycle
@@ -119,62 +117,65 @@ onMounted(async () => {
     <div class="col-md-6">
       <h3>Dependencias</h3>
       <hr />
+      <div v-if="customer.get_dependencies.length > 0">
+        <!-- Search for dependencies -->
+        <div class="row g-2 align-items-center mb-2">
+          <div class="col-auto">
+            <label class="col-form-label">Buscar dependencia:</label>
+          </div>
+          <div class="col-auto">
+            <input
+              type="search"
+              class="form-control form-control-sm"
+              v-model="searchDependencyTerm"
+              placeholder="Nombre de dependencia..."
+            />
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-primary btn-sm" @click="handleDependencySearch">
+              Buscar
+            </button>
+            <button
+              type="button"
+              @click="clearDependencySearch"
+              class="btn btn-secondary btn-sm ms-1"
+              v-if="searchDependencyTerm"
+            >
+              Limpiar
+            </button>
+          </div>
+        </div>
 
-      <!-- Search for dependencies -->
-      <div class="row g-2 align-items-center mb-2">
-        <div class="col-auto">
-          <label class="col-form-label">Buscar dependencia:</label>
+        <!-- Dependencies list -->
+        <div v-if="filteredDependencies.length > 0">
+          <div class="list-group">
+            <RouterLink
+              v-for="dependency in filteredDependencies"
+              :key="dependency.id"
+              :to="{ name: 'customer_dependecy_detail', params: { id: dependency.id } }"
+              class="list-group-item list-group-item-action"
+            >
+              <strong>{{ dependency.name }}</strong>
+              <br />
+              <small class="text-muted">
+                {{ dependency.address }}, {{ dependency.township }}, {{ dependency.province }}
+              </small>
+            </RouterLink>
+          </div>
         </div>
-        <div class="col-auto">
-          <input
-            type="search"
-            class="form-control form-control-sm"
-            v-model="searchDependencyTerm"
-            placeholder="Nombre de dependencia..."
-            @keyup.enter="handleDependencySearch"
-          />
-        </div>
-        <div class="col-auto">
-          <button type="button" class="btn btn-primary btn-sm" @click="handleDependencySearch">
-            Buscar
-          </button>
-          <button
-            type="button"
-            @click="clearDependencySearch"
-            class="btn btn-secondary btn-sm ms-1"
-            v-if="hasSearchedDependencies"
-          >
-            Limpiar
-          </button>
+
+        <div
+          v-else-if="filteredDependencies.length === 0 && searchDependencyTerm"
+          class="text-center mt-3"
+        >
+          <p class="text-muted">No se encontraron dependencias</p>
         </div>
       </div>
-
-      <!-- Dependencies list -->
-      <div v-if="filteredDependencies.length > 0">
-        <div class="list-group">
-          <RouterLink
-            v-for="dependency in filteredDependencies"
-            :key="dependency.id"
-            :to="{ name: 'customer_dependecy_detail', params: { id: dependency.id } }"
-            class="list-group-item list-group-item-action"
-          >
-            <strong>{{ dependency.name }}</strong>
-            <br />
-            <small class="text-muted">
-              {{ dependency.address }}, {{ dependency.township }}, {{ dependency.province }}
-            </small>
-          </RouterLink>
-        </div>
-      </div>
-
-      <div v-else class="text-center mt-3">
-        <p class="text-muted">
-          {{
-            hasSearchedDependencies
-              ? 'No se encontraron dependencias'
-              : 'No hay dependencias registradas'
-          }}
-        </p>
+      <div v-else>
+        Este Cliente no posee dependencias, para insertar una haga click
+        <RouterLink :to="{ name: 'customer_dependecy_create', params: { id: customer.id } }"
+          >aquí.</RouterLink
+        >
       </div>
     </div>
   </div>
