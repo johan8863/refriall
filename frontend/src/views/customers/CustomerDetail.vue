@@ -145,7 +145,7 @@ onMounted(async () => {
             </button>
           </div>
         </div>
-  
+
         <!-- Dependencies list -->
         <div v-if="filteredDependencies.length > 0">
           <div class="list-group">
@@ -163,15 +163,21 @@ onMounted(async () => {
             </RouterLink>
           </div>
         </div>
-  
-        <div v-else-if="filteredDependencies.length === 0 && searchDependencyTerm" class="text-center mt-3">
-            <p class="text-muted">No se encontraron dependencias</p>
-          </div>
-        </div>
-        <div v-else>
-          Este Cliente no posee dependencias, para insertar una haga click <RouterLink :to="{ name: 'customer_dependecy_create', params: { id: customer.id } }">aquí.</RouterLink>
+
+        <div
+          v-else-if="filteredDependencies.length === 0 && searchDependencyTerm"
+          class="text-center mt-3"
+        >
+          <p class="text-muted">No se encontraron dependencias</p>
         </div>
       </div>
+      <div v-else>
+        Este Cliente no posee dependencias, para insertar una haga click
+        <RouterLink :to="{ name: 'customer_dependecy_create', params: { id: customer.id } }"
+          >aquí.</RouterLink
+        >
+      </div>
+    </div>
   </div>
 </template>
 
