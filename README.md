@@ -82,7 +82,7 @@ The software is a fullstack application built with the following technologies:
 The following environment variables are required in the root `.env` file:
 
 | Variable | Description | Example |
-|----------|-------------|---------|
+| ---------- | ------------- | --------- |
 | `MARIADB_DATABASE_DEV` | Development database name | `mariadb_refriall_dev` |
 | `MARIADB_DATABASE` | Production database name | `mariadb_refriall_prod` |
 | `MARIADB_USER` | Database user | `root` |
