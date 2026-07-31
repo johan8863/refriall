@@ -43,6 +43,7 @@ const loadCustomers = async (page = 1, search = '') => {
     showNextButton.value = !!data.next
     showPrevButton.value = !!data.previous
   } catch (error) {
+    console.error('General error:', { error })
     handleError(error)
   } finally {
     isLoading.value = false
