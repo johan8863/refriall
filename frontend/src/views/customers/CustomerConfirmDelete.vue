@@ -39,9 +39,7 @@ const route = useRoute()
 const { goToDetail } = useRouting()
 
 const handleGoToDetail = () => {
-  try {
-    goToDetail('customers_detail', customer.value.id)
-  } catch (error) {}
+  goToDetail('customers_detail', customer.value.id)
 }
 
 // methods
