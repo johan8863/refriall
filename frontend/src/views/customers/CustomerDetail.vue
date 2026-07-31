@@ -35,12 +35,11 @@ const route = useRoute()
 const isLoading = ref(false)
 
 // search variables for dependencies
-const hasSearchedDependencies = ref(false)
 const searchDependencyTerm = ref('')
 
 // methods
 const filteredDependencies = computed(() => {
-  if (!searchDependencyTerm.value.trim() || !hasSearchedDependencies.value) {
+  if (!searchDependencyTerm.value.trim()) {
     return customer.value.get_dependencies
   }
 
@@ -52,13 +51,12 @@ const filteredDependencies = computed(() => {
 
 const handleDependencySearch = () => {
   if (searchDependencyTerm.value.trim()) {
-    hasSearchedDependencies.value = true
+    return filteredDependencies()
   }
 }
 
 const clearDependencySearch = () => {
   searchDependencyTerm.value = ''
-  hasSearchedDependencies.value = false
 }
 
 // lifecycle
@@ -131,7 +129,6 @@ onMounted(async () => {
             class="form-control form-control-sm"
             v-model="searchDependencyTerm"
             placeholder="Nombre de dependencia..."
-            @keyup.enter="handleDependencySearch"
           />
         </div>
         <div class="col-auto">
@@ -142,7 +139,7 @@ onMounted(async () => {
             type="button"
             @click="clearDependencySearch"
             class="btn btn-secondary btn-sm ms-1"
-            v-if="hasSearchedDependencies"
+            v-if="searchDependencyTerm"
           >
             Limpiar
           </button>
@@ -167,14 +164,8 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div v-else class="text-center mt-3">
-        <p class="text-muted">
-          {{
-            hasSearchedDependencies
-              ? 'No se encontraron dependencias'
-              : 'No hay dependencias registradas'
-          }}
-        </p>
+      <div v-else-if="filteredDependencies.length === 0 && searchDependencyTerm" class="text-center mt-3">
+        <p class="text-muted">No se encontraron dependencias</p>
       </div>
     </div>
   </div>
