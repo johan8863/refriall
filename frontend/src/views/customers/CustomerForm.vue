@@ -40,9 +40,7 @@ const route = useRoute()
 const { goBack } = useRouting()
 
 const handlegGoBack = () => {
-  try {
-    goBack('customers', 'customers_detail', customer.value.id)
-  } catch (error) {}
+  goBack('customers', 'customers_detail', customer.value.id)
 }
 
 // loading state
