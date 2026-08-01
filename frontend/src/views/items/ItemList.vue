@@ -1,6 +1,6 @@
 <script setup>
 // vue
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
 // app
 import { itemService } from '../../services/itemService'
@@ -8,126 +8,33 @@ import ItemListTable from '../../components/items/ItemListTable.vue'
 import ItemListPagination from '../../components/items/ItemListPagination.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import ItemListMenu from '../../components/items/menus/ItemListMenu.vue'
-import { errorHandler } from '../../utils/errors/errorHandler.js'
+import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
 
-// reactive objects
-const items = ref([])
-const currentPage = ref(1)
-const showNextButton = ref(false)
-const showPrevButton = ref(false)
-const itemBackendErrors = ref(null)
-const isLoading = ref(false)
-
-// search variables
-const hasSearched = ref(false)
-const searchTerm = ref('')
-
-// methods
-const getItems = async (page = 1) => {
-  isLoading.value = true
-  try {
-    const resp = await itemService.listItem(page)
-    const data = resp.data
-
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-    items.value = data.results
-    itemBackendErrors.value = null
-  } catch (error) {
-    console.error(error)
-    errorHandler(error, itemBackendErrors)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const restartSearchFlags = () => {
-  currentPage.value = 1
-  showNextButton.value = false
-  showPrevButton.value = false
-}
-
-const handleSearch = async () => {
-  if (!searchTerm.value.trim()) {
-    await getItems(1)
-    hasSearched.value = false
-    return
-  }
-
-  restartSearchFlags()
-
-  isLoading.value = true
-  hasSearched.value = true
-
-  try {
-    const resp = await itemService.searchItems(searchTerm.value)
-    const data = resp.data
-
-    items.value = data.results
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-    itemBackendErrors.value = null
-  } catch (error) {
-    console.error(error)
-    errorHandler(error, itemBackendErrors)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const clearSearch = async () => {
-  searchTerm.value = ''
-  hasSearched.value = false
-
-  restartSearchFlags()
-  await getItems(1)
-}
-
-const loadNextItems = async () => {
-  currentPage.value += 1
-  if (hasSearched.value && searchTerm.value.trim()) {
-    isLoading.value = true
-    try {
-      const resp = await itemService.searchItems(searchTerm.value, currentPage.value)
-      const data = resp.data
-      items.value = data.results
-      showNextButton.value = !!data.next
-      showPrevButton.value = !!data.previous
-    } catch (error) {
-      console.error(error)
-      errorHandler(error, itemBackendErrors)
-    } finally {
-      isLoading.value = false
-    }
-  } else {
-    await getItems(currentPage.value)
-  }
-}
-
-const loadPrevItems = async () => {
-  currentPage.value -= 1
-  if (hasSearched.value && searchTerm.value.trim()) {
-    isLoading.value = true
-    try {
-      const resp = await itemService.searchItems(searchTerm.value, currentPage.value)
-      const data = resp.data
-      items.value = data.results
-      showNextButton.value = !!data.next
-      showPrevButton.value = !!data.previous
-    } catch (error) {
-      console.error(error)
-      errorHandler(error, itemBackendErrors)
-    } finally {
-      isLoading.value = false
-    }
-  } else {
-    await getItems(currentPage.value)
-  }
-}
+const {
+  items,
+  currentPage,
+  isLoading,
+  hasSearched,
+  searchTerm,
+  errorMessage: itemBackendErrors,
+  showPrevButton,
+  showNextButton,
+  loadItems,
+  handleSearch,
+  loadNextItems,
+  loadPrevItems,
+  clearSearch
+} = usePaginationSearch({
+  fetchFunction: itemService.listItem,
+  searchFunction: itemService.searchItems,
+  itemName: 'Artículo',
+  gender: 'm',
+  pageSize: 10
+})
 
 // lifecycle
 onMounted(async () => {
-  await getItems(1)
+  await loadItems(1, '')
 })
 </script>
 

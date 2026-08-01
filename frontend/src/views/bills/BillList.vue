@@ -1,6 +1,6 @@
 <script setup>
 // vue
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
 // app
 import { billService } from '../../services/billService'
@@ -8,90 +8,33 @@ import BillListTable from '../../components/bills/BillListTable.vue'
 import BillListPaginatin from '../../components/bills/BillListPaginatin.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import BillListMenu from '../../components/bills/menus/BillListMenu.vue'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
 
-const bills = ref([])
-const currentPage = ref(1)
-const showNextButton = ref(false)
-const showPrevButton = ref(false)
-const isLoading = ref(false)
-
-// error objects
-const { errorMessage, handleError, clearErrors } = useErrorHandler({
-  objectName: 'Factura'
+const {
+  items: bills,
+  currentPage,
+  isLoading,
+  hasSearched,
+  searchTerm,
+  errorMessage,
+  showPrevButton,
+  showNextButton,
+  loadItems,
+  handleSearch,
+  loadNextItems,
+  loadPrevItems,
+  clearSearch
+} = usePaginationSearch({
+  fetchFunction: billService.listBillsPagination,
+  searchFunction: billService.searchBills,
+  itemName: 'Factura',
+  gender: 'f',
+  pageSize: 10
 })
 
-// search variables
-const hasSearched = ref(false)
-const searchTerm = ref('')
-
-const getBills = async (page = 1, search = '') => {
-  // start loading state
-  isLoading.value = true
-  clearErrors()
-
-  try {
-    // ternary to decide whether to search or list bills
-    const resp = search
-      ? await billService.searchBills(search, page)
-      : await billService.listBillsPagination(page)
-    // general data
-    const data = resp.data
-    // bill ref value
-    bills.value = data.results
-    // properties restarting
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-  } catch (error) {
-    console.error('General error:', { error })
-    handleError(error)
-  } finally {
-    // stop loading state
-    isLoading.value = false
-  }
-}
-
-const restartSearchFlags = () => {
-  currentPage.value = 1
-  showNextButton.value = false
-  showPrevButton.value = false
-}
-
-const handleSearch = async () => {
-  if (!searchTerm.value.trim()) {
-    await getBills(1)
-    hasSearched.value = false
-    return
-  }
-
-  restartSearchFlags()
-  hasSearched.value = true
-
-  await getBills(1, searchTerm.value)
-}
-
-const clearSearch = async () => {
-  searchTerm.value = ''
-  hasSearched.value = false
-
-  restartSearchFlags()
-  await getBills(1)
-}
-
-const loadNextItems = async () => {
-  currentPage.value += 1
-  const search = hasSearched.value ? searchTerm.value : ''
-  await getBills(currentPage.value, search)
-}
-
-const loadPrevItems = async () => {
-  currentPage.value -= 1
-  const search = hasSearched.value ? searchTerm.value : ''
-  await getBills(currentPage.value, search)
-}
-
+// lifecycle
 onMounted(async () => {
-  await getBills(1)
+  await loadItems(1, '')
 })
 </script>
 
