@@ -15,14 +15,14 @@ export const orderService = {
       params.search = searchTerm
     }
 
-    return apiBase.get(`${urlOrder}/orders-list-pagination/`, { params })
+    return apiBase.get(`${urlOrder}/list-pagination/`, { params })
   },
   searchOrders: (searchTerm, page = 1) => {
     const params = { search: searchTerm }
     if (page > 1) {
       params.page = page
     }
-    return apiBase.get(`${urlOrder}/orders-list-pagination/`, { params })
+    return apiBase.get(`${urlOrder}/list-pagination/`, { params })
   },
   detailOrder: (id) => apiBase.get(`${urlOrder}/${id}/order-detail/`),
   detailOrderUpdate: (id) => apiBase.get(`${urlOrder}/${id}/`),

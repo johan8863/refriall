@@ -15,14 +15,14 @@ export const billService = {
       params.search = searchTerm
     }
 
-    return apiBase.get(`${urlBill}/bill-list-pagination/`, { params })
+    return apiBase.get(`${urlBill}/list-pagination/`, { params })
   },
   searchBills: (searchTerm, page = 1) => {
     const params = { search: searchTerm }
     if (page > 1) {
       params.page = page
     }
-    return apiBase.get(`${urlBill}/bill-list-pagination/`, { params })
+    return apiBase.get(`${urlBill}/list-pagination/`, { params })
   },
   detailBill: (id) => apiBase.get(`${urlBill}/${id}/`),
   getForUpdate: (id) => apiBase.get(`${urlBill}/${id}/get-for-update/`),

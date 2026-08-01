@@ -29,7 +29,7 @@ class ItemViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
     
-    @action(detail=False, methods=['get'], url_path='item-list-pagination')
+    @action(detail=False, url_path='list-pagination')
     def get_item_list_pagination(self, request):
         """Return Items paginated"""
 
@@ -70,8 +70,8 @@ class KitViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
     
-    @action(detail=False, url_path='kits-list-paginated')
-    def get_kits_list_paginated(self, request, format=None):
+    @action(detail=False, url_path='list-paginated')
+    def get_kits_list_pagination(self, request, format=None):
         kits = Kit.objects.all()
 
         # search

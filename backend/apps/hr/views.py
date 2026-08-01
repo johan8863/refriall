@@ -46,7 +46,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
     
-    @action(detail=False, url_path='customers-list-pagination')
+    @action(detail=False, url_path='list-pagination')
     def get_customer_list_pagination(self, request):
         """List customers paginated"""
 
@@ -177,8 +177,8 @@ class ProviderViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(providers, many=True)
         return Response(serializer.data)
     
-    @action(detail=False, url_path="get-providers-paginated")
-    def get_providers_paginated(self, request, format=None):
+    @action(detail=False, url_path="list-pagination")
+    def get_provider_list_pagination(self, request, format=None):
         """Returns the list of providers pagianted."""
         providers = self.get_queryset()
         
