@@ -6,7 +6,7 @@ export const usePaginationSearch = ({
   fetchFunction,
   searchFunction,
   itemName = 'Items',
-  gender = 'm', // ✅ Añadir género para el mensaje de error
+  gender = 'm',
   pageSize = 10
 }) => {
   const items = ref([])
@@ -17,7 +17,7 @@ export const usePaginationSearch = ({
   const hasSearched = ref(false)
   const searchTerm = ref('')
 
-  // ✅ Usar useErrorHandler
+  // reutilize useErrorHandler
   const { errorMessage, backendErrors, hasErrors, handleError, clearErrors } = useErrorHandler({
     objectName: itemName,
     gender: gender
@@ -28,7 +28,7 @@ export const usePaginationSearch = ({
 
   const loadItems = async (page = 1, search = '') => {
     isLoading.value = true
-    clearErrors() // ✅ Limpiar errores antes de cada carga
+    clearErrors() // clear errors before every load
 
     try {
       const response = search ? await searchFunction(search, page) : await fetchFunction(page)
@@ -39,10 +39,10 @@ export const usePaginationSearch = ({
       totalItems.value = data.count || 0
 
       return response
-    } catch (err) {
+    } catch (error) {
       // ✅ Usar handleError del composable
-      handleError(err)
-      throw err
+      handleError(error)
+      throw error
     } finally {
       isLoading.value = false
     }
@@ -78,7 +78,7 @@ export const usePaginationSearch = ({
     searchTerm.value = ''
     hasSearched.value = false
     currentPage.value = 1
-    clearErrors() // ✅ Limpiar errores al limpiar búsqueda
+    clearErrors() // clear errors when cleaning search
     await loadItems(1, '')
   }
 
@@ -90,7 +90,7 @@ export const usePaginationSearch = ({
   }
 
   return {
-    // Estado
+    // state
     items,
     currentPage,
     totalPages,
@@ -99,16 +99,16 @@ export const usePaginationSearch = ({
     hasSearched,
     searchTerm,
 
-    // ✅ Errores desde useErrorHandler
+    // useErrorHandler states
     errorMessage,
     backendErrors,
     hasErrors,
 
-    // Computed
+    // Ccomputed
     showPrevButton,
     showNextButton,
 
-    // Métodos
+    // methods
     loadItems,
     handleSearch,
     loadNextItems,
@@ -116,7 +116,7 @@ export const usePaginationSearch = ({
     clearSearch,
     goToPage,
 
-    // ✅ Métodos de error (opcional, por si se necesitan directamente)
+    // useErrorHandler methods, just in case they need to be used directly
     clearErrors,
     handleError
   }
