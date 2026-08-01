@@ -4,26 +4,20 @@ import apiBase from './baseService'
 const urlOrder = orderAPIEnvs.orderUrl
 
 export const orderService = {
-  listOrder: (currentPage = null, searchTerm = null) => {
-    const params = {}
-
-    if (currentPage) {
-      params.page = currentPage
-    }
-
-    if (searchTerm) {
-      params.search = searchTerm
-    }
-
-    return apiBase.get(`${urlOrder}/list-pagination/`, { params })
-  },
-  searchOrders: (searchTerm, page = 1) => {
-    const params = { search: searchTerm }
-    if (page > 1) {
-      params.page = page
-    }
-    return apiBase.get(`${urlOrder}/list-pagination/`, { params })
-  },
+  listOrder: (currentPage = null, searchTerm = null) =>
+    apiBase.get(`${urlOrder}/list-pagination/`, {
+      params: {
+        ...(currentPage && { page: currentPage }),
+        ...(searchTerm && { search: searchTerm })
+      }
+    }),
+  searchOrders: (searchTerm, page = 1) =>
+    apiBase.get(`${urlOrder}/list-pagination/`, {
+      params: {
+        search: searchTerm,
+        ...(page > 1 && { page })
+      }
+    }),
   detailOrder: (id) => apiBase.get(`${urlOrder}/${id}/order-detail/`),
   detailOrderUpdate: (id) => apiBase.get(`${urlOrder}/${id}/`),
   postOrder: (order) => apiBase.post(`${urlOrder}/`, order),

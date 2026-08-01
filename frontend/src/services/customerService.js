@@ -4,27 +4,20 @@ import apiBase from './baseService'
 const urlCustomer = customerAPIEnvs.customerUrl
 
 export const customerService = {
-  listCustomer: (currentPage = null, searchTerm = null) => {
-    const params = {}
-
-    if (currentPage) {
-      params.page = currentPage
-    }
-
-    if (searchTerm) {
-      params.search = searchTerm
-    }
-
-    return apiBase.get(`${urlCustomer}/list-pagination/`, { params })
-  },
-  listAllCustomers: () => apiBase.get(`${urlCustomer}/`),
-  searchCustomers: (searchTerm, page = 1) => {
-    const params = { search: searchTerm }
-    if (page > 1) {
-      params.page = page
-    }
-    return apiBase.get(`${urlCustomer}/list-pagination/`, { params })
-  },
+  listCustomer: (currentPage = null, searchTerm = null) =>
+    apiBase.get(`${urlCustomer}/list-pagination/`, {
+      params: {
+        ...(currentPage && { page: currentPage }),
+        ...(searchTerm && { search: searchTerm })
+      }
+    }),
+  searchCustomers: (searchTerm, page = 1) =>
+    apiBase.get(`${urlCustomer}/list-pagination/`, {
+      params: {
+        search: searchTerm,
+        ...(page > 1 && { page })
+      }
+    }),
   listCustomerOrdersNoBill: (currency, provider) =>
     apiBase.get(`${urlCustomer}/customer-order-currency-provider-no-bill/${currency}/${provider}/`),
   detailCustomer: (id) => apiBase.get(`${urlCustomer}/${id}/`),

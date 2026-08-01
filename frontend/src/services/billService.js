@@ -4,26 +4,20 @@ import apiBase from './baseService'
 const urlBill = billsAPIEnvs.billUrl
 
 export const billService = {
-  listBillsPagination: (currentPage = null, searchTerm = null) => {
-    const params = {}
-
-    if (currentPage) {
-      params.page = currentPage
-    }
-
-    if (searchTerm) {
-      params.search = searchTerm
-    }
-
-    return apiBase.get(`${urlBill}/list-pagination/`, { params })
-  },
-  searchBills: (searchTerm, page = 1) => {
-    const params = { search: searchTerm }
-    if (page > 1) {
-      params.page = page
-    }
-    return apiBase.get(`${urlBill}/list-pagination/`, { params })
-  },
+  listBillsPagination: (currentPage = null, searchTerm = null) =>
+    apiBase.get(`${urlBill}/list-pagination/`, {
+      params: {
+        ...(currentPage && { page: currentPage }),
+        ...(searchTerm && { search: searchTerm })
+      }
+    }),
+  searchBills: (searchTerm, page = 1) =>
+    apiBase.get(`${urlBill}/list-pagination/`, {
+      params: {
+        search: searchTerm,
+        ...(page > 1 && { page })
+      }
+    }),
   detailBill: (id) => apiBase.get(`${urlBill}/${id}/`),
   getForUpdate: (id) => apiBase.get(`${urlBill}/${id}/get-for-update/`),
   getForDelete: (id) => apiBase.get(`${urlBill}/${id}/get-for-delete/`),
