@@ -7,6 +7,8 @@ export const usePaginationSearch = ({
   searchFunction,
   itemName = 'Items',
   gender = 'm',
+  // important: this attribute MUST match de page_size attribute from BaseCustomPagination
+  // at ../../../backend/utils/base_paginator.py
   pageSize = 10
 }) => {
   const items = ref([])
