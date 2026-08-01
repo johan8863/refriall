@@ -47,7 +47,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
             )
     
     @action(detail=False, url_path='list-pagination')
-    def get_customer_list_pagination(self, request):
+    def list_pagination(self, request):
         """List customers paginated"""
 
         customers = self.get_queryset()
@@ -178,7 +178,7 @@ class ProviderViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
     @action(detail=False, url_path="list-pagination")
-    def get_provider_list_pagination(self, request, format=None):
+    def list_pagination(self, request, format=None):
         """Returns the list of providers pagianted."""
         providers = self.get_queryset()
         

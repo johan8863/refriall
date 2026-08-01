@@ -30,7 +30,7 @@ class ItemViewSet(viewsets.ModelViewSet):
             )
     
     @action(detail=False, url_path='list-pagination')
-    def get_item_list_pagination(self, request):
+    def list_pagination(self, request):
         """Return Items paginated"""
 
         # queryset
@@ -71,7 +71,7 @@ class KitViewSet(viewsets.ModelViewSet):
             )
     
     @action(detail=False, url_path='list-paginated')
-    def get_kits_list_pagination(self, request, format=None):
+    def list_pagination(self, request, format=None):
         kits = Kit.objects.all()
 
         # search

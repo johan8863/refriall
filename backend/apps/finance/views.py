@@ -62,7 +62,7 @@ class BillViewSet(viewsets.ModelViewSet):
         return BillSerializer
     
     @action(detail=False, url_path='list-pagination')
-    def get_bill_list_pagination(self, request, format=None):
+    def list_pagination(self, request, format=None):
         """Returns bills list pagianted"""
 
         # queryset
@@ -117,7 +117,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             return Response(data=serializer.data, status=status.HTTP_400_BAD_REQUEST)
     
     @action(detail=False, url_path='list-pagination')
-    def get_orders_list_pagination(self, request):
+    def list_pagination(self, request):
         orders = Order.objects.all()
         
         # Search by folio, customer name or dependency
