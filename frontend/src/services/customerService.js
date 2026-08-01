@@ -15,7 +15,7 @@ export const customerService = {
       params.search = searchTerm
     }
 
-    return apiBase.get(`${urlCustomer}/customers-list-pagination/`, { params })
+    return apiBase.get(`${urlCustomer}/list-pagination/`, { params })
   },
   listAllCustomers: () => apiBase.get(`${urlCustomer}/`),
   searchCustomers: (searchTerm, page = 1) => {
@@ -23,7 +23,7 @@ export const customerService = {
     if (page > 1) {
       params.page = page
     }
-    return apiBase.get(`${urlCustomer}/customers-list-pagination/`, { params })
+    return apiBase.get(`${urlCustomer}/list-pagination/`, { params })
   },
   listCustomerOrdersNoBill: (currency, provider) =>
     apiBase.get(`${urlCustomer}/customer-order-currency-provider-no-bill/${currency}/${provider}/`),

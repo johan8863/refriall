@@ -15,7 +15,7 @@ export const itemService = {
       params.search = searchTerm
     }
 
-    return apiBase.get(`${urlItem}/item-list-pagination/`, { params })
+    return apiBase.get(`${urlItem}/list-pagination/`, { params })
   },
   listItemsForSelect: (searchTerm = null) => {
     const params = {}
@@ -31,7 +31,7 @@ export const itemService = {
     if (page > 1) {
       params.page = page
     }
-    return apiBase.get(`${urlItem}/item-list-pagination/`, { params })
+    return apiBase.get(`${urlItem}/list-pagination/`, { params })
   },
   getItem: (id) => apiBase.get(`${urlItem}/${id}/`),
   detailItem: (id) => apiBase.get(`${urlItem}/${id}/`),

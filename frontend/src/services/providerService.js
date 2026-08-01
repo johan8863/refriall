@@ -4,8 +4,7 @@ import apiBase from './baseService'
 const urlProvider = providerAPIEnvs.providerUrl
 
 export const providerService = {
-  listProvider: (currentPage) =>
-    apiBase.get(`${urlProvider}/get-providers-paginated/?page=${currentPage}`),
+  listProvider: (currentPage) => apiBase.get(`${urlProvider}/list-pagination/?page=${currentPage}`),
   listAllProviders: () => apiBase.get(`${urlProvider}/`),
   listProviderCurrencyOrderNoBill: (currency) =>
     apiBase.get(`${urlProvider}/get-provider-order-currency-no-bill/${currency}/`),
