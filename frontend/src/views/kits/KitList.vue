@@ -1,6 +1,6 @@
 <script setup>
 // vue
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
 // app
 import { kitService } from '../../services/kitService'
@@ -8,126 +8,33 @@ import KitsListTable from '../../components/kits/KitsListTable.vue'
 import KitListPagination from '../../components/kits/KitListPagination.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import KitListMenu from '../../components/kits/menus/KitListMenu.vue'
-import { errorHandler } from '../../utils/errors/errorHandler.js'
+import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
 
-// reactive objects
-const kits = ref([])
-const currentPage = ref(1)
-const showNextButton = ref(false)
-const showPrevButton = ref(false)
-const kitsErrors = ref(null)
-const isLoading = ref(false)
-
-// search variables
-const hasSearched = ref(false)
-const searchTerm = ref('')
-
-// methods
-const getKits = async (page = 1) => {
-  isLoading.value = true
-  try {
-    const resp = await kitService.listKit(page)
-    const data = resp.data
-
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-    kits.value = data.results
-    kitsErrors.value = null
-  } catch (error) {
-    console.error(error)
-    errorHandler(error, kitsErrors)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const restartSearchFlags = () => {
-  currentPage.value = 1
-  showNextButton.value = false
-  showPrevButton.value = false
-}
-
-const handleSearch = async () => {
-  if (!searchTerm.value.trim()) {
-    await getKits(1)
-    hasSearched.value = false
-    return
-  }
-
-  restartSearchFlags()
-
-  isLoading.value = true
-  hasSearched.value = true
-
-  try {
-    const resp = await kitService.searchKits(searchTerm.value)
-    const data = resp.data
-
-    kits.value = data.results
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-    kitsErrors.value = null
-  } catch (error) {
-    console.error(error)
-    errorHandler(error, kitsErrors)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const clearSearch = async () => {
-  searchTerm.value = ''
-  hasSearched.value = false
-
-  restartSearchFlags()
-  await getKits(1)
-}
-
-const loadNextItems = async () => {
-  currentPage.value += 1
-  if (hasSearched.value && searchTerm.value.trim()) {
-    isLoading.value = true
-    try {
-      const resp = await kitService.searchKits(searchTerm.value, currentPage.value)
-      const data = resp.data
-      kits.value = data.results
-      showNextButton.value = !!data.next
-      showPrevButton.value = !!data.previous
-    } catch (error) {
-      console.error(error)
-      errorHandler(error, kitsErrors)
-    } finally {
-      isLoading.value = false
-    }
-  } else {
-    await getKits(currentPage.value)
-  }
-}
-
-const loadPrevItems = async () => {
-  currentPage.value -= 1
-  if (hasSearched.value && searchTerm.value.trim()) {
-    isLoading.value = true
-    try {
-      const resp = await searchKits(searchTerm.value, currentPage.value)
-      const data = resp.data
-      kits.value = data.results
-      showNextButton.value = !!data.next
-      showPrevButton.value = !!data.previous
-    } catch (error) {
-      console.error(error)
-      errorHandler(error, kitsErrors)
-    } finally {
-      isLoading.value = false
-    }
-  } else {
-    await getKits(currentPage.value)
-  }
-}
+const {
+  items: kits,
+  currentPage,
+  isLoading,
+  hasSearched,
+  searchTerm,
+  errorMessage: kitsErrors,
+  showPrevButton,
+  showNextButton,
+  loadItems,
+  handleSearch,
+  loadNextItems,
+  loadPrevItems,
+  clearSearch
+} = usePaginationSearch({
+  fetchFunction: kitService.listKit,
+  searchFunction: kitService.searchKits,
+  itemName: 'Kit',
+  gender: 'm',
+  pageSize: 10
+})
 
 // lifecycle
 onMounted(async () => {
-  await getKits(1)
+  await loadItems(1, '')
 })
 </script>
 

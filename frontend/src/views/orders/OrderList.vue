@@ -1,121 +1,41 @@
 <script setup>
 // vue
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
 // app
 import { orderService } from '../../services/orderService'
-import { errorHandler } from '../../utils/errors/errorHandler'
 import OrdersListTable from '../../components/orders/OrdersListTable.vue'
 import OrdersListPagination from '../../components/orders/OrdersListPagination.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import OrderListMenu from '../../components/orders/menus/OrderListMenu.vue'
+import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
 
-const orders = ref([])
-const ordersCount = ref(0)
-const currentPage = ref(1)
-const showNextButton = ref(false)
-const showPrevButton = ref(false)
-const orderBackendErrors = ref(null)
-const isLoading = ref(false)
+const {
+  items: orders,
+  totalItems: ordersCount,
+  currentPage,
+  isLoading,
+  hasSearched,
+  searchTerm,
+  errorMessage: orderBackendErrors,
+  showPrevButton,
+  showNextButton,
+  loadItems,
+  handleSearch,
+  loadNextItems,
+  loadPrevItems,
+  clearSearch
+} = usePaginationSearch({
+  fetchFunction: orderService.listOrder,
+  searchFunction: orderService.searchOrders,
+  itemName: 'Orden',
+  gender: 'f',
+  pageSize: 10
+})
 
-// search variables
-const hasSearched = ref(false)
-const searchTerm = ref('')
-
-const getOrders = async (page = 1) => {
-  isLoading.value = true
-  try {
-    const resp = await orderService.listOrder(page)
-    const data = resp.data
-
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-    ordersCount.value = data.count
-    orders.value = data.results
-    orderBackendErrors.value = null
-  } catch (error) {
-    console.error(error)
-    errorHandler(error, orderBackendErrors, 'Orden')
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const restartSearchFlags = () => {
-  currentPage.value = 1
-  showNextButton.value = false
-  showPrevButton.value = false
-}
-
-const handleSearch = async () => {
-  if (!searchTerm.value.trim()) {
-    await getOrders(1)
-    hasSearched.value = false
-    return
-  }
-
-  restartSearchFlags()
-
-  isLoading.value = true
-  hasSearched.value = true
-
-  try {
-    const resp = await orderService.searchOrders(searchTerm.value)
-    const data = resp.data
-
-    orders.value = data.results
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-    orderBackendErrors.value = null
-  } catch (error) {
-    console.error(error)
-    errorHandler(error, orderBackendErrors, 'Orden')
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const clearSearch = async () => {
-  showNextButton.value = false
-  showPrevButton.value = false
-  searchTerm.value = ''
-
-  restartSearchFlags()
-  await getOrders(1)
-}
-
-const loadNextItems = async () => {
-  currentPage.value += 1
-  if (hasSearched.value && searchTerm.value.trim()) {
-    // search purpose
-    const resp = await orderService.searchOrders(searchTerm.value, currentPage.value)
-    const data = resp.data
-    orders.value = data.results // o bills.value
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-  } else {
-    // whole pagination list
-    await getOrders(currentPage.value)
-  }
-}
-
-const loadPrevItems = async () => {
-  currentPage.value -= 1
-  if (hasSearched.value && searchTerm.value.trim()) {
-    // search purpose
-    const resp = await orderService.searchOrders(searchTerm.value, currentPage.value) // o searchBills
-    const data = resp.data
-    orders.value = data.results // o bills.value
-    showNextButton.value = !!data.next
-    showPrevButton.value = !!data.previous
-  } else {
-    // whole pagination list
-    await getOrders(currentPage.value) // o getBills
-  }
-}
-
+// lifecycle
 onMounted(async () => {
-  await getOrders()
+  await loadItems(1, '')
 })
 </script>
 
