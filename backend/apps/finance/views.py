@@ -72,7 +72,7 @@ class BillViewSet(viewsets.ModelViewSet):
     queryset = Bill.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'get_bill_list_pagination':
+        if self.action == 'list_pagination':
             return BillSerializerReadListView
         elif self.action == 'retrieve':
             return BillSerializerForReadOnly
@@ -122,7 +122,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
 
     def get_serializer_class(self):
-        if self.action in ['list', 'get_orders_list_pagination']:
+        if self.action in ['list', 'list_pagination']:
             return OrderSerializerReadListView
         elif self.action in ['get_order_detail', 'get_orders_from_currency_customer_free_bill']:
             return OrderSerializerForReadOnly
