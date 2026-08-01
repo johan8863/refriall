@@ -177,11 +177,20 @@ class ProviderViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(providers, many=True)
         return Response(serializer.data)
     
-    @action(detail=False, url_path="list-pagination")
-    def list_pagination(self, request, format=None):
-        """Returns the list of providers pagianted."""
+    @action(detail=False, url_path='list-pagination')
+    def list_pagination(self, request):
+        """List providers paginated with search"""
         providers = self.get_queryset()
         
+        # search
+        search_term = request.query_params.get('search', None)
+        if search_term:
+            providers = providers.filter(
+                Q(name__icontains=search_term) |
+                Q(code__icontains=search_term) |
+                Q(license_number__icontains=search_term)
+            )
+
         # pagination
         paginator = BaseCustomPagination()
         page = paginator.paginate_queryset(providers, request)
@@ -190,7 +199,6 @@ class ProviderViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(page, many=True)
             return paginator.get_paginated_response(serializer.data)
         
-        # Fallback
         serializer = self.get_serializer(providers, many=True)
         return Response(serializer.data)
 
