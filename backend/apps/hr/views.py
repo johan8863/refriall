@@ -31,7 +31,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerSerializer
 
     def get_serializer_class(self):
-        if self.action in ['list', 'retrieve', 'get_customer_list_pagination']:
+        if self.action in ['list', 'retrieve', 'list_pagination']:
             return CustomerDetailSerializer
         return self.serializer_class
 

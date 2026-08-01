@@ -70,7 +70,7 @@ class KitViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
     
-    @action(detail=False, url_path='list-paginated')
+    @action(detail=False, url_path='list-pagination')
     def list_pagination(self, request, format=None):
         kits = Kit.objects.all()
 

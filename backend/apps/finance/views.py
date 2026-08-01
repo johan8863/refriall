@@ -33,6 +33,27 @@ class CurrencyViewSet(viewsets.ModelViewSet):
     queryset = Currency.objects.all()
     serializer_class = CurrencySerializer
 
+
+    @action(detail=False, url_path='list-pagination')
+    def list_pagination(self, request):
+        """List currencies paginated"""
+        currencies = self.get_queryset()
+        
+        # Búsqueda
+        search_term = request.query_params.get('search', None)
+        if search_term:
+            currencies = currencies.filter(name__icontains=search_term)
+        
+        paginator = BaseCustomPagination()
+        page = paginator.paginate_queryset(currencies, request)
+        
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        
+        serializer = self.get_serializer(currencies, many=True)
+        return Response(serializer.data)
+
     def destroy(self, request, *args, **kwargs):
         """Custom function to watch the ProtectedError case"""
 
@@ -51,7 +72,7 @@ class BillViewSet(viewsets.ModelViewSet):
     queryset = Bill.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'get_bill_list_pagination':
+        if self.action == 'list_pagination':
             return BillSerializerReadListView
         elif self.action == 'retrieve':
             return BillSerializerForReadOnly
@@ -101,7 +122,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
 
     def get_serializer_class(self):
-        if self.action in ['list', 'get_orders_list_pagination']:
+        if self.action in ['list', 'list_pagination']:
             return OrderSerializerReadListView
         elif self.action in ['get_order_detail', 'get_orders_from_currency_customer_free_bill']:
             return OrderSerializerForReadOnly
