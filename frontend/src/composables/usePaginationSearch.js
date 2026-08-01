@@ -41,8 +41,10 @@ export const usePaginationSearch = ({
       return response
     } catch (error) {
       // handleError from composable
+      // importat: error states from useErrorHandler will be
+      // included in the return of the composable in order
+      // to skip re-throwing the error
       handleError(error)
-      throw error
     } finally {
       isLoading.value = false
     }
