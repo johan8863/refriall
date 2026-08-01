@@ -66,7 +66,7 @@ onMounted(async () => {
     const resp = await customerService.detailCustomer(route.params.id)
     customer.value = resp.data
   } catch (error) {
-    console.error('General error:', error)
+    console.error('General error:', { error })
     handleError(error)
   } finally {
     isLoading.value = false
