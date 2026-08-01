@@ -40,7 +40,7 @@ export const usePaginationSearch = ({
 
       return response
     } catch (error) {
-      // ✅ Usar handleError del composable
+      // handleError from composable
       handleError(error)
       throw error
     } finally {
