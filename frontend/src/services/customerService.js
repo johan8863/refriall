@@ -18,6 +18,7 @@ export const customerService = {
         ...(page > 1 && { page })
       }
     }),
+  listAllCustomers: () => apiBase.get(`${urlCustomer}/`),
   listCustomerOrdersNoBill: (currency, provider) =>
     apiBase.get(`${urlCustomer}/customer-order-currency-provider-no-bill/${currency}/${provider}/`),
   detailCustomer: (id) => apiBase.get(`${urlCustomer}/${id}/`),
