@@ -1,7 +1,7 @@
 <script setup>
 // vue
 import { onMounted, ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { billService } from '../../services/billService'
@@ -10,16 +10,20 @@ import { useResourceLoader } from '../../composables/useResourceLoader.js'
 
 // third
 import html2pdf from 'html2pdf.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // Constants
 const ITEMS_PER_PAGE = 12
 
 // Routing
 const route = useRoute()
+const router = useRouter()
 
 // State
 const paginatedBills = ref([])
 const billToPaginate = ref(null)
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
 
 // Resource loader with integrated error handling
 const {
@@ -60,6 +64,16 @@ const {
   onError: (err) => {
     console.error('Error loading bill:', err)
   }
+})
+
+// Independent error composable handler to deal with
+// deletion errors
+const {
+  errorMessage: deletingError,
+  handleError,
+  clearErrors
+} = useErrorHandler({
+  objectName: 'Factura'
 })
 
 // Computed
@@ -127,18 +141,40 @@ const loadBillData = async () => {
   try {
     await loadBill(route.params.id)
 
-    // Prepare pagination after data is loaded
     if (bill.value && hasItems.value) {
       prepareBillToPaginate()
       paginatedBills.value = paginate(billToPaginate.value, ITEMS_PER_PAGE)
     } else {
-      // If no items, create a single page with the bill data
       const { get_orders, ...rest } = bill.value
       paginatedBills.value = [{ items: [], ...rest }]
     }
   } catch (error) {
-    // Error already handled by useResourceLoader
     console.error('Error loading bill:', error)
+  }
+}
+
+// Delete methods
+const openDeleteModal = () => {
+  clearErrors()
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+}
+
+const confirmDelete = async () => {
+  isDeleting.value = true
+  try {
+    await billService.deleteBill(bill.value.id)
+    closeDeleteModal()
+    // Redirect to bills list
+    router.push({ name: 'bills' })
+  } catch (error) {
+    console.error('Error deleting bill:', error)
+    // Independent error handling
+    handleError(error)
+    isDeleting.value = false
   }
 }
 
@@ -152,7 +188,12 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <bill-detail-menu :is-loading="isLoading" :bill="bill" @on-p-d-f="generatePDF" />
+      <BillDetailMenu
+        :is-loading="isLoading"
+        :bill="bill"
+        @on-p-d-f="generatePDF"
+        @on-delete="openDeleteModal"
+      />
     </div>
 
     <!-- loading bill data -->
@@ -340,4 +381,75 @@ onMounted(async () => {
     </div>
     <!-- end main content -->
   </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-labelledby="deleteModalLabel"
+    aria-hidden="true"
+    :class="{ show: showDeleteModal }"
+    :style="{ display: showDeleteModal ? 'block' : 'none' }"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="deleteModalLabel">
+            <i class="bi bi-exclamation-triangle"></i> Confirmar Eliminación
+          </h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            @click="closeDeleteModal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <!-- show error if there's any -->
+          <div v-if="deletingError" class="alert alert-danger">
+            <i class="bi bi-exclamation-circle"></i> {{ deletingError }}
+          </div>
+
+          <template v-else>
+            <p class="fs-6">¿Está seguro que desea eliminar la siguiente factura?</p>
+            <div class="alert alert-warning">
+              <p class="mb-1"><strong>Folio:</strong> {{ bill.folio || 'No especificado' }}</p>
+              <p class="mb-0"><strong>ID:</strong> {{ bill.id }}</p>
+            </div>
+            <p class="text-danger mb-0">
+              <small>Esta acción no se puede deshacer.</small>
+            </p>
+          </template>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            @click="closeDeleteModal"
+            :disabled="isDeleting"
+          >
+            <i class="bi bi-x-circle"></i> Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            @click="confirmDelete"
+            :disabled="isDeleting"
+          >
+            <span
+              v-if="isDeleting"
+              class="spinner-border spinner-border-sm me-1"
+              role="status"
+            ></span>
+            <i v-else class="bi bi-trash"></i>
+            {{ isDeleting ? 'Eliminando...' : 'Eliminar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal backdrop -->
+  <div v-if="showDeleteModal" class="modal-backdrop fade show"></div>
 </template>
