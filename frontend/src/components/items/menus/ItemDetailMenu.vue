@@ -9,7 +9,10 @@ defineProps({
     required: true
   }
 })
+
+defineEmits(['onDelete'])
 </script>
+
 <template>
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
@@ -27,7 +30,6 @@ defineProps({
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
     </li>
-
     <li v-else class="list-group-item">
       <RouterLink :to="{ name: 'items_update', params: { id: item.id } }">Editar</RouterLink>
     </li>
@@ -37,9 +39,7 @@ defineProps({
       Cargando...
     </li>
     <li v-else class="list-group-item">
-      <RouterLink :to="{ name: 'items_confirm_delete', params: { id: item.id } }"
-        >Eliminar</RouterLink
-      >
+      <a href="#" @click.prevent="$emit('onDelete')" class="text-danger">Eliminar</a>
     </li>
   </ul>
 </template>
