@@ -18,6 +18,7 @@ export const kitService = {
         ...(page > 1 && { page })
       }
     }),
+  getAllKits: () => apiBase.get(`${urlKit}/`),
   detailKit: (id) => apiBase.get(`${urlKit}/${id}/`),
   postKit: (kit) => apiBase.post(`${urlKit}/`, kit),
   putKit: (kit) => apiBase.put(`${urlKit}/${kit.id}/`, kit),
