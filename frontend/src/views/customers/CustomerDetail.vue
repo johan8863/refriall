@@ -6,41 +6,45 @@ import { useRoute } from 'vue-router'
 // app
 import { customerService } from '../../services/customerService'
 import CustomerDetailMenu from '../../components/customers/menus/CustomerDetailMenu.vue'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { useResourceLoader } from '../../composables/useResourceLoader.js'
 
-// main object
-const customer = ref({
-  id: null,
-  customer_type: '',
-  name: '',
-  address: '',
-  province: '',
-  township: '',
-  code: '',
-  client_nit: '',
-  bank_account_header: '',
-  bank_account: '',
-  get_dependencies: []
-})
-// errors
-const { errorMessage, handleError } = useErrorHandler({
-  objectName: 'Cliente',
-  gender: 'm'
-})
-
-// routing utilities
+// Routing
 const route = useRoute()
 
-// loading state
-const isLoading = ref(false)
-
-// search variables for dependencies
+// Search state for dependencies
 const searchDependencyTerm = ref('')
 
-// methods
+// Resource loader with integrated error handling
+const {
+  data: customer,
+  isLoading,
+  errorMessage,
+  load: loadCustomer
+} = useResourceLoader(customerService.detailCustomer, {
+  initialData: {
+    id: null,
+    customer_type: '',
+    name: '',
+    address: '',
+    province: '',
+    township: '',
+    code: '',
+    client_nit: '',
+    bank_account_header: '',
+    bank_account: '',
+    get_dependencies: []
+  },
+  objectName: 'Cliente',
+  gender: 'm',
+  onError: (err) => {
+    console.error('Error loading customer:', err)
+  }
+})
+
+// Computed
 const filteredDependencies = computed(() => {
-  if (!searchDependencyTerm.value.trim()) {
-    return customer.value.get_dependencies
+  if (!searchDependencyTerm.value.trim() || !customer.value?.get_dependencies) {
+    return customer.value?.get_dependencies || []
   }
 
   const term = searchDependencyTerm.value.toLowerCase()
@@ -49,28 +53,18 @@ const filteredDependencies = computed(() => {
   )
 })
 
-const handleDependencySearch = () => {
-  if (searchDependencyTerm.value.trim()) {
-    return filteredDependencies()
-  }
-}
+const hasDependencies = computed(() => {
+  return customer.value?.get_dependencies?.length > 0
+})
 
+// Methods
 const clearDependencySearch = () => {
   searchDependencyTerm.value = ''
 }
 
-// lifecycle
+// Lifecycle
 onMounted(async () => {
-  isLoading.value = true
-  try {
-    const resp = await customerService.detailCustomer(route.params.id)
-    customer.value = resp.data
-  } catch (error) {
-    console.error('General error:', { error })
-    handleError(error)
-  } finally {
-    isLoading.value = false
-  }
+  await loadCustomer(route.params.id)
 })
 </script>
 
@@ -91,33 +85,34 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- displaying customer data -->
-    <div class="col-md-4">
-      <!-- backend general errors -->
-      <span v-if="errorMessage">
-        <p class="form-text text-danger">{{ errorMessage }}</p>
-      </span>
+    <!-- error message -->
+    <div v-else-if="errorMessage" class="col-md-4">
+      <p class="form-text text-danger">{{ errorMessage }}</p>
+    </div>
 
-      <div v-else>
-        <h3>{{ customer.name }}</h3>
-        <hr />
-        <p><strong>Dirección:</strong> {{ customer.address }}</p>
-        <p><strong>Provincia:</strong> {{ customer.province }}</p>
-        <p><strong>Municipio:</strong> {{ customer.township }}</p>
-        <p>
-          <strong>Tipo:</strong> {{ customer.customer_type === 'es' ? 'ESTATAL' : 'PARTICULAR' }}
-        </p>
-        <p><strong>Código:</strong> {{ customer.code }}</p>
-        <p><strong>NIT:</strong> {{ customer.client_nit || 'No especificado' }}</p>
-        <p><strong>Titular de la cuenta:</strong> {{ customer.bank_account_header }}</p>
-        <p><strong>Cuenta bancaria:</strong> {{ customer.bank_account }}</p>
-      </div>
+    <!-- displaying customer data -->
+    <div v-else class="col-md-4">
+      <h3>{{ customer.name }}</h3>
+      <hr />
+      <p><strong>Dirección:</strong> {{ customer.address || 'No especificada' }}</p>
+      <p><strong>Provincia:</strong> {{ customer.province || 'No especificada' }}</p>
+      <p><strong>Municipio:</strong> {{ customer.township || 'No especificado' }}</p>
+      <p><strong>Tipo:</strong> {{ customer.customer_type === 'es' ? 'ESTATAL' : 'PARTICULAR' }}</p>
+      <p><strong>Código:</strong> {{ customer.code || 'No especificado' }}</p>
+      <p><strong>NIT:</strong> {{ customer.client_nit || 'No especificado' }}</p>
+      <p>
+        <strong>Titular de la cuenta:</strong>
+        {{ customer.bank_account_header || 'No especificado' }}
+      </p>
+      <p><strong>Cuenta bancaria:</strong> {{ customer.bank_account || 'No especificada' }}</p>
     </div>
 
     <div class="col-md-6">
       <h3>Dependencias</h3>
       <hr />
-      <div v-if="customer.get_dependencies.length > 0">
+
+      <!-- Has dependencies -->
+      <div v-if="hasDependencies">
         <!-- Search for dependencies -->
         <div class="row g-2 align-items-center mb-2">
           <div class="col-auto">
@@ -129,16 +124,14 @@ onMounted(async () => {
               class="form-control form-control-sm"
               v-model="searchDependencyTerm"
               placeholder="Nombre de dependencia..."
+              @input="handleDependencySearch"
             />
           </div>
           <div class="col-auto">
-            <button type="button" class="btn btn-primary btn-sm" @click="handleDependencySearch">
-              Buscar
-            </button>
             <button
               type="button"
               @click="clearDependencySearch"
-              class="btn btn-secondary btn-sm ms-1"
+              class="btn btn-secondary btn-sm"
               v-if="searchDependencyTerm"
             >
               Limpiar
@@ -164,18 +157,21 @@ onMounted(async () => {
           </div>
         </div>
 
-        <div
-          v-else-if="filteredDependencies.length === 0 && searchDependencyTerm"
-          class="text-center mt-3"
-        >
+        <!-- No search results -->
+        <div v-else-if="searchDependencyTerm" class="text-center mt-3">
           <p class="text-muted">No se encontraron dependencias</p>
         </div>
       </div>
+
+      <!-- No dependencies -->
       <div v-else>
-        Este Cliente no posee dependencias, para insertar una haga click
-        <RouterLink :to="{ name: 'customer_dependecy_create', params: { id: customer.id } }"
-          >aquí.</RouterLink
-        >
+        <p>Este Cliente no posee dependencias.</p>
+        <p>
+          Para insertar una haga click
+          <RouterLink :to="{ name: 'customer_dependecy_create', params: { id: customer.id } }">
+            aquí.
+          </RouterLink>
+        </p>
       </div>
     </div>
   </div>

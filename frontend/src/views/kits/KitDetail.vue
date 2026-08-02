@@ -1,46 +1,37 @@
 <script setup>
 // vue
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 // app
 import { kitService } from '../../services/kitService'
-import { errorHandler } from '../../utils/errors/errorHandler'
 import KitDetailMenu from '../../components/kits/menus/KitDetailMenu.vue'
+import { useResourceLoader } from '../../composables/useResourceLoader.js'
 
-// kit object
-const kit = ref({
-  name: ''
-})
-
-// kit object errors
-const kitErrors = ref({
-  name: ''
-})
-
-const errorMessage = ref(null)
-
-// router utilities to redirect the view and catch route params
+// Routing
 const route = useRoute()
 
-// loading state
-const isLoading = ref(false)
-
-// loading the kit object
-onMounted(async () => {
-  try {
-    // start loading state
-    isLoading.value = true
-    // getting kit data from backend
-    const resp = await kitService.detailKit(route.params.id)
-    kit.value = resp.data
-  } catch (error) {
-    console.error(error)
-    errorHandler(error, errorMessage, 'Equipo', 'm')
-  } finally {
-    // stop loading state
-    isLoading.value = false
+// Resource loader with integrated error handling
+const {
+  data: kit,
+  isLoading,
+  errorMessage,
+  load: loadKit
+} = useResourceLoader(kitService.detailKit, {
+  initialData: {
+    id: null,
+    name: ''
+  },
+  objectName: 'Equipo',
+  gender: 'm',
+  onError: (err) => {
+    console.error('Error loading kit:', err)
   }
+})
+
+// Lifecycle
+onMounted(async () => {
+  await loadKit(route.params.id)
 })
 </script>
 
@@ -48,7 +39,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <kit-detail-menu :kit="kit" />
+      <kit-detail-menu :kit="kit" :is-loading="isLoading" />
     </div>
 
     <!-- main content -->
@@ -61,15 +52,18 @@ onMounted(async () => {
       </div>
     </div>
 
+    <!-- error message -->
+    <div v-else-if="errorMessage" class="col-md-4">
+      <p class="form-text text-danger">
+        {{ errorMessage }}
+      </p>
+    </div>
+
     <!-- displaying kit data -->
     <div v-else class="col-md-4">
-      <!-- backend general errors -->
-      <span v-if="errorMessage">
-        <p class="form-text text-danger">
-          {{ errorMessage }}
-        </p>
-      </span>
       <h3>{{ kit.name }}</h3>
+      <hr />
+      <p><strong>Nombre:</strong> {{ kit.name }}</p>
     </div>
   </div>
   <!-- end row -->

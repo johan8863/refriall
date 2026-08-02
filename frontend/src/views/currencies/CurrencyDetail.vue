@@ -1,44 +1,38 @@
 <script setup>
 // vue
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 // app
 import { currencyService } from '../../services/currencyService'
 import CurrencyDetailMenu from '../../components/currencies/menus/CurrencyDetailMenu.vue'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { useResourceLoader } from '../../composables/useResourceLoader.js'
 
-// main object
-const currency = ref({
-  id: null,
-  name: '',
-  description: ''
-})
-
-// errors holder object
-const { errorMessage, handleError} = useErrorHandler({
-  objectName: 'Moneda'
-})
-
-// loading state
-const isLoading = ref(false)
-
-// routing
+// Routing
 const route = useRoute()
 
-onMounted(async () => {
-  try {
-    // start loading state
-    isLoading.value = true
-    // get currency data
-    const response = await currencyService.detailCurrency(route.params.id)
-    currency.value = response.data
-  } catch (error) {
-    console.error('General error:', error)
-    handleError(error)
-  } finally {
-    isLoading.value = false
+// Resource loader with integrated error handling
+const {
+  data: currency,
+  isLoading,
+  errorMessage,
+  load: loadCurrency
+} = useResourceLoader(currencyService.detailCurrency, {
+  initialData: {
+    id: null,
+    name: '',
+    description: ''
+  },
+  objectName: 'Moneda',
+  gender: 'f',
+  onError: (err) => {
+    console.error('Error loading currency:', err)
   }
+})
+
+// Lifecycle
+onMounted(async () => {
+  await loadCurrency(route.params.id)
 })
 </script>
 
@@ -51,7 +45,7 @@ onMounted(async () => {
 
     <!-- main content -->
 
-    <!-- loading order data -->
+    <!-- loading currency data -->
     <div v-if="isLoading" class="col-md-4">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
         <span role="status" class="text-primary">Cargando datos... </span>
@@ -59,16 +53,17 @@ onMounted(async () => {
       </div>
     </div>
 
+    <!-- error message -->
+    <div v-else-if="errorMessage" class="col-md-4">
+      <p class="form-text text-danger">
+        {{ errorMessage }}
+      </p>
+    </div>
+
     <!-- displaying currency data -->
     <div v-else class="col-md-4">
-      <!-- backend general errors -->
-      <span v-if="errorMessage">
-        <p class="form-text text-danger">
-          {{ errorMessage }}
-        </p>
-      </span>
       <h3>{{ currency.name }}</h3>
-      <p>{{ currency.description }}</p>
+      <p>{{ currency.description || 'Sin descripción' }}</p>
     </div>
   </div>
 </template>

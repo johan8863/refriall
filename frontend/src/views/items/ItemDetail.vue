@@ -1,47 +1,41 @@
 <script setup>
 // vue
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 // app
 import { itemService } from '../../services/itemService'
-import { errorHandler } from '../../utils/errors/errorHandler'
 import ItemDetailMenu from '../../components/items/menus/ItemDetailMenu.vue'
+import { useResourceLoader } from '../../composables/useResourceLoader.js'
 
-// main object
-const item = ref({
-  id: null,
-  code: '',
-  name: '',
-  get_item_type: '',
-  get_measurement: '',
-  price: 0
-})
-
-// // errors holder object
-const itemBackendErrors = ref(null)
-
-// routing utilities
+// Routing
 const route = useRoute()
 
-// loading state
-const isLoading = ref(false)
-
-// lifecycle
-onMounted(async () => {
-  try {
-    // start loading state
-    isLoading.value = true
-    // getting item data
-    const resp = await itemService.detailItem(route.params.id)
-    item.value = resp.data
-  } catch (error) {
-    console.error('General error', error)
-    errorHandler(error, itemBackendErrors, 'Artículo', 'm')
-  } finally {
-    // stop loading state
-    isLoading.value = false
+// Resource loader with integrated error handling
+const {
+  data: item,
+  isLoading,
+  errorMessage: itemBackendErrors,
+  load: loadItem
+} = useResourceLoader(itemService.detailItem, {
+  initialData: {
+    id: null,
+    code: '',
+    name: '',
+    get_item_type: '',
+    get_measurement: '',
+    price: 0
+  },
+  objectName: 'Artículo',
+  gender: 'm',
+  onError: (err) => {
+    console.error('Error loading item:', err)
   }
+})
+
+// Lifecycle
+onMounted(async () => {
+  await loadItem(route.params.id)
 })
 </script>
 
@@ -61,23 +55,24 @@ onMounted(async () => {
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
     </div>
+
+    <!-- error message -->
+    <div v-else-if="itemBackendErrors" class="col-md-6">
+      <p class="form-text text-danger">
+        {{ itemBackendErrors }}
+      </p>
+    </div>
+
     <!-- displaying item data -->
     <div v-else class="col-md-6">
-      <!-- backend general errors -->
-      <span v-if="itemBackendErrors">
-        <p class="form-text text-danger">
-          {{ itemBackendErrors }}
-        </p>
-      </span>
-
       <h3>
         Artículo: <small>{{ item.name }}</small>
       </h3>
       <hr />
-      <p>Código: {{ item.code }}</p>
-      <p>Tipo: {{ item.get_item_type }}</p>
-      <p>U/M: {{ item.get_measurement }}</p>
-      <p>Precio: {{ item.price.toFixed(2) }}</p>
+      <p><strong>Código:</strong> {{ item.code || 'No especificado' }}</p>
+      <p><strong>Tipo:</strong> {{ item.get_item_type || 'No especificado' }}</p>
+      <p><strong>U/M:</strong> {{ item.get_measurement || 'No especificado' }}</p>
+      <p><strong>Precio:</strong> {{ (item.price || 0).toFixed(2) }}</p>
     </div>
   </div>
   <!-- end row -->
