@@ -329,11 +329,6 @@ const router = createRouter({
                       path: 'update',
                       name: 'bills_update',
                       component: () => import('../views/bills/BillForm.vue')
-                    },
-                    {
-                      path: 'confirm/delete',
-                      name: 'bills_delete',
-                      component: () => import('../views/bills/BillConfirmDelete.vue')
                     }
                   ]
                 }
