@@ -1,15 +1,31 @@
 <script setup>
 // vue
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { providerService } from '../../services/providerService'
 import ProviderDetailMenu from '../../components/providers/menus/ProviderDetailMenu.vue'
+import DeleteModal from '../../components/common/DeleteModal.vue'
 import { useResourceLoader } from '../../composables/useResourceLoader.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // Routing
 const route = useRoute()
+const router = useRouter()
+
+// State
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
+
+// Error handler for deletion
+const {
+  errorMessage: deletingError,
+  handleError,
+  clearErrors
+} = useErrorHandler({
+  objectName: 'Proveedor'
+})
 
 // Resource loader with integrated error handling
 const {
@@ -37,11 +53,76 @@ const {
 })
 
 // Computed
-const fullName = () => {
+const fullName = computed(() => {
   if (!provider.value) return ''
   return (
     `${provider.value.first_name || ''} ${provider.value.last_name || ''}`.trim() || 'Sin nombre'
   )
+})
+
+const deleteModalFields = computed(() => {
+  return [
+    { key: 'first_name', label: 'Nombre', value: provider.value?.first_name },
+    { key: 'last_name', label: 'Apellidos', value: provider.value?.last_name },
+    { key: 'personal_id', label: 'CI', value: provider.value?.personal_id },
+    { key: 'license_number', label: 'Licencia', value: provider.value?.license_number }
+  ]
+})
+
+// Delete methods
+const openDeleteModal = () => {
+  clearErrors()
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+}
+
+const confirmDelete = async () => {
+  isDeleting.value = true
+  try {
+    await providerService.deleteProvider(provider.value.id)
+    closeDeleteModal()
+    router.push({ name: 'providers' })
+  } catch (error) {
+    console.error('Error deleting provider:', error)
+
+    // Handle error manually to ensure it displays correctly in modal
+    if (error.response) {
+      if (error.response.status === 400) {
+        // Provider has associated orders
+        const errorData = error.response.data
+        // Try to extract the error message from different possible structures
+        let errorMessageText = 'El prestador no se puede eliminar porque tiene órdenes asociadas.'
+
+        if (errorData && typeof errorData === 'object') {
+          if (errorData.detail) {
+            errorMessageText = errorData.detail
+          } else if (errorData.message) {
+            errorMessageText = errorData.message
+          } else if (errorData.non_field_errors) {
+            errorMessageText = errorData.non_field_errors.join(' ')
+          } else if (errorData.error) {
+            errorMessageText = errorData.error
+          }
+        }
+
+        // Set the error message directly
+        deletingError.value = errorMessageText
+      } else if (error.response.status === 404) {
+        deletingError.value = 'El prestador que intenta eliminar no existe.'
+      } else {
+        // Let useErrorHandler handle other errors
+        handleError(error)
+      }
+    } else {
+      // Network or other errors
+      deletingError.value = error.message || 'Error inesperado, consulte al desarrollador'
+    }
+
+    isDeleting.value = false
+  }
 }
 
 // Lifecycle
@@ -54,7 +135,11 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <provider-detail-menu :provider="provider" :is-loading="isLoading" />
+      <ProviderDetailMenu
+        :provider="provider"
+        :is-loading="isLoading"
+        @on-delete="openDeleteModal"
+      />
     </div>
 
     <!-- loading provider data -->
@@ -74,7 +159,7 @@ onMounted(async () => {
 
     <!-- main content -->
     <div v-else class="col-md-4">
-      <h3>{{ fullName() }}</h3>
+      <h3>{{ fullName }}</h3>
       <hr />
       <p><strong>Nombre de usuario:</strong> {{ provider.username || 'No especificado' }}</p>
       <p><strong>CI:</strong> {{ provider.personal_id || 'No especificado' }}</p>
@@ -87,4 +172,19 @@ onMounted(async () => {
     </div>
   </div>
   <!-- end row -->
+
+  <!-- Delete Confirmation Modal -->
+  <DeleteModal
+    v-model:show="showDeleteModal"
+    title="Confirmar Eliminación"
+    item-name="el prestador"
+    :item-id="provider?.id"
+    :item-identifier="fullName"
+    :item-fields="deleteModalFields"
+    :is-deleting="isDeleting"
+    :error-message="deletingError"
+    variant="danger"
+    @confirm="confirmDelete"
+    @cancel="closeDeleteModal"
+  />
 </template>
