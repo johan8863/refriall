@@ -2,10 +2,13 @@
 // vue
 import { useRoute } from 'vue-router'
 import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 // app
 import { orderService } from '../../services/orderService'
 import { useResourceLoader } from '../../composables/useResourceLoader.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import DeleteModal from '../../components/common/DeleteModal.vue'
 
 // third
 import html2pdf from 'html2pdf.js'
@@ -16,9 +19,23 @@ const ITEMS_PER_PAGE = 12
 
 // Routing
 const route = useRoute()
+const router = useRouter()
 
 // State
 const paginatedOrders = ref([])
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
+const billDeleteErrorObject = ref(null)
+const billDeleteErrorMessage = ref(null)
+
+// Error handler for deletion
+const {
+  errorMessage: deletingError,
+  handleError,
+  clearErrors
+} = useErrorHandler({
+  objectName: 'Orden'
+})
 
 // Resource loader with integrated error handling
 const {
@@ -86,6 +103,18 @@ const pdfFilename = computed(() => {
   return `${prefix}_${order.value?.folio || 'sin_folio'}_${identifier}`
 })
 
+const deleteModalFields = computed(() => {
+  return [
+    { key: 'folio', label: 'Folio', value: order.value?.folio },
+    {
+      key: 'customer',
+      label: 'Cliente',
+      value:
+        order.value?.customer?.name || order.value?.customer_dependency?.name || 'No especificado'
+    }
+  ]
+})
+
 // Methods
 const paginateItems = (items, itemsPerPage) => {
   const pages = []
@@ -98,18 +127,14 @@ const paginateItems = (items, itemsPerPage) => {
 const prepareOrderPages = () => {
   if (!order.value) return []
 
-  // Get items from itemtimeorder_set
   const items = order.value.itemtimeorder_set || []
 
-  // If no items, return single page with order data
   if (items.length === 0) {
     return [{ ...order.value, items: [] }]
   }
 
-  // Paginate items
   const itemPages = paginateItems(items, ITEMS_PER_PAGE)
 
-  // Create a page for each group of items
   return itemPages.map((pageItems) => ({
     ...order.value,
     items: pageItems
@@ -132,13 +157,61 @@ const loadOrderData = async () => {
   try {
     await loadOrder(route.params.id)
 
-    // Prepare pagination after data is loaded
     if (order.value) {
       paginatedOrders.value = prepareOrderPages()
     }
   } catch (error) {
-    // Error already handled by useResourceLoader
     console.error('Error loading order:', error)
+  }
+}
+
+// Delete methods
+const openDeleteModal = () => {
+  clearErrors()
+  billDeleteErrorMessage.value = null
+  billDeleteErrorObject.value = null
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+  billDeleteErrorMessage.value = null
+  billDeleteErrorObject.value = null
+  isDeleting.value = false
+}
+
+const confirmDelete = async () => {
+  isDeleting.value = true
+  try {
+    await orderService.deleteOrder(order.value.id)
+    closeDeleteModal()
+    router.push({ name: 'orders' })
+  } catch (error) {
+    console.error('Error deleting order:', error)
+
+    // Handle specific error cases
+    if (error.response) {
+      if (error.response.status === 404) {
+        handleError(error)
+        isDeleting.value = false
+      } else if (error.response.status === 400) {
+        // Order is associated with a bill
+        const errorData = error.response.data
+        billDeleteErrorObject.value = errorData
+        billDeleteErrorMessage.value = errorData.folio
+          ? `Esta orden está asociada a la factura con folio: ${errorData.folio}`
+          : 'Esta orden está asociada a una factura y no puede ser eliminada'
+
+        // Keep modal open and stop deleting state
+        isDeleting.value = false
+      } else {
+        handleError(error)
+        isDeleting.value = false
+      }
+    } else {
+      handleError(error)
+      isDeleting.value = false
+    }
   }
 }
 
@@ -152,7 +225,12 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <OrderDetailMenu :is-loading="isLoading" :order="order" @on-p-d-f="generatePDF" />
+      <OrderDetailMenu
+        :is-loading="isLoading"
+        :order="order"
+        @on-p-d-f="generatePDF"
+        @on-delete="openDeleteModal"
+      />
     </div>
 
     <!-- main content -->
@@ -394,4 +472,44 @@ onMounted(async () => {
     </div>
   </div>
   <!-- end row -->
+
+  <!-- Delete Confirmation Modal -->
+  <DeleteModal
+    v-model:show="showDeleteModal"
+    title="Confirmar Eliminación"
+    item-name="la orden"
+    :item-id="order?.id"
+    :item-identifier="order?.folio"
+    :item-fields="deleteModalFields"
+    :is-deleting="isDeleting"
+    :error-message="deletingError || billDeleteErrorMessage"
+    variant="danger"
+    @confirm="confirmDelete"
+    @cancel="closeDeleteModal"
+  >
+    <!-- Slot para mostrar el enlace a la factura cuando está asociada -->
+    <template #extra-content>
+      <div v-if="billDeleteErrorObject && billDeleteErrorObject.id" class="mt-2">
+        <hr />
+        <p class="mb-1">
+          <i class="bi bi-info-circle"></i>
+          <strong>Detalle:</strong>
+        </p>
+        <div class="alert alert-info">
+          <p class="mb-1">
+            Esta orden está asociada a la factura con folio:
+            <strong>{{ billDeleteErrorObject.folio || 'N/A' }}</strong>
+          </p>
+          <p class="mb-0">
+            <RouterLink
+              :to="{ name: 'bills_detail', params: { id: billDeleteErrorObject.id } }"
+              class="alert-link"
+            >
+              <i class="bi bi-eye"></i> Ver factura
+            </RouterLink>
+          </p>
+        </div>
+      </div>
+    </template>
+  </DeleteModal>
 </template>
