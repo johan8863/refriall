@@ -249,11 +249,6 @@ const router = createRouter({
                       path: 'update',
                       name: 'currency_update',
                       component: () => import('../views/currencies/CurrencyForm.vue')
-                    },
-                    {
-                      path: 'confirm/delete',
-                      name: 'currency_delete',
-                      component: () => import('../views/currencies/CurrencyConfirmDelete.vue')
                     }
                   ]
                 }
