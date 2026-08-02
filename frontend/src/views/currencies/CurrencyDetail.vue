@@ -1,15 +1,31 @@
 <script setup>
 // vue
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { currencyService } from '../../services/currencyService'
 import CurrencyDetailMenu from '../../components/currencies/menus/CurrencyDetailMenu.vue'
+import DeleteModal from '../../components/common/DeleteModal.vue'
 import { useResourceLoader } from '../../composables/useResourceLoader.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // Routing
 const route = useRoute()
+const router = useRouter()
+
+// State
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
+
+// Error handler for deletion
+const {
+  errorMessage: deletingError,
+  handleError,
+  clearErrors
+} = useErrorHandler({
+  objectName: 'Moneda'
+})
 
 // Resource loader with integrated error handling
 const {
@@ -30,6 +46,37 @@ const {
   }
 })
 
+// Computed for modal fields
+const deleteModalFields = computed(() => {
+  return [
+    { key: 'name', label: 'Nombre', value: currency.value?.name },
+    { key: 'description', label: 'Descripción', value: currency.value?.description }
+  ]
+})
+
+// Delete methods
+const openDeleteModal = () => {
+  clearErrors()
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+}
+
+const confirmDelete = async () => {
+  isDeleting.value = true
+  try {
+    await currencyService.deleteCurrency(currency.value.id)
+    closeDeleteModal()
+    router.push({ name: 'currencies' })
+  } catch (error) {
+    console.error('Error deleting currency:', error)
+    handleError(error)
+    isDeleting.value = false
+  }
+}
+
 // Lifecycle
 onMounted(async () => {
   await loadCurrency(route.params.id)
@@ -40,7 +87,11 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <currency-detail-menu :is-loading="isLoading" :currency="currency" />
+      <CurrencyDetailMenu
+        :is-loading="isLoading"
+        :currency="currency"
+        @on-delete="openDeleteModal"
+      />
     </div>
 
     <!-- main content -->
@@ -63,7 +114,24 @@ onMounted(async () => {
     <!-- displaying currency data -->
     <div v-else class="col-md-4">
       <h3>{{ currency.name }}</h3>
-      <p>{{ currency.description || 'Sin descripción' }}</p>
+      <hr />
+      <p><strong>Nombre:</strong> {{ currency.name }}</p>
+      <p><strong>Descripción:</strong> {{ currency.description || 'Sin descripción' }}</p>
     </div>
   </div>
+
+  <!-- Delete Confirmation Modal -->
+  <DeleteModal
+    v-model:show="showDeleteModal"
+    title="Confirmar Eliminación"
+    item-name="la moneda"
+    :item-id="currency?.id"
+    :item-identifier="currency?.name"
+    :item-fields="deleteModalFields"
+    :is-deleting="isDeleting"
+    :error-message="deletingError"
+    variant="danger"
+    @confirm="confirmDelete"
+    @cancel="closeDeleteModal"
+  />
 </template>
