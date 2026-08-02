@@ -204,12 +204,6 @@ const router = createRouter({
                           name: 'customer_dependecy_update',
                           component: () =>
                             import('../views/customerDependencies/CustomerDependencyUpdate.vue')
-                        },
-                        {
-                          path: 'confirm/delete',
-                          name: 'customer_dependecy_delete',
-                          component: () =>
-                            import('../views/customerDependencies/CustomerDependencyConfirmDelete.vue')
                         }
                       ]
                     }
