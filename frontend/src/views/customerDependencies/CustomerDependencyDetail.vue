@@ -1,15 +1,31 @@
 <script setup>
 // vue
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { customerDependecyService } from '../../services/customerDependencyService'
 import CustomerDependencyDetailMenu from '../../components/customerDependencies/menus/CustomerDependencyDetailMenu.vue'
+import DeleteModal from '../../components/common/DeleteModal.vue'
 import { useResourceLoader } from '../../composables/useResourceLoader.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // Routing
 const route = useRoute()
+const router = useRouter()
+
+// State
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
+
+// Error handler for deletion
+const {
+  errorMessage: deletingError,
+  handleError,
+  clearErrors
+} = useErrorHandler({
+  objectName: 'Dependencia'
+})
 
 // Resource loader with integrated error handling
 const {
@@ -33,6 +49,44 @@ const {
   }
 })
 
+// Computed for modal fields
+const deleteModalFields = computed(() => {
+  return [
+    { key: 'name', label: 'Nombre', value: dependency.value?.name },
+    { key: 'address', label: 'Dirección', value: dependency.value?.address },
+    { key: 'customer', label: 'Cliente', value: dependency.value?.customer?.name }
+  ]
+})
+
+// Delete methods
+const openDeleteModal = () => {
+  clearErrors()
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+}
+
+const confirmDelete = async () => {
+  isDeleting.value = true
+  try {
+    await customerDependecyService.deleteCustomerDependency(dependency.value.id)
+    closeDeleteModal()
+    // Redirect to customer detail
+    router.push({
+      name: 'customers_detail',
+      params: {
+        id: dependency.value.customer?.id || dependency.value.customer
+      }
+    })
+  } catch (error) {
+    console.error('Error deleting dependency:', error)
+    handleError(error)
+    isDeleting.value = false
+  }
+}
+
 // Lifecycle
 onMounted(async () => {
   await loadDependency(route.params.id)
@@ -43,7 +97,11 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <customer-dependency-detail-menu :is-loading="isLoading" :dependency="dependency" />
+      <CustomerDependencyDetailMenu
+        :is-loading="isLoading"
+        :dependency="dependency"
+        @on-delete="openDeleteModal"
+      />
     </div>
 
     <!-- main content -->
@@ -76,4 +134,19 @@ onMounted(async () => {
       </p>
     </div>
   </div>
+
+  <!-- Delete Confirmation Modal -->
+  <DeleteModal
+    v-model:show="showDeleteModal"
+    title="Confirmar Eliminación"
+    item-name="la dependencia"
+    :item-id="dependency?.id"
+    :item-identifier="dependency?.name"
+    :item-fields="deleteModalFields"
+    :is-deleting="isDeleting"
+    :error-message="deletingError"
+    variant="danger"
+    @confirm="confirmDelete"
+    @cancel="closeDeleteModal"
+  />
 </template>
