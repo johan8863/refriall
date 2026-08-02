@@ -53,11 +53,6 @@ const router = createRouter({
                       path: 'update',
                       name: 'kits_update',
                       component: () => import('../views/kits/KitForm.vue')
-                    },
-                    {
-                      path: 'confirm/delete',
-                      name: 'kits_confirm_delete',
-                      component: () => import('../views/kits/KitConfirmDelete.vue')
                     }
                   ]
                 }
