@@ -1,161 +1,159 @@
 <script setup>
 // vue
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 // app
 import { billService } from '../../services/billService'
+import BillDetailMenu from '../../components/bills/menus/BillDetailMenu.vue'
+import { useResourceLoader } from '../../composables/useResourceLoader.js'
 
 // third
 import html2pdf from 'html2pdf.js'
-import BillDetailMenu from '../../components/bills/menus/BillDetailMenu.vue'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
-// main object
-const bill = ref({
-  id: null,
-  customer: null,
-  customer_dependency: null,
-  folio: '',
-  provider: null,
-  provider_signature_date: '',
-  customer_signature_date: '',
-  get_orders: [],
-  get_orders_folio: [],
-  get_total_amount: '',
-  get_total_amount_revision: '',
-  get_total_amount_prod: '',
-  get_total_amount_concept: '',
-  get_total_amount_repair: '',
-  get_total_amount_maintenace: '',
-  get_total_amount_install: '',
-  get_total_amount_unmounting: '',
-  check_number: '',
-  charge_aprove: '',
-  charge_check: '',
-  customer_charge: '',
-  customer_name: '',
-  customer_personal_id: '',
-  checked_by: '',
-  aproved_by: ''
-})
+// Constants
+const ITEMS_PER_PAGE = 12
 
-// loading status
-const isLoading = ref(false)
-
-// errors
-const { errorMessage, handleError } = useErrorHandler({
-  objectName: 'Factura'
-})
-
-// pagination objects
-const billToPaginate = ref(null)
-const paginatedBills = ref([])
-
-// routing utulities
+// Routing
 const route = useRoute()
 
+// State
+const paginatedBills = ref([])
+const billToPaginate = ref(null)
+
+// Resource loader with integrated error handling
+const {
+  data: bill,
+  isLoading,
+  errorMessage,
+  load: loadBill
+} = useResourceLoader(billService.detailBill, {
+  initialData: {
+    id: null,
+    customer: null,
+    customer_dependency: null,
+    folio: '',
+    provider: null,
+    provider_signature_date: '',
+    customer_signature_date: '',
+    get_orders: [],
+    get_orders_folio: [],
+    get_total_amount: '',
+    get_total_amount_revision: '',
+    get_total_amount_prod: '',
+    get_total_amount_concept: '',
+    get_total_amount_repair: '',
+    get_total_amount_maintenace: '',
+    get_total_amount_install: '',
+    get_total_amount_unmounting: '',
+    check_number: '',
+    charge_aprove: '',
+    charge_check: '',
+    customer_charge: '',
+    customer_name: '',
+    customer_personal_id: '',
+    checked_by: '',
+    aproved_by: ''
+  },
+  objectName: 'Factura',
+  gender: 'f',
+  onError: (err) => {
+    console.error('Error loading bill:', err)
+  }
+})
+
+// Computed
+const hasItems = computed(() => {
+  return bill.value?.get_orders?.some((order) => order.itemtime_set?.length > 0)
+})
+
+// Methods
 const mergeItemsTimes = (itemsTimes) => {
   try {
     return Object.values(
-      // the final result of reduce will be an object of objects
-      // therefore let's split it into an array
       itemsTimes.reduce(
         (acc, { item: { code, get_item_type, get_measurement, name, price }, times }) => {
-          // Prettier autocompletes this semicolon to prevent execution risks.
-
-          // If doesn't exists an object with the key 'from code', create it,
-          // otherwise just increase times attr.
           ;(acc[code] ??= {
             item: { code, get_item_type, get_measurement, name, price },
             times: 0
           }).times += times
           return acc
         },
-        // initial empty object as recommended at
-        //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce#sum_of_values_in_an_object_array
         {}
       )
     )
   } catch (error) {
-    console.error('General error:', error)
+    console.error('Error merging items:', error)
     if (error instanceof TypeError) {
       console.error("Array must contain values if initial value isn't provided")
     }
+    return []
   }
 }
 
-const prepareBillToPaginate = (billToPaginate, bill) => {
-  // fill the billToPaginate items attrs with all the items from
-  // all the orders of the current bill
-
-  // sepparate the orders from the bill to take advantage of the destructuring
+const prepareBillToPaginate = () => {
   const { get_orders, ...rest } = bill.value
 
-  // merge items by flattening get_orders
-  const allItems = get_orders.flatMap((order) => order.itemtime_set)
+  const allItems = get_orders.flatMap((order) => order.itemtime_set || [])
   const mergedItems = mergeItemsTimes(allItems)
 
-  // create new billToPaginate object values
   billToPaginate.value = {
     items: mergedItems,
     ...rest
   }
 }
 
-const paginate = (bill, itemsPerPage, start = 0, pages = []) => {
-  if (start >= bill.value.items.length) {
+const paginate = (billData, itemsPerPage, start = 0, pages = []) => {
+  if (start >= billData.items.length) {
     return pages
   }
 
   const end = start + itemsPerPage
-  const { items, ...rest } = bill.value
+  const { items, ...rest } = billData
 
   pages.push({ items: items.slice(start, end), ...rest })
-  return paginate(bill, itemsPerPage, end, pages)
+  return paginate(billData, itemsPerPage, end, pages)
 }
 
-function pdf() {
+const generatePDF = () => {
   const element = document.getElementById('bill-to-pdf')
   const opt = {
-    filename: `factura_${bill.value.folio}_${bill.value.customer.name}`
+    filename: `factura_${bill.value.folio}_${bill.value.customer?.name || 'sin_cliente'}`
   }
-
   html2pdf().from(element).set(opt).save()
 }
 
-const getBill = async () => {
+const loadBillData = async () => {
   try {
-    // start loading state
-    isLoading.value = true
+    await loadBill(route.params.id)
 
-    // get order data
-    const resp = await billService.detailBill(route.params.id)
-    bill.value = resp.data
-
-    // pagination logic
-    prepareBillToPaginate(billToPaginate, bill)
-    paginatedBills.value = paginate(billToPaginate, 12)
+    // Prepare pagination after data is loaded
+    if (bill.value && hasItems.value) {
+      prepareBillToPaginate()
+      paginatedBills.value = paginate(billToPaginate.value, ITEMS_PER_PAGE)
+    } else {
+      // If no items, create a single page with the bill data
+      const { get_orders, ...rest } = bill.value
+      paginatedBills.value = [{ items: [], ...rest }]
+    }
   } catch (error) {
-    console.error('General error:', error)
-    handleError(error)
-  } finally {
-    // stop loading state
-    isLoading.value = false
+    // Error already handled by useResourceLoader
+    console.error('Error loading bill:', error)
   }
 }
 
-onMounted(async () => await getBill())
+// Lifecycle
+onMounted(async () => {
+  await loadBillData()
+})
 </script>
 
 <template>
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <bill-detail-menu :is-loading="isLoading" :bill="bill" @on-p-d-f="pdf" />
+      <bill-detail-menu :is-loading="isLoading" :bill="bill" @on-p-d-f="generatePDF" />
     </div>
-
-    <!-- main content -->
 
     <!-- loading bill data -->
     <div v-if="isLoading" class="col-md-9">
@@ -203,15 +201,17 @@ onMounted(async () => await getBill())
 
           <div class="col-md-5 border-bottom border-2 mb-1">
             <span class="d-block fw-bold">Prestador</span>
-            <span class="d-block">Código TPCP: {{ paginatedBill.provider.tcp_code }}</span>
             <span class="d-block"
-              >Titular de Cta: {{ paginatedBill.provider.bank_account_header }}</span
+              >Código TPCP: {{ paginatedBill.provider?.tcp_code || 'N/A' }}</span
             >
             <span class="d-block"
-              >No. de cuenta TPCP: {{ paginatedBill.provider.bank_account }}</span
+              >Titular de Cta: {{ paginatedBill.provider?.bank_account_header || 'N/A' }}</span
             >
             <span class="d-block"
-              >No. de Licencia: {{ paginatedBill.provider.license_number }}</span
+              >No. de cuenta TPCP: {{ paginatedBill.provider?.bank_account || 'N/A' }}</span
+            >
+            <span class="d-block"
+              >No. de Licencia: {{ paginatedBill.provider?.license_number || 'N/A' }}</span
             >
           </div>
 
@@ -235,13 +235,20 @@ onMounted(async () => await getBill())
               </thead>
 
               <tbody>
-                <tr v-for="item in paginatedBill.items" :key="item.id">
-                  <td>{{ item.item.code }}</td>
-                  <td>{{ item.item.name }}</td>
-                  <td class="text-center">{{ item.item.get_measurement }}</td>
-                  <td class="text-center">{{ item.times.toFixed(2) }}</td>
-                  <td class="text-end">{{ item.item.price.toFixed(2) }}</td>
-                  <td class="text-end">{{ (item.item.price * item.times).toFixed(2) }}</td>
+                <tr v-if="paginatedBill.items && paginatedBill.items.length === 0">
+                  <td colspan="6" class="text-center text-muted">
+                    No hay artículos asociados a esta factura
+                  </td>
+                </tr>
+                <tr v-for="item in paginatedBill.items" :key="item.item?.code || item.id">
+                  <td>{{ item.item?.code || 'N/A' }}</td>
+                  <td>{{ item.item?.name || 'N/A' }}</td>
+                  <td class="text-center">{{ item.item?.get_measurement || 'N/A' }}</td>
+                  <td class="text-center">{{ (item.times || 0).toFixed(2) }}</td>
+                  <td class="text-end">{{ (item.item?.price || 0).toFixed(2) }}</td>
+                  <td class="text-end">
+                    {{ ((item.item?.price || 0) * (item.times || 0)).toFixed(2) }}
+                  </td>
                 </tr>
               </tbody>
 
@@ -255,7 +262,7 @@ onMounted(async () => await getBill())
                   <td></td>
                   <td></td>
                   <td class="text-end">
-                    <strong>{{ paginatedBill.get_total_amount.toFixed(2) }}</strong>
+                    <strong>{{ (paginatedBill.get_total_amount || 0).toFixed(2) }}</strong>
                   </td>
                 </tr>
               </tfoot>
@@ -265,8 +272,8 @@ onMounted(async () => await getBill())
           <div class="col-md-12">
             <p>
               Órdenes asociadas:
-              <span v-for="order of paginatedBill.get_orders_folio" :key="order.folio">
-                {{ order.folio }},
+              <span v-for="(order, idx) of paginatedBill.get_orders_folio" :key="idx">
+                {{ order.folio }}{{ idx < paginatedBill.get_orders_folio.length - 1 ? ', ' : '' }}
               </span>
             </p>
           </div>
@@ -274,35 +281,38 @@ onMounted(async () => await getBill())
           <div class="col-md-4">
             <span class="d-block fw-bold">Desglose de importes</span>
             <span class="d-block"
-              >Rev/Diag.: {{ paginatedBill.get_total_amount_revision.toFixed(2) }}</span
+              >Rev/Diag.: {{ (paginatedBill.get_total_amount_revision || 0).toFixed(2) }}</span
             >
             <span class="d-block"
-              >Partes: {{ paginatedBill.get_total_amount_prod.toFixed(2) }}</span
+              >Partes: {{ (paginatedBill.get_total_amount_prod || 0).toFixed(2) }}</span
             >
             <span class="d-block"
-              >Conceptos: {{ paginatedBill.get_total_amount_concept.toFixed(2) }}</span
+              >Conceptos: {{ (paginatedBill.get_total_amount_concept || 0).toFixed(2) }}</span
             >
             <span class="d-block"
-              >Reparación: {{ paginatedBill.get_total_amount_repair.toFixed(2) }}</span
+              >Reparación: {{ (paginatedBill.get_total_amount_repair || 0).toFixed(2) }}</span
             >
             <span class="d-block"
-              >Mtto: {{ paginatedBill.get_total_amount_maintenace.toFixed(2) }}</span
+              >Mtto: {{ (paginatedBill.get_total_amount_maintenace || 0).toFixed(2) }}</span
             >
             <span class="d-block"
-              >Instalación: {{ paginatedBill.get_total_amount_install.toFixed(2) }}</span
+              >Instalación: {{ (paginatedBill.get_total_amount_install || 0).toFixed(2) }}</span
             >
             <span class="d-block"
-              >Montaje/Desm: {{ paginatedBill.get_total_amount_unmounting.toFixed(2) }}</span
+              >Montaje/Desm: {{ (paginatedBill.get_total_amount_unmounting || 0).toFixed(2) }}</span
             >
           </div>
 
           <div class="col-md-4">
             <span class="d-block fw-bold">Prestador</span>
-            <span class="d-block">Licencia: {{ paginatedBill.provider.license_number }}</span>
             <span class="d-block"
-              >{{ paginatedBill.provider.first_name }} {{ paginatedBill.provider.last_name }}</span
+              >Licencia: {{ paginatedBill.provider?.license_number || 'N/A' }}</span
             >
-            <span class="d-block">No. CI: {{ paginatedBill.provider.personal_id }}</span>
+            <span class="d-block"
+              >{{ paginatedBill.provider?.first_name || '' }}
+              {{ paginatedBill.provider?.last_name || '' }}</span
+            >
+            <span class="d-block">No. CI: {{ paginatedBill.provider?.personal_id || 'N/A' }}</span>
             <span class="d-block">Firma: </span>
             <span v-if="paginatedBill.provider_signature_date" class="d-block">{{
               paginatedBill.provider_signature_date
@@ -312,9 +322,9 @@ onMounted(async () => await getBill())
 
           <div class="col-md-4">
             <span class="d-block fw-bold">Cliente</span>
-            <span class="d-block">Cargo: {{ paginatedBill.customer_charge }}</span>
-            <span class="d-block">Nombre: </span>
-            <span class="d-block">No. CI: {{ paginatedBill.customer_personal_id }}</span>
+            <span class="d-block">Cargo: {{ paginatedBill.customer_charge || 'N/A' }}</span>
+            <span class="d-block">Nombre: {{ paginatedBill.customer_name || 'N/A' }}</span>
+            <span class="d-block">No. CI: {{ paginatedBill.customer_personal_id || 'N/A' }}</span>
             <span class="d-block">Firma: </span>
             <span v-if="paginatedBill.customer_signature_date" class="d-block">{{
               paginatedBill.customer_signature_date

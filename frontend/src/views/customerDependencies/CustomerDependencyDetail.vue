@@ -1,46 +1,41 @@
 <script setup>
 // vue
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 // app
 import { customerDependecyService } from '../../services/customerDependencyService'
-import { errorHandler } from '../../utils/errors/errorHandler'
 import CustomerDependencyDetailMenu from '../../components/customerDependencies/menus/CustomerDependencyDetailMenu.vue'
+import { useResourceLoader } from '../../composables/useResourceLoader.js'
 
-// main object
-const dependency = ref({
-  id: null,
-  customer: null,
-  name: '',
-  address: '',
-  province: '',
-  township: ''
-})
-
-// errors holder object
-const customerDependencyBackendErrors = ref(null)
-
-// routing utilities
+// Routing
 const route = useRoute()
 
-// loading state
-const isLoading = ref(false)
-
-onMounted(async () => {
-  try {
-    // start loading state
-    isLoading.value = true
-    // get dependecy data
-    const response = await customerDependecyService.detailCustomerDependecy(route.params.id)
-    dependency.value = response.data
-  } catch (error) {
-    console.error('General error', error)
-    errorHandler(error, customerDependencyBackendErrors, 'Dependencia')
-  } finally {
-    // stop loading state
-    isLoading.value = false
+// Resource loader with integrated error handling
+const {
+  data: dependency,
+  isLoading,
+  errorMessage: customerDependencyBackendErrors,
+  load: loadDependency
+} = useResourceLoader(customerDependecyService.detailCustomerDependecy, {
+  initialData: {
+    id: null,
+    customer: null,
+    name: '',
+    address: '',
+    province: '',
+    township: ''
+  },
+  objectName: 'Dependencia',
+  gender: 'f',
+  onError: (err) => {
+    console.error('Error loading dependency:', err)
   }
+})
+
+// Lifecycle
+onMounted(async () => {
+  await loadDependency(route.params.id)
 })
 </script>
 
@@ -60,23 +55,25 @@ onMounted(async () => {
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
     </div>
+
     <!-- errors -->
     <div v-else-if="customerDependencyBackendErrors" class="col-md-4">
-      <span>
-        <p class="form-text text-danger">
-          {{ customerDependencyBackendErrors }}
-        </p>
-      </span>
+      <p class="form-text text-danger">
+        {{ customerDependencyBackendErrors }}
+      </p>
     </div>
+
     <!-- displaying dependency data -->
     <div v-else class="col-md-4">
       <h3>{{ dependency.name }}</h3>
       <hr />
-      <p>{{ dependency.name }}</p>
-      <p>{{ dependency.address }}</p>
-      <p>{{ dependency.province }}</p>
-      <p>{{ dependency.township }}</p>
-      <!-- end notFound false -->
+      <p><strong>Nombre:</strong> {{ dependency.name }}</p>
+      <p><strong>Dirección:</strong> {{ dependency.address || 'No especificada' }}</p>
+      <p><strong>Provincia:</strong> {{ dependency.province || 'No especificada' }}</p>
+      <p><strong>Municipio:</strong> {{ dependency.township || 'No especificado' }}</p>
+      <p v-if="dependency.customer">
+        <strong>Cliente:</strong> {{ dependency.customer.name || 'No especificado' }}
+      </p>
     </div>
   </div>
 </template>
