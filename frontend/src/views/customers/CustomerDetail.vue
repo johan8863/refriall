@@ -1,18 +1,32 @@
 <script setup>
 // vue
 import { ref, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { customerService } from '../../services/customerService'
 import CustomerDetailMenu from '../../components/customers/menus/CustomerDetailMenu.vue'
+import DeleteModal from '../../components/common/DeleteModal.vue'
 import { useResourceLoader } from '../../composables/useResourceLoader.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // Routing
 const route = useRoute()
+const router = useRouter()
 
-// Search state for dependencies
+// State
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
 const searchDependencyTerm = ref('')
+
+// Error handler for deletion
+const {
+  errorMessage: deletingError,
+  handleError,
+  clearErrors
+} = useErrorHandler({
+  objectName: 'Cliente'
+})
 
 // Resource loader with integrated error handling
 const {
@@ -57,9 +71,44 @@ const hasDependencies = computed(() => {
   return customer.value?.get_dependencies?.length > 0
 })
 
+const deleteModalFields = computed(() => {
+  return [
+    { key: 'name', label: 'Nombre', value: customer.value?.name },
+    { key: 'code', label: 'Código', value: customer.value?.code },
+    {
+      key: 'customer_type',
+      label: 'Tipo',
+      value: customer.value?.customer_type === 'es' ? 'ESTATAL' : 'PARTICULAR'
+    }
+  ]
+})
+
 // Methods
 const clearDependencySearch = () => {
   searchDependencyTerm.value = ''
+}
+
+// Delete methods
+const openDeleteModal = () => {
+  clearErrors()
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+}
+
+const confirmDelete = async () => {
+  isDeleting.value = true
+  try {
+    await customerService.deleteCustomer(customer.value.id)
+    closeDeleteModal()
+    router.push({ name: 'customers' })
+  } catch (error) {
+    console.error('Error deleting customer:', error)
+    handleError(error)
+    isDeleting.value = false
+  }
 }
 
 // Lifecycle
@@ -72,7 +121,11 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <CustomerDetailMenu :is-loading="isLoading" :customer="customer" />
+      <CustomerDetailMenu
+        :is-loading="isLoading"
+        :customer="customer"
+        @on-delete="openDeleteModal"
+      />
     </div>
 
     <!-- main content -->
@@ -124,7 +177,6 @@ onMounted(async () => {
               class="form-control form-control-sm"
               v-model="searchDependencyTerm"
               placeholder="Nombre de dependencia..."
-              @input="handleDependencySearch"
             />
           </div>
           <div class="col-auto">
@@ -175,6 +227,21 @@ onMounted(async () => {
       </div>
     </div>
   </div>
+
+  <!-- Delete Confirmation Modal -->
+  <DeleteModal
+    v-model:show="showDeleteModal"
+    title="Confirmar Eliminación"
+    item-name="el cliente"
+    :item-id="customer?.id"
+    :item-identifier="customer?.name"
+    :item-fields="deleteModalFields"
+    :is-deleting="isDeleting"
+    :error-message="deletingError"
+    variant="danger"
+    @confirm="confirmDelete"
+    @cancel="closeDeleteModal"
+  />
 </template>
 
 <style scoped>

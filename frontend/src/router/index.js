@@ -53,11 +53,6 @@ const router = createRouter({
                       path: 'update',
                       name: 'kits_update',
                       component: () => import('../views/kits/KitForm.vue')
-                    },
-                    {
-                      path: 'confirm/delete',
-                      name: 'kits_confirm_delete',
-                      component: () => import('../views/kits/KitConfirmDelete.vue')
                     }
                   ]
                 }
@@ -89,11 +84,6 @@ const router = createRouter({
                       path: 'update',
                       name: 'items_update',
                       component: () => import('../views/items/ItemForm.vue')
-                    },
-                    {
-                      path: 'confirm/delete',
-                      name: 'items_confirm_delete',
-                      component: () => import('../views/items/ItemConfirmDelete.vue')
                     }
                   ]
                 }
@@ -178,11 +168,6 @@ const router = createRouter({
                       name: 'customers_update',
                       component: () => import('../views/customers/CustomerForm.vue')
                     },
-                    {
-                      path: 'confirm/delete',
-                      name: 'customers_confirm_delete',
-                      component: () => import('../views/customers/CustomerConfirmDelete.vue')
-                    },
                     // dependencies
                     {
                       path: 'dependencies',
@@ -204,12 +189,6 @@ const router = createRouter({
                           name: 'customer_dependecy_update',
                           component: () =>
                             import('../views/customerDependencies/CustomerDependencyUpdate.vue')
-                        },
-                        {
-                          path: 'confirm/delete',
-                          name: 'customer_dependecy_delete',
-                          component: () =>
-                            import('../views/customerDependencies/CustomerDependencyConfirmDelete.vue')
                         }
                       ]
                     }
@@ -249,11 +228,6 @@ const router = createRouter({
                       path: 'update',
                       name: 'currency_update',
                       component: () => import('../views/currencies/CurrencyForm.vue')
-                    },
-                    {
-                      path: 'confirm/delete',
-                      name: 'currency_delete',
-                      component: () => import('../views/currencies/CurrencyConfirmDelete.vue')
                     }
                   ]
                 }
@@ -329,11 +303,6 @@ const router = createRouter({
                       path: 'update',
                       name: 'bills_update',
                       component: () => import('../views/bills/BillForm.vue')
-                    },
-                    {
-                      path: 'confirm/delete',
-                      name: 'bills_delete',
-                      component: () => import('../views/bills/BillConfirmDelete.vue')
                     }
                   ]
                 }

@@ -1,15 +1,31 @@
 <script setup>
 // vue
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { itemService } from '../../services/itemService'
 import ItemDetailMenu from '../../components/items/menus/ItemDetailMenu.vue'
+import DeleteModal from '../../components/common/DeleteModal.vue'
 import { useResourceLoader } from '../../composables/useResourceLoader.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // Routing
 const route = useRoute()
+const router = useRouter()
+
+// State
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
+
+// Error handler for deletion
+const {
+  errorMessage: deletingError,
+  handleError,
+  clearErrors
+} = useErrorHandler({
+  objectName: 'Artículo'
+})
 
 // Resource loader with integrated error handling
 const {
@@ -33,6 +49,43 @@ const {
   }
 })
 
+// Computed for modal fields
+const deleteModalFields = computed(() => {
+  return [
+    { key: 'code', label: 'Código', value: item.value?.code },
+    { key: 'name', label: 'Nombre', value: item.value?.name },
+    { key: 'item_type', label: 'Tipo', value: item.value?.get_item_type },
+    {
+      key: 'price',
+      label: 'Precio',
+      value: item.value?.price ? `$${item.value.price.toFixed(2)}` : 'No especificado'
+    }
+  ]
+})
+
+// Delete methods
+const openDeleteModal = () => {
+  clearErrors()
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+}
+
+const confirmDelete = async () => {
+  isDeleting.value = true
+  try {
+    await itemService.deleteItem(item.value.id)
+    closeDeleteModal()
+    router.push({ name: 'items' })
+  } catch (error) {
+    console.error('Error deleting item:', error)
+    handleError(error)
+    isDeleting.value = false
+  }
+}
+
 // Lifecycle
 onMounted(async () => {
   await loadItem(route.params.id)
@@ -43,7 +96,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <ItemDetailMenu :is-loading="isLoading" :item="item" />
+      <ItemDetailMenu :is-loading="isLoading" :item="item" @on-delete="openDeleteModal" />
     </div>
 
     <!-- main content -->
@@ -76,4 +129,19 @@ onMounted(async () => {
     </div>
   </div>
   <!-- end row -->
+
+  <!-- Delete Confirmation Modal -->
+  <DeleteModal
+    v-model:show="showDeleteModal"
+    title="Confirmar Eliminación"
+    item-name="el artículo"
+    :item-id="item?.id"
+    :item-identifier="item?.name"
+    :item-fields="deleteModalFields"
+    :is-deleting="isDeleting"
+    :error-message="deletingError"
+    variant="danger"
+    @confirm="confirmDelete"
+    @cancel="closeDeleteModal"
+  />
 </template>

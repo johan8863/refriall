@@ -1,15 +1,31 @@
 <script setup>
 // vue
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { kitService } from '../../services/kitService'
 import KitDetailMenu from '../../components/kits/menus/KitDetailMenu.vue'
+import DeleteModal from '../../components/common/DeleteModal.vue'
 import { useResourceLoader } from '../../composables/useResourceLoader.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // Routing
 const route = useRoute()
+const router = useRouter()
+
+// State
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
+
+// Error handler for deletion
+const {
+  errorMessage: deletingError,
+  handleError,
+  clearErrors
+} = useErrorHandler({
+  objectName: 'Equipo'
+})
 
 // Resource loader with integrated error handling
 const {
@@ -29,6 +45,34 @@ const {
   }
 })
 
+// Computed for modal fields
+const deleteModalFields = computed(() => {
+  return [{ key: 'name', label: 'Nombre', value: kit.value?.name }]
+})
+
+// Delete methods
+const openDeleteModal = () => {
+  clearErrors()
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+}
+
+const confirmDelete = async () => {
+  isDeleting.value = true
+  try {
+    await kitService.deleteKit(kit.value.id)
+    closeDeleteModal()
+    router.push({ name: 'kits' })
+  } catch (error) {
+    console.error('Error deleting kit:', error)
+    handleError(error)
+    isDeleting.value = false
+  }
+}
+
 // Lifecycle
 onMounted(async () => {
   await loadKit(route.params.id)
@@ -39,7 +83,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <kit-detail-menu :kit="kit" :is-loading="isLoading" />
+      <KitDetailMenu :kit="kit" :is-loading="isLoading" @on-delete="openDeleteModal" />
     </div>
 
     <!-- main content -->
@@ -63,8 +107,24 @@ onMounted(async () => {
     <div v-else class="col-md-4">
       <h3>{{ kit.name }}</h3>
       <hr />
+      <p><strong>ID:</strong> {{ kit.id }}</p>
       <p><strong>Nombre:</strong> {{ kit.name }}</p>
     </div>
   </div>
   <!-- end row -->
+
+  <!-- Delete Confirmation Modal -->
+  <DeleteModal
+    v-model:show="showDeleteModal"
+    title="Confirmar Eliminación"
+    item-name="el equipo"
+    :item-id="kit?.id"
+    :item-identifier="kit?.name"
+    :item-fields="deleteModalFields"
+    :is-deleting="isDeleting"
+    :error-message="deletingError"
+    variant="danger"
+    @confirm="confirmDelete"
+    @cancel="closeDeleteModal"
+  />
 </template>

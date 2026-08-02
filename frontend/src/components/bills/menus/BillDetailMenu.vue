@@ -9,8 +9,10 @@ defineProps({
     required: true
   }
 })
-defineEmits(['onPDF'])
+
+defineEmits(['onPDF', 'onDelete'])
 </script>
+
 <template>
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
@@ -41,7 +43,7 @@ defineEmits(['onPDF'])
       Cargando...
     </li>
     <li v-else-if="bill.id" class="list-group-item">
-      <a href="#" @click="$emit('onPDF')">PDF</a>
+      <a href="#" @click.prevent="$emit('onPDF')">PDF</a>
     </li>
     <li v-else class="list-group-item text-muted">No disponible</li>
     <!-- delete bill -->
@@ -50,9 +52,7 @@ defineEmits(['onPDF'])
       Cargando...
     </li>
     <li v-else-if="bill.id" class="list-group-item">
-      <router-link v-if="bill.id" :to="{ name: 'bills_delete', params: { id: bill.id } }"
-        >Eliminar</router-link
-      >
+      <a href="#" @click.prevent="$emit('onDelete')" class="text-danger">Eliminar</a>
     </li>
     <li v-else class="list-group-item text-muted">No disponible</li>
   </ul>

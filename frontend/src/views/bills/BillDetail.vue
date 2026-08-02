@@ -1,12 +1,14 @@
 <script setup>
 // vue
 import { onMounted, ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { billService } from '../../services/billService'
 import BillDetailMenu from '../../components/bills/menus/BillDetailMenu.vue'
+import DeleteModal from '../../components/common/DeleteModal.vue' // ✅ Importar componente
 import { useResourceLoader } from '../../composables/useResourceLoader.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // third
 import html2pdf from 'html2pdf.js'
@@ -16,12 +18,24 @@ const ITEMS_PER_PAGE = 12
 
 // Routing
 const route = useRoute()
+const router = useRouter()
 
 // State
 const paginatedBills = ref([])
 const billToPaginate = ref(null)
+const showDeleteModal = ref(false)
+const isDeleting = ref(false)
 
-// Resource loader with integrated error handling
+// Error handler for deletion
+const {
+  errorMessage: deletingError,
+  handleError,
+  clearErrors
+} = useErrorHandler({
+  objectName: 'Factura'
+})
+
+// Resource loader for bill data
 const {
   data: bill,
   isLoading,
@@ -65,6 +79,13 @@ const {
 // Computed
 const hasItems = computed(() => {
   return bill.value?.get_orders?.some((order) => order.itemtime_set?.length > 0)
+})
+
+const deleteModalFields = computed(() => {
+  return [
+    { key: 'folio', label: 'Folio', value: bill.value?.folio },
+    { key: 'cliente', label: 'Cliente', value: bill.value?.customer?.name }
+  ]
 })
 
 // Methods
@@ -127,18 +148,38 @@ const loadBillData = async () => {
   try {
     await loadBill(route.params.id)
 
-    // Prepare pagination after data is loaded
     if (bill.value && hasItems.value) {
       prepareBillToPaginate()
       paginatedBills.value = paginate(billToPaginate.value, ITEMS_PER_PAGE)
     } else {
-      // If no items, create a single page with the bill data
       const { get_orders, ...rest } = bill.value
       paginatedBills.value = [{ items: [], ...rest }]
     }
   } catch (error) {
-    // Error already handled by useResourceLoader
     console.error('Error loading bill:', error)
+  }
+}
+
+// Delete methods
+const openDeleteModal = () => {
+  clearErrors()
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+}
+
+const confirmDelete = async () => {
+  isDeleting.value = true
+  try {
+    await billService.deleteBill(bill.value.id)
+    closeDeleteModal()
+    router.push({ name: 'bills' })
+  } catch (error) {
+    console.error('Error deleting bill:', error)
+    handleError(error)
+    isDeleting.value = false
   }
 }
 
@@ -152,7 +193,12 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <bill-detail-menu :is-loading="isLoading" :bill="bill" @on-p-d-f="generatePDF" />
+      <BillDetailMenu
+        :is-loading="isLoading"
+        :bill="bill"
+        @on-p-d-f="generatePDF"
+        @on-delete="openDeleteModal"
+      />
     </div>
 
     <!-- loading bill data -->
@@ -340,4 +386,19 @@ onMounted(async () => {
     </div>
     <!-- end main content -->
   </div>
+
+  <!-- Delete Confirmation Modal -->
+  <DeleteModal
+    v-model:show="showDeleteModal"
+    title="Confirmar Eliminación"
+    item-name="la factura"
+    :item-id="bill?.id"
+    :item-identifier="bill?.folio"
+    :item-fields="deleteModalFields"
+    :is-deleting="isDeleting"
+    :error-message="deletingError"
+    variant="danger"
+    @confirm="confirmDelete"
+    @cancel="closeDeleteModal"
+  />
 </template>

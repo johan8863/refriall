@@ -11,7 +11,10 @@ defineProps({
     required: true
   }
 })
+
+defineEmits(['onDelete'])
 </script>
+
 <template>
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
@@ -38,9 +41,7 @@ defineProps({
       Cargando...
     </li>
     <li v-else-if="currency.id" class="list-group-item">
-      <RouterLink :to="{ name: 'currency_delete', params: { id: currency.id } }"
-        >Eliminar</RouterLink
-      >
+      <a href="#" @click.prevent="$emit('onDelete')" class="text-danger">Eliminar</a>
     </li>
     <li v-else class="list-group-item text-muted">No disponible</li>
   </ul>
