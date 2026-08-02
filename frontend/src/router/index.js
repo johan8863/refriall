@@ -89,11 +89,6 @@ const router = createRouter({
                       path: 'update',
                       name: 'items_update',
                       component: () => import('../views/items/ItemForm.vue')
-                    },
-                    {
-                      path: 'confirm/delete',
-                      name: 'items_confirm_delete',
-                      component: () => import('../views/items/ItemConfirmDelete.vue')
                     }
                   ]
                 }
