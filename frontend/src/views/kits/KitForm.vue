@@ -9,7 +9,6 @@ import { kitService } from '../../services/kitService'
 // third
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
-import { errorHandler } from '../../utils/errors/errorHandler'
 import KitFormMenu from '../../components/kits/menus/KitFormMenu.vue'
 import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
