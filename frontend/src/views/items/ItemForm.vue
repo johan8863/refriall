@@ -9,9 +9,9 @@ import { itemService } from '../../services/itemService'
 // third
 import { useVuelidate } from '@vuelidate/core'
 import { required, minValue, helpers } from '@vuelidate/validators'
-import { errorHandler } from '../../utils/errors/errorHandler'
 import ItemFormMenu from '../../components/items/menus/ItemFormMenu.vue'
 import { useRouting } from '../../composables/routingFunctions.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // item object to be created or updated
 const item = ref({
@@ -23,17 +23,11 @@ const item = ref({
   price: 0
 })
 
-// item errors messages object to catch
-// errors from the django rest api
-const itemErrors = ref({
-  code: [],
-  name: [],
-  item_type: [],
-  measurement: [],
-  price: []
+// useFormErrorHandler refs
+const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
+  objectName: 'Equipo',
+  gender: 'm'
 })
-
-const errorMessage = ref(null)
 
 // router utilities and handlers
 const router = useRouter()
@@ -48,10 +42,6 @@ const handleGoBack = () => {
     console.error(error)
   }
 }
-
-// const goToItems = () => router.push({ name: 'items' })
-// const goToItemDetail = () => router.push({ name: 'items_detail', params: { id: item.value.id } })
-// const goBack = () => (!item.value.id ? goToItems() : goToItemDetail())
 
 // loading state
 const isLoading = ref(false)
@@ -98,13 +88,8 @@ const createItem = async (item) => {
       )
     }
   } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      itemErrors.value = error.response.data
-    } else {
-      itemErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
-    console.log(itemErrors.value)
+    console.error('General errors:', { error })
+    handleError(error)
   }
 }
 
@@ -125,13 +110,8 @@ const updateItem = async (item) => {
       )
     }
   } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      itemErrors.value = error.response.data
-    } else {
-      itemErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
-    console.log(itemErrors.value)
+    console.error('General errors:', { error })
+    handleError(error)
   }
 }
 
@@ -179,32 +159,17 @@ onMounted(async () => {
         <p class="form-text text-danger">{{ errorMessage }}</p>
       </span>
       <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="itemErrors.non_field_errors">
+      <span v-if="backendErrors.non_field_errors">
         <p
           class="form-text text-danger"
-          v-for="(error, index) in itemErrors.non_field_errors"
+          v-for="(error, index) in backendErrors.non_field_errors"
           :key="index"
         >
           {{ error }}
         </p>
       </span>
-      <!-- backend general errors -->
-      <span v-if="itemErrors.message">
-        <p class="form-text text-danger">
-          {{ itemErrors.message }}
-        </p>
-      </span>
       <!-- form -->
       <form @submit.prevent="!item.id ? createItem(item) : updateItem(item)">
-        <span v-if="itemErrors.non_field_errors">
-          <p
-            class="form-text text-danger"
-            v-for="(error, i) in itemErrors.non_field_errors"
-            :key="i"
-          >
-            {{ error.$message }}
-          </p>
-        </span>
         <!-- code control -->
         <div class="mb-2">
           <label for="code" class="form-label">Código</label>
@@ -220,11 +185,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend validations -->
-          <span v-if="itemErrors.code">
-            <p class="form-text text-danger" v-for="(error, i) in itemErrors.code" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('code')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- name control -->
         <div class="mb-2">
@@ -241,11 +208,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend validations -->
-          <span v-if="itemErrors.name">
-            <p class="form-text text-danger" v-for="(error, i) in itemErrors.name" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('name')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- item_type control -->
         <div class="mb-2">
@@ -269,11 +238,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend validations -->
-          <span v-if="itemErrors.item_type">
-            <p class="form-text text-danger" v-for="(error, i) in itemErrors.item_type" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('item_type')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- measurement control -->
         <div class="mb-2">
@@ -304,11 +275,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend validations -->
-          <span v-if="itemErrors.measurement">
-            <p class="form-text text-danger" v-for="(error, i) in itemErrors.measurement" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('measurement')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- price control -->
         <div class="mb-2">
@@ -326,11 +299,13 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend validations -->
-          <span v-if="itemErrors.price">
-            <p class="form-text text-danger" v-for="(error, i) in itemErrors.price" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('price')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- buttons -->
         <div>
