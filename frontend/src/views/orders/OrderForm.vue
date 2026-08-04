@@ -249,16 +249,10 @@ const createOrder = async (order) => {
 
 const loadData = async () => {
   try {
-    // start loading backend data
     isLoadingBackendData.value = true
-    const [
-      { data: respCustomers },
-      { data: respKits },
-      { data: respItems },
-      { data: respDependencies },
-      { data: respCurrencies },
-      { data: respProviders }
-    ] = await Promise.all([
+    errorMessage.value = null
+
+    const results = await Promise.allSettled([
       customerService.listAllCustomers(),
       kitService.getAllKits(),
       itemService.listItemsForSelect(),
@@ -267,16 +261,36 @@ const loadData = async () => {
       providerService.listAllProviders()
     ])
 
-    customers.value = respCustomers
-    kits.value = respKits
-    items.value = respItems
-    dependencies.value = respDependencies
-    currencies.value = respCurrencies
-    providers.value = respProviders
+    // handle each result
+    const [
+      customersResult,
+      kitsResult,
+      itemsResult,
+      dependenciesResult,
+      currenciesResult,
+      providersResult
+    ] = results
+
+    // assign data only if successful
+    customers.value = customersResult.status === 'fulfilled' ? customersResult.value.data : []
+    kits.value = kitsResult.status === 'fulfilled' ? kitsResult.value.data : []
+    items.value = itemsResult.status === 'fulfilled' ? itemsResult.value.data : []
+    dependencies.value =
+      dependenciesResult.status === 'fulfilled' ? dependenciesResult.value.data : []
+    currencies.value = currenciesResult.status === 'fulfilled' ? currenciesResult.value.data : []
+    providers.value = providersResult.status === 'fulfilled' ? providersResult.value.data : []
+
+    // Log de errores
+    results.forEach((result, index) => {
+      if (result.status === 'rejected') {
+        const names = ['Customers', 'Kits', 'Items', 'Dependencies', 'Currencies', 'Providers']
+        console.warn(`Error loading ${names[index]}:`, result.reason)
+      }
+    })
   } catch (error) {
-    errorHandler(error, errorMessage)
+    console.error('Unexpected error:', error)
+    errorHandler(error, errorMessage, 'Form data')
   } finally {
-    // finish loading backend data
     isLoadingBackendData.value = false
   }
 }
