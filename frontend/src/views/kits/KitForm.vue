@@ -11,17 +11,17 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { errorHandler } from '../../utils/errors/errorHandler'
 import KitFormMenu from '../../components/kits/menus/KitFormMenu.vue'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // kit object for post and put requests
 const kit = ref({
   name: ''
 })
 
-// kit object to catch error messages from
-// django rest api
-const kitErrors = ref({
-  name: [],
-  detail: []
+// useFormErrorHandler refs
+const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
+  objectName: 'Equipo',
+  gender: 'm'
 })
 
 // router utilities and handlers
@@ -66,14 +66,8 @@ const createKit = async (kit) => {
       )
     }
   } catch (error) {
-    // in case of backend errors, assign the errors dictionary
-    // to the kit errors object
-    console.error('General error', error)
-    if (error.response) {
-      kitErrors.value = error.response.data
-    } else {
-      kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
+    console.error('General errors:', { error })
+    handleError(error)
   }
 }
 
@@ -96,14 +90,8 @@ const updateKit = async (kit) => {
       )
     }
   } catch (error) {
-    // in case of backend errors, assign the errors dictionary
-    // to the kit errors object
-    console.error('General error', error)
-    if (error.response) {
-      kitErrors.value = error.response.data
-    } else {
-      kitErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
+    console.error('General errors:', { error })
+    handleError(error)
   }
 }
 
@@ -146,32 +134,23 @@ onMounted(async () => {
     <!-- displaying kit data -->
     <div v-else class="col-md-4">
       <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="kitErrors.non_field_errors">
+      <span v-if="backendErrors.non_field_errors">
         <p
           class="form-text text-danger"
-          v-for="(error, index) in kitErrors.non_field_errors"
+          v-for="(error, index) in backendErrors.non_field_errors"
           :key="index"
         >
           {{ error }}
         </p>
       </span>
       <!-- backend general errors -->
-      <span v-if="kitErrors.message">
+      <span v-if="errorMessage">
         <p class="form-text text-danger">
-          {{ kitErrors.message }}
+          {{ errorMessage }}
         </p>
       </span>
       <!-- form -->
       <form @submit.prevent="!kit.id ? createKit(kit) : updateKit(kit)">
-        <span v-if="kitErrors.non_field_errors">
-          <p
-            class="form-text text-danger"
-            v-for="(error, i) in kitErrors.non_field_errors"
-            :key="i"
-          >
-            {{ error.$message }}
-          </p>
-        </span>
         <!-- name control -->
         <div class="mb-2">
           <label for="name" class="form-label">Nombre</label>
@@ -188,18 +167,20 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
           <!-- backend validations -->
-          <span v-if="kitErrors.name">
-            <p class="form-text text-danger" v-for="(error, index) in kitErrors.name" :key="index">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('name')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- buttons -->
         <div>
           <!-- 
-                        the order in the ternary operator is due to the fact that 
-                        this form is more often used to create than to update 
-                    -->
+            the order in the ternary operator is due to the fact that 
+            this form is more often used to create than to update 
+          -->
           <button type="submit" class="btn btn-sm btn-primary">
             {{ !kit.id ? 'Guardar' : 'Actualizar' }}
           </button>
