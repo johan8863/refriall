@@ -11,7 +11,6 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import CustomerDependencyCreateMenu from '../../components/customerDependencies/menus/CustomerDependencyCreateMenu.vue'
 import { useRouting } from '../../composables/routingFunctions.js'
-import { errorHandler } from '../../utils/errors/errorHandler.js'
 import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // router utilities and handlers
