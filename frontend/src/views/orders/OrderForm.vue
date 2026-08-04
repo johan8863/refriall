@@ -811,17 +811,7 @@ onMounted(async () => {
           />
         </div>
 
-        <div class="col-md-3 mb-2">
-          <label for="customer_name">Nombre</label>
-          <input
-            type="text"
-            class="form-control"
-            id="customer_name"
-            v-model.trim="order.customer_name"
-          />
-        </div>
-
-        <div class="col-md-3 mb-2"></div>
+        <div class="col-md-6 mb-2"></div>
 
         <!-- dates controls -->
         <div class="col-md-3">
