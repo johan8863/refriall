@@ -167,15 +167,13 @@ onMounted(async () => await getCustomerIfID())
             <option value="pr">PARTICULAR</option>
           </select>
           <!-- frontend errors -->
-          <span v-if="v$.customer_type.$error">
-            <p
-              class="form-text text-danger"
-              v-for="error in v$.customer_type.$errors"
-              :key="error.$uid"
-            >
-              {{ error.$message }}
-            </p>
-          </span>
+          <p
+            class="form-text text-danger"
+            v-for="error in v$.customer_type.$errors"
+            :key="error.$uid"
+          >
+            {{ error.$message }}
+          </p>
           <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('customer_type')"
