@@ -162,11 +162,11 @@ onMounted(async () => {
             v-model.trim="kit.name"
             @blur="v$.name.$touch"
           />
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.name.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('name')"
             :key="`backend-${i}`"
