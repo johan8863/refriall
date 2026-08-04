@@ -20,6 +20,7 @@ import { useOrderTotalComputed } from '../../composables/OrderComposable'
 import OrderFormMenu from '../../components/orders/menus/OrderFormMenu.vue'
 import { useRouting } from '../../composables/routingFunctions.js'
 import { useFormErrorHandler } from '../../composables/useErrorFormHandler.js'
+import CustomerDependencySelector from '../../components/orders/CustomerDependencySelector.vue'
 
 // main object
 const order = ref({
@@ -383,88 +384,32 @@ onMounted(async () => {
 
         <!-- customer control -->
         <div class="col-md-3 mb-2">
-          <div class="row g-1">
-            <label for="customer" class="form-label">Cliente</label>
-            <div class="col-md-11">
-              <select
-                autofocus
-                id="customer"
-                class="form-select form-select-sm"
-                v-model.trim="order.customer"
-                @blur="v$.customer.$touch"
-              >
-                <option v-for="customer in customers" :key="customer.id" :value="customer.id">
-                  {{ customer.name }}
-                </option>
-              </select>
-
-              <!-- frontend errors -->
-              <p
-                class="form-text text-danger"
-                v-for="error in v$.customer.$errors"
-                :key="error.$uid"
-              >
-                {{ error.$message }}
-              </p>
-
-              <!-- backend errors -->
-              <p
-                v-for="(error, i) in getFieldErrors('customer')"
-                :key="`backend-${i}`"
-                class="form-text text-danger"
-              >
-                {{ error }}
-              </p>
-            </div>
-            <!-- clear customers select button -->
-            <div class="col-md-1">
-              <button type="button" class="btn btn-sm btn-danger" @click="clearCustomer()">
-                X
-              </button>
-            </div>
-          </div>
+          <customer-dependency-selector
+            type="customer"
+            :customers="customers"
+            :model-value="order.customer"
+            :disabled="!!order.customer_dependency"
+            :vuelidate-errors="v$.customer.$errors"
+            :get-field-errors="getFieldErrors"
+            @update:model-value="order.customer = $event"
+            @blur="v$.customer.$touch"
+            @clear="order.customer = ''"
+          />
         </div>
 
         <!-- customer_dependency control -->
         <div class="col-md-3 mb-2">
-          <div class="row g-1">
-            <label for="customer_dependency" class="form-label">Dependencia</label>
-            <div class="col-md-11">
-              <select
-                id="customer_dependency"
-                class="form-select form-select-sm"
-                v-model.trim="order.customer_dependency"
-              >
-                <option
-                  v-for="dependency in dependencies"
-                  :key="dependency.id"
-                  :value="dependency.id"
-                >
-                  {{ dependency.name }}
-                </option>
-              </select>
-
-              <!-- backend errors -->
-              <p
-                v-for="(error, i) in getFieldErrors('customer_dependency')"
-                :key="`backend-${i}`"
-                class="form-text text-danger"
-              >
-                {{ error }}
-              </p>
-            </div>
-
-            <!-- clear customers dependency select button -->
-            <div class="col-md-1">
-              <button
-                type="button"
-                class="btn btn-sm btn-danger"
-                @click="clearCustomerDependency()"
-              >
-                X
-              </button>
-            </div>
-          </div>
+          <customer-dependency-selector
+            type="dependency"
+            :dependencies="dependencies"
+            :model-value="order.customer_dependency"
+            :disabled="!!order.customer"
+            :vuelidate-errors="v$.customer_dependency.$errors"
+            :get-field-errors="getFieldErrors"
+            @update:model-value="order.customer_dependency = $event"
+            @blur="v$.customer_dependency.$touch"
+            @clear="order.customer_dependency = ''"
+          />
         </div>
 
         <!-- symptom control -->
@@ -866,17 +811,7 @@ onMounted(async () => {
           />
         </div>
 
-        <div class="col-md-3 mb-2">
-          <label for="customer_name">Nombre</label>
-          <input
-            type="text"
-            class="form-control"
-            id="customer_name"
-            v-model.trim="order.customer_name"
-          />
-        </div>
-
-        <div class="col-md-3 mb-2"></div>
+        <div class="col-md-6 mb-2"></div>
 
         <!-- dates controls -->
         <div class="col-md-3">
