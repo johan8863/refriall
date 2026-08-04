@@ -81,9 +81,15 @@ const isLoadingBackendData = ref(false)
 const isLoadingOrderData = ref(false)
 
 // customs rules
-const customerOrDependency = () =>
-  (order.value.customer && !order.value.customer_dependency) ||
-  (!order.value.customer && order.value.customer_dependency)
+const customerOrDependency = () => {
+  if (!order.value.customer && !order.value.customer_dependency) {
+    return true
+  }
+  if (order.value.customer && order.value.customer_dependency) {
+    return false
+  }
+  return true
+}
 
 const minimalItems = () => order.value.itemtime_set.length > 0
 
