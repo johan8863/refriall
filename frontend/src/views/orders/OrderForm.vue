@@ -91,6 +91,9 @@ const customerOrDependency = () => {
   return true
 }
 
+const atleastOneCustomerOrDependency = () =>
+  !!order.value.customer || !!order.value.customer_dependency
+
 const minimalItems = () => order.value.itemtime_set.length > 0
 
 const atLeastOneModality = () =>
@@ -108,6 +111,10 @@ const rules = {
     customerOrDependency: helpers.withMessage(
       'Debe seleccionar un cliente o una dependencia, no ambos.',
       customerOrDependency
+    ),
+    required: helpers.withMessage(
+      'Debe Seleccionar un cliente o una dependencia.',
+      atleastOneCustomerOrDependency
     )
   },
   customer_dependency: {
