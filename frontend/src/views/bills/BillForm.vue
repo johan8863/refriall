@@ -384,11 +384,11 @@ onMounted(async () => {
               {{ currency.name }}
             </option>
           </select>
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.currency.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('currency')"
             :key="`backend-${i}`"
@@ -440,7 +440,7 @@ onMounted(async () => {
               {{ customer.name }}
             </option>
           </select>
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.customer.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
@@ -465,12 +465,12 @@ onMounted(async () => {
             @blur="v$.folio.$touch"
           />
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.folio.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('folio')"
             :key="`backend-${i}`"
@@ -494,7 +494,7 @@ onMounted(async () => {
             @blur="v$.provider_signature_date.$touch"
           />
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p
             class="form-text text-danger"
             v-for="error in v$.provider_signature_date.$errors"
@@ -502,7 +502,7 @@ onMounted(async () => {
           >
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('provider_signature_date')"
             :key="`backend-${i}`"
@@ -524,7 +524,7 @@ onMounted(async () => {
             @blur="v$.customer_signature_date.$touch"
           />
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p
             class="form-text text-danger"
             v-for="error in v$.customer_signature_date.$errors"
@@ -533,7 +533,7 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('customer_signature_date')"
             :key="`backend-${i}`"
@@ -591,11 +591,11 @@ onMounted(async () => {
               </tr>
             </tbody>
           </table>
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.orders.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('orders')"
             :key="`backend-${i}`"
@@ -613,7 +613,7 @@ onMounted(async () => {
             id="check_number"
             v-model.trim="bill.check_number"
           />
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('check_number')"
             :key="`backend-${i}`"
@@ -632,7 +632,7 @@ onMounted(async () => {
             id="charge_aprove"
             v-model.trim="bill.charge_aprove"
           />
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('charge_aprove')"
             :key="`backend-${i}`"
@@ -651,7 +651,7 @@ onMounted(async () => {
             id="charge_check"
             v-model.trim="bill.charge_check"
           />
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('charge_check')"
             :key="`backend-${i}`"
@@ -670,7 +670,7 @@ onMounted(async () => {
             id="customer_charge"
             v-model.trim="bill.customer_charge"
           />
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('customer_charge')"
             :key="`backend-${i}`"
@@ -689,7 +689,7 @@ onMounted(async () => {
             id="customer_name"
             v-model.trim="bill.customer_name"
           />
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('customer_name')"
             :key="`backend-${i}`"
@@ -708,7 +708,7 @@ onMounted(async () => {
             id="customer_personal_id"
             v-model.trim="bill.customer_personal_id"
           />
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('customer_personal_id')"
             :key="`backend-${i}`"
@@ -722,7 +722,7 @@ onMounted(async () => {
         <div class="col-md-3 mb-2">
           <label for="checked_by">Revisado por</label>
           <input type="text" class="form-control" id="checked_by" v-model.trim="bill.checked_by" />
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('checked_by')"
             :key="`backend-${i}`"
@@ -736,7 +736,7 @@ onMounted(async () => {
         <div class="col-md-3 mb-2">
           <label for="aproved_by">Cargo del Cliente</label>
           <input type="text" class="form-control" id="aproved_by" v-model.trim="bill.aproved_by" />
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('aproved_by')"
             :key="`backend-${i}`"
