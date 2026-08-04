@@ -12,6 +12,7 @@ import { required, helpers } from '@vuelidate/validators'
 import CustomerDependencyCreateMenu from '../../components/customerDependencies/menus/CustomerDependencyCreateMenu.vue'
 import { useRouting } from '../../composables/routingFunctions.js'
 import { errorHandler } from '../../utils/errors/errorHandler.js'
+import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // router utilities and handlers
 const router = useRouter()
@@ -36,17 +37,10 @@ const dependency = ref({
   township: ''
 })
 
-// dependency errors holder object
-const dependencyErrors = ref({
-  customer: [],
-  name: [],
-  address: [],
-  province: [],
-  township: []
+// useFormErrorHandler refs
+const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
+  objectName: 'Dependencia'
 })
-
-// error ref
-const errorMessage = ref(null)
 
 // validation rules
 const rules = {
@@ -90,15 +84,8 @@ const createDependency = async () => {
       )
     }
   } catch (error) {
-    console.error('General error', error)
-    errorHandler(error, errorMessage, 'Dependencia')
-    if (error.response) {
-      if (error.response.data) {
-        dependencyErrors.value = error.response.data
-      }
-    } else {
-      dependencyErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
+    console.error('General errors:', { error })
+    handleError(error)
   }
 }
 </script>
@@ -113,22 +100,16 @@ const createDependency = async () => {
     <!-- main content -->
     <div class="col-md-4">
       <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="dependencyErrors.non_field_errors">
+      <span v-if="backendErrors.non_field_errors">
         <p
           class="form-text text-danger"
-          v-for="(error, index) in dependencyErrors.non_field_errors"
+          v-for="(error, index) in backendErrors.non_field_errors"
           :key="index"
         >
           {{ error }}
         </p>
       </span>
       <!-- backend general errors -->
-      <span v-if="dependencyErrors.message">
-        <p class="form-text text-danger">
-          {{ dependencyErrors.message }}
-        </p>
-      </span>
-      <!-- non object backend general errors -->
       <span v-if="errorMessage">
         <p class="form-text text-danger">
           {{ errorMessage }}
@@ -136,15 +117,6 @@ const createDependency = async () => {
       </span>
       <!-- form -->
       <form @submit.prevent="createDependency">
-        <span v-if="dependencyErrors.non_field_errors">
-          <p
-            class="form-text text-danger"
-            v-for="(error, i) in dependencyErrors.non_field_errors"
-            :key="i"
-          >
-            {{ error.$message }}
-          </p>
-        </span>
         <!-- name control -->
         <div class="mb-2">
           <label for="name" class="form-label">Nombre</label>
@@ -156,17 +128,17 @@ const createDependency = async () => {
             @blur="v$.name.$touch"
           />
           <!-- frontend errors -->
-          <span v-if="v$.name.$error">
-            <p class="form-text text-danger" v-for="error in v$.name.$errors" :key="error.$uid">
-              {{ error.$message }}
-            </p>
-          </span>
+          <p class="form-text text-danger" v-for="error in v$.name.$errors" :key="error.$uid">
+            {{ error.$message }}
+          </p>
           <!-- backend errors -->
-          <span v-if="dependencyErrors.name">
-            <p class="form-text text-danger" v-for="(error, i) in dependencyErrors.name" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('name')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- address control -->
@@ -182,21 +154,17 @@ const createDependency = async () => {
             rows="5"
           ></textarea>
           <!-- frontend errors -->
-          <span v-if="v$.address.$error">
-            <p class="form-text text-danger" v-for="error in v$.address.$errors" :key="error.$uid">
-              {{ error.$message }}
-            </p>
-          </span>
+          <p class="form-text text-danger" v-for="error in v$.address.$errors" :key="error.$uid">
+            {{ error.$message }}
+          </p>
           <!-- backend errors -->
-          <span v-if="dependencyErrors.address">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in dependencyErrors.address"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('address')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- province control -->
@@ -210,21 +178,17 @@ const createDependency = async () => {
             @blur="v$.province.$touch"
           />
           <!-- frontend errors -->
-          <span v-if="v$.province.$error">
-            <p class="form-text text-danger" v-for="error in v$.province.$errors" :key="error.$uid">
-              {{ error.$message }}
-            </p>
-          </span>
+          <p class="form-text text-danger" v-for="error in v$.province.$errors" :key="error.$uid">
+            {{ error.$message }}
+          </p>
           <!-- backend errors -->
-          <span v-if="dependencyErrors.customer_type">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in dependencyErrors.province"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('province')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- township control -->
@@ -237,21 +201,17 @@ const createDependency = async () => {
             v-model.trim="dependency.township"
           />
           <!-- frontend errors -->
-          <span v-if="v$.township.$error">
-            <p class="form-text text-danger" v-for="error in v$.township.$errors" :key="error.$uid">
-              {{ error.$message }}
-            </p>
-          </span>
+          <p class="form-text text-danger" v-for="error in v$.township.$errors" :key="error.$uid">
+            {{ error.$message }}
+          </p>
           <!-- backend errors -->
-          <span v-if="dependencyErrors.customer_type">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in dependencyErrors.township"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('township')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- buttons -->
