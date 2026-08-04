@@ -384,14 +384,13 @@ onMounted(async () => {
 
         <!-- customer control -->
         <div class="col-md-3 mb-2">
-          <customer-dependency-selector
+          <CustomerDependencySelector
             type="customer"
             :customers="customers"
-            :model-value="order.customer"
+            v-model="order.customer"
             :disabled="!!order.customer_dependency"
             :vuelidate-errors="v$.customer.$errors"
             :get-field-errors="getFieldErrors"
-            @update:model-value="order.customer = $event"
             @blur="v$.customer.$touch"
             @clear="order.customer = ''"
           />
@@ -399,15 +398,14 @@ onMounted(async () => {
 
         <!-- customer_dependency control -->
         <div class="col-md-3 mb-2">
-          <customer-dependency-selector
+          <CustomerDependencySelector
             type="dependency"
             :dependencies="dependencies"
-            :model-value="order.customer_dependency"
+            v-model="order.customer_dependency"
             :disabled="!!order.customer"
             :vuelidate-errors="v$.customer_dependency.$errors"
             :get-field-errors="getFieldErrors"
-            @update:model-value="order.customer_dependency = $event"
-            @blur="v$.customer_dependency.$touch"
+            @blur="v$.customer.$touch"
             @clear="order.customer_dependency = ''"
           />
         </div>
