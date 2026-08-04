@@ -180,11 +180,11 @@ onMounted(async () => {
             v-model.trim="item.code"
             @blur="v$.code.$touch"
           />
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.code.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+          <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('code')"
             :key="`backend-${i}`"
