@@ -17,9 +17,9 @@ import { orderService } from '../../services/orderService'
 import { customerDependecyService } from '../../services/customerDependencyService'
 import { currencyService } from '../../services/currencyService'
 import { useOrderTotalComputed } from '../../composables/OrderComposable'
-import { errorHandler } from '../../utils/errors/errorHandler'
 import OrderFormMenu from '../../components/orders/menus/OrderFormMenu.vue'
 import { useRouting } from '../../composables/routingFunctions.js'
+import { useFormErrorHandler } from '../../composables/useErrorFormHandler.js'
 
 // main object
 const order = ref({
@@ -82,9 +82,6 @@ const handleGoBack = () => {
 // loading status
 const isLoadingBackendData = ref(false)
 const isLoadingOrderData = ref(false)
-
-// error message
-const errorMessage = ref(null)
 
 // customs rules
 const customerOrDependency = () =>
@@ -166,38 +163,9 @@ const rules = {
 // vuelidate object
 const v$ = useVuelidate(rules, order)
 
-// order object to be filled with backend errors
-const orderBackendErrors = ref({
-  customer: [],
-  currency: [],
-  customer_dependency: [],
-  symptom: [],
-  flaw: [],
-  repair_description: [],
-  folio: [],
-  check_diagnosis: [],
-  repair: [],
-  install: [],
-  maintenance: [],
-  support: [],
-  kit: [],
-  kit_brand: [],
-  kit_model: [],
-  kit_serial: [],
-  job_description: [],
-  itemtime_set: [],
-  provider: [],
-  provider_signature_date: [],
-  customer_signature_date: [],
-  check_number: [],
-  charge_aprove: [],
-  charge_check: [],
-  customer_charge: [],
-  customer_name: [],
-  customer_personal_id: [],
-  checked_by: [],
-  aproved_by: [],
-  non_field_errors: []
+// useFormErrorHandler refs
+const { errorMessage, backendErrors, handleError, getFieldErrors } = useFormErrorHandler({
+  objectName: 'Orden'
 })
 
 // preparation of the itemtime_set order property
@@ -241,8 +209,8 @@ const updateOrder = async (order) => {
       )
     }
   } catch (error) {
-    console.error(error)
-    errorHandler(error, orderBackendErrors, 'Orden')
+    console.error('General error:', { error })
+    handleError(error)
   }
 }
 
@@ -264,8 +232,8 @@ const createOrder = async (order) => {
       )
     }
   } catch (error) {
-    console.error(error)
-    errorHandler(error, orderBackendErrors, 'Orden')
+    console.error('General error:', { error })
+    handleError(error)
   }
 }
 
@@ -349,43 +317,40 @@ onMounted(async () => {
     </div>
 
     <!-- main content -->
-
-    <!-- Loading backend data -->
-    <div class="col-md-10" v-if="isLoadingBackendData">
-      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
-        <span role="status" class="text-primary">Cargando datos... </span>
-        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+    <div class="col-md-10">
+      <!-- loading section -->
+      <!-- Loading backend data -->
+      <div class="col-md-10" v-if="isLoadingBackendData">
+        <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+          <span role="status" class="text-primary">Cargando datos... </span>
+          <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+        </div>
       </div>
-    </div>
 
-    <!-- Loading order data -->
-    <div class="col-md-10" v-else-if="isLoadingOrderData">
-      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
-        <span role="status" class="text-primary">Cargando orden... </span>
-        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+      <!-- Loading order data -->
+      <div class="col-md-10" v-else-if="isLoadingOrderData">
+        <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+          <span role="status" class="text-primary">Cargando orden... </span>
+          <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+        </div>
       </div>
-    </div>
-
-    <!-- displaying form -->
-    <div v-else class="col-md-10">
+      <!-- errors section -->
+      <!-- backend general errors -->
+      <div v-if="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+      <!-- backend errors from non_field_errors dictionary -->
+      <div v-if="backendErrors.non_field_errors">
+        <p
+          v-for="(error, index) in backendErrors.non_field_errors"
+          :key="index"
+          class="form-text text-danger"
+        >
+          {{ error }}
+        </p>
+      </div>
       <!-- form -->
       <form @submit.prevent="onSubmit" class="row">
-        <!-- backend errors -->
-        <span v-if="orderBackendErrors.non_field_errors">
-          <p
-            class="form-text text-danger"
-            v-for="(error, i) in orderBackendErrors.non_field_errors"
-            :key="i"
-          >
-            {{ error }}
-          </p>
-        </span>
-        <span v-if="orderBackendErrors.message">
-          <p class="form-text text-danger">
-            {{ orderBackendErrors.message }}
-          </p>
-        </span>
-
         <!-- provider control -->
         <div class="col-md-3 mb-2">
           <label for="provider" class="form-label">Prestador</label>
@@ -401,21 +366,19 @@ onMounted(async () => {
             </option>
           </select>
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.provider.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.provider">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.provider"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('provider')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- customer control -->
@@ -435,7 +398,7 @@ onMounted(async () => {
                 </option>
               </select>
 
-              <!-- frontend validations -->
+              <!-- frontend errors -->
               <p
                 class="form-text text-danger"
                 v-for="error in v$.customer.$errors"
@@ -444,18 +407,16 @@ onMounted(async () => {
                 {{ error.$message }}
               </p>
 
-              <!-- backend validations -->
-              <span v-if="orderBackendErrors.customer">
-                <p
-                  class="form-text text-danger"
-                  v-for="(error, i) in orderBackendErrors.customer"
-                  :key="i"
-                >
-                  {{ error }}
-                </p>
-              </span>
+              <!-- backend errors -->
+              <p
+                v-for="(error, i) in getFieldErrors('customer')"
+                :key="`backend-${i}`"
+                class="form-text text-danger"
+              >
+                {{ error }}
+              </p>
             </div>
-
+            <!-- clear customers select button -->
             <div class="col-md-1">
               <button type="button" class="btn btn-sm btn-danger" @click="clearCustomer()">
                 X
@@ -483,17 +444,17 @@ onMounted(async () => {
                 </option>
               </select>
 
-              <!-- backend validations -->
-              <span v-if="orderBackendErrors.customer_dependency">
-                <p
-                  class="form-text text-danger"
-                  v-for="(error, i) in orderBackendErrors.customer_dependency"
-                  :key="i"
-                >
-                  {{ error }}
-                </p>
-              </span>
+              <!-- backend errors -->
+              <p
+                v-for="(error, i) in getFieldErrors('customer_dependency')"
+                :key="`backend-${i}`"
+                class="form-text text-danger"
+              >
+                {{ error }}
+              </p>
             </div>
+
+            <!-- clear customers dependency select button -->
             <div class="col-md-1">
               <button
                 type="button"
@@ -517,21 +478,19 @@ onMounted(async () => {
             @blur="v$.symptom.$touch"
           />
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.symptom.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.symptom">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.symptom"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('symptom')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- flaw control -->
@@ -545,17 +504,19 @@ onMounted(async () => {
             @blur="v$.flaw.$touch"
           />
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.flaw.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.flaw">
-            <p class="form-text text-danger" v-for="(error, i) in orderBackendErrors.flaw" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('flaw')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- repair_description control -->
@@ -569,7 +530,7 @@ onMounted(async () => {
             @blur="v$.repair_description.$touch"
           />
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p
             class="form-text text-danger"
             v-for="error in v$.repair_description.$errors"
@@ -578,16 +539,14 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.repair_description">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.repair_description"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('repair_description')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- folio control -->
@@ -607,15 +566,13 @@ onMounted(async () => {
           </p>
 
           <!-- backend errors -->
-          <span v-if="orderBackendErrors.folio">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.folio"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('folio')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
         <!-- support control -->
         <div class="col-md-3 mb-2">
@@ -636,16 +593,15 @@ onMounted(async () => {
           </p>
 
           <!-- backend errors -->
-          <span v-if="orderBackendErrors.support">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.support"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <p
+            v-for="(error, i) in getFieldErrors('support')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
+
         <!-- currency control -->
         <div class="col-md-3">
           <label for="currency" class="form-label">Moneda</label>
@@ -660,20 +616,18 @@ onMounted(async () => {
               {{ currency.name }}
             </option>
           </select>
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.currency.$errors" :key="error.$uuid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.currency">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.currency"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('currency')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <div class="row mt-2">
@@ -686,7 +640,7 @@ onMounted(async () => {
               class="form-check"
               v-model.trim="order.check_diagnosis"
             />
-            <!-- frontend validations -->
+            <!-- frontend errors -->
             <p
               class="form-text text-danger"
               v-for="error in v$.check_diagnosis.$errors"
@@ -728,17 +682,19 @@ onMounted(async () => {
             <option v-for="kit in kits" :key="kit.id" :value="kit.id">{{ kit.name }}</option>
           </select>
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.kit.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.kit">
-            <p class="form-text text-danger" v-for="(error, i) in orderBackendErrors.kit" :key="i">
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('kit')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- kit_brand control -->
@@ -752,21 +708,19 @@ onMounted(async () => {
             @blur="v$.kit_brand.$touch"
           />
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.kit_brand.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.kit_brand">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.kit_brand"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('kit_brand')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- kit_model control -->
@@ -780,21 +734,19 @@ onMounted(async () => {
             @blur="v$.kit_model.$touch"
           />
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.kit_model.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.kit_model">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.kit_model"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('kit_model')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- kit_serial control -->
@@ -808,21 +760,19 @@ onMounted(async () => {
             @blur="v$.kit_serial.$touch"
           />
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.kit_serial.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.kit_serial">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.kit_serial"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('kit_serial')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- job_description control -->
@@ -837,16 +787,14 @@ onMounted(async () => {
           >
           </textarea>
 
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.job_description">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.job_description"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('job_description')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <!-- items_times control -->
@@ -862,7 +810,7 @@ onMounted(async () => {
           <div class="col-md-1">U/M</div>
           <div class="col-md-1">Precio</div>
         </div>
-        <!-- frontend validations -->
+        <!-- frontend errors -->
         <p class="form-text text-danger" v-for="error in v$.itemtime_set.$errors" :key="error.$uid">
           {{ error.$message }}
         </p>
@@ -942,7 +890,7 @@ onMounted(async () => {
             @blur="v$.provider_signature_date.$touch"
           />
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p
             class="form-text text-danger"
             v-for="error in v$.provider_signature_date.$errors"
@@ -951,16 +899,14 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.provider_signature_date">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.provider_signature_date"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('provider_signature_date')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <div class="col-md-3">
@@ -972,7 +918,7 @@ onMounted(async () => {
             class="form-control"
           />
 
-          <!-- frontend validations -->
+          <!-- frontend errors -->
           <p
             class="form-text text-danger"
             v-for="error in v$.customer_signature_date.$errors"
@@ -981,16 +927,14 @@ onMounted(async () => {
             {{ error.$message }}
           </p>
 
-          <!-- backend validations -->
-          <span v-if="orderBackendErrors.customer_signature_date">
-            <p
-              class="form-text text-danger"
-              v-for="(error, i) in orderBackendErrors.customer_signature_date"
-              :key="i"
-            >
-              {{ error }}
-            </p>
-          </span>
+          <!-- backend errors -->
+          <p
+            v-for="(error, i) in getFieldErrors('customer_signature_date')"
+            :key="`backend-${i}`"
+            class="form-text text-danger"
+          >
+            {{ error }}
+          </p>
         </div>
 
         <div class="col-md-3">
