@@ -76,10 +76,6 @@ const handleGoBack = () => {
   } catch (error) {}
 }
 
-// const goToOrders = () => router.push({ name: 'orders' })
-// const goToOrderDetail = () => router.push({ name: 'orders_detail', params: { id: order.value.id } })
-// const goBack = () => (!order.value.id ? goToOrders() : goToOrderDetail())
-
 // loading status
 const isLoadingBackendData = ref(false)
 const isLoadingOrderData = ref(false)
@@ -236,14 +232,6 @@ const createOrder = async (order) => {
     console.error('General error:', { error })
     handleError(error)
   }
-}
-
-const clearCustomer = () => {
-  order.value.customer = ''
-}
-
-const clearCustomerDependency = () => {
-  order.value.customer_dependency = ''
 }
 
 const loadData = async () => {
