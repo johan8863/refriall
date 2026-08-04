@@ -76,18 +76,20 @@ const handleGoBack = () => {
   } catch (error) {}
 }
 
-// const goToOrders = () => router.push({ name: 'orders' })
-// const goToOrderDetail = () => router.push({ name: 'orders_detail', params: { id: order.value.id } })
-// const goBack = () => (!order.value.id ? goToOrders() : goToOrderDetail())
-
 // loading status
 const isLoadingBackendData = ref(false)
 const isLoadingOrderData = ref(false)
 
 // customs rules
-const customerOrDependency = () =>
-  (order.value.customer && !order.value.customer_dependency) ||
-  (!order.value.customer && order.value.customer_dependency)
+const customerOrDependency = () => {
+  if (!order.value.customer && !order.value.customer_dependency) {
+    return true
+  }
+  if (order.value.customer && order.value.customer_dependency) {
+    return false
+  }
+  return true
+}
 
 const minimalItems = () => order.value.itemtime_set.length > 0
 
@@ -238,14 +240,6 @@ const createOrder = async (order) => {
   }
 }
 
-const clearCustomer = () => {
-  order.value.customer = ''
-}
-
-const clearCustomerDependency = () => {
-  order.value.customer_dependency = ''
-}
-
 const loadData = async () => {
   try {
     // start loading backend data
@@ -384,14 +378,13 @@ onMounted(async () => {
 
         <!-- customer control -->
         <div class="col-md-3 mb-2">
-          <customer-dependency-selector
+          <CustomerDependencySelector
             type="customer"
             :customers="customers"
-            :model-value="order.customer"
+            v-model="order.customer"
             :disabled="!!order.customer_dependency"
             :vuelidate-errors="v$.customer.$errors"
             :get-field-errors="getFieldErrors"
-            @update:model-value="order.customer = $event"
             @blur="v$.customer.$touch"
             @clear="order.customer = ''"
           />
@@ -399,15 +392,14 @@ onMounted(async () => {
 
         <!-- customer_dependency control -->
         <div class="col-md-3 mb-2">
-          <customer-dependency-selector
+          <CustomerDependencySelector
             type="dependency"
             :dependencies="dependencies"
-            :model-value="order.customer_dependency"
+            v-model="order.customer_dependency"
             :disabled="!!order.customer"
             :vuelidate-errors="v$.customer_dependency.$errors"
             :get-field-errors="getFieldErrors"
-            @update:model-value="order.customer_dependency = $event"
-            @blur="v$.customer_dependency.$touch"
+            @blur="v$.customer.$touch"
             @clear="order.customer_dependency = ''"
           />
         </div>
