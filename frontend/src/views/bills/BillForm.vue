@@ -4,23 +4,23 @@
  */
 
 // vue
-import { onMounted, ref, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // third
-import { useVuelidate } from '@vuelidate/core'
 import { helpers, required } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
 
 // app
+import BillFormMenu from '../../components/bills/menus/BillFormMenu.vue'
 import { billService } from '../../services/billService'
+import { currencyService } from '../../services/currencyService'
 import { customerService } from '../../services/customerService'
 import { orderService } from '../../services/orderService'
 import { providerService } from '../../services/providerService'
-import { currencyService } from '../../services/currencyService'
 import { useCheckAllCheckboxes } from '../../composables/CheckAllCheckboxesComposable'
-import BillFormMenu from '../../components/bills/menus/BillFormMenu.vue'
-import { useRouting } from '../../composables/routingFunctions.js'
 import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // main reactive object
 const bill = ref({
