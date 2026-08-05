@@ -221,7 +221,9 @@ onMounted(async () => {
 
         <!-- buttons -->
         <div class="mb-2">
-          <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+          <button type="submit" class="btn btn-sm btn-primary">
+            {{ dependency.id ? 'Actualizar' : 'Guardar' }}
+          </button>
           <button type="button" class="btn btn-sm btn-secondary" @click="handleGoToDetail">
             Cancelar
           </button>
