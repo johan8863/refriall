@@ -3,15 +3,15 @@
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-// app
-import { customerDependecyService } from '../../services/customerDependencyService'
-
 // third
-import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
+
+// app
 import CustomerDependencyCreateMenu from '../../components/customerDependencies/menus/CustomerDependencyCreateMenu.vue'
-import { useRouting } from '../../composables/routingFunctions.js'
+import { customerDependecyService } from '../../services/customerDependencyService'
 import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // router utilities and handlers
 const router = useRouter()
