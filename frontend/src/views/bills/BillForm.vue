@@ -67,7 +67,13 @@ const handleGoBack = () => {
 }
 
 // loading status
-const isLoading = ref(false)
+// currencies allways will be loaded because they are
+// the starting point in the bill form
+const isLoadingCurrencies = ref(false)
+// isLoadingData is only meant for update case,
+// on create, the data will be fetched as the form
+// is being filled
+const isLoadingData = ref(false)
 
 // composable errors objects
 const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
@@ -247,10 +253,16 @@ const ordersFromCustomer = async () => {
 /*
  * Loads required data to pre populate bill edition form
  */
-const loadData = async () => {
-  try {
-    isLoading.value = true
+const loadData = async (billID) => {
+  isLoadingData.value = true
 
+  try {
+    // we first need to charge data into the bill object
+    // in order to prvide arguments to the rest of the services
+    const { data } = await billService.getForUpdate(billID)
+    bill.value = data
+
+    // load the rest of the data needed to populate the form
     const [
       { data: respProviders },
       { data: respBillProvider },
@@ -279,6 +291,8 @@ const loadData = async () => {
     billCustomer.value = respBillCustomer
     insertNonExistingCustomer()
 
+    // we need free orders in case that arise a new order
+    // that matches the currency, customer and provider on the bill
     freeOrders.value = respFreeorders
     orders.value = respOrdersByIds
     orders.value.push(...freeOrders.value)
@@ -286,7 +300,7 @@ const loadData = async () => {
     error('General error:', error)
     handleError(error)
   } finally {
-    isLoading.value = false
+    isLoadingData.value = false
   }
 }
 
@@ -306,22 +320,20 @@ const { checkAllCheckboxes } = useCheckAllCheckboxes(orders, selectedOrders)
 
 onMounted(async () => {
   try {
-    isLoading.value = true
+    isLoadingCurrencies.value = true
     // always load currencies whether the action is to create or update
     const respCurrencies = await currencyService.listCurrencies()
     currencies.value = respCurrencies.data
 
     const id = route.params.id
     if (id) {
-      const { data } = await billService.getForUpdate(id)
-      bill.value = data
-      await loadData()
+      await loadData(id)
     }
   } catch (error) {
     console.error(error)
     errorMessage.value = 'Error cargando datos.'
   } finally {
-    isLoading.value = false
+    isLoadingCurrencies.value = false
   }
 })
 </script>
@@ -336,7 +348,15 @@ onMounted(async () => {
     <!-- main content -->
 
     <!-- Loading data -->
-    <div v-if="isLoading" class="col-md-9">
+    <!-- first load currencies regardless of the use case(create or update) -->
+    <div v-if="isLoadingCurrencies" class="col-md-9">
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+        <span role="status" class="text-primary">Cargando Monedas... </span>
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+      </div>
+    </div>
+    <!-- in case of update only -->
+    <div v-else-if="isLoadingData" class="col-md-9">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
         <span role="status" class="text-primary">Cargando datos... </span>
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
