@@ -1,6 +1,6 @@
 <script setup>
 /*
- * Bills creation form
+ * Bills form
  */
 
 // vue
