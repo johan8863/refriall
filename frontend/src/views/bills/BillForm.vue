@@ -76,6 +76,8 @@ const isLoadingCurrencies = ref(false)
 const isLoadingData = ref(false)
 // create form loading status
 const isLoadingProvider = ref(false)
+const isLoadingCustomer = ref(false)
+const isLoadingOrders = ref(false)
 
 // composable errors objects
 const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
@@ -165,8 +167,6 @@ const insertNonExistingCustomer = () => {
  * Function to load providers with free orders to match given a currency
  */
 const chargeProviderNoBill = async () => {
-  console.log('here')
-
   try {
     // start loading state
     isLoadingProvider.value = true
@@ -194,24 +194,25 @@ const chargeProviderNoBill = async () => {
 const customersFromProvider = async () => {
   try {
     // start loading state
-    isLoading.value = true
+    isLoadingCustomer.value = true
     // reset orders objects
     orders.value = []
     bill.value.orders = []
     // if available both currency and provider, retrieve/update the list of customers
     if (bill.value.currency && bill.value.provider) {
-      customers.value = (
-        await customerService.listCustomerOrdersNoBill(bill.value.currency, bill.value.provider)
-      ).data
+      const { data: respCustomers } = await customerService.listCustomerOrdersNoBill(
+        bill.value.currency,
+        bill.value.provider
+      )
+      customers.value = respCustomers
       // if customer changes, retrieve/update the list of orders
       if (bill.value.customer) {
-        orders.value = (
-          await orderService.getOrdersFromCustomerNotMatched(
-            bill.value.currency,
-            bill.value.provider,
-            bill.value.customer
-          )
-        ).data
+        const { data: respOrders } = await orderService.getOrdersFromCustomerNotMatched(
+          bill.value.currency,
+          bill.value.provider,
+          bill.value.customer
+        )
+        orders.value = respOrders
       }
     }
   } catch (error) {
@@ -219,7 +220,7 @@ const customersFromProvider = async () => {
     handleError(error)
   } finally {
     // finish loading state
-    isLoading.value = false
+    isLoadingCustomer.value = false
   }
 }
 
@@ -229,7 +230,7 @@ const customersFromProvider = async () => {
 const ordersFromCustomer = async () => {
   try {
     // start loading state
-    isLoading.value = true
+    isLoadingOrders.value = true
     // reset orders
     orders.value = []
     bill.value.orders = []
@@ -250,7 +251,7 @@ const ordersFromCustomer = async () => {
     console.error('General errors:', { error })
     handleError(error)
   } finally {
-    isLoading.value = false
+    isLoadingOrders.value = false
   }
 }
 
@@ -454,7 +455,12 @@ onMounted(async () => {
 
         <!-- customer control -->
         <div class="col-md-3 mb-2">
-          <label for="customer">Cliente</label>
+          <label for="customer">
+            Cliente
+            <div v-if="isLoadingCustomer" class="d-inline col-md-9">
+              <span class="spinner-border spinner-border-sm text-body" aria-hidden="true"></span>
+            </div>
+          </label>
           <select
             name="customer"
             id="customer"
