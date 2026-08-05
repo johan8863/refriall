@@ -78,7 +78,7 @@ const handleSubmit = async () => {
 
     // on success return to currency detail view
     const { data } = await method
-    router.push({ name: 'currency_detail', params: { id: data.id } })
+    handleGoBack()
   } catch (error) {
     console.error('General error:', error)
     handleError(error)
