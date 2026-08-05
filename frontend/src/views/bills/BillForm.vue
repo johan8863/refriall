@@ -74,6 +74,8 @@ const isLoadingCurrencies = ref(false)
 // on create, the data will be fetched as the form
 // is being filled
 const isLoadingData = ref(false)
+// create form loading status
+const isLoadingProvider = ref(false)
 
 // composable errors objects
 const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
@@ -163,9 +165,11 @@ const insertNonExistingCustomer = () => {
  * Function to load providers with free orders to match given a currency
  */
 const chargeProviderNoBill = async () => {
+  console.log('here')
+
   try {
     // start loading state
-    isLoading.value = true
+    isLoadingProvider.value = true
     // reseting error state
     errorMessage.value = null
     // reseting bill both provider and orders
@@ -180,7 +184,7 @@ const chargeProviderNoBill = async () => {
     console.error('General errors:', { error })
     handleError(error)
   } finally {
-    isLoading.value = false
+    isLoadingProvider.value = false
   }
 }
 
@@ -420,7 +424,12 @@ onMounted(async () => {
 
         <!-- provider control -->
         <div class="col-md-3 mb-2">
-          <label for="provider">Prestador</label>
+          <label for="provider">
+            Prestador
+            <div v-if="isLoadingProvider" class="d-inline col-md-9">
+              <span class="spinner-border spinner-border-sm text-body" aria-hidden="true"></span>
+            </div>
+          </label>
           <select
             name="provider"
             id="provider"
