@@ -1,17 +1,17 @@
 <script setup>
 // vue
 import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 // third
-import { useVuelidate } from '@vuelidate/core'
 import { required, helpers, maxLength, minLength } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
 
 // app
-import { currencyService } from '../../services/currencyService'
 import CurrencyFormMenu from '../../components/currencies/menus/CurrencyFormMenu.vue'
-import { useRouting } from '../../composables/routingFunctions.js'
+import { currencyService } from '../../services/currencyService'
 import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // router utilities and handlers
 const router = useRouter()
