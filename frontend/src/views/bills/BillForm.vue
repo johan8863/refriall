@@ -457,7 +457,9 @@ onMounted(async () => {
             name="provider"
             id="provider"
             class="form-select"
-            :disabled="!bill.currency || (bill.currency && providers.length === 0)"
+            :disabled="
+              !bill.currency || (bill.currency && providers.length === 0) || isLoadingProvider
+            "
             @change="customersFromProvider"
             v-model="bill.provider"
           >
@@ -488,7 +490,9 @@ onMounted(async () => {
             id="customer"
             class="form-select"
             :disabled="
-              (!bill.currency && !bill.provider) || (bill.currency && customers.length === 0)
+              (!bill.currency && !bill.provider) ||
+              (bill.currency && customers.length === 0) ||
+              isLoadingCustomer
             "
             @change="ordersFromCustomer"
             v-model="bill.customer"
