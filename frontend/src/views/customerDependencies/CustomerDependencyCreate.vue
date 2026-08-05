@@ -1,6 +1,6 @@
 <script setup>
 // vue
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // third
@@ -21,7 +21,7 @@ const { goToDetail } = useRouting()
 
 const handleGoToDetail = () => {
   try {
-    goToDetail('customers_detail', route.params.id)
+    goToDetail('customers_detail', dependency.value.customer)
   } catch (error) {
     console.error(error)
   }
@@ -29,6 +29,7 @@ const handleGoToDetail = () => {
 
 // dependency objects
 const dependency = ref({
+  id: null,
   customer: '',
   name: '',
   address: '',
@@ -61,32 +62,37 @@ const rules = {
 const v$ = useVuelidate(rules, dependency)
 
 // methods
-const createDependency = async () => {
+const handleSubmit = async () => {
+  // vuelidate validations
+  if (await v$.value.$validate()) {
+    try {
+      const isUpdate = !!dependency.value.id
+      const method = isUpdate
+        ? customerDependecyService.putCustomerDependcy(dependency.value)
+        : customerDependecyService.postCustomerDependency(dependency.value)
+      await method
+      handleGoToDetail()
+    } catch (error) {}
+  } else {
+    console.error('Validation errors:', v$.value.$errors)
+  }
+}
+
+onMounted(async () => {
+  if (route.name === 'customer_dependecy_create') {
+    dependency.value.customer = route.params.id
+    return
+  }
+
   try {
-    if (await v$.value.$validate()) {
-      dependency.value.customer = route.params.id
-      const { data } = await customerDependecyService.postCustomerDependency(dependency.value)
-      router.push({
-        name: 'customers_detail',
-        params: {
-          id: data.customer
-        }
-      })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
-    }
+    const id = route.params.id
+    const { data } = await customerDependecyService.detailCustomerDependecy(id)
+    dependency.value = data
   } catch (error) {
     console.error('General errors:', { error })
     handleError(error)
   }
-}
+})
 </script>
 
 <template>
@@ -115,7 +121,7 @@ const createDependency = async () => {
         </p>
       </span>
       <!-- form -->
-      <form @submit.prevent="createDependency">
+      <form @submit.prevent="handleSubmit">
         <!-- name control -->
         <div class="mb-2">
           <label for="name" class="form-label">Nombre</label>

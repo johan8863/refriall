@@ -183,7 +183,7 @@ const router = createRouter({
                           path: 'update',
                           name: 'customer_dependecy_update',
                           component: () =>
-                            import('../views/customerDependencies/CustomerDependencyUpdate.vue')
+                            import('../views/customerDependencies/CustomerDependencyCreate.vue')
                         }
                       ]
                     }
