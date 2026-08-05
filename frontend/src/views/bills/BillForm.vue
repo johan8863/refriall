@@ -606,52 +606,60 @@ onMounted(async () => {
 
         <!-- orders control -->
         <div class="col-md-12">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    name=""
-                    id=""
-                    class="form-check"
-                    v-model="checkAllCheckboxes"
-                  />
-                </th>
-                <th>Folio</th>
-                <th>Cliente</th>
-                <th>Dependencia</th>
-                <th>Importe Total</th>
-              </tr>
-            </thead>
+          <fieldset :disabled="isLoadingOrders || orders.length === 0">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>
+                    <span
+                      v-if="isLoadingOrders"
+                      class="spinner-border spinner-border-sm text-body"
+                      aria-hidden="true"
+                    ></span>
+                    <input
+                      v-else
+                      type="checkbox"
+                      name=""
+                      id=""
+                      class="form-check"
+                      v-model="checkAllCheckboxes"
+                    />
+                  </th>
+                  <th>Folio</th>
+                  <th>Cliente</th>
+                  <th>Dependencia</th>
+                  <th>Importe Total</th>
+                </tr>
+              </thead>
 
-            <tbody>
-              <tr v-for="order in orders" :key="order.id">
-                <td>
-                  <input
-                    type="checkbox"
-                    name=""
-                    :id="order.id"
-                    class="form-check"
-                    v-model="bill.orders"
-                    :value="order.id"
-                  />
-                </td>
-                <td>
-                  <router-link
-                    :to="{ name: 'orders_detail', params: { id: order.id } }"
-                    target="_blank"
-                    >{{ order.folio }}</router-link
-                  >
-                </td>
-                <td v-if="order.customer">{{ order.customer.name }}</td>
-                <td v-else>-</td>
-                <td v-if="order.customer_dependency">{{ order.customer_dependency.name }}</td>
-                <td v-else>-</td>
-                <td>{{ order.get_total_amount }}</td>
-              </tr>
-            </tbody>
-          </table>
+              <tbody>
+                <tr v-for="order in orders" :key="order.id">
+                  <td>
+                    <input
+                      type="checkbox"
+                      name=""
+                      :id="order.id"
+                      class="form-check"
+                      v-model="bill.orders"
+                      :value="order.id"
+                    />
+                  </td>
+                  <td>
+                    <router-link
+                      :to="{ name: 'orders_detail', params: { id: order.id } }"
+                      target="_blank"
+                      >{{ order.folio }}</router-link
+                    >
+                  </td>
+                  <td v-if="order.customer">{{ order.customer.name }}</td>
+                  <td v-else>-</td>
+                  <td v-if="order.customer_dependency">{{ order.customer_dependency.name }}</td>
+                  <td v-else>-</td>
+                  <td>{{ order.get_total_amount }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
           <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.orders.$errors" :key="error.$uid">
             {{ error.$message }}
