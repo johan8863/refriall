@@ -449,9 +449,11 @@ onMounted(async () => {
         <div class="col-md-3 mb-2">
           <label for="provider">
             Prestador
-            <div v-if="isLoadingProvider" class="d-inline col-md-9">
-              <span class="spinner-border spinner-border-sm text-body" aria-hidden="true"></span>
-            </div>
+            <span
+              v-if="isLoadingProvider"
+              class="spinner-border spinner-border-sm text-body"
+              aria-hidden="true"
+            ></span>
           </label>
           <select
             name="provider"
@@ -481,9 +483,11 @@ onMounted(async () => {
         <div class="col-md-3 mb-2">
           <label for="customer">
             Cliente
-            <div v-if="isLoadingCustomer" class="d-inline col-md-9">
-              <span class="spinner-border spinner-border-sm text-body" aria-hidden="true"></span>
-            </div>
+            <span
+              v-if="isLoadingCustomer"
+              class="spinner-border spinner-border-sm text-body"
+              aria-hidden="true"
+            ></span>
           </label>
           <select
             name="customer"
