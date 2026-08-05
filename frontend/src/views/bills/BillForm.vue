@@ -80,7 +80,7 @@ const isLoadingCustomer = ref(false)
 const isLoadingOrders = ref(false)
 
 // composable errors objects
-const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
+const { errorMessage, backendErrors, handleError, getFieldErrors, clearErrors } = useErrorHandler({
   objectName: 'Factura'
 })
 
@@ -167,16 +167,19 @@ const insertNonExistingCustomer = () => {
  * Function to load providers with free orders to match given a currency
  */
 const chargeProviderNoBill = async () => {
+  // start loading state
+  isLoadingProvider.value = true
+
+  // clear errors
+  clearErrors()
+
+  // reseting both provider and orders bill
+  // every time a new currency is selected
+  bill.value.provider = ''
+  providers.value = []
+  orders.value = []
+
   try {
-    // start loading state
-    isLoadingProvider.value = true
-    // reseting error state
-    errorMessage.value = null
-    // reseting bill both provider and orders
-    // every time a new currency is selected
-    bill.value.provider = ''
-    providers.value = []
-    orders.value = []
     // getting backend data
     const respProviders = await providerService.listProviderCurrencyOrderNoBill(bill.value.currency)
     providers.value = respProviders.data
@@ -192,12 +195,17 @@ const chargeProviderNoBill = async () => {
  * Get the customers with free orders given a currency and a provider
  */
 const customersFromProvider = async () => {
+  // start loading state
+  isLoadingCustomer.value = true
+
+  // reset orders objects
+  orders.value = []
+  bill.value.orders = []
+
+  // clear errors
+  clearErrors()
+
   try {
-    // start loading state
-    isLoadingCustomer.value = true
-    // reset orders objects
-    orders.value = []
-    bill.value.orders = []
     // if available both currency and provider, retrieve/update the list of customers
     if (bill.value.currency && bill.value.provider) {
       const { data: respCustomers } = await customerService.listCustomerOrdersNoBill(
@@ -228,12 +236,17 @@ const customersFromProvider = async () => {
  * Get the available orders given a currency, a provider and a customer
  */
 const ordersFromCustomer = async () => {
+  // start loading state
+  isLoadingOrders.value = true
+
+  // reset orders
+  orders.value = []
+  bill.value.orders = []
+
+  // clear errors
+  clearErrors()
+
   try {
-    // start loading state
-    isLoadingOrders.value = true
-    // reset orders
-    orders.value = []
-    bill.value.orders = []
     // if both currency and provider, retrieve/update the orders list
     if (bill.value.currency && bill.value.provider) {
       orders.value = (
@@ -259,7 +272,11 @@ const ordersFromCustomer = async () => {
  * Loads required data to pre populate bill edition form
  */
 const loadData = async (billID) => {
+  // start loading state
   isLoadingData.value = true
+
+  // clear errors
+  clearErrors()
 
   try {
     // we first need to charge data into the bill object
@@ -305,6 +322,7 @@ const loadData = async (billID) => {
     console.error('General errors:', { error })
     handleError(error)
   } finally {
+    // finish loading state
     isLoadingData.value = false
   }
 }
@@ -324,8 +342,9 @@ const selectedOrders = computed({
 const { checkAllCheckboxes } = useCheckAllCheckboxes(orders, selectedOrders)
 
 onMounted(async () => {
+  // start loading state
+  isLoadingCurrencies.value = true
   try {
-    isLoadingCurrencies.value = true
     // always load currencies whether the action is to create or update
     const respCurrencies = await currencyService.listCurrencies()
     currencies.value = respCurrencies.data
@@ -338,6 +357,7 @@ onMounted(async () => {
     console.error('General errors:', { error })
     handleError(error)
   } finally {
+    // finish loading state
     isLoadingCurrencies.value = false
   }
 })
