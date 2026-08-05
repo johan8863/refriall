@@ -177,13 +177,13 @@ const router = createRouter({
                           path: 'create',
                           name: 'customer_dependecy_create',
                           component: () =>
-                            import('../views/customerDependencies/CustomerDependencyCreate.vue')
+                            import('../views/customerDependencies/CustomerDependencyForm.vue')
                         },
                         {
                           path: 'update',
                           name: 'customer_dependecy_update',
                           component: () =>
-                            import('../views/customerDependencies/CustomerDependencyCreate.vue')
+                            import('../views/customerDependencies/CustomerDependencyForm.vue')
                         }
                       ]
                     }

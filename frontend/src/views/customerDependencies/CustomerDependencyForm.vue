@@ -9,7 +9,7 @@ import { useVuelidate } from '@vuelidate/core'
 
 // app
 import CustomerDependencyCreateMenu from '../../components/customerDependencies/menus/CustomerDependencyCreateMenu.vue'
-import { customerDependecyService } from '../../services/customerDependencyService'
+import { customerDependecyService } from '../../services/customerDependencyService.js'
 import { useErrorHandler } from '../../composables/useErrorHandler.js'
 import { useRouting } from '../../composables/routingFunctions.js'
 
