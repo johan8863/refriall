@@ -173,10 +173,12 @@ const chargeProviderNoBill = async () => {
   // clear errors
   clearErrors()
 
-  // reseting both provider and orders bill
+  // reset provider, customer and orders bill
   // every time a new currency is selected
   bill.value.provider = ''
+  bill.value.customer = ''
   providers.value = []
+  customers.value = []
   orders.value = []
 
   try {
