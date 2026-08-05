@@ -399,7 +399,7 @@ onMounted(async () => {
 
     <!-- displaying form -->
     <div v-else class="col-md-9">
-      <div v-if="bill.currency && providers.length === 0">
+      <div v-if="bill.currency && !isLoadingProvider && providers.length === 0">
         <span class="text-danger">No hay órdenes libres para asociar.</span>
       </div>
 
