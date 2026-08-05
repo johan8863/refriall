@@ -128,7 +128,7 @@ const handleSubmit = async () => {
       const { data } = await method
       router.push({ name: 'bills_detail', params: { id: data.id } })
     } catch (error) {
-      console.error('General error:', error)
+      console.error('General errors:', { error })
       handleError(error)
     }
   } else {
@@ -177,7 +177,7 @@ const chargeProviderNoBill = async () => {
     const respProviders = await providerService.listProviderCurrencyOrderNoBill(bill.value.currency)
     providers.value = respProviders.data
   } catch (error) {
-    error('General error:', error)
+    console.error('General errors:', { error })
     handleError(error)
   } finally {
     isLoading.value = false
@@ -211,7 +211,7 @@ const customersFromProvider = async () => {
       }
     }
   } catch (error) {
-    error('General error:', error)
+    console.error('General errors:', { error })
     handleError(error)
   } finally {
     // finish loading state
@@ -243,7 +243,7 @@ const ordersFromCustomer = async () => {
       orders.value = []
     }
   } catch (error) {
-    error('General error:', error)
+    console.error('General errors:', { error })
     handleError(error)
   } finally {
     isLoading.value = false
@@ -297,7 +297,7 @@ const loadData = async (billID) => {
     orders.value = respOrdersByIds
     orders.value.push(...freeOrders.value)
   } catch (error) {
-    error('General error:', error)
+    console.error('General errors:', { error })
     handleError(error)
   } finally {
     isLoadingData.value = false
@@ -330,8 +330,8 @@ onMounted(async () => {
       await loadData(id)
     }
   } catch (error) {
-    console.error(error)
-    errorMessage.value = 'Error cargando datos.'
+    console.error('General errors:', { error })
+    handleError(error)
   } finally {
     isLoadingCurrencies.value = false
   }
