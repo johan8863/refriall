@@ -102,16 +102,23 @@ const handleSubmit = async () => {
 }
 
 const getCustomerIfID = async () => {
+  // get route id to decide if fetching or not
+  // a customer object
   const id = route.params.id
   if (!id) return
 
+  // start loading state
   isLoading.value = true
+
   try {
+    // fetching data from backend
     const { data } = await customerService.detailCustomer(id)
     customer.value = data
   } catch (error) {
+    // error handling
     handleError(error)
   } finally {
+    // stop loading state
     isLoading.value = false
   }
 }
