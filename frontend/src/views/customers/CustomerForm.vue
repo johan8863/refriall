@@ -82,7 +82,7 @@ const handleSubmit = async () => {
   if (!(await v$.value.$validate())) {
     // always log vuelidate errors
     // just in case an unexpected behavior
-    console.error('Errores de validación:', v$.value.$errors)
+    console.error('Validation errors:', v$.value.$errors)
     return
   }
 
