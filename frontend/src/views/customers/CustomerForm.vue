@@ -1,17 +1,17 @@
 <script setup>
 // vue
-import { useRouter, useRoute } from 'vue-router'
-import { ref, onMounted } from 'vue'
-
-// app
-import { customerService } from '../../services/customerService'
-import CustomerFormMenu from '../../components/customers/menus/CustomerFormMenu.vue'
-import { useRouting } from '../../composables/routingFunctions.js'
-import { useFormErrorHandler } from '../../composables/useErrorFormHandler.js'
+import { useRoute, useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
 
 // third
-import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
+
+// app
+import CustomerFormMenu from '../../components/customers/menus/CustomerFormMenu.vue'
+import { customerService } from '../../services/customerService'
+import { useFormErrorHandler } from '../../composables/useErrorFormHandler.js'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // customer object to be created or updated
 const customer = ref({
