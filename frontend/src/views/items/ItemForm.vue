@@ -1,17 +1,17 @@
 <script setup>
 // vue
-import { useRouter, useRoute } from 'vue-router'
-import { ref, onMounted } from 'vue'
-
-// app
-import { itemService } from '../../services/itemService'
+import { useRoute, useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
 
 // third
-import { useVuelidate } from '@vuelidate/core'
 import { required, minValue, helpers } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
+
+// app
 import ItemFormMenu from '../../components/items/menus/ItemFormMenu.vue'
-import { useRouting } from '../../composables/routingFunctions.js'
+import { itemService } from '../../services/itemService'
 import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // item object to be created or updated
 const item = ref({
