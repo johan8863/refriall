@@ -70,48 +70,28 @@ const rules = {
 const v$ = useVuelidate(rules, item)
 
 // methods
+const handleSubmit = async () => {
+  if (await v$.value.$validate()) {
+    try {
+      // update or create depending on item id
+      const isUpdate = !!item.value.id
+      const method = isUpdate ? itemService.putItem(item.value) : itemService.postItem(item.value)
 
-// create item function
-const createItem = async (item) => {
-  try {
-    if (await v$.value.$validate()) {
-      const { data } = await itemService.postItem(item)
-      router.push({ name: 'items_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
+      // on success redirect t item detail view
+      const { data } = await method
+      router.push({
+        name: 'items_detail',
+        params: { id: data.id }
+      })
+    } catch (error) {
+      console.error('General errors:', error)
+      handleError(error)
     }
-  } catch (error) {
-    console.error('General errors:', { error })
-    handleError(error)
-  }
-}
-
-// update item function
-const updateItem = async (item) => {
-  try {
-    if (await v$.value.$validate()) {
-      const { data } = await itemService.putItem(item)
-      router.push({ name: 'items_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
-    }
-  } catch (error) {
-    console.error('General errors:', { error })
-    handleError(error)
+  } else {
+    // always log vuelidate errors
+    // just in case an unexpected behavior
+    console.error('Validation errors:', v$.value.$errors)
+    return
   }
 }
 
@@ -169,7 +149,7 @@ onMounted(async () => {
         </p>
       </span>
       <!-- form -->
-      <form @submit.prevent="!item.id ? createItem(item) : updateItem(item)">
+      <form @submit.prevent="handleSubmit">
         <!-- code control -->
         <div class="mb-2">
           <label for="code" class="form-label">Código</label>
