@@ -116,6 +116,7 @@ const getCustomerIfID = async () => {
     customer.value = data
   } catch (error) {
     // error handling
+    console.error('General errors:', { error })
     handleError(error)
   } finally {
     // stop loading state
