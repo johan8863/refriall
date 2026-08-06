@@ -103,8 +103,8 @@ const handleSubmit = async () => {
 
 const getCustomerIfID = async () => {
   const id = route.params.id
-
   if (!id) return
+
   isLoading.value = true
   try {
     const { data } = await customerService.detailCustomer(id)
