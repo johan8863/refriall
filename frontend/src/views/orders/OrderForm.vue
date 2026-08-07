@@ -1,26 +1,26 @@
 <script setup>
 // vue
-import { useRouter, useRoute } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
 
 // third
-import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
 
 // app
-import { customerService } from '../../services/customerService'
-import { kitService } from '../../services/kitService'
-import { itemService } from '../../services/itemService'
-import { providerService } from '../../services/providerService'
-import ItemTime from '../../components/orders/ItemTime.vue'
-import { orderService } from '../../services/orderService'
-import { customerDependecyService } from '../../services/customerDependencyService'
 import { currencyService } from '../../services/currencyService'
-import { useOrderTotalComputed } from '../../composables/OrderComposable'
-import OrderFormMenu from '../../components/orders/menus/OrderFormMenu.vue'
-import { useRouting } from '../../composables/routingFunctions.js'
-import { useFormErrorHandler } from '../../composables/useErrorFormHandler.js'
 import CustomerDependencySelector from '../../components/orders/CustomerDependencySelector.vue'
+import { customerDependecyService } from '../../services/customerDependencyService'
+import { customerService } from '../../services/customerService'
+import { itemService } from '../../services/itemService'
+import ItemTime from '../../components/orders/ItemTime.vue'
+import { kitService } from '../../services/kitService'
+import OrderFormMenu from '../../components/orders/menus/OrderFormMenu.vue'
+import { orderService } from '../../services/orderService'
+import { providerService } from '../../services/providerService'
+import { useFormErrorHandler } from '../../composables/useErrorFormHandler.js'
+import { useOrderTotalComputed } from '../../composables/OrderComposable'
+import { useRouting } from '../../composables/routingFunctions.js'
 
 // main object
 const order = ref({
