@@ -14,6 +14,7 @@ import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // kit object for post and put requests
 const kit = ref({
+  id: null,
   name: ''
 })
 
