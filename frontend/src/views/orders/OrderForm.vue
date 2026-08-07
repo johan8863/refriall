@@ -178,6 +178,7 @@ const { errorMessage, backendErrors, handleError, getFieldErrors } = useFormErro
   objectName: 'Orden'
 })
 
+// methods
 // preparation of the itemtime_set order property
 const createItemTime = (elements = 12) => {
   // create 12 elements by default to iterate in the create initial form
@@ -200,50 +201,29 @@ const deleteItem = (index) => {
   order.value.itemtime_set.splice(index, 1)
 }
 
-const onSubmit = () => (order.value.id ? updateOrder(order) : createOrder(order))
+const handleSubmit = async () => {
+  if (await v$.value.$validate()) {
+    // keep only items with value
+    order.value.itemtime_set = order.value.itemtime_set.filter((x) => x.item !== 0)
+    try {
+      // update or create depending on order id
+      const isUpdate = !!order.value.id
+      const method = isUpdate
+        ? orderService.putOrder(order.value)
+        : orderService.postOrder(order.value)
 
-const updateOrder = async (order) => {
-  try {
-    if (await v$.value.$validate()) {
-      order.value.itemtime_set = order.value.itemtime_set.filter((x) => x.item > 0)
-      const { data } = await orderService.putOrder(order.value)
+      // on success redirect to kit detail view
+      const { data } = await method
       router.push({ name: 'orders_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
+    } catch (error) {
+      console.error('General errors:', { error })
+      handleError(error)
     }
-  } catch (error) {
-    console.error('General error:', { error })
-    handleError(error)
-  }
-}
-
-const createOrder = async (order) => {
-  try {
-    // only charge itemtime objects with values
-    order.value.itemtime_set = order.value.itemtime_set.filter((x) => x.item > 0)
-    if (await v$.value.$validate()) {
-      const { data } = await orderService.postOrder(order.value)
-      router.push({ name: 'orders_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
-    }
-  } catch (error) {
-    console.error('General error:', { error })
-    handleError(error)
+  } else {
+    // always log vuelidate errors
+    // just in case an unexpected behavior
+    console.error('Validation errors:', v$.value.$errors)
+    return
   }
 }
 
@@ -366,7 +346,7 @@ onMounted(async () => {
         </p>
       </div>
       <!-- form -->
-      <form @submit.prevent="onSubmit" class="row">
+      <form @submit.prevent="handleSubmit" class="row">
         <!-- provider control -->
         <div class="col-md-3 mb-2">
           <label for="provider" class="form-label">Prestador</label>
