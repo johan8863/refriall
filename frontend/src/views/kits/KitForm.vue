@@ -46,52 +46,25 @@ const rules = {
 const v$ = useVuelidate(rules, kit)
 
 // methods
+const handleSubmit = async () => {
+  if (await v$.value.$validate()) {
+    try {
+      // update or create depending on kit id
+      const isUpdate = !!kit.value.id
+      const method = isUpdate ? kitService.putKit(kit.value) : kitService.postKit(kit.value)
 
-// create kit object function
-const createKit = async (kit) => {
-  try {
-    if (await v$.value.$validate()) {
-      // if front validations run,
-      // post the object and redirect to its detail view
-      const { data } = await kitService.postKit(kit)
+      // on success redirect to kit detail view
+      const { data } = await method
       router.push({ name: 'kits_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
+    } catch (error) {
+      console.error('General errors:', { error })
+      handleError(error)
     }
-  } catch (error) {
-    console.error('General errors:', { error })
-    handleError(error)
-  }
-}
-
-// update kit object function
-const updateKit = async (kit) => {
-  try {
-    // if front validations run,
-    // put the object and redirect to its detail view
-    if (await v$.value.$validate()) {
-      const { data } = await kitService.putKit(kit)
-      router.push({ name: 'kits_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
-    }
-  } catch (error) {
-    console.error('General errors:', { error })
-    handleError(error)
+  } else {
+    // always log vuelidate errors
+    // just in case an unexpected behavior
+    console.error('Validation errors:', v$.value.$errors)
+    return
   }
 }
 
@@ -150,7 +123,7 @@ onMounted(async () => {
         </p>
       </span>
       <!-- form -->
-      <form @submit.prevent="!kit.id ? createKit(kit) : updateKit(kit)">
+      <form @submit.prevent="handleSubmit">
         <!-- name control -->
         <div class="mb-2">
           <label for="name" class="form-label">Nombre</label>

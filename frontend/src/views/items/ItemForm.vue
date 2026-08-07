@@ -84,7 +84,7 @@ const handleSubmit = async () => {
         params: { id: data.id }
       })
     } catch (error) {
-      console.error('General errors:', error)
+      console.error('General errors:', { error })
       handleError(error)
     }
   } else {
