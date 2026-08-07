@@ -772,26 +772,7 @@ onMounted(async () => {
         <p class="form-text text-danger" v-for="error in v$.itemtime_set.$errors" :key="error.$uid">
           {{ error.$message }}
         </p>
-        <!-- 
-          if no order.id means the order is being created,
-          therefore the state management is being done via the list indexes 
-        -->
-        <div v-if="!order.id" class="col-md-12 mb-2" style="overflow-y: auto; height: 400px">
-          <template v-for="(item, index) in order.itemtime_set" :key="index">
-            <item-time
-              v-if="order.itemtime_set.length > 0"
-              :items="items"
-              :item="item"
-              @on-delete-item="deleteItem(index)"
-            />
-          </template>
-        </div>
-
-        <!-- 
-          if order.id means the order its being updated,
-          therefore the state management is being done via the itemtimes objects ids 
-        -->
-        <div v-else class="col-md-12 mb-2" style="overflow-y: auto; height: 400px">
+        <div class="col-md-12 mb-2" style="overflow-y: auto; height: 400px">
           <template v-for="(item, index) in order.itemtime_set" :key="index">
             <item-time
               v-if="order.itemtime_set.length > 0"
