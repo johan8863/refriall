@@ -180,15 +180,12 @@ const { errorMessage, backendErrors, handleError, getFieldErrors } = useFormErro
 
 // methods
 // preparation of the itemtime_set order property
-const createItemTime = (elements = 12) => {
-  // create 12 elements by default to iterate in the create initial form
-  // the binding to the "Add item" button can be called with a lesser value
-  for (let index = 0; index < elements; index++) {
-    order.value.itemtime_set.push({
-      item: 0,
-      times: 1
-    })
-  }
+const defaulItemTimes = () => ({ item: 0, times: 1 })
+const DEFAULT_ITEMS_COUNT = 12
+
+const createItemTime = (elements = DEFAULT_ITEMS_COUNT) => {
+  const newItems = Array.from({ length: elements }, defaulItemTimes)
+  order.value.itemtime_set.push(...newItems)
 }
 
 // computed composable property to calculate value of the order
