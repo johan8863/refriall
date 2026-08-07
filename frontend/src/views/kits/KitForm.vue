@@ -1,15 +1,15 @@
 <script setup>
 // vue
-import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-
-// app
-import { kitService } from '../../services/kitService'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 // third
-import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
+
+// app
 import KitFormMenu from '../../components/kits/menus/KitFormMenu.vue'
+import { kitService } from '../../services/kitService'
 import { useErrorHandler } from '../../composables/useErrorHandler.js'
 
 // kit object for post and put requests
