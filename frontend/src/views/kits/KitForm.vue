@@ -3,7 +3,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
-// local
+// app
 import { kitService } from '../../services/kitService'
 
 // third
