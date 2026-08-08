@@ -72,7 +72,7 @@ export const useForm = (options = {}) => {
    * Submit the form (create or update)
    * @returns {Promise<Object>} Response data
    */
-  const submit = async () => {
+  const handleSubmit = async () => {
     // Validate form
     if (!(await v$.value.$validate())) {
       console.error('Validation errors:', v$.value.$errors)
@@ -123,7 +123,7 @@ export const useForm = (options = {}) => {
 
     // Methods
     loadData,
-    submit,
+    handleSubmit,
     reset,
     getFieldErrors,
     clearErrors
