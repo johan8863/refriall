@@ -249,12 +249,18 @@ const loadData = async () => {
     ] = results
 
     // assign data only if successful
+    // customers
     customers.value = customersResult.status === 'fulfilled' ? customersResult.value.data : []
+    // kits
     kits.value = kitsResult.status === 'fulfilled' ? kitsResult.value.data : []
+    // items
     items.value = itemsResult.status === 'fulfilled' ? itemsResult.value.data : []
+    // dependencies
     dependencies.value =
       dependenciesResult.status === 'fulfilled' ? dependenciesResult.value.data : []
+    // currencies
     currencies.value = currenciesResult.status === 'fulfilled' ? currenciesResult.value.data : []
+    // providers
     providers.value = providersResult.status === 'fulfilled' ? providersResult.value.data : []
 
     // Log de errores
