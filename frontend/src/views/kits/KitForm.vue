@@ -1,7 +1,7 @@
 <script setup>
 // vue
 import { onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 // third
 import { required, helpers } from '@vuelidate/validators'
@@ -10,10 +10,14 @@ import { required, helpers } from '@vuelidate/validators'
 import KitFormMenu from '../../components/kits/menus/KitFormMenu.vue'
 import { kitService } from '../../services/kitService'
 import { useForm } from '../../composables/useForm.js'
+import { useRouting } from '../../composables/routingFunctions.js'
 
-// router utilities and handlers
-const router = useRouter()
+// routing utilities and handlers
 const route = useRoute()
+
+const { goBack } = useRouting()
+
+const handleGoBack = () => goBack('kits', 'kits_detail', kit.value.id)
 
 // rules to manage front validations
 const rules = {
@@ -47,10 +51,6 @@ const {
   detailMethod: 'detailKit',
   onSuccess: (data) => router.push({ name: 'kits_detail', params: { id: data.id } })
 })
-
-const goToKits = () => router.push({ name: 'kits' })
-const goToKitDetail = () => router.push({ name: 'kits_detail', params: { id: kit.value.id } })
-const goBack = () => (!kit.value.id ? goToKits() : goToKitDetail())
 
 // lifecycle
 onMounted(async () => {
@@ -128,7 +128,9 @@ onMounted(async () => {
             <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ !kit.id ? 'Guardar' : 'Actualizar' }}
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" @click="goBack">Cancelar</button>
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
+            Cancelar
+          </button>
         </div>
       </form>
     </div>
