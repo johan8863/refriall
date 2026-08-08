@@ -263,7 +263,7 @@ const loadData = async () => {
     // providers
     providers.value = providersResult.status === 'fulfilled' ? providersResult.value.data : []
 
-    // Log de errores
+    // errors logs
     results.forEach((result, index) => {
       if (result.status === 'rejected') {
         const names = ['Customers', 'Kits', 'Items', 'Dependencies', 'Currencies', 'Providers']
