@@ -30,8 +30,8 @@ export const useRouting = () => {
     }
   }
 
-  const goToListPost = (routeListName) => {
-    validateRouteName(routeListName, 'goToListPost')
+  const goToList = (routeListName) => {
+    validateRouteName(routeListName, 'goToList')
     router.push({ name: routeListName })
   }
 
@@ -45,11 +45,11 @@ export const useRouting = () => {
     validateRouteName(routeListName, 'goBack')
     validateRouteName(routeDetailName, 'goBack')
     validateObjectIDGoBack(objectID, 'goBack')
-    return !objectID ? goToListPost(routeListName) : goToDetail(routeDetailName, objectID)
+    return !objectID ? goToList(routeListName) : goToDetail(routeDetailName, objectID)
   }
 
   return {
-    goToListPost,
+    goToList,
     goToDetail,
     goBack
   }
