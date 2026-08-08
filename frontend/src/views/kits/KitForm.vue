@@ -1,39 +1,19 @@
 <script setup>
 // vue
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // third
 import { required, helpers } from '@vuelidate/validators'
-import { useVuelidate } from '@vuelidate/core'
 
 // app
 import KitFormMenu from '../../components/kits/menus/KitFormMenu.vue'
 import { kitService } from '../../services/kitService'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
-
-// kit object for post and put requests
-const kit = ref({
-  id: null,
-  name: ''
-})
-
-// useFormErrorHandler refs
-const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
-  objectName: 'Equipo',
-  gender: 'm'
-})
+import { useForm } from '../../composables/useForm.js'
 
 // router utilities and handlers
 const router = useRouter()
 const route = useRoute()
-
-const goToKits = () => router.push({ name: 'kits' })
-const goToKitDetail = () => router.push({ name: 'kits_detail', params: { id: kit.value.id } })
-const goBack = () => (!kit.value.id ? goToKits() : goToKitDetail())
-
-// loading state
-const isLoading = ref(false)
 
 // rules to manage front validations
 const rules = {
@@ -42,49 +22,39 @@ const rules = {
   }
 }
 
-// vuelidate object
-const v$ = useVuelidate(rules, kit)
+// useForm functions and composables
+const {
+  formData: kit,
+  isLoading,
+  isSaving,
+  errorMessage,
+  backendErrors,
+  v$,
+  loadData,
+  handleSubmit,
+  getFieldErrors
+} = useForm({
+  initialData: {
+    id: null,
+    name: ''
+  },
+  rules,
+  service: kitService,
+  objectName: 'Equipo',
+  gender: 'm',
+  createMethod: 'postKit',
+  updateMethod: 'putKit',
+  detailMethod: 'detailKit',
+  onSuccess: (data) => router.push({ name: 'kits_detail', params: { id: data.id } })
+})
 
-// methods
-const handleSubmit = async () => {
-  if (await v$.value.$validate()) {
-    try {
-      // update or create depending on kit id
-      const isUpdate = !!kit.value.id
-      const method = isUpdate ? kitService.putKit(kit.value) : kitService.postKit(kit.value)
-
-      // on success redirect to kit detail view
-      const { data } = await method
-      router.push({ name: 'kits_detail', params: { id: data.id } })
-    } catch (error) {
-      console.error('General errors:', { error })
-      handleError(error)
-    }
-  } else {
-    // always log vuelidate errors
-    // just in case an unexpected behavior
-    console.error('Validation errors:', v$.value.$errors)
-    return
-  }
-}
+const goToKits = () => router.push({ name: 'kits' })
+const goToKitDetail = () => router.push({ name: 'kits_detail', params: { id: kit.value.id } })
+const goBack = () => (!kit.value.id ? goToKits() : goToKitDetail())
 
 // lifecycle
 onMounted(async () => {
-  try {
-    // start loading state
-    isLoading.value = true
-    // getting kit from backend
-    const id = route.params.id
-    if (id) {
-      const { data } = await kitService.detailKit(id)
-      kit.value = data
-    }
-  } catch (error) {
-    errorHandler(error, kitErrors, 'Equipo', 'm')
-  } finally {
-    // stop loading state
-    isLoading.value = false
-  }
+  await loadData(route.params.id)
 })
 </script>
 
@@ -155,6 +125,7 @@ onMounted(async () => {
             this form is more often used to create than to update 
           -->
           <button type="submit" class="btn btn-sm btn-primary">
+            <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ !kit.id ? 'Guardar' : 'Actualizar' }}
           </button>
           <button type="button" class="btn btn-sm btn-secondary" @click="goBack">Cancelar</button>
