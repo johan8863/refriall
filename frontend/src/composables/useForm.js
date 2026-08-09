@@ -104,11 +104,9 @@ export const useForm = (options = {}) => {
           Please ensure your service has "${methodName}" or configure it in useForm options.`)
       }
 
-      const { data } = await method(formData.value)
+      await method(formData.value)
 
       handleGoBack()
-
-      return data
     } catch (error) {
       handleError(error)
       throw error
