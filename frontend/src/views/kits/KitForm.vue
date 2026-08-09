@@ -32,6 +32,7 @@ const {
   v$,
   loadData,
   handleSubmit,
+  handleGoBack,
   getFieldErrors
 } = useForm({
   initialData: {
@@ -45,12 +46,9 @@ const {
   createMethod: 'postKit',
   updateMethod: 'putKit',
   detailMethod: 'detailKit',
-  onSuccess: (data) => router.push({ name: 'kits_detail', params: { id: data.id } })
+  listView: 'kits',
+  detailView: 'kits_detail'
 })
-
-const goToKits = () => router.push({ name: 'kits' })
-const goToKitDetail = () => router.push({ name: 'kits_detail', params: { id: kit.value.id } })
-const goBack = () => (!kit.value.id ? goToKits() : goToKitDetail())
 
 // lifecycle
 onMounted(async () => {
@@ -128,7 +126,9 @@ onMounted(async () => {
             <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ !kit.id ? 'Guardar' : 'Actualizar' }}
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" @click="goBack">Cancelar</button>
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
+            Cancelar
+          </button>
         </div>
       </form>
     </div>

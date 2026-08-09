@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { useFormErrorHandler } from './useErrorFormHandler.js'
+import { useRouting } from './routingFunctions.js'
 
 /**
  * Composable for handling forms with validation and CRUD operations
@@ -12,10 +13,11 @@ import { useFormErrorHandler } from './useErrorFormHandler.js'
  * @param {Object} options.service - Service object with CRUD methods
  * @param {string} options.objectName - Name of the object (for error messages)
  * @param {string} options.gender - Gender of the object ('m' or 'f')
- * @param {Function} options.onSuccess - Callback on successful submit
  * @param {string} options.createMethod - Name of the create method (default: 'create')
  * @param {string} options.updateMethod - Name of the update method (default: 'update')
  * @param {string} options.detailMethod - Name of the detail method (default: 'detail')
+ * @param {string} options.listView - Name of the list view to use in goBack
+ * @param {string} options.detailView - Name of the detail view to use in goBack and form redirection
  */
 export const useForm = (options = {}) => {
   const {
@@ -24,10 +26,11 @@ export const useForm = (options = {}) => {
     service,
     objectName = 'Elemento',
     gender = 'm',
-    onSuccess = null,
     createMethod = 'create',
     updateMethod = 'update',
-    detailMethod = 'detail'
+    detailMethod = 'detail',
+    listView,
+    detailView
   } = options
 
   const formData = ref({ ...initialData })
@@ -39,6 +42,10 @@ export const useForm = (options = {}) => {
       objectName,
       gender
     })
+
+  const { goBack, router } = useRouting()
+
+  const handleGoBack = () => goBack(listView, detailView, formData.value.id)
 
   const v$ = useVuelidate(rules, formData)
 
@@ -59,10 +66,8 @@ export const useForm = (options = {}) => {
       }
       const { data } = await fn(id)
       formData.value = data
-      return data
     } catch (error) {
       handleError(error)
-      throw error
     } finally {
       isLoading.value = false
     }
@@ -92,13 +97,9 @@ export const useForm = (options = {}) => {
 
       const { data } = await method(formData.value)
 
-      if (onSuccess) {
-        onSuccess(data)
-      }
-      return data
+      router.push({ name: detailView, params: { id: data.id } })
     } catch (error) {
       handleError(error)
-      throw error
     } finally {
       isSaving.value = false
     }
@@ -124,6 +125,7 @@ export const useForm = (options = {}) => {
     // Methods
     loadData,
     handleSubmit,
+    handleGoBack,
     reset,
     getFieldErrors,
     clearErrors
