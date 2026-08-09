@@ -1,7 +1,7 @@
 <script setup>
 // vue
 import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 // third
 import { required, helpers, maxLength, minLength } from '@vuelidate/validators'
@@ -10,35 +10,17 @@ import { useVuelidate } from '@vuelidate/core'
 // app
 import CurrencyFormMenu from '../../components/currencies/menus/CurrencyFormMenu.vue'
 import { currencyService } from '../../services/currencyService'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
-import { useRouting } from '../../composables/routingFunctions.js'
+import { useForm } from '../../composables/useForm.js'
 
 // router utilities and handlers
-const router = useRouter()
 const route = useRoute()
-const { goBack } = useRouting()
-const handleGoBack = () => {
-  try {
-    goBack('currencies', 'currency_detail', currency.value.id)
-  } catch (error) {
-    console.error(error)
-  }
-}
 
-// currency object for post and put requests
-const currency = ref({
+// currency initial data to use in composable
+const initialData = {
   id: null,
   name: '',
   description: ''
-})
-
-// errors oobjects holders
-const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
-  objectName: 'Moneda'
-})
-
-// loading state
-const isLoading = ref(false)
+}
 
 // rules to manage front validations
 const rules = {
@@ -51,62 +33,40 @@ const rules = {
   }
 }
 
-// vuelidate object
-const v$ = useVuelidate(rules, currency)
-
 // helper function to always set to upper case the name of the currency
 const currenyNameUpper = () =>
   (currency.value.name = currency.value.name ? currency.value.name.toUpperCase() : '')
 
-// submit handler
+const {
+  formData: currency,
+  isLoading,
+  isSaving,
+  errorMessage,
+  backendErrors,
+  v$,
+  loadData,
+  handleSubmit: useFormSubmit,
+  handleGoBack,
+  getFieldErrors
+} = useForm({
+  initialData,
+  rules,
+  service: currencyService,
+  objectName: 'Moneda',
+  createMethod: 'postCurrency',
+  updateMethod: 'putCurrency',
+  detailMethod: 'detailCurrency',
+  listView: 'currencies',
+  detailView: 'currency_detail'
+})
+
 const handleSubmit = async () => {
-  // vuelidate validation
-  if (!(await v$.value.$validate())) {
-    // always log vuelidate errors
-    // just in case an unexpected behavior
-    console.error('Vuelidate errors:', v$.value.$errors)
-    return // end the operation
-  }
-
-  try {
-    // update or create related to currency.value.id
-    currenyNameUpper()
-    const isUpdate = !!currency.value.id
-    const method = isUpdate
-      ? currencyService.putCurrency(currency.value)
-      : currencyService.postCurrency(currency.value)
-
-    // on success return to currency detail view
-    const { data } = await method
-    handleGoBack()
-  } catch (error) {
-    console.error('General error:', error)
-    handleError(error)
-  }
-}
-
-const getCurrencyIfID = async () => {
-  // create use case
-  const id = route.params.id
-  if (!id) return
-
-  // update use case
-  // start loading state
-  isLoading.value = true
-  try {
-    const { data } = await currencyService.detailCurrency(id)
-    currency.value = data
-  } catch (error) {
-    console.error('General error:', error)
-    handleError(error)
-  } finally {
-    // stop loading status
-    isLoading.value = false
-  }
+  currency.value.name = currency.value.name.toUpperCase()
+  await useFormSubmit()
 }
 
 // onMounted life cycle
-onMounted(async () => await getCurrencyIfID())
+onMounted(async () => await loadData(route.params.id))
 </script>
 
 <template>
