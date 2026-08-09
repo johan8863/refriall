@@ -47,7 +47,7 @@ export const useForm = (options = {}) => {
       gender
     })
 
-  const { goBack, router } = useRouting()
+  const { goBack, goToDetail } = useRouting()
 
   const handleGoBack = () => goBack(listView, detailView, formData.value.id)
 
@@ -99,9 +99,9 @@ export const useForm = (options = {}) => {
           Please ensure your service has "${methodName}" or configure it in useForm options.`)
       }
 
-      await method(formData.value)
-
-      router.push({ name: detailView, params: { id: data.id } })
+      const { data } = await method(formData.value)
+      // go to object detail view on success operatin
+      goToDetail(detailView, data.id)
     } catch (error) {
       handleError(error)
     } finally {
