@@ -51,6 +51,7 @@ export const useRouting = () => {
   return {
     goToList,
     goToDetail,
-    goBack
+    goBack,
+    router
   }
 }

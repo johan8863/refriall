@@ -16,8 +16,8 @@ import { useRouting } from './routingFunctions.js'
  * @param {string} options.createMethod - Name of the create method (default: 'create')
  * @param {string} options.updateMethod - Name of the update method (default: 'update')
  * @param {string} options.detailMethod - Name of the detail method (default: 'detail')
- * @param {string} options.listView - Name of the list view for gBack function
- * @param {string} options.detailView - Name of the detail view for gBack function
+ * @param {string} options.listView - Name of the list view to use in goBack
+ * @param {string} options.detailView - Name of the detail view to use in goBack and form redirection
  */
 
 // destructure options
@@ -28,7 +28,6 @@ export const useForm = (options = {}) => {
     service,
     objectName = 'Elemento',
     gender = 'm',
-    onSuccess = null,
     createMethod = 'create',
     updateMethod = 'update',
     detailMethod = 'detail',
@@ -48,12 +47,10 @@ export const useForm = (options = {}) => {
       gender
     })
 
-  // routing
-  const { goBack } = useRouting()
+  const { goBack, router } = useRouting()
 
   const handleGoBack = () => goBack(listView, detailView, formData.value.id)
 
-  // vuelidate validation object
   const v$ = useVuelidate(rules, formData)
 
   /**
@@ -73,7 +70,6 @@ export const useForm = (options = {}) => {
       }
       const { data } = await fn(id)
       formData.value = data
-      return data
     } catch (error) {
       handleError(error)
     } finally {
@@ -105,7 +101,7 @@ export const useForm = (options = {}) => {
 
       await method(formData.value)
 
-      handleGoBack()
+      router.push({ name: detailView, params: { id: data.id } })
     } catch (error) {
       handleError(error)
     } finally {
