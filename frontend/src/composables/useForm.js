@@ -76,7 +76,6 @@ export const useForm = (options = {}) => {
       return data
     } catch (error) {
       handleError(error)
-      throw error
     } finally {
       isLoading.value = false
     }
@@ -109,7 +108,6 @@ export const useForm = (options = {}) => {
       handleGoBack()
     } catch (error) {
       handleError(error)
-      throw error
     } finally {
       isSaving.value = false
     }
