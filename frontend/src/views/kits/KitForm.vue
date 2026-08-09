@@ -10,14 +10,9 @@ import { required, helpers } from '@vuelidate/validators'
 import KitFormMenu from '../../components/kits/menus/KitFormMenu.vue'
 import { kitService } from '../../services/kitService'
 import { useForm } from '../../composables/useForm.js'
-import { useRouting } from '../../composables/routingFunctions.js'
 
 // routing utilities and handlers
 const route = useRoute()
-
-const { goBack } = useRouting()
-
-const handleGoBack = () => goBack('kits', 'kits_detail', kit.value.id)
 
 // rules to manage front validations
 const rules = {
@@ -36,6 +31,7 @@ const {
   v$,
   loadData,
   handleSubmit,
+  handleGoBack,
   getFieldErrors
 } = useForm({
   initialData: {
@@ -49,7 +45,8 @@ const {
   createMethod: 'postKit',
   updateMethod: 'putKit',
   detailMethod: 'detailKit',
-  onSuccess: (data) => router.push({ name: 'kits_detail', params: { id: data.id } })
+  listView: 'kits',
+  detailView: 'kits_detail'
 })
 
 // lifecycle

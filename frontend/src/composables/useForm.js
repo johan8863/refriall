@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { useFormErrorHandler } from './useErrorFormHandler.js'
+import { useRouting } from './routingFunctions.js'
 
 /**
  * Composable for handling forms with validation and CRUD operations
@@ -12,11 +13,14 @@ import { useFormErrorHandler } from './useErrorFormHandler.js'
  * @param {Object} options.service - Service object with CRUD methods
  * @param {string} options.objectName - Name of the object (for error messages)
  * @param {string} options.gender - Gender of the object ('m' or 'f')
- * @param {Function} options.onSuccess - Callback on successful submit
  * @param {string} options.createMethod - Name of the create method (default: 'create')
  * @param {string} options.updateMethod - Name of the update method (default: 'update')
  * @param {string} options.detailMethod - Name of the detail method (default: 'detail')
+ * @param {string} options.listView - Name of the list view for gBack function
+ * @param {string} options.detailView - Name of the detail view for gBack function
  */
+
+// destructure options
 export const useForm = (options = {}) => {
   const {
     initialData = {},
@@ -27,19 +31,29 @@ export const useForm = (options = {}) => {
     onSuccess = null,
     createMethod = 'create',
     updateMethod = 'update',
-    detailMethod = 'detail'
+    detailMethod = 'detail',
+    listView,
+    detailView
   } = options
 
+  // refs
   const formData = ref({ ...initialData })
   const isLoading = ref(false)
   const isSaving = ref(false)
 
+  // error handling
   const { errorMessage, backendErrors, handleError, getFieldErrors, clearErrors } =
     useFormErrorHandler({
       objectName,
       gender
     })
 
+  // routing
+  const { goBack } = useRouting()
+
+  const handleGoBack = () => goBack(listView, detailView, formData.value.id)
+
+  // vuelidate validation object
   const v$ = useVuelidate(rules, formData)
 
   /**
@@ -92,9 +106,8 @@ export const useForm = (options = {}) => {
 
       const { data } = await method(formData.value)
 
-      if (onSuccess) {
-        onSuccess(data)
-      }
+      handleGoBack()
+
       return data
     } catch (error) {
       handleError(error)
@@ -124,6 +137,7 @@ export const useForm = (options = {}) => {
     // Methods
     loadData,
     handleSubmit,
+    handleGoBack,
     reset,
     getFieldErrors,
     clearErrors
