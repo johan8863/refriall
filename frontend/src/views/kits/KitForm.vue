@@ -122,7 +122,7 @@ onMounted(async () => {
             the order in the ternary operator is due to the fact that 
             this form is more often used to create than to update 
           -->
-          <button type="submit" class="btn btn-sm btn-primary">
+          <button type="submit" class="btn btn-sm btn-primary" :disabled="isSaving">
             <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ !kit.id ? 'Guardar' : 'Actualizar' }}
           </button>
