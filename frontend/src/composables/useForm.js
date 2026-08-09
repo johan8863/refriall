@@ -43,7 +43,7 @@ export const useForm = (options = {}) => {
       gender
     })
 
-  const { goBack, router } = useRouting()
+  const { goBack, goToDetail } = useRouting()
 
   const handleGoBack = () => goBack(listView, detailView, formData.value.id)
 
@@ -96,8 +96,8 @@ export const useForm = (options = {}) => {
       }
 
       const { data } = await method(formData.value)
-
-      router.push({ name: detailView, params: { id: data.id } })
+      // go to object detail view on success operatin
+      goToDetail(detailView, data.id)
     } catch (error) {
       handleError(error)
     } finally {
