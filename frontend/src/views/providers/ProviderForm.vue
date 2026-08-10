@@ -10,13 +10,13 @@ import { required, helpers, numeric } from '@vuelidate/validators'
 // app
 import { providerService } from '../../services/providerService'
 import ProviderFormMenu from '../../components/providers/menus/ProviderFormMenu.vue'
+import { useForm } from '../../composables/useForm.js'
 
 // router utilities and handlers
-const router = useRouter()
 const route = useRoute()
 
 // main object
-const provider = ref({
+const initialData = {
   id: null,
   username: '',
   first_name: '',
@@ -30,7 +30,7 @@ const provider = ref({
   password: '',
   confirm_password: '',
   personal_id: ''
-})
+}
 
 // validation rules
 
@@ -92,105 +92,32 @@ const rules = computed(() => ({
   }
 }))
 
-// vuelidate object
-const v$ = useVuelidate(rules, provider)
-
-// provider object to be filled with backend errors
-const providerBackendErrors = ref({
-  first_name: [],
-  username: [],
-  first_name: [],
-  last_name: [],
-  tcp_code: [],
-  bank_account_header: [],
-  bank_account: [],
-  address: [],
-  activity: [],
-  license_number: [],
-  password: [],
-  confirm_password: [],
-  personal_id: []
+const {
+  formData: provider,
+  isLoading,
+  isSaving,
+  errorMessage,
+  backendErrors,
+  v$,
+  loadData,
+  handleSubmit,
+  handleGoBack,
+  getFieldErrors
+} = useForm({
+  initialData,
+  rules,
+  service: providerService,
+  objectName: 'Prestador',
+  gender: 'm',
+  createMethod: 'postProvider',
+  updateMethod: 'putProvider',
+  detailMethod: 'detailProvider',
+  listView: 'providers',
+  detailView: 'providers_detail'
 })
-
-// methods
-const createProvider = async (provider) => {
-  try {
-    if (await v$.value.$validate()) {
-      const { data } = await providerService.postProvider(provider)
-      router.push({ name: 'providers_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
-    }
-  } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      providerBackendErrors.value = error.response.data
-      console.log('providerBackendErrors', providerBackendErrors.value)
-    } else {
-      providerBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
-    console.log(providerBackendErrors.value)
-  }
-}
-
-const updateProvider = async (provider) => {
-  try {
-    if (await v$.value.$validate()) {
-      const { data } = await providerService.putProvider(provider)
-      router.push({ name: 'providers_detail', params: { id: data.id } })
-    } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
-      console.error(
-        v$.value.$errors.map((err) => ({
-          property: err.$property,
-          message: err.$message
-        }))
-      )
-    }
-  } catch (error) {
-    console.error('General error', error)
-    if (error.response) {
-      providerBackendErrors.value = error.response.data
-    } else {
-      providerBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador' }
-    }
-    console.log(providerBackendErrors.value)
-  }
-}
-
-const onSubmit = () =>
-  provider.value.id ? updateProvider(provider.value) : createProvider(provider.value)
-
-const goBack = () =>
-  provider.value.id
-    ? router.push({ name: 'providers_detail', params: { id: provider.value.id } })
-    : router.push({ name: 'providers' })
 
 // lifecycle
-onMounted(async () => {
-  try {
-    const id = route.params.id
-    if (id) {
-      const resp = await providerService.detailProvider(id)
-      provider.value = resp.data
-    }
-  } catch (error) {
-    console.log('General error: ', error)
-    if (error.response) {
-      providerBackendErrors.value = error.response
-    } else {
-      providerBackendErrors.value = { message: 'Error inesperado, consulte al desarrollador.' }
-    }
-  }
-})
+onMounted(async () => await loadData(route.params.id))
 </script>
 
 <template>
@@ -202,21 +129,28 @@ onMounted(async () => {
 
     <!-- main content -->
     <div class="col-md-9">
+      <!-- loading provider data -->
+      <div v-if="isLoading" class="col-md-4">
+        <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+          <span role="status" class="text-primary">Cargando datos... </span>
+          <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+        </div>
+      </div>
       <!-- form -->
-      <form class="row" @submit.prevent="onSubmit">
+      <form v-else class="row" @submit.prevent="handleSubmit">
         <!-- backend errors -->
-        <span v-if="providerBackendErrors.non_field_errors">
+        <span v-if="backendErrors.non_field_errors">
           <p
             class="form-text text-danger"
-            v-for="(error, i) in providerBackendErrors.non_field_errors"
+            v-for="(error, i) in backendErrors.non_field_errors"
             :key="i"
           >
             {{ error }}
           </p>
         </span>
-        <span v-if="providerBackendErrors.message">
+        <span v-if="errorMessage">
           <p class="form-text text-danger">
-            {{ providerBackendErrors.message }}
+            {{ errorMessage }}
           </p>
         </span>
 
@@ -238,15 +172,13 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.username">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.username"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('username')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
@@ -272,15 +204,13 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.first_name">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.first_name"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('first_name')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
@@ -306,15 +236,13 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.last_name">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.last_name"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('last_name')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
@@ -336,15 +264,13 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.tcp_code">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.tcp_code"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('tcp_code')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
@@ -370,15 +296,13 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.bank_account_header">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.bank_account_header"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('bank_accunt_header')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
@@ -404,15 +328,13 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.bank_account">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.bank_account"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('bank_account')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
@@ -434,15 +356,13 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.address">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.address"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('address')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
@@ -464,15 +384,13 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.activity">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.activity"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('activity')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
@@ -498,15 +416,13 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.license_number">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.license_number"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('license_number')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
@@ -528,15 +444,13 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.password">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.password"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('password')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
@@ -562,15 +476,13 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.confirm_password">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.confirm_password"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('confirm_password')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
@@ -596,22 +508,23 @@ onMounted(async () => {
             </p>
 
             <!-- backend validations -->
-            <span v-if="providerBackendErrors.personal_id">
-              <p
-                class="form-text text-danger"
-                v-for="(error, i) in providerBackendErrors.personal_id"
-                :key="i"
-              >
-                {{ error }}
-              </p>
-            </span>
+            <p
+              v-for="(error, i) in getFieldErrors('personal_id')"
+              :key="`backend-${i}`"
+              class="form-text text-danger"
+            >
+              {{ error }}
+            </p>
           </div>
         </div>
 
         <!-- buttons -->
         <div>
-          <input type="submit" class="btn btn-sm btn-primary" value="Guardar" />
-          <button class="btn btn-sm btn-secondary" @click="goBack()">Cancelar</button>
+          <button type="submit" class="btn btn-sm btn-primary" :disabled="isSaving">
+            <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
+            {{ !provider.id ? 'Guardar' : 'Actualizar' }}
+          </button>
+          <button class="btn btn-sm btn-secondary" @click="handleGoBack">Cancelar</button>
         </div>
       </form>
     </div>
