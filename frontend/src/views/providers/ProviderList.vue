@@ -5,59 +5,81 @@ import { ref, onMounted } from 'vue'
 // app
 import { providerService } from '../../services/providerService'
 import ProviderListMenu from '../../components/providers/menus/ProviderListMenu.vue'
-import { errorHandler } from '../../utils/errors/errorHandler.js'
+import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
+
+const {
+  items: providers,
+  currentPage,
+  isLoading,
+  hasSearched,
+  searchTerm,
+  errorMessage,
+  showPrevButton,
+  showNextButton,
+  loadItems,
+  handleSearch,
+  loadNextItems,
+  loadPrevItems,
+  clearSearch
+} = usePaginationSearch({
+  fetchFunction: providerService.listProvider,
+  searchFunction: providerService.searchProviders,
+  itemName: 'Prestadores',
+  gender: 'm'
+})
 
 // reactive objects
-const providers = ref([])
+// const providers = ref([])
 
-const currentPage = ref(1)
-const showNextButton = ref(false)
-const showPrevButton = ref(false)
+// const currentPage = ref(1)
+// const showNextButton = ref(false)
+// const showPrevButton = ref(false)
 
-// loading state
-const isLoading = ref(false)
+// // loading state
+// const isLoading = ref(false)
 
-// errors
-const errorMessage = ref('')
+// // errors
+// const errorMessage = ref('')
 
-// methods
-const getProviders = async () => {
-  try {
-    isLoading.value = true
+// // methods
+// const getProviders = async () => {
+//   try {
+//     isLoading.value = true
 
-    const resp = (await providerService.listProvider(currentPage.value)).data
+//     const resp = (await providerService.listProvider(currentPage.value)).data
 
-    showNextButton.value = false
-    if (resp.next) {
-      showNextButton.value = true
-    }
+//     showNextButton.value = false
+//     if (resp.next) {
+//       showNextButton.value = true
+//     }
 
-    showPrevButton.value = false
-    if (resp.previous) {
-      showPrevButton.value = true
-    }
+//     showPrevButton.value = false
+//     if (resp.previous) {
+//       showPrevButton.value = true
+//     }
 
-    providers.value = resp.results
-  } catch (error) {
-    errorHandler(error, errorMessage, 'Prestador', 'm')
-  } finally {
-    isLoading.value = false
-  }
-}
+//     providers.value = resp.results
+//   } catch (error) {
+//     errorHandler(error, errorMessage, 'Prestador', 'm')
+//   } finally {
+//     isLoading.value = false
+//   }
+// }
 
-const loadNextItems = () => {
-  currentPage.value += 1
-  getProviders()
-}
+// const loadNextItems = () => {
+//   currentPage.value += 1
+//   getProviders()
+// }
 
-const loadPrevItems = () => {
-  currentPage.value -= 1
-  getProviders()
-}
+// const loadPrevItems = () => {
+//   currentPage.value -= 1
+//   getProviders()
+// }
 
 // lifecycle
 onMounted(async () => {
-  getProviders()
+  // getProviders()
+  await loadItems(1, '')
 })
 </script>
 
