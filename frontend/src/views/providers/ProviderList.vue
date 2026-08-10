@@ -7,6 +7,7 @@ import { providerService } from '../../services/providerService'
 import ProviderListMenu from '../../components/providers/menus/ProviderListMenu.vue'
 import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
 
+// pagination composable
 const {
   items: providers,
   currentPage,
