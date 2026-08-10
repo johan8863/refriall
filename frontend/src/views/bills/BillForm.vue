@@ -19,11 +19,10 @@ import { customerService } from '../../services/customerService'
 import { orderService } from '../../services/orderService'
 import { providerService } from '../../services/providerService'
 import { useCheckAllCheckboxes } from '../../composables/CheckAllCheckboxesComposable'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
-import { useRouting } from '../../composables/routingFunctions.js'
+import { useForm } from '../../composables/useForm.js'
 
-// main reactive object
-const bill = ref({
+// main bill object to be used in composable
+const initialData = {
   id: null,
   customer: null,
   currency: null,
@@ -41,7 +40,7 @@ const bill = ref({
   customer_personal_id: '',
   checked_by: '',
   aproved_by: ''
-})
+}
 
 // reactive objects to be rendered in form
 const customers = ref([])
@@ -53,36 +52,16 @@ const billProvider = ref(null)
 const billCustomer = ref(null)
 
 // routes utilities and handlers
-const router = useRouter()
 const route = useRoute()
-
-const { goBack } = useRouting()
-
-const handleGoBack = () => {
-  try {
-    goBack('bills', 'bills_detail', bill.value.id)
-  } catch (error) {
-    console.error(error)
-  }
-}
 
 // loading status
 // currencies allways will be loaded because they are
 // the starting point in the bill form
 const isLoadingCurrencies = ref(false)
-// isLoadingData is only meant for update case,
-// on create, the data will be fetched as the form
-// is being filled
-const isLoadingData = ref(false)
 // create form loading status
 const isLoadingProvider = ref(false)
 const isLoadingCustomer = ref(false)
 const isLoadingOrders = ref(false)
-
-// composable errors objects
-const { errorMessage, backendErrors, handleError, getFieldErrors, clearErrors } = useErrorHandler({
-  objectName: 'Factura'
-})
 
 // custom rules
 const atLeastOneOrder = () => bill.value.orders.length > 0
@@ -112,36 +91,31 @@ const rules = {
   }
 }
 
-// vuelidate object
-const v$ = useVuelidate(rules, bill)
+const {
+  formData: bill,
+  isLoading: isLoadingData,
+  isSaving,
+  errorMessage,
+  backendErrors,
+  v$,
+  loadData,
+  handleSubmit,
+  handleGoBack,
+  clearErrors,
+  getFieldErrors
+} = useForm({
+  initialData,
+  rules,
+  service: billService,
+  objectName: 'Factura',
+  createMethod: 'postBill',
+  updateMethod: 'putBill',
+  detailMethod: 'getForUpdate',
+  listView: 'bills',
+  detailView: 'bills_detail'
+})
 
 /* methods */
-
-/*
- * Handles form submission to create or update a bill
- */
-const handleSubmit = async () => {
-  // vuelidate validations
-  if (await v$.value.$validate()) {
-    try {
-      // update or create related to bill.value.id
-      const isUpdate = !!bill.value.id
-      const method = isUpdate ? billService.putBill(bill.value) : billService.postBill(bill.value)
-
-      // on success return to customer detail view
-      const { data } = await method
-      router.push({ name: 'bills_detail', params: { id: data.id } })
-    } catch (error) {
-      console.error('General errors:', { error })
-      handleError(error)
-    }
-  } else {
-    // always log vuelidate errors
-    // just in case an unexpected behavior
-    console.error('Vuelidate errors:', v$.value.$errors)
-    return
-  }
-}
 
 /*
  * Handles insertion of non existing providers
@@ -273,19 +247,8 @@ const ordersFromCustomer = async () => {
 /*
  * Loads required data to pre populate bill edition form
  */
-const loadData = async (billID) => {
-  // start loading state
-  isLoadingData.value = true
-
-  // clear errors
-  clearErrors()
-
+const loadBillFormData = async () => {
   try {
-    // we first need to charge data into the bill object
-    // in order to prvide arguments to the rest of the services
-    const { data } = await billService.getForUpdate(billID)
-    bill.value = data
-
     // load the rest of the data needed to populate the form
     const [
       { data: respProviders },
@@ -354,6 +317,7 @@ onMounted(async () => {
     const id = route.params.id
     if (id) {
       await loadData(id)
+      await loadBillFormData()
     }
   } catch (error) {
     console.error('General errors:', { error })
@@ -825,7 +789,8 @@ onMounted(async () => {
             the order in the ternary operator is due to the fact that 
             this form is more often used to create than to update 
           -->
-          <button type="submit" class="btn btn-sm btn-primary">
+          <button type="submit" class="btn btn-sm btn-primary" :disabled="isSaving">
+            <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ !bill.id ? 'Guardar' : 'Actualizar' }}
           </button>
           <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
