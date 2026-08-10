@@ -28,57 +28,8 @@ const {
   gender: 'm'
 })
 
-// reactive objects
-// const providers = ref([])
-
-// const currentPage = ref(1)
-// const showNextButton = ref(false)
-// const showPrevButton = ref(false)
-
-// // loading state
-// const isLoading = ref(false)
-
-// // errors
-// const errorMessage = ref('')
-
-// // methods
-// const getProviders = async () => {
-//   try {
-//     isLoading.value = true
-
-//     const resp = (await providerService.listProvider(currentPage.value)).data
-
-//     showNextButton.value = false
-//     if (resp.next) {
-//       showNextButton.value = true
-//     }
-
-//     showPrevButton.value = false
-//     if (resp.previous) {
-//       showPrevButton.value = true
-//     }
-
-//     providers.value = resp.results
-//   } catch (error) {
-//     errorHandler(error, errorMessage, 'Prestador', 'm')
-//   } finally {
-//     isLoading.value = false
-//   }
-// }
-
-// const loadNextItems = () => {
-//   currentPage.value += 1
-//   getProviders()
-// }
-
-// const loadPrevItems = () => {
-//   currentPage.value -= 1
-//   getProviders()
-// }
-
 // lifecycle
 onMounted(async () => {
-  // getProviders()
   await loadItems(1, '')
 })
 </script>
@@ -109,26 +60,24 @@ onMounted(async () => {
         <!-- results -->
         <div v-else class="col-md-4">
           <div v-if="providers.length > 0">
-            <div id="tableContainer" style="height: 460px">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Nombre</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="provider in providers" :key="provider.id">
-                    <td>
-                      <router-link
-                        v-if="provider.id"
-                        :to="{ name: 'providers_detail', params: { id: provider.id } }"
-                        >{{ provider.first_name }}</router-link
-                      >
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="provider in providers" :key="provider.id">
+                  <td>
+                    <router-link
+                      v-if="provider.id"
+                      :to="{ name: 'providers_detail', params: { id: provider.id } }"
+                      >{{ provider.first_name }}</router-link
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
             <!-- buttons -->
             <div>
