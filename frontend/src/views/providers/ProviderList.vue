@@ -6,6 +6,7 @@ import { ref, onMounted } from 'vue'
 import { providerService } from '../../services/providerService'
 import ProviderListMenu from '../../components/providers/menus/ProviderListMenu.vue'
 import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
+import ProviderListTable from '../../components/providers/ProviderListTable.vue'
 
 // pagination composable
 const {
@@ -61,7 +62,7 @@ onMounted(async () => {
         <!-- results -->
         <div v-else class="col-md-4">
           <div v-if="providers.length > 0">
-            <table class="table">
+            <!-- <table class="table">
               <thead>
                 <tr>
                   <th scope="col">Nombre</th>
@@ -78,8 +79,9 @@ onMounted(async () => {
                   </td>
                 </tr>
               </tbody>
-            </table>
+            </table> -->
 
+            <provider-list-table :providers="providers" />
             <!-- buttons -->
             <div>
               <button v-if="showNextButton" class="btn btn-sm btn-primary" @click="loadNextItems()">
