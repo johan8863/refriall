@@ -7,6 +7,7 @@ import { providerService } from '../../services/providerService'
 import ProviderListMenu from '../../components/providers/menus/ProviderListMenu.vue'
 import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
 import ProviderListTable from '../../components/providers/ProviderListTable.vue'
+import ListPagination from '../../components/common/ListPagination.vue'
 
 // pagination composable
 const {
@@ -62,24 +63,28 @@ onMounted(async () => {
         <!-- results -->
         <div v-else class="col-md-4">
           <div v-if="providers.length > 0">
+            <!-- table list -->
             <provider-list-table :providers="providers" />
-            <!-- buttons -->
-            <div>
-              <button v-if="showNextButton" class="btn btn-sm btn-primary" @click="loadNextItems()">
-                Siguiente
-              </button>
 
-              <button v-if="showPrevButton" class="btn btn-sm btn-primary" @click="loadPrevItems()">
-                Anterior
-              </button>
-            </div>
+            <!-- pagination list -->
+            <list-pagination
+              :show-prev-button="showPrevButton"
+              :show-next-button="showNextButton"
+              :is-loading="isLoading"
+              :current-page="currentPage"
+              @on-load-prev-items="loadPrevItems"
+              @on-load-next-items="loadNextItems"
+            />
           </div>
           <!-- in case no providers -->
           <div v-else>
             <p class="lead text-center">Inserte un Proveedor.</p>
           </div>
+          <!-- end results -->
         </div>
       </div>
+      <!-- end main content -->
     </div>
+    <!-- end outer row -->
   </div>
 </template>
