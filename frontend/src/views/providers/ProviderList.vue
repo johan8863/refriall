@@ -62,25 +62,6 @@ onMounted(async () => {
         <!-- results -->
         <div v-else class="col-md-4">
           <div v-if="providers.length > 0">
-            <!-- <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Nombre</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="provider in providers" :key="provider.id">
-                  <td>
-                    <router-link
-                      v-if="provider.id"
-                      :to="{ name: 'providers_detail', params: { id: provider.id } }"
-                      >{{ provider.first_name }}</router-link
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table> -->
-
             <provider-list-table :providers="providers" />
             <!-- buttons -->
             <div>
