@@ -1,6 +1,6 @@
 <script setup>
 // vue
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { onMounted, ref } from 'vue'
 
 // third
@@ -10,41 +10,20 @@ import { useVuelidate } from '@vuelidate/core'
 // app
 import ItemFormMenu from '../../components/items/menus/ItemFormMenu.vue'
 import { itemService } from '../../services/itemService'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
-import { useRouting } from '../../composables/routingFunctions.js'
+import { useForm } from '../../composables/useForm.js'
 
-// item object to be created or updated
-const item = ref({
+// main item object to used in composable
+const initialData = {
   id: null,
   code: '',
   name: '',
   item_type: '',
   measurement: '',
   price: 0
-})
-
-// useFormErrorHandler refs
-const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
-  objectName: 'Equipo',
-  gender: 'm'
-})
-
-// router utilities and handlers
-const router = useRouter()
-const route = useRoute()
-
-const { goBack } = useRouting()
-
-const handleGoBack = () => {
-  try {
-    goBack('items', 'items_detail', item.value.id)
-  } catch (error) {
-    console.error(error)
-  }
 }
 
-// loading state
-const isLoading = ref(false)
+// router utilities and handlers
+const route = useRoute()
 
 // vuelidate rules
 const rules = {
@@ -66,53 +45,33 @@ const rules = {
   }
 }
 
-// vuelidate object
-const v$ = useVuelidate(rules, item)
-
-// methods
-const handleSubmit = async () => {
-  if (await v$.value.$validate()) {
-    try {
-      // update or create depending on item id
-      const isUpdate = !!item.value.id
-      const method = isUpdate ? itemService.putItem(item.value) : itemService.postItem(item.value)
-
-      // on success redirect t item detail view
-      const { data } = await method
-      router.push({
-        name: 'items_detail',
-        params: { id: data.id }
-      })
-    } catch (error) {
-      console.error('General errors:', { error })
-      handleError(error)
-    }
-  } else {
-    // always log vuelidate errors
-    // just in case an unexpected behavior
-    console.error('Validation errors:', v$.value.$errors)
-    return
-  }
-}
+// useForm composable
+const {
+  formData: item,
+  isLoading,
+  isSaving,
+  errorMessage,
+  backendErrors,
+  v$,
+  loadData,
+  handleSubmit,
+  handleGoBack,
+  getFieldErrors
+} = useForm({
+  initialData,
+  rules,
+  service: itemService,
+  objectName: 'Equipo',
+  gender: 'm',
+  createMethod: 'postItem',
+  updateMethod: 'putItem',
+  detailMethod: 'detailItem',
+  listView: 'items',
+  detailView: 'items_detail'
+})
 
 // onMounted cycle to get an item object if editing intended
-onMounted(async () => {
-  const id = route.params.id
-  if (id) {
-    try {
-      // start loading state
-      isLoading.value = true
-      // getting item data from backend
-      const response = await itemService.getItem(id)
-      item.value = response.data
-    } catch (error) {
-      errorHandler(error, errorMessage, 'Artículo', 'm')
-    } finally {
-      // stop loading state
-      isLoading.value = false
-    }
-  }
-})
+onMounted(async () => loadData(route.params.id))
 </script>
 
 <template>
@@ -293,7 +252,8 @@ onMounted(async () => {
             the order in the ternary operator is due to the fact that 
             this form is more often used to create than to update 
           -->
-          <button type="submit" class="btn btn-sm btn-primary">
+          <button type="submit" class="btn btn-sm btn-primary" :disabled="isSaving">
+            <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ !item.id ? 'Guardar' : 'Actualizar' }}
           </button>
 
