@@ -10,11 +10,10 @@ import { useVuelidate } from '@vuelidate/core'
 // app
 import CustomerFormMenu from '../../components/customers/menus/CustomerFormMenu.vue'
 import { customerService } from '../../services/customerService'
-import { useFormErrorHandler } from '../../composables/useErrorFormHandler.js'
-import { useRouting } from '../../composables/routingFunctions.js'
+import { useForm } from '../../composables/useForm.js'
 
-// customer object to be created or updated
-const customer = ref({
+// main customer object to be used in composable
+const initialData = {
   id: null,
   customer_type: 'es',
   name: '',
@@ -25,26 +24,10 @@ const customer = ref({
   client_nit: '',
   bank_account_header: '',
   bank_account: ''
-})
-
-// composable errors objects
-const { errorMessage, backendErrors, handleError, getFieldErrors } = useFormErrorHandler({
-  objectName: 'Cliente',
-  gender: 'm'
-})
-
-// router utilities and handlers
-const router = useRouter()
-const route = useRoute()
-
-const { goBack } = useRouting()
-
-const handlegGoBack = () => {
-  goBack('customers', 'customers_detail', customer.value.id)
 }
 
-// loading state
-const isLoading = ref(false)
+// router utilities and handlers
+const route = useRoute()
 
 // vuelidate rules
 const rules = {
@@ -74,58 +57,32 @@ const rules = {
   }
 }
 
-// vuelidate object
-const v$ = useVuelidate(rules, customer)
-
-const handleSubmit = async () => {
-  // vuelidate validations
-  if (!(await v$.value.$validate())) {
-    // always log vuelidate errors
-    // just in case an unexpected behavior
-    console.error('Validation errors:', v$.value.$errors)
-    return
-  }
-
-  try {
-    // update or create related to customer.id
-    const isUpdate = !!customer.value.id
-    const method = isUpdate
-      ? customerService.putCustomer(customer.value)
-      : customerService.postCustomer(customer.value)
-
-    // on success return to customer detail view
-    const { data } = await method
-    router.push({ name: 'customers_detail', params: { id: data.id } })
-  } catch (error) {
-    handleError(error)
-  }
-}
-
-const getCustomerIfID = async () => {
-  // get route id to decide if fetching or not
-  // a customer object
-  const id = route.params.id
-  if (!id) return
-
-  // start loading state
-  isLoading.value = true
-
-  try {
-    // fetching data from backend
-    const { data } = await customerService.detailCustomer(id)
-    customer.value = data
-  } catch (error) {
-    // error handling
-    console.error('General errors:', { error })
-    handleError(error)
-  } finally {
-    // stop loading state
-    isLoading.value = false
-  }
-}
+const {
+  formData: customer,
+  isLoading,
+  isSaving,
+  errorMessage,
+  backendErrors,
+  v$,
+  loadData,
+  handleSubmit,
+  handleGoBack,
+  getFieldErrors
+} = useForm({
+  initialData,
+  rules,
+  service: customerService,
+  objectName: 'Cliente',
+  gender: 'm',
+  createMethod: 'postCustomer',
+  updateMethod: 'putCustomer',
+  detailMethod: 'detailCustomer',
+  listView: 'customers',
+  detailView: 'customers_detail'
+})
 
 // lifecycle
-onMounted(async () => await getCustomerIfID())
+onMounted(async () => await loadData(route.params.id))
 </script>
 
 <template>
@@ -373,15 +330,16 @@ onMounted(async () => await getCustomerIfID())
           </p>
         </div>
         <!-- buttons -->
-        <div>
-          <!-- 
+        <!-- 
             the order in the ternary operator is due to the fact that 
             this form is more often used to create than to update 
           -->
-          <button type="submit" class="btn btn-sm btn-primary">
+        <div>
+          <button type="submit" class="btn btn-sm btn-primary" :disabled="isSaving">
+            <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ !customer.id ? 'Guardar' : 'Actualizar' }}
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" @click="handlegGoBack">
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
             Cancelar
           </button>
         </div>
