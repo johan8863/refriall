@@ -95,10 +95,10 @@ onMounted(async () => {
       <div class="row">
         <div v-if="isLoading" class="text-center my-4">
           <!-- loading state -->
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Cargando...</span>
+          <div class="spinner-border text-primary" role="status"></div>
+          <div>
+            <span>Cargando...</span>
           </div>
-          <p class="mt-2">Buscando equipos...</p>
         </div>
 
         <!-- error message -->
