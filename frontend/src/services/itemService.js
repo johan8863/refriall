@@ -27,7 +27,6 @@ export const itemService = {
 
     return apiBase.get(urlItem, { params })
   },
-  getItem: (id) => apiBase.get(`${urlItem}/${id}/`),
   detailItem: (id) => apiBase.get(`${urlItem}/${id}/`),
   postItem: (item) => apiBase.post(`${urlItem}/`, item),
   putItem: (item) => apiBase.put(`${urlItem}/${item.id}/`, item),
