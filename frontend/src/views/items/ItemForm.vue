@@ -71,7 +71,7 @@ const {
 })
 
 // onMounted cycle to get an item object if editing intended
-onMounted(async () => loadData(route.params.id))
+onMounted(async () => await loadData(route.params.id))
 </script>
 
 <template>
