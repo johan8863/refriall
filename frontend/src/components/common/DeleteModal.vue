@@ -136,6 +136,7 @@ const iconClass = `bi bi-exclamation-${props.variant === 'danger' ? 'triangle' :
             <i class="bi bi-x-circle"></i> Cancelar
           </button>
           <button
+            v-if="!errorMessage"
             type="button"
             :class="`btn btn-${variant}`"
             @click="confirmDelete"
