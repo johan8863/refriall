@@ -128,14 +128,6 @@ const iconClass = `bi bi-exclamation-${props.variant === 'danger' ? 'triangle' :
         <!-- Footer -->
         <div class="modal-footer">
           <button
-            type="button"
-            class="btn btn-secondary"
-            @click="closeModal"
-            :disabled="isDeleting"
-          >
-            <i class="bi bi-x-circle"></i> Cancelar
-          </button>
-          <button
             v-if="!errorMessage"
             type="button"
             :class="`btn btn-${variant}`"
@@ -149,6 +141,14 @@ const iconClass = `bi bi-exclamation-${props.variant === 'danger' ? 'triangle' :
             ></span>
             <i v-else class="bi bi-trash"></i>
             {{ isDeleting ? 'Eliminando...' : 'Eliminar' }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            @click="closeModal"
+            :disabled="isDeleting"
+          >
+            <i class="bi bi-x-circle"></i> Cancelar
           </button>
         </div>
       </div>
