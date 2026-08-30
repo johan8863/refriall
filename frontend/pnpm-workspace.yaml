@@ -1,11 +1,3 @@
 allowBuilds:
   core-js: true
   vue-demi: true
-
-supportedArchitectures:
-  os:
-    - linux
-    - darwin
-    - win32
-  cpu:
-    - x64
