@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // vue
 import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -9,6 +9,21 @@ import KitDetailMenu from '../../components/kits/menus/KitDetailMenu.vue'
 import DeleteModal from '../../components/common/DeleteModal.vue'
 import { useResourceLoader } from '../../composables/useResourceLoader.js'
 import { useErrorHandler } from '../../composables/useErrorHandler.js'
+
+// hello dear typescript...
+// this is the first fragment of typescript code to test the dev
+// dependencies installed
+import { sum, greet, type User } from '../../utils/helloTS'
+
+const result = sum(4, 7)
+const hello = greet('Gisela')
+const johan: User = {
+  id: 1,
+  firstName: 'Johan',
+  email: 'jtravieso8863@gmail.com'
+}
+
+// refriall code
 
 // Routing
 const route = useRoute()
