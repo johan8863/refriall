@@ -1,4 +1,4 @@
-export interface ApiResponse<T> {
+export interface PaginatedResponse<T> {
   data: T[]
   count: number
   next: string | null
