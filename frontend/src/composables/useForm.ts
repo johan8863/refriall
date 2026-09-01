@@ -1,33 +1,39 @@
-// composables/useForm.js
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { useFormErrorHandler } from './useErrorFormHandler.js'
-import { useRouting } from './routingFunctions.js'
+import { useFormErrorHandler } from './useErrorFormHandler'
+import { useRouting } from './routingFunctions'
+import type { Kit } from '../views/kits/types'
+
+interface Service<T> {
+  create?: (data: any) => Promise<{ data: T }>
+  update?: (data: any) => Promise<{ data: T }>
+  detail?: (id: number | string) => Promise<{ data: T }>
+  [key: string]: any
+}
+
+interface UseFormOptions<T> {
+  initialData: T
+  rules: any
+  service: Service<T>
+  objectName?: string
+  gender?: 'm' | 'f'
+  createMethod?: string
+  updateMethod?: string
+  detailMethod?: string
+  listView?: string
+  detailView?: string
+}
 
 /**
  * Composable for handling forms with validation and CRUD operations
- *
- * @param {Object} options - Configuration options
- * @param {Object} options.initialData - Initial form data
- * @param {Object} options.rules - Vuelidate validation rules
- * @param {Object} options.service - Service object with CRUD methods
- * @param {string} options.objectName - Name of the object (for error messages)
- * @param {string} options.gender - Gender of the object ('m' or 'f')
- * @param {string} options.createMethod - Name of the create method (default: 'create')
- * @param {string} options.updateMethod - Name of the update method (default: 'update')
- * @param {string} options.detailMethod - Name of the detail method (default: 'detail')
- * @param {string} options.listView - Name of the list view to use in goBack
- * @param {string} options.detailView - Name of the detail view to use in goBack and form redirection
  */
-
-// destructure options
-export const useForm = (options = {}) => {
+export const useForm = <T extends Record<string, any>>(options: UseFormOptions<T>) => {
   const {
-    initialData = {},
+    initialData,
     rules = {},
     service,
     objectName = 'Elemento',
-    gender = 'm',
+    gender = 'm' as 'm' | 'f',
     createMethod = 'create',
     updateMethod = 'update',
     detailMethod = 'detail',
@@ -35,12 +41,12 @@ export const useForm = (options = {}) => {
     detailView
   } = options
 
-  // refs
+  // Refs
   const formData = ref({ ...initialData })
-  const isLoading = ref(false)
-  const isSaving = ref(false)
+  const isLoading: Ref<boolean> = ref(false)
+  const isSaving: Ref<boolean> = ref(false)
 
-  // error handling
+  // Error handling
   const { errorMessage, backendErrors, handleError, getFieldErrors, clearErrors } =
     useFormErrorHandler({
       objectName,
@@ -49,16 +55,20 @@ export const useForm = (options = {}) => {
 
   const { goBack, goToDetail } = useRouting()
 
-  const handleGoBack = () => goBack(listView, detailView, formData.value.id)
+  const handleGoBack = (): void => {
+    if (listView && detailView) {
+      goBack(listView, detailView, formData.value.id)
+    }
+  }
 
   const v$ = useVuelidate(rules, formData)
 
   /**
    * Load data for editing
-   * @param {number|string} id - ID of the record to load
-   * @param {Function} fetchFunction - Optional custom fetch function
+   * @param id - ID of the record to load
+   * @param fetchFunction - Optional custom fetch function
    */
-  const loadData = async (id, fetchFunction = null) => {
+  const loadData = async (id: number | string, fetchFunction: any = null): Promise<void> => {
     if (!id) return
     isLoading.value = true
     clearErrors()
@@ -79,9 +89,8 @@ export const useForm = (options = {}) => {
 
   /**
    * Submit the form (create or update)
-   * @returns {Promise<Object>} Response data
    */
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     // Validate form
     if (!(await v$.value.$validate())) {
       console.error('Validation errors:', v$.value.$errors)
@@ -100,8 +109,10 @@ export const useForm = (options = {}) => {
       }
 
       const { data } = await method(formData.value)
-      // go to object detail view on success operatin
-      goToDetail(detailView, data.id)
+      // Navigate to detail view on success
+      if (detailView) {
+        goToDetail(detailView, data.id)
+      }
     } catch (error) {
       handleError(error)
     } finally {
@@ -112,7 +123,7 @@ export const useForm = (options = {}) => {
   /**
    * Reset form to initial state
    */
-  const reset = () => {
+  const reset = (): void => {
     formData.value = { ...initialData }
     clearErrors()
   }
