@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // vue
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
@@ -9,19 +9,20 @@ import { required, helpers } from '@vuelidate/validators'
 // app
 import KitFormMenu from '../../components/kits/menus/KitFormMenu.vue'
 import { kitService } from '../../services/kitService'
-import { useForm } from '../../composables/useForm.js'
+import { useForm } from '../../composables/useForm'
+import type { Kit } from './types'
 
-// routing utilities and handlers
+// Routing
 const route = useRoute()
 
-// rules to manage front validations
+// Validation rules
 const rules = {
   name: {
-    required: helpers.withMessage('El nombre es requierido.', required)
+    required: helpers.withMessage('El nombre es requerido.', required)
   }
 }
 
-// useForm functions and composables
+// ✅ useForm with Kit type
 const {
   formData: kit,
   isLoading,
@@ -33,9 +34,9 @@ const {
   handleSubmit,
   handleGoBack,
   getFieldErrors
-} = useForm({
+} = useForm<Kit>({
   initialData: {
-    id: null,
+    id: 0,
     name: ''
   },
   rules,
@@ -49,9 +50,9 @@ const {
   detailView: 'kits_detail'
 })
 
-// lifecycle
+// Lifecycle
 onMounted(async () => {
-  await loadData(route.params.id)
+  await loadData(route.params.id as string)
 })
 </script>
 
@@ -59,7 +60,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <kit-form-menu />
+      <KitFormMenu />
     </div>
 
     <!-- main content -->
@@ -71,10 +72,11 @@ onMounted(async () => {
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
       </div>
     </div>
+
     <!-- displaying kit data -->
     <div v-else class="col-md-4">
       <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="backendErrors.non_field_errors">
+      <div v-if="backendErrors.non_field_errors">
         <p
           class="form-text text-danger"
           v-for="(error, index) in backendErrors.non_field_errors"
@@ -82,13 +84,13 @@ onMounted(async () => {
         >
           {{ error }}
         </p>
-      </span>
+      </div>
+
       <!-- backend general errors -->
-      <span v-if="errorMessage">
-        <p class="form-text text-danger">
-          {{ errorMessage }}
-        </p>
-      </span>
+      <div v-if="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
       <!-- form -->
       <form @submit.prevent="handleSubmit">
         <!-- name control -->
@@ -102,10 +104,12 @@ onMounted(async () => {
             v-model.trim="kit.name"
             @blur="v$.name.$touch"
           />
+
           <!-- frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.name.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
+
           <!-- backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('name')"
@@ -115,12 +119,9 @@ onMounted(async () => {
             {{ error }}
           </p>
         </div>
+
         <!-- buttons -->
         <div>
-          <!-- 
-            the order in the ternary operator is due to the fact that 
-            this form is more often used to create than to update 
-          -->
           <button type="submit" class="btn btn-sm btn-primary" :disabled="isSaving">
             <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ !kit.id ? 'Guardar' : 'Actualizar' }}
