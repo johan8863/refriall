@@ -1,4 +1,13 @@
-import { ref, reactive } from 'vue'
+import { ref, reactive, type Ref, type Reactive } from 'vue'
+
+interface UseErrorHandlerOptions {
+  objectName?: string
+  gender?: 'f' | 'm'
+}
+
+interface BackendErrors {
+  [key: string]: string[]
+}
 
 /**
  * Composable to handle errors centrally
@@ -6,16 +15,16 @@ import { ref, reactive } from 'vue'
  * @param {string} options.objectName - Object name to the message
  * @param {string} options.gender - Gender ('m' o 'f')
  */
-export const useErrorHandler = (options = {}) => {
+export const useErrorHandler = (options: UseErrorHandlerOptions = {}) => {
   const { objectName = 'Objeto', gender = 'f' } = options
 
   // errors status
-  const errorMessage = ref(null)
-  const backendErrors = reactive({})
-  const hasErrors = ref(false)
+  const errorMessage: Ref<string | null> = ref(null)
+  const backendErrors: Reactive<BackendErrors> = reactive({})
+  const hasErrors: Ref<boolean> = ref(false)
 
   // clear errors
-  const clearErrors = () => {
+  const clearErrors = (): void => {
     errorMessage.value = null
     Object.keys(backendErrors).forEach((key) => {
       delete backendErrors[key]
@@ -24,7 +33,7 @@ export const useErrorHandler = (options = {}) => {
   }
 
   // handle response errors
-  const handleResponseError = (error) => {
+  const handleResponseError = (error: any): void => {
     clearErrors()
     hasErrors.value = true
 
@@ -62,8 +71,8 @@ export const useErrorHandler = (options = {}) => {
         break
 
       case 404:
-        const genderMap = { m: 'o', f: 'a' }
-        errorMessage.value = `${objectName} no encontrad${genderMap[gender] || 'o'}.`
+        const genderMap: Record<'m' | 'f', string> = { m: 'o', f: 'a' }
+        errorMessage.value = `${objectName} no encontrad${genderMap[gender as 'm' | 'f'] || 'o'}.`
         break
 
       case 500:
@@ -76,18 +85,18 @@ export const useErrorHandler = (options = {}) => {
   }
 
   // handle any error
-  const handleError = (error) => {
+  const handleError = (error: any): void => {
     console.error('Error caught:', error)
     handleResponseError(error)
   }
 
   // verufy if backend errors on specific fields
-  const hasFieldError = (fieldName) => {
+  const hasFieldError = (fieldName: string): boolean => {
     return !!(backendErrors[fieldName] && backendErrors[fieldName].length > 0)
   }
 
   // get backend errors from specific field
-  const getFieldErrors = (fieldName) => {
+  const getFieldErrors = (fieldName: string): string[] => {
     return backendErrors[fieldName] || []
   }
 
