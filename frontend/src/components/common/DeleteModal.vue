@@ -1,70 +1,62 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 
-const props = defineProps({
-  show: {
-    type: Boolean,
-    required: true,
-    default: false
-  },
-  title: {
-    type: String,
-    required: true,
-    default: 'Confirmar Eliminación'
-  },
-  itemName: {
-    type: String,
-    required: true,
-    default: 'Elemento'
-  },
-  itemId: {
-    type: [String, Number],
-    default: null
-  },
-  itemIdentifier: {
-    type: String,
-    default: ''
-  },
-  isDeleting: {
-    type: Boolean,
-    default: false
-  },
-  errorMessage: {
-    type: String,
-    default: null
-  },
-  itemFields: {
-    type: Array,
-    default: () => []
-  },
-  variant: {
-    type: String,
-    default: 'danger',
-    validator: (value) => ['danger', 'warning', 'info'].includes(value)
-  }
+interface Field {
+  key: string
+  label: string
+  value: string | number | null | undefined
+}
+
+interface Props {
+  show: boolean
+  title?: string
+  itemName?: string
+  itemId?: string | number | null
+  itemIdentifier?: string
+  isDeleting?: boolean
+  errorMessage?: string | null
+  itemFields?: Field[]
+  variant?: 'danger' | 'warning' | 'info'
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  show: false,
+  title: 'Confirmar Eliminación',
+  itemName: 'Elemento',
+  itemId: null,
+  itemIdentifier: '',
+  isDeleting: false,
+  itemFields: () => [],
+  variant: 'danger'
 })
 
-const emit = defineEmits(['update:show', 'confirm', 'cancel'])
+const emit = defineEmits<{
+  (e: 'update:show', value?: boolean): void
+  (e: 'confirm'): void
+  (e: 'cancel'): void
+}>()
 
 // Computed para controlar visibilidad
 const isVisible = computed({
   get: () => props.show,
-  set: (value) => emit('update:show', value)
+  set: (value: boolean) => emit('update:show', value)
 })
 
 // Methods
-const closeModal = () => {
+const closeModal = (): void => {
   isVisible.value = false
   emit('cancel')
 }
 
-const confirmDelete = () => {
+const confirmDelete = (): void => {
   emit('confirm')
 }
 
 // Computed classes
-const headerClass = `bg-${props.variant} text-white`
-const iconClass = `bi bi-exclamation-${props.variant === 'danger' ? 'triangle' : 'circle'}`
+const headerClass = computed(() => `bg-${props.variant} text-white`)
+const iconClass = computed(() =>
+  props.variant === 'danger' ? 'bi bi-exclamation-triangle' : 'bi bi-exclamation-circle'
+)
 </script>
 
 <template>
@@ -103,7 +95,7 @@ const iconClass = `bi bi-exclamation-${props.variant === 'danger' ? 'triangle' :
 
             <!-- Item info -->
             <div class="alert alert-warning">
-              <template v-if="itemFields.length > 0">
+              <template v-if="itemFields && itemFields.length > 0">
                 <p v-for="field in itemFields" :key="field.key" class="mb-1">
                   <strong>{{ field.label }}:</strong> {{ field.value || 'No especificado' }}
                 </p>
