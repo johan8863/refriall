@@ -1,5 +1,13 @@
-import { ref } from 'vue'
-import { useErrorHandler } from './useErrorHandler.js'
+import { ref, type Ref } from 'vue'
+import { useErrorHandler } from './useErrorHandler'
+
+interface UseResourceLoaderOptions<T> {
+  initialData?: T
+  objectName?: string
+  gender?: 'm' | 'f'
+  onSuccess?: (response: any) => void
+  onError?: (error: any) => void
+}
 
 /**
  * Composable for loading a single resource with built-in error handling
@@ -13,17 +21,20 @@ import { useErrorHandler } from './useErrorHandler.js'
  * @param {Function} options.onError - Callback when load fails
  * @returns {Object} Resource state and methods
  */
-export const useResourceLoader = (fetchFunction, options = {}) => {
+export const useResourceLoader = <T>(
+  fetchFunction: (params: any) => Promise<{ data: T }>,
+  options: UseResourceLoaderOptions<T> = {}
+) => {
   const {
-    initialData = null,
+    initialData = null as T,
     objectName = 'Recurso',
-    gender = 'm',
+    gender = 'm' as 'm' | 'f',
     onSuccess = null,
     onError = null
   } = options
 
   // State
-  const data = ref(initialData)
+  const data = ref(initialData as T)
   const isLoading = ref(false)
   const error = ref(null)
 
@@ -38,7 +49,7 @@ export const useResourceLoader = (fetchFunction, options = {}) => {
    * @param {*} params - Parameters to pass to fetchFunction
    * @returns {Promise<Object>} Response data
    */
-  const load = async (params) => {
+  const load = async (params: any): Promise<any> => {
     isLoading.value = true
     error.value = null
     clearErrors()
@@ -69,7 +80,7 @@ export const useResourceLoader = (fetchFunction, options = {}) => {
   /**
    * Reset the resource to initial state
    */
-  const reset = () => {
+  const reset = (): void => {
     data.value = initialData
     isLoading.value = false
     error.value = null
@@ -79,7 +90,7 @@ export const useResourceLoader = (fetchFunction, options = {}) => {
   /**
    * Check if the resource has data
    */
-  const hasData = () => {
+  const hasData = (): boolean => {
     return data.value !== null && data.value !== undefined
   }
 
