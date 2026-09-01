@@ -7,8 +7,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { kitService } from '../../services/kitService'
 import KitDetailMenu from '../../components/kits/menus/KitDetailMenu.vue'
 import DeleteModal from '../../components/common/DeleteModal.vue'
-import { useResourceLoader } from '../../composables/useResourceLoader.js'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { useResourceLoader } from '../../composables/useResourceLoader'
+import { useErrorHandler } from '../../composables/useErrorHandler'
 
 // hello dear typescript...
 // this is the first fragment of typescript code to test the dev
