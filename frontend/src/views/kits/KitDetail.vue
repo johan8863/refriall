@@ -4,6 +4,7 @@ import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
+import type { Kit } from './types'
 import { kitService } from '../../services/kitService'
 import KitDetailMenu from '../../components/kits/menus/KitDetailMenu.vue'
 import DeleteModal from '../../components/common/DeleteModal.vue'
@@ -48,7 +49,7 @@ const {
   isLoading,
   errorMessage,
   load: loadKit
-} = useResourceLoader(kitService.detailKit, {
+} = useResourceLoader<Kit>(kitService.detailKit, {
   initialData: {
     id: null,
     name: ''
@@ -62,7 +63,13 @@ const {
 
 // Computed for modal fields
 const deleteModalFields = computed(() => {
-  return [{ key: 'name', label: 'Nombre', value: kit.value?.name }]
+  return [
+    {
+      key: 'name',
+      label: 'Nombre',
+      value: kit.value?.name
+    }
+  ]
 })
 
 // Delete methods
