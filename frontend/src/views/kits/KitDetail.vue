@@ -96,9 +96,7 @@ const confirmDelete = async () => {
 }
 
 // Lifecycle
-onMounted(async () => {
-  await loadKit(route.params.id)
-})
+onMounted(async () => await loadKit(route.params.id))
 </script>
 
 <template>
