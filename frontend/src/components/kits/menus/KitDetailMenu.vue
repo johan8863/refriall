@@ -1,16 +1,16 @@
-<script setup>
-defineProps({
-  kit: {
-    type: Object,
-    required: true
-  },
-  isLoading: {
-    type: Boolean,
-    required: true
-  }
-})
+<script setup lang="ts">
+import type { Kit } from '../../../views/kits/types'
 
-defineEmits(['onDelete'])
+interface Props {
+  kit: Kit
+  isLoading: boolean
+}
+
+defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'onDelete'): void
+}>()
 </script>
 
 <template>
