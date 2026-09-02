@@ -7,9 +7,9 @@ import type { PaginatedResponse } from '../types/shared'
  */
 interface UsePaginationSearchOptions<T> {
   /** Function to fetch paginated data */
-  fetchFunction: (page: number) => Promise<{ data: PaginatedResponse<T> }>
+  fetchFunction: (page?: number, search?: string) => Promise<PaginatedResponse<T>>
   /** Function to search paginated data */
-  searchFunction: (search: string, page: number) => Promise<{ data: PaginatedResponse<T> }>
+  searchFunction: (search: string, page: number) => Promise<PaginatedResponse<T>>
   /** Name of the item (used in error messages) */
   itemName?: string
   /** Gender of the item ('m' for masculine, 'f' for feminine) */
