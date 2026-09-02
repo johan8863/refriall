@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // vue
 import { onMounted } from 'vue'
 
@@ -8,8 +8,13 @@ import KitsListTable from '../../components/kits/KitsListTable.vue'
 import KitListPagination from '../../components/kits/KitListPagination.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
 import KitListMenu from '../../components/kits/menus/KitListMenu.vue'
-import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
+import { usePaginationSearch } from '../../composables/usePaginationSearch'
+import type { Kit } from './types'
 
+/**
+ * Kit list view with pagination and search
+ * Uses usePaginationSearch composable for data fetching and state management
+ */
 const {
   items: kits,
   currentPage,
@@ -24,7 +29,7 @@ const {
   loadNextItems,
   loadPrevItems,
   clearSearch
-} = usePaginationSearch({
+} = usePaginationSearch<Kit>({
   fetchFunction: kitService.listKit,
   searchFunction: kitService.searchKits,
   itemName: 'Kit',
@@ -32,7 +37,7 @@ const {
   pageSize: 10
 })
 
-// lifecycle
+// Load initial data
 onMounted(async () => {
   await loadItems(1, '')
 })
@@ -47,7 +52,6 @@ onMounted(async () => {
 
     <!-- main content -->
     <div class="col-md-10">
-      <!-- main row content -->
       <div class="row">
         <div class="col-md-12 mt-2">
           <!-- search form row -->
