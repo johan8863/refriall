@@ -1,11 +1,12 @@
-<script setup>
-defineProps({
-  kits: {
-    type: Array,
-    required: true
-  }
-})
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import type { Kit } from '../../views/kits/types'
+
+defineProps<{
+  kits: Kit[]
+}>()
 </script>
+
 <template>
   <table class="table table-striped table-hover">
     <thead class="table-dark">
