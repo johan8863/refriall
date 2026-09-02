@@ -1,14 +1,16 @@
-<script setup>
+<script setup lang="ts">
 // vue
-import { onMounted, ref, computed } from 'vue'
+import { ref } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { currencyService } from '../../services/currencyService'
 import CurrencyDetailMenu from '../../components/currencies/menus/CurrencyDetailMenu.vue'
 import DeleteModal from '../../components/common/DeleteModal.vue'
-import { useResourceLoader } from '../../composables/useResourceLoader.js'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { useResourceLoader } from '../../composables/useResourceLoader'
+import { useErrorHandler } from '../../composables/useErrorHandler'
+import type { Currency } from './types'
 
 // Routing
 const route = useRoute()
@@ -33,11 +35,11 @@ const {
   isLoading,
   errorMessage,
   load: loadCurrency
-} = useResourceLoader(currencyService.detailCurrency, {
+} = useResourceLoader<Currency>(currencyService.detailCurrency, {
   initialData: {
-    id: null,
+    id: 0,
     name: '',
-    description: ''
+    description: null
   },
   objectName: 'Moneda',
   gender: 'f',
@@ -95,8 +97,6 @@ onMounted(async () => {
     </div>
 
     <!-- main content -->
-
-    <!-- loading currency data -->
     <div v-if="isLoading" class="col-md-4">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
         <span role="status" class="text-primary">Cargando datos... </span>
@@ -104,14 +104,12 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- error message -->
     <div v-else-if="errorMessage" class="col-md-4">
       <p class="form-text text-danger">
         {{ errorMessage }}
       </p>
     </div>
 
-    <!-- displaying currency data -->
     <div v-else class="col-md-4">
       <h3>{{ currency.name }}</h3>
       <hr />
