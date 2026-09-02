@@ -1,27 +1,31 @@
-<script setup>
+<script setup lang="ts">
 // vue
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 // app
 import { currencyService } from '../../services/currencyService'
 import CurrencyListMenu from '../../components/currencies/menus/CurrencyListMenu.vue'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { useErrorHandler } from '../../composables/useErrorHandler'
+import type { Currency } from './types'
 
-// main object
-const currencies = ref([])
-
-// loading status
+/**
+ * Currency list view - simple list without pagination
+ */
+const currencies = ref<Currency[]>([])
 const isLoading = ref(false)
 
-// errors objects
 const { errorMessage, handleError } = useErrorHandler({
   objectName: 'Monedas'
 })
 
-const getCurrencies = async () => {
+/**
+ * Fetch all currencies from the API
+ */
+const getCurrencies = async (): Promise<void> => {
   isLoading.value = true
   try {
-    currencies.value = (await currencyService.listCurrencies()).data
+    const response = await currencyService.listCurrencies()
+    currencies.value = (response as any).data
   } catch (error) {
     console.error('General error: ', error)
     handleError(error)
@@ -30,6 +34,7 @@ const getCurrencies = async () => {
   }
 }
 
+// Lifecycle
 onMounted(async () => {
   await getCurrencies()
 })
@@ -39,8 +44,9 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <currency-list-menu />
+      <CurrencyListMenu />
     </div>
+
     <!-- main content -->
     <div class="col-md-10">
       <div class="row">
@@ -57,6 +63,7 @@ onMounted(async () => {
           <div v-else-if="errorMessage" class="alert alert-danger mt-2">
             {{ errorMessage }}
           </div>
+
           <!-- results -->
           <div v-else-if="currencies.length > 0">
             <div id="tableContainer">
@@ -70,20 +77,20 @@ onMounted(async () => {
                 <tbody>
                   <tr v-for="currency in currencies" :key="currency.id">
                     <td>
-                      <router-link :to="{ name: 'currency_detail', params: { id: currency.id } }">{{
-                        currency.name
-                      }}</router-link>
+                      <router-link :to="{ name: 'currency_detail', params: { id: currency.id } }">
+                        {{ currency.name }}
+                      </router-link>
                     </td>
-                    <td>{{ currency.description }}</td>
+                    <td>{{ currency.description || 'Sin descripción' }}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
 
-          <!-- in case no currencies -->
+          <!-- no currencies -->
           <div v-else>
-            <p class="lead text-center">Inserte una Moneda.</p>
+            <p class="lead text-center">No hay monedas registradas.</p>
           </div>
         </div>
       </div>
