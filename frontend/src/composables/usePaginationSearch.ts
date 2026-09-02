@@ -1,29 +1,55 @@
-import { ref, computed } from 'vue'
-import { useErrorHandler } from './useErrorHandler.js'
+import { ref, computed, type Ref, type ComputedRef } from 'vue'
+import { useErrorHandler } from './useErrorHandler'
+import type { PaginatedResponse } from '../types/shared'
+
+/**
+ * Configuration options for usePaginationSearch composable
+ */
+interface UsePaginationSearchOptions<T> {
+  /** Function to fetch paginated data */
+  fetchFunction: (page: number) => Promise<{ data: PaginatedResponse<T> }>
+  /** Function to search paginated data */
+  searchFunction: (search: string, page: number) => Promise<{ data: PaginatedResponse<T> }>
+  /** Name of the item (used in error messages) */
+  itemName?: string
+  /** Gender of the item ('m' for masculine, 'f' for feminine) */
+  gender?: 'm' | 'f'
+  /** Number of items per page. Must match backend paginator. */
+  pageSize?: number
+}
 
 /**
  * Composable for handling paginated lists with search functionality
  *
- * @param {Object} config - Configuration object
- * @param {Function} config.fetchFunction - Function to fetch paginated data
- * @param {Function} config.searchFunction - Function to search paginated data
- * @param {string} config.itemName - Name of the item (used in error messages)
- * @param {string} config.gender - Gender of the item ('m' for masculine, 'f' for feminine)
- * @param {number} config.pageSize - Number of items per page. MUST match the page_size attribute
- *                                   from BaseCustomPagination at backend/utils/base_paginator.py
- * @returns {Object} Pagination state and methods
+ * @template T - The type of items in the list
+ * @param {UsePaginationSearchOptions<T>} config - Configuration object
+ *
+ * @example
+ * ```typescript
+ * const {
+ *   items: kits,
+ *   isLoading,
+ *   loadItems,
+ *   handleSearch
+ * } = usePaginationSearch<Kit>({
+ *   fetchFunction: kitService.listKit,
+ *   searchFunction: kitService.searchKits,
+ *   itemName: 'Kit',
+ *   gender: 'm'
+ * })
+ * ```
  */
-export const usePaginationSearch = ({
+export const usePaginationSearch = <T extends Record<string, any>>({
   fetchFunction,
   searchFunction,
   itemName = 'Items',
-  gender = 'm',
-  // IMPORTANT: This attribute MUST match the page_size attribute
-  // from BaseCustomPagination at ../../../backend/utils/base_paginator.py
+  gender = 'm' as 'm' | 'f',
   pageSize = 10
-}) => {
-  // State
-  const items = ref([])
+}: UsePaginationSearchOptions<T>) => {
+  // ============================================================
+  // 1. STATE
+  // ============================================================
+  const items = ref<T[]>([])
   const currentPage = ref(1)
   const totalPages = ref(0)
   const totalItems = ref(0)
@@ -31,25 +57,34 @@ export const usePaginationSearch = ({
   const hasSearched = ref(false)
   const searchTerm = ref('')
 
-  // Reuse useErrorHandler for consistent error handling across the application
+  // ============================================================
+  // 2. ERROR HANDLING
+  // ============================================================
   const { errorMessage, backendErrors, hasErrors, handleError, clearErrors } = useErrorHandler({
     objectName: itemName,
     gender: gender
   })
 
-  // Computed properties for pagination controls
+  // ============================================================
+  // 3. COMPUTED
+  // ============================================================
   const showPrevButton = computed(() => currentPage.value > 1)
   const showNextButton = computed(() => currentPage.value < totalPages.value)
 
+  // ============================================================
+  // 4. METHODS
+  // ============================================================
+
   /**
    * Load items with pagination and optional search
+   *
    * @param {number} page - Page number to load
-   * @param {string} search - Search term (optional)
-   * @returns {Promise<Object>} Response data
+   * @param {string} search - Search term (optional, defaults to empty string)
+   * @returns {Promise<any>} Response data
    */
-  const loadItems = async (page = 1, search = '') => {
+  const loadItems = async (page: number = 1, search: string = ''): Promise<any> => {
     isLoading.value = true
-    clearErrors() // Clear previous errors before each load
+    clearErrors()
 
     try {
       const response = search ? await searchFunction(search, page) : await fetchFunction(page)
@@ -61,9 +96,6 @@ export const usePaginationSearch = ({
 
       return response
     } catch (error) {
-      // Handle error using the composable's error handler
-      // Important: Error states from useErrorHandler are included in the return
-      // object, so we don't need to re-throw the error
       handleError(error)
     } finally {
       isLoading.value = false
@@ -74,7 +106,7 @@ export const usePaginationSearch = ({
    * Handle search action
    * Clears search or executes search based on search term
    */
-  const handleSearch = async () => {
+  const handleSearch = async (): Promise<void> => {
     if (!searchTerm.value.trim()) {
       hasSearched.value = false
       currentPage.value = 1
@@ -89,7 +121,7 @@ export const usePaginationSearch = ({
   /**
    * Load the next page of items
    */
-  const loadNextItems = async () => {
+  const loadNextItems = async (): Promise<void> => {
     if (!showNextButton.value) return
     currentPage.value += 1
     const search = hasSearched.value ? searchTerm.value : ''
@@ -99,7 +131,7 @@ export const usePaginationSearch = ({
   /**
    * Load the previous page of items
    */
-  const loadPrevItems = async () => {
+  const loadPrevItems = async (): Promise<void> => {
     if (!showPrevButton.value) return
     currentPage.value -= 1
     const search = hasSearched.value ? searchTerm.value : ''
@@ -109,25 +141,29 @@ export const usePaginationSearch = ({
   /**
    * Clear the current search and reset to the first page
    */
-  const clearSearch = async () => {
+  const clearSearch = async (): Promise<void> => {
     searchTerm.value = ''
     hasSearched.value = false
     currentPage.value = 1
-    clearErrors() // Clear errors when clearing search
+    clearErrors()
     await loadItems(1, '')
   }
 
   /**
    * Navigate to a specific page
+   *
    * @param {number} page - Page number to navigate to
    */
-  const goToPage = async (page) => {
+  const goToPage = async (page: number): Promise<void> => {
     if (page < 1 || page > totalPages.value) return
     currentPage.value = page
     const search = hasSearched.value ? searchTerm.value : ''
     await loadItems(page, search)
   }
 
+  // ============================================================
+  // 5. RETURN
+  // ============================================================
   return {
     // State
     items,
@@ -138,7 +174,7 @@ export const usePaginationSearch = ({
     hasSearched,
     searchTerm,
 
-    // useErrorHandler state
+    // Error state
     errorMessage,
     backendErrors,
     hasErrors,
@@ -155,7 +191,7 @@ export const usePaginationSearch = ({
     clearSearch,
     goToPage,
 
-    // useErrorHandler methods (exposed in case direct usage is needed)
+    // Error methods
     clearErrors,
     handleError
   }
