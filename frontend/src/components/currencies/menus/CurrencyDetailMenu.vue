@@ -1,18 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import type { Currency } from '../../../views/currencies/types'
 
-defineProps({
-  currency: {
-    type: Object,
-    required: true
-  },
-  isLoading: {
-    type: Boolean,
-    required: true
-  }
-})
+interface Props {
+  currency: Currency
+  isLoading: boolean
+}
 
-defineEmits(['onDelete'])
+defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'onDelete'): void
+}>()
 </script>
 
 <template>
@@ -20,29 +19,24 @@ defineEmits(['onDelete'])
     <li class="list-group-item">
       <strong>Monedas</strong>
     </li>
-    <!-- currencies -->
     <li class="list-group-item">
       <RouterLink :to="{ name: 'currencies' }">Monedas</RouterLink>
     </li>
-    <!-- update currency -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
     </li>
-    <li v-else-if="currency.id" class="list-group-item">
-      <RouterLink :to="{ name: 'currency_update', params: { id: currency.id } }"
-        >Actualizar</RouterLink
-      >
+    <li v-else class="list-group-item">
+      <RouterLink :to="{ name: 'currency_update', params: { id: currency.id } }">
+        Editar
+      </RouterLink>
     </li>
-    <li v-else class="list-group-item text-muted">No disponible</li>
-    <!-- delete currency -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
     </li>
-    <li v-else-if="currency.id" class="list-group-item">
+    <li v-else class="list-group-item">
       <a href="#" @click.prevent="$emit('onDelete')" class="text-danger">Eliminar</a>
     </li>
-    <li v-else class="list-group-item text-muted">No disponible</li>
   </ul>
 </template>
