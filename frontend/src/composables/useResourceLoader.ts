@@ -22,7 +22,7 @@ interface UseResourceLoaderOptions<T> {
  * @returns {Object} Resource state and methods
  */
 export const useResourceLoader = <T>(
-  fetchFunction: (params: any) => Promise<{ data: T }>,
+  fetchFunction: (id: number) => Promise<T>,
   options: UseResourceLoaderOptions<T> = {}
 ) => {
   const {
@@ -56,7 +56,7 @@ export const useResourceLoader = <T>(
 
     try {
       const response = await fetchFunction(params)
-      data.value = response.data
+      data.value = (response as any).data
 
       if (onSuccess) {
         onSuccess(response)
