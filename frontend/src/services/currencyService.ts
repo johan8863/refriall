@@ -48,34 +48,28 @@ export const currencyService = {
    * @param id - Currency ID
    * @returns Promise with currency data
    */
-  detailCurrency: (id: number): Promise<Currency> => {
-    return apiBase.get(`${url}/${id}/`)
-  },
+  detailCurrency: (id: number): Promise<AxiosResponse<Currency>> => apiBase.get(`${url}/${id}/`),
 
   /**
    * Create a new currency
    * @param currency - Currency data (without id)
    * @returns Promise with created currency
    */
-  postCurrency: (currency: Omit<Currency, 'id'>): Promise<Currency> => {
-    return apiBase.post(`${url}/`, currency)
-  },
+  postCurrency: (currency: Omit<Currency, 'id'>): Promise<AxiosResponse<Currency>> =>
+    apiBase.post(`${url}/`, currency),
 
   /**
    * Update an existing currency
    * @param currency - Currency data (with id)
    * @returns Promise with updated currency
    */
-  putCurrency: (currency: Currency): Promise<Currency> => {
-    return apiBase.put(`${url}/${currency.id}/`, currency)
-  },
+  putCurrency: (currency: Currency): Promise<AxiosResponse<Currency>> =>
+    apiBase.put(`${url}/${currency.id}/`, currency),
 
   /**
    * Delete a currency by ID
    * @param id - Currency ID
    * @returns Promise void
    */
-  deleteCurrency: (id: number): Promise<void> => {
-    return apiBase.delete(`${url}/${id}/`)
-  }
+  deleteCurrency: (id: number): Promise<void> => apiBase.delete(`${url}/${id}/`)
 }
