@@ -12,7 +12,7 @@ export const kitService = {
    * @params searchTerm - search term
    * @returns Promise with a paginated response
    */
-  listKit: (page: number = 1, search: string = ''): Promise<{ data: PaginatedResponse<Kit> }> => {
+  listKit: (page: number = 1, search: string = ''): Promise<PaginatedResponse<Kit>> => {
     const params: Record<string, string | number> = {
       ...(page && { page }),
       ...(search && { search })
@@ -24,7 +24,7 @@ export const kitService = {
    * @param searchTerm - search term
    * @param page - page number(optional, default = 1)
    */
-  searchKits: (searchTerm: string, page: number = 1): Promise<{ data: PaginatedResponse<Kit> }> => {
+  searchKits: (searchTerm: string, page: number = 1): Promise<PaginatedResponse<Kit>> => {
     const params: Record<string, string | number> = {
       search: searchTerm,
       ...(page > 1 && { page })
@@ -35,25 +35,25 @@ export const kitService = {
    * Gets all kits(no pagination)
    * @returns Promise with the whole kits list
    */
-  getAllKits: (): Promise<{ data: Kit[] }> => apiBase.get(`${urlKit}/`),
+  getAllKits: (): Promise<Kit[]> => apiBase.get(`${urlKit}/`),
   /*
    * Gets a Kit by id
    * @params id - Kit id
    * @returns Promise with Kit data
    */
-  detailKit: (id: number): Promise<{ data: Kit }> => apiBase.get(`${urlKit}/${id}/`),
+  detailKit: (id: number): Promise<Kit> => apiBase.get(`${urlKit}/${id}/`),
   /*
    * Creates a Kit from kit param
    * @param kit - Kit data
    * @returns Promise with Kit created data
    */
-  postKit: (kit: Omit<Kit, 'id'>): Promise<{ data: Kit }> => apiBase.post(`${urlKit}/`, kit),
+  postKit: (kit: Omit<Kit, 'id'>): Promise<Kit> => apiBase.post(`${urlKit}/`, kit),
   /*
    * Updates a Kit from kit param
    * @param kit - Kit data
    * @returns Promise with Kit updated data
    */
-  putKit: (kit: Kit): Promise<{ data: Kit }> => apiBase.put(`${urlKit}/${kit.id}/`, kit),
+  putKit: (kit: Kit): Promise<Kit> => apiBase.put(`${urlKit}/${kit.id}/`, kit),
   /*
    * Deletes a Kit by its id
    * @params id - Kit id
@@ -61,5 +61,3 @@ export const kitService = {
    */
   deleteKit: (id: number): Promise<void> => apiBase.delete(`${urlKit}/${id}/`)
 }
-
-export type { Kit }
