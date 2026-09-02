@@ -1,31 +1,32 @@
-<script setup>
+<script setup lang="ts">
 // vue
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 // third
 import { required, helpers, maxLength, minLength } from '@vuelidate/validators'
-import { useVuelidate } from '@vuelidate/core'
 
 // app
 import CurrencyFormMenu from '../../components/currencies/menus/CurrencyFormMenu.vue'
 import { currencyService } from '../../services/currencyService'
-import { useForm } from '../../composables/useForm.js'
+import { useForm } from '../../composables/useForm'
+import type { Currency } from './types'
 
-// router utilities and handlers
+// Routing
 const route = useRoute()
 
-// currency initial data to use in composable
-const initialData = {
-  id: null,
+// Currency initial data
+const initialData: Currency = {
+  id: 0,
   name: '',
-  description: ''
+  description: null
 }
 
-// rules to manage front validations
+// Validation rules
 const rules = {
   name: {
-    required: helpers.withMessage('El nombre es requerido.', required)
+    required: helpers.withMessage('El nombre es requerido.', required),
+    maxLength: helpers.withMessage('El nombre no puede exceder 4 caracteres.', maxLength(4))
   },
   description: {
     minLength: helpers.withMessage('La descripción debe tener al menos 5 caracteres', minLength(5)),
@@ -33,10 +34,7 @@ const rules = {
   }
 }
 
-// helper function to always set to upper case the name of the currency
-const currenyNameUpper = () =>
-  (currency.value.name = currency.value.name ? currency.value.name.toUpperCase() : '')
-
+// Use form composable with Currency type
 const {
   formData: currency,
   isLoading,
@@ -48,11 +46,12 @@ const {
   handleSubmit: useFormSubmit,
   handleGoBack,
   getFieldErrors
-} = useForm({
+} = useForm<Currency>({
   initialData,
   rules,
   service: currencyService,
   objectName: 'Moneda',
+  gender: 'f',
   createMethod: 'postCurrency',
   updateMethod: 'putCurrency',
   detailMethod: 'detailCurrency',
@@ -60,25 +59,26 @@ const {
   detailView: 'currency_detail'
 })
 
+// Transform name to uppercase before submit
 const handleSubmit = async () => {
-  currency.value.name = currency.value.name.toUpperCase()
+  if (currency.value.name) {
+    currency.value.name = currency.value.name.toUpperCase()
+  }
   await useFormSubmit()
 }
 
-// onMounted life cycle
-onMounted(async () => await loadData(route.params.id))
+// Lifecycle
+onMounted(async () => await loadData(route.params.id as string))
 </script>
 
 <template>
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <currency-form-menu />
+      <CurrencyFormMenu />
     </div>
 
     <!-- main content -->
-
-    <!-- loading order data -->
     <div v-if="isLoading" class="col-md-4">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
         <span role="status" class="text-primary">Cargando datos... </span>
@@ -86,13 +86,13 @@ onMounted(async () => await loadData(route.params.id))
       </div>
     </div>
 
-    <!-- displaying form -->
     <div v-else class="col-md-4">
-      <!-- backend general errors -->
+      <!-- General errors -->
       <div v-if="errorMessage" class="alert alert-danger">
         {{ errorMessage }}
       </div>
-      <!-- backend errors from non_field_errors dictionary -->
+
+      <!-- Non-field errors -->
       <div v-if="backendErrors.non_field_errors">
         <p
           v-for="(error, index) in backendErrors.non_field_errors"
@@ -102,9 +102,9 @@ onMounted(async () => await loadData(route.params.id))
           {{ error }}
         </p>
       </div>
-      <!-- form -->
+
       <form @submit.prevent="handleSubmit" class="row">
-        <!-- name control -->
+        <!-- Name field -->
         <div class="col-md-6 mb-2">
           <label for="name" class="form-label">Nombre</label>
           <input
@@ -114,12 +114,15 @@ onMounted(async () => await loadData(route.params.id))
             id="name"
             v-model.trim="currency.name"
             @blur="v$.name.$touch"
+            maxlength="4"
           />
-          <!-- frontend errors -->
+
+          <!-- Frontend errors -->
           <p class="form-text text-danger" v-for="error in v$.name.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend errors -->
+
+          <!-- Backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('name')"
             :key="`backend-${i}`"
@@ -128,9 +131,11 @@ onMounted(async () => await loadData(route.params.id))
             {{ error }}
           </p>
         </div>
-        <!-- filling container -->
+
+        <!-- Spacer -->
         <div class="col-md-6"></div>
-        <!-- description control -->
+
+        <!-- Description field -->
         <div class="col-md-12 mb-2">
           <label for="description" class="form-label">Descripción</label>
           <input
@@ -138,8 +143,10 @@ onMounted(async () => await loadData(route.params.id))
             class="form-control"
             id="description"
             v-model.trim="currency.description"
+            maxlength="22"
           />
-          <!-- frontend errors -->
+
+          <!-- Frontend errors -->
           <p
             class="form-text text-danger"
             v-for="error in v$.description.$errors"
@@ -147,7 +154,8 @@ onMounted(async () => await loadData(route.params.id))
           >
             {{ error.$message }}
           </p>
-          <!-- backend errors -->
+
+          <!-- Backend errors -->
           <p
             v-for="(error, i) in getFieldErrors('description')"
             :key="`backend-${i}`"
@@ -156,13 +164,11 @@ onMounted(async () => await loadData(route.params.id))
             {{ error }}
           </p>
         </div>
-        <!-- buttons -->
+
+        <!-- Buttons -->
         <div>
-          <!-- 
-            the order in the ternary operator is due to the fact that 
-            this form is more often used to create than to update 
-          -->
-          <button type="submit" class="btn btn-primary btn-sm">
+          <button type="submit" class="btn btn-primary btn-sm" :disabled="isSaving">
+            <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ !currency.id ? 'Guardar' : 'Actualizar' }}
           </button>
           <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
