@@ -1,10 +1,8 @@
 export interface PaginatedResponse<T> {
-  data: {
-    results: T[]
-    count: number
-    next: string | null
-    previous: string | null
-  }
+  results: T[]
+  count: number
+  next: string | null
+  previous: string | null
 }
 
 export type FormErrors<T> = {
