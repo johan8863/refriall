@@ -25,7 +25,7 @@ const getCurrencies = async (): Promise<void> => {
   isLoading.value = true
   try {
     const response = await currencyService.listCurrencies()
-    currencies.value = (response as any).data
+    currencies.value = response.data
   } catch (error) {
     console.error('General error: ', error)
     handleError(error)

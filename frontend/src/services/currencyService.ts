@@ -2,6 +2,7 @@ import { currenciesAPIEnvs } from '../settings/env'
 import apiBase from './baseService'
 import type { Currency } from '../views/currencies/types'
 import type { PaginatedResponse } from '../types/shared'
+import type { AxiosResponse } from 'axios'
 
 const url = currenciesAPIEnvs.currenciesUrl
 
@@ -10,7 +11,7 @@ export const currencyService = {
    * Get all currencies (no pagination)
    * @returns Promise with all currencies
    */
-  listCurrencies: (): Promise<Currency[]> => apiBase.get(`${url}/`),
+  listCurrencies: (): Promise<AxiosResponse<Currency[]>> => apiBase.get(`${url}/`),
 
   /**
    * Get paginated list of currencies with optional search
