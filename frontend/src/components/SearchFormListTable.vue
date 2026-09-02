@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { nextTick } from 'vue'
 
 /**
@@ -7,35 +7,34 @@ import { nextTick } from 'vue'
  * This component provides a search input with submit button and clear functionality.
  * It supports two-way binding via v-model and emits events for search and clear actions.
  */
-const searchTerm = defineModel({
+
+/**
+ * Search term model - two-way binding with parent component
+ */
+const searchTerm = defineModel<string>({
   type: String,
   default: ''
 })
 
-defineProps({
+defineProps<{
   /**
    * Controls the loading state - disables input and buttons when true
    */
-  isLoading: {
-    type: Boolean,
-    required: true
-  },
+  isLoading: boolean
   /**
    * Indicates if a search has been performed - shows clear button when true
    */
-  hasSearched: {
-    type: Boolean,
-    required: true
-  },
+  hasSearched: boolean
   /**
    * Placeholder text for the search input field
    */
-  inputPlaceholder: {
-    type: String
-  }
-})
+  inputPlaceholder?: string
+}>()
 
-const emit = defineEmits(['onHandleSearch', 'onClearSearch'])
+const emit = defineEmits<{
+  (e: 'onHandleSearch'): void
+  (e: 'onClearSearch'): void
+}>()
 
 /**
  * Handles the search event from the input's native search button (the "x" icon)
@@ -50,7 +49,7 @@ const emit = defineEmits(['onHandleSearch', 'onClearSearch'])
  * Without nextTick, we would read the previous value of searchTerm
  * because Vue hasn't updated it yet.
  */
-const handleSearchEvent = async () => {
+const handleSearchEvent = async (): Promise<void> => {
   // Wait for Vue to finish updating the DOM and reactive state
   await nextTick()
 
@@ -69,7 +68,7 @@ const handleSearchEvent = async () => {
  *
  * It simply forwards the event to the parent component.
  */
-const handleSubmit = () => {
+const handleSubmit = (): void => {
   emit('onHandleSearch')
 }
 </script>
