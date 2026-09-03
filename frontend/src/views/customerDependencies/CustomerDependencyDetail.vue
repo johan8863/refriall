@@ -1,14 +1,16 @@
-<script setup>
+<script setup lang="ts">
 // vue
-import { onMounted, ref, computed } from 'vue'
+import { ref } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
-import { customerDependecyService } from '@/services/customerDependencyService'
+import { customerDependencyService } from '@/services/customerDependencyService'
 import CustomerDependencyDetailMenu from '@/components/customerDependencies/menus/CustomerDependencyDetailMenu.vue'
 import DeleteModal from '@/components/common/DeleteModal.vue'
-import { useResourceLoader } from '@/composables/useResourceLoader.js'
-import { useErrorHandler } from '@/composables/useErrorHandler.js'
+import { useResourceLoader } from '@/composables/useResourceLoader'
+import { useErrorHandler } from '@/composables/useErrorHandler'
+import type { CustomerDependencyDetail } from './types'
 
 // Routing
 const route = useRoute()
@@ -33,21 +35,35 @@ const {
   isLoading,
   errorMessage: customerDependencyBackendErrors,
   load: loadDependency
-} = useResourceLoader(customerDependecyService.detailCustomerDependecy, {
-  initialData: {
-    id: null,
-    customer: null,
-    name: '',
-    address: '',
-    province: '',
-    township: ''
-  },
-  objectName: 'Dependencia',
-  gender: 'f',
-  onError: (err) => {
-    console.error('Error loading dependency:', err)
+} = useResourceLoader<CustomerDependencyDetail>(
+  customerDependencyService.detailCustomerDependency,
+  {
+    initialData: {
+      id: 0,
+      customer: {
+        id: 0,
+        customer_type: 'es',
+        name: '',
+        address: '',
+        province: '',
+        township: '',
+        code: '',
+        client_nit: null,
+        bank_account_header: '',
+        bank_account: ''
+      },
+      name: '',
+      address: '',
+      province: '',
+      township: ''
+    },
+    objectName: 'Dependencia',
+    gender: 'f',
+    onError: (err) => {
+      console.error('Error loading dependency:', err)
+    }
   }
-})
+)
 
 // Computed for modal fields
 const deleteModalFields = computed(() => {
@@ -59,26 +75,28 @@ const deleteModalFields = computed(() => {
 })
 
 // Delete methods
-const openDeleteModal = () => {
+const openDeleteModal = (): void => {
   clearErrors()
   showDeleteModal.value = true
 }
 
-const closeDeleteModal = () => {
+const closeDeleteModal = (): void => {
   showDeleteModal.value = false
 }
 
-const confirmDelete = async () => {
+const confirmDelete = async (): Promise<void> => {
   isDeleting.value = true
   try {
-    await customerDependecyService.deleteCustomerDependency(dependency.value.id)
+    await customerDependencyService.deleteCustomerDependency(dependency.value.id)
     closeDeleteModal()
     // Redirect to customer detail
+    const customerId =
+      typeof dependency.value.customer === 'object'
+        ? dependency.value.customer.id
+        : dependency.value.customer
     router.push({
       name: 'customers_detail',
-      params: {
-        id: dependency.value.customer?.id || dependency.value.customer
-      }
+      params: { id: customerId }
     })
   } catch (error) {
     console.error('Error deleting dependency:', error)
