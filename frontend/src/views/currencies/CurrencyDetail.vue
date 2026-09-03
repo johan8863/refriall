@@ -5,11 +5,11 @@ import { onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
-import { currencyService } from '../../services/currencyService'
-import CurrencyDetailMenu from '../../components/currencies/menus/CurrencyDetailMenu.vue'
-import DeleteModal from '../../components/common/DeleteModal.vue'
-import { useResourceLoader } from '../../composables/useResourceLoader'
-import { useErrorHandler } from '../../composables/useErrorHandler'
+import { currencyService } from '@/services/currencyService'
+import CurrencyDetailMenu from '@/components/currencies/menus/CurrencyDetailMenu.vue'
+import DeleteModal from '@/components/common/DeleteModal.vue'
+import { useResourceLoader } from '@/composables/useResourceLoader'
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import type { Currency } from './types'
 
 // Routing
