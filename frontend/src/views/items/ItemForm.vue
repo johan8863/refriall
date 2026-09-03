@@ -1,31 +1,18 @@
-<script setup>
+<script setup lang="ts">
 // vue
-import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
-
-// third
-import { required, minValue, helpers } from '@vuelidate/validators'
-import { useVuelidate } from '@vuelidate/core'
+import { onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { helpers, required, minValue } from '@vuelidate/validators'
 
 // app
-import ItemFormMenu from '../../components/items/menus/ItemFormMenu.vue'
 import { itemService } from '../../services/itemService'
-import { useForm } from '../../composables/useForm.js'
+import ItemFormMenu from '../../components/items/menus/ItemFormMenu.vue'
+import { useForm } from '../../composables/useForm'
+import { ITEM_TYPE_OPTIONS, MEASUREMENT_OPTIONS, type Item, type Measurement } from './types'
 
-// main item object to used in composable
-const initialData = {
-  id: null,
-  code: '',
-  name: '',
-  item_type: '',
-  measurement: '',
-  price: 0
-}
-
-// router utilities and handlers
 const route = useRoute()
 
-// vuelidate rules
+// Validation rules
 const rules = {
   code: {
     required: helpers.withMessage('El código es requerido.', required)
@@ -37,7 +24,7 @@ const rules = {
     required: helpers.withMessage('El tipo es requerido.', required)
   },
   measurement: {
-    required: helpers.withMessage('La unidad de medida es requierida.', required)
+    required: helpers.withMessage('La unidad de medida es requerida.', required)
   },
   price: {
     required: helpers.withMessage('El precio es requerido.', required),
@@ -45,7 +32,7 @@ const rules = {
   }
 }
 
-// useForm composable
+// Use form composable with Item type
 const {
   formData: item,
   isLoading,
@@ -57,11 +44,20 @@ const {
   handleSubmit,
   handleGoBack,
   getFieldErrors
-} = useForm({
-  initialData,
+} = useForm<Item>({
+  initialData: {
+    id: 0,
+    code: '',
+    name: '',
+    item_type: 'prod',
+    measurement: null,
+    price: 0,
+    get_item_type: '',
+    get_measurement: null
+  },
   rules,
   service: itemService,
-  objectName: 'Equipo',
+  objectName: 'Artículo',
   gender: 'm',
   createMethod: 'postItem',
   updateMethod: 'putItem',
@@ -70,8 +66,20 @@ const {
   detailView: 'items_detail'
 })
 
-// onMounted cycle to get an item object if editing intended
-onMounted(async () => await loadData(route.params.id))
+// Computed for measurement options (filtered by item type)
+const measurementOptions = computed(() => {
+  // Only products can have different measurements
+  if (item.value.item_type === 'prod') {
+    return MEASUREMENT_OPTIONS
+  }
+  // Other item types only have 'u' (Uno)
+  return MEASUREMENT_OPTIONS.filter((opt) => opt.value === 'u')
+})
+
+// Lifecycle
+onMounted(async () => {
+  await loadData(route.params.id as string)
+})
 </script>
 
 <template>
@@ -82,8 +90,6 @@ onMounted(async () => await loadData(route.params.id))
     </div>
 
     <!-- main content -->
-
-    <!-- loading item data -->
     <div v-if="isLoading" class="col-md-6">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
         <span role="status" class="text-primary">Cargando datos... </span>
@@ -91,39 +97,40 @@ onMounted(async () => await loadData(route.params.id))
       </div>
     </div>
 
-    <!-- displaying form -->
     <div v-else class="col-md-4">
-      <!-- backend errors when getting item data -->
-      <span v-if="errorMessage">
-        <p class="form-text text-danger">{{ errorMessage }}</p>
-      </span>
-      <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="backendErrors.non_field_errors">
+      <!-- General errors -->
+      <div v-if="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Non-field errors -->
+      <div v-if="backendErrors.non_field_errors">
         <p
-          class="form-text text-danger"
           v-for="(error, index) in backendErrors.non_field_errors"
           :key="index"
+          class="form-text text-danger"
         >
           {{ error }}
         </p>
-      </span>
-      <!-- form -->
+      </div>
+
       <form @submit.prevent="handleSubmit">
-        <!-- code control -->
+        <!-- Code field -->
         <div class="mb-2">
           <label for="code" class="form-label">Código</label>
           <input
+            autofocus
             type="text"
             id="code"
             class="form-control"
             v-model.trim="item.code"
             @blur="v$.code.$touch"
           />
-          <!-- frontend errors -->
+
           <p class="form-text text-danger" v-for="error in v$.code.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend errors -->
+
           <p
             v-for="(error, i) in getFieldErrors('code')"
             :key="`backend-${i}`"
@@ -132,7 +139,8 @@ onMounted(async () => await loadData(route.params.id))
             {{ error }}
           </p>
         </div>
-        <!-- name control -->
+
+        <!-- Name field -->
         <div class="mb-2">
           <label for="name" class="form-label">Nombre</label>
           <input
@@ -142,11 +150,11 @@ onMounted(async () => await loadData(route.params.id))
             v-model.trim="item.name"
             @blur="v$.name.$touch"
           />
-          <!-- frontend validations -->
+
           <p class="form-text text-danger" v-for="error in v$.name.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+
           <p
             v-for="(error, i) in getFieldErrors('name')"
             :key="`backend-${i}`"
@@ -155,7 +163,8 @@ onMounted(async () => await loadData(route.params.id))
             {{ error }}
           </p>
         </div>
-        <!-- item_type control -->
+
+        <!-- Item type field -->
         <div class="mb-2">
           <label for="item_type" class="form-label">Tipo</label>
           <select
@@ -164,19 +173,15 @@ onMounted(async () => await loadData(route.params.id))
             v-model.trim="item.item_type"
             @blur="v$.item_type.$touch"
           >
-            <option value="revision">Rev/Diag.</option>
-            <option value="prod">Producto</option>
-            <option value="concept">Concepto</option>
-            <option value="repair">Reparación</option>
-            <option value="maintenace">Mtto</option>
-            <option value="install">Instal/Mont</option>
-            <option value="unmounting">Desmontaje</option>
+            <option v-for="option in ITEM_TYPE_OPTIONS" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </option>
           </select>
-          <!-- frontend validations -->
+
           <p class="form-text text-danger" v-for="error in v$.item_type.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+
           <p
             v-for="(error, i) in getFieldErrors('item_type')"
             :key="`backend-${i}`"
@@ -185,7 +190,8 @@ onMounted(async () => await loadData(route.params.id))
             {{ error }}
           </p>
         </div>
-        <!-- measurement control -->
+
+        <!-- Measurement field -->
         <div class="mb-2">
           <label for="measurement" class="form-label">U/M</label>
           <select
@@ -194,18 +200,11 @@ onMounted(async () => await loadData(route.params.id))
             v-model.trim="item.measurement"
             @blur="v$.measurement.$touch"
           >
-            <option value="u">Uno</option>
-            <!-- only products can have any kind of measurement -->
-            <template v-if="item.item_type === 'prod'">
-              <option value="m">Metros</option>
-              <option value="kg">Kilogramos</option>
-              <option value="lts">Litros</option>
-              <option value="gl">Galones</option>
-              <option value="tr">Tiras</option>
-              <option value="pqt">Paquetes</option>
-            </template>
+            <option v-for="option in measurementOptions" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </option>
           </select>
-          <!-- frontend validations -->
+
           <p
             class="form-text text-danger"
             v-for="error in v$.measurement.$errors"
@@ -213,7 +212,7 @@ onMounted(async () => await loadData(route.params.id))
           >
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+
           <p
             v-for="(error, i) in getFieldErrors('measurement')"
             :key="`backend-${i}`"
@@ -222,7 +221,8 @@ onMounted(async () => await loadData(route.params.id))
             {{ error }}
           </p>
         </div>
-        <!-- price control -->
+
+        <!-- Price field -->
         <div class="mb-2">
           <label for="price" class="form-label">Precio</label>
           <input
@@ -233,11 +233,11 @@ onMounted(async () => await loadData(route.params.id))
             v-model.trim="item.price"
             @blur="v$.price.$touch"
           />
-          <!-- frontend validations -->
+
           <p class="form-text text-danger" v-for="error in v$.price.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
+
           <p
             v-for="(error, i) in getFieldErrors('price')"
             :key="`backend-${i}`"
@@ -246,17 +246,13 @@ onMounted(async () => await loadData(route.params.id))
             {{ error }}
           </p>
         </div>
-        <!-- buttons -->
+
+        <!-- Buttons -->
         <div>
-          <!-- 
-            the order in the ternary operator is due to the fact that 
-            this form is more often used to create than to update 
-          -->
           <button type="submit" class="btn btn-sm btn-primary" :disabled="isSaving">
             <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ !item.id ? 'Guardar' : 'Actualizar' }}
           </button>
-
           <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
             Cancelar
           </button>
@@ -264,5 +260,4 @@ onMounted(async () => await loadData(route.params.id))
       </form>
     </div>
   </div>
-  <!-- end row -->
 </template>
