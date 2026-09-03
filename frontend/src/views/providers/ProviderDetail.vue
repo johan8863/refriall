@@ -4,11 +4,11 @@ import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
-import { providerService } from '../../services/providerService'
-import ProviderDetailMenu from '../../components/providers/menus/ProviderDetailMenu.vue'
-import DeleteModal from '../../components/common/DeleteModal.vue'
-import { useResourceLoader } from '../../composables/useResourceLoader.js'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { providerService } from '@/services/providerService'
+import ProviderDetailMenu from '@/components/providers/menus/ProviderDetailMenu.vue'
+import DeleteModal from '@/components/common/DeleteModal.vue'
+import { useResourceLoader } from '@/composables/useResourceLoader.js'
+import { useErrorHandler } from '@/composables/useErrorHandler.js'
 
 // Routing
 const route = useRoute()
