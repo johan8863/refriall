@@ -12,14 +12,14 @@ import { helpers, required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 
 // app
-import BillFormMenu from '../../components/bills/menus/BillFormMenu.vue'
-import { billService } from '../../services/billService'
-import { currencyService } from '../../services/currencyService'
-import { customerService } from '../../services/customerService'
-import { orderService } from '../../services/orderService'
-import { providerService } from '../../services/providerService'
-import { useCheckAllCheckboxes } from '../../composables/CheckAllCheckboxesComposable'
-import { useForm } from '../../composables/useForm.js'
+import BillFormMenu from '@/components/bills/menus/BillFormMenu.vue'
+import { billService } from '@/services/billService'
+import { currencyService } from '@/services/currencyService'
+import { customerService } from '@/services/customerService'
+import { orderService } from '@/services/orderService'
+import { providerService } from '@/services/providerService'
+import { useCheckAllCheckboxes } from '@/composables/CheckAllCheckboxesComposable'
+import { useForm } from '@/composables/useForm.js'
 
 // main bill object to be used in composable
 const initialData = {
