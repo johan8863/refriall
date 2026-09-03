@@ -5,9 +5,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { helpers, required, minValue } from '@vuelidate/validators'
 
 // app
-import { itemService } from '../../services/itemService'
-import ItemFormMenu from '../../components/items/menus/ItemFormMenu.vue'
-import { useForm } from '../../composables/useForm'
+import { itemService } from '@/services/itemService'
+import ItemFormMenu from '@/components/items/menus/ItemFormMenu.vue'
+import { useForm } from '@/composables/useForm'
 import { ITEM_TYPE_OPTIONS, MEASUREMENT_OPTIONS, type Item, type Measurement } from './types'
 
 const route = useRoute()
