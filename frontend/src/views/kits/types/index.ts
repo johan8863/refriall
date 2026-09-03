@@ -1,4 +1,4 @@
-import type { PaginatedResponse, FormErrors } from '../../../types/shared'
+import type { PaginatedResponse, FormErrors } from '@/types/shared'
 
 /*
  * Kit model
