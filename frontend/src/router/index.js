@@ -262,11 +262,6 @@ const router = createRouter({
                       meta: {
                         preOrder: true
                       }
-                    },
-                    {
-                      path: 'confirm/delete',
-                      name: 'orders_confirm_delete',
-                      component: () => import('@/views/orders/OrderConfirmDelete.vue')
                     }
                   ]
                 }
