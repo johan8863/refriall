@@ -1,11 +1,15 @@
-<script setup>
+<script setup lang="ts">
+// vue
 import { onMounted } from 'vue'
+
+// app
+import { customerService } from '../../services/customerService'
 import CustomerListMenu from '../../components/customers/menus/CustomerListMenu.vue'
 import CustomerListPagination from '../../components/customers/CustomerListPagination.vue'
 import CustomerListTable from '../../components/customers/CustomerListTable.vue'
 import SearchFormListTable from '../../components/SearchFormListTable.vue'
-import { customerService } from '../../services/customerService'
-import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
+import { usePaginationSearch } from '../../composables/usePaginationSearch'
+import type { Customer } from './types'
 
 const {
   items: customers,
@@ -21,13 +25,15 @@ const {
   loadNextItems,
   loadPrevItems,
   clearSearch
-} = usePaginationSearch({
-  fetchFunction: customerService.listCustomer,
+} = usePaginationSearch<Customer>({
+  fetchFunction: (page) => customerService.listCustomer(page, ''),
   searchFunction: customerService.searchCustomers,
   itemName: 'Clientes',
-  gender: 'm'
+  gender: 'm',
+  pageSize: 10
 })
 
+// Load initial data
 onMounted(async () => {
   await loadItems(1, '')
 })
@@ -63,6 +69,7 @@ onMounted(async () => {
             <p class="mt-1">Buscando clientes...</p>
           </div>
 
+          <!-- backend errors -->
           <div v-else-if="errorMessage" class="alert alert-danger mt-2">
             {{ errorMessage }}
           </div>
