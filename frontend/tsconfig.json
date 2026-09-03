@@ -4,6 +4,9 @@
     "allowJs": true,
     "strict": false,
     "noImplicitAny": false,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "skipLibCheck": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"]
