@@ -3,11 +3,11 @@
 import { ref, onMounted } from 'vue'
 
 // app
-import { providerService } from '../../services/providerService'
-import ProviderListMenu from '../../components/providers/menus/ProviderListMenu.vue'
-import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
-import ProviderListTable from '../../components/providers/ProviderListTable.vue'
-import ListPagination from '../../components/common/ListPagination.vue'
+import { providerService } from '@/services/providerService'
+import ProviderListMenu from '@/components/providers/menus/ProviderListMenu.vue'
+import { usePaginationSearch } from '@/composables/usePaginationSearch.js'
+import ProviderListTable from '@/components/providers/ProviderListTable.vue'
+import ListPagination from '@/components/common/ListPagination.vue'
 
 // pagination composable
 const {
