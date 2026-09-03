@@ -77,9 +77,7 @@ const measurementOptions = computed(() => {
 })
 
 // Lifecycle
-onMounted(async () => {
-  await loadData(route.params.id as string)
-})
+onMounted(async () => await loadData(route.params.id as string))
 </script>
 
 <template>
