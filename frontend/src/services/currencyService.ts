@@ -1,7 +1,7 @@
-import { currenciesAPIEnvs } from '../settings/env'
+import { currenciesAPIEnvs } from '@/settings/env'
 import apiBase from './baseService'
-import type { Currency } from '../views/currencies/types'
-import type { PaginatedResponse } from '../types/shared'
+import type { Currency } from '@/views/currencies/types'
+import type { PaginatedResponse } from '@/types/shared'
 import type { AxiosResponse } from 'axios'
 
 const url = currenciesAPIEnvs.currenciesUrl
