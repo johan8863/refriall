@@ -3,9 +3,9 @@
 import { onMounted, ref } from 'vue'
 
 // app
-import { currencyService } from '../../services/currencyService'
-import CurrencyListMenu from '../../components/currencies/menus/CurrencyListMenu.vue'
-import { useErrorHandler } from '../../composables/useErrorHandler'
+import { currencyService } from '@/services/currencyService'
+import CurrencyListMenu from '@/components/currencies/menus/CurrencyListMenu.vue'
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import type { Currency } from './types'
 
 /**
