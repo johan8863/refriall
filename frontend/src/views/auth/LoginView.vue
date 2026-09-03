@@ -4,7 +4,7 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
-import { useAuthStore } from '@stores/authStore'
+import { useAuthStore } from '@/stores/authStore'
 
 const authStore = useAuthStore()
 
