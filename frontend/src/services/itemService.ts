@@ -1,8 +1,7 @@
-// services/itemService.ts
-import { itemAPIEnvs } from '../settings/env'
+import { itemAPIEnvs } from '@/settings/env'
 import apiBase from './baseService'
-import type { Item, ItemCreate } from '../views/items/types'
-import type { PaginatedResponse } from '../types/shared'
+import type { Item, ItemCreate } from '@/views/items/types'
+import type { PaginatedResponse } from '@/types/shared'
 import type { AxiosResponse } from 'axios'
 
 const urlItem = itemAPIEnvs.itemUrl
