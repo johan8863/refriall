@@ -1,7 +1,7 @@
-import { kitAPIEnvs } from '../settings/env'
+import { kitAPIEnvs } from '@/settings/env'
 import apiBase from './baseService'
-import type { Kit } from '../views/kits/types'
-import type { PaginatedResponse } from '../types/shared'
+import type { Kit } from '@/views/kits/types'
+import type { PaginatedResponse } from '@/types/shared'
 import type { AxiosResponse } from 'axios'
 
 const urlKit = kitAPIEnvs.kitUrl
