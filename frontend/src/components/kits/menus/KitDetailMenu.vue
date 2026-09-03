@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Kit } from '../../../views/kits/types'
+import type { Kit } from '@/views/kits/types'
 
 interface Props {
   kit: Kit
