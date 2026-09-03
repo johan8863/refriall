@@ -4,11 +4,11 @@ import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
-import { customerDependecyService } from '../../services/customerDependencyService'
-import CustomerDependencyDetailMenu from '../../components/customerDependencies/menus/CustomerDependencyDetailMenu.vue'
-import DeleteModal from '../../components/common/DeleteModal.vue'
-import { useResourceLoader } from '../../composables/useResourceLoader.js'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { customerDependecyService } from '@/services/customerDependencyService'
+import CustomerDependencyDetailMenu from '@/components/customerDependencies/menus/CustomerDependencyDetailMenu.vue'
+import DeleteModal from '@/components/common/DeleteModal.vue'
+import { useResourceLoader } from '@/composables/useResourceLoader.js'
+import { useErrorHandler } from '@/composables/useErrorHandler.js'
 
 // Routing
 const route = useRoute()
