@@ -5,7 +5,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { jwtDecode } from 'jwt-decode'
 
 // refriall
-import OrderList from '../views/orders/OrderList.vue'
+import OrderList from '@/views/orders/OrderList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,12 +34,12 @@ const router = createRouter({
                 {
                   path: '',
                   name: 'kits',
-                  component: () => import('../views/kits/KitList.vue')
+                  component: () => import('@/views/kits/KitList.vue')
                 },
                 {
                   path: 'create',
                   name: 'kits_create',
-                  component: () => import('../views/kits/KitForm.vue')
+                  component: () => import('@/views/kits/KitForm.vue')
                 },
                 {
                   path: ':id',
@@ -47,12 +47,12 @@ const router = createRouter({
                     {
                       path: 'detail',
                       name: 'kits_detail',
-                      component: () => import('../views/kits/KitDetail.vue')
+                      component: () => import('@/views/kits/KitDetail.vue')
                     },
                     {
                       path: 'update',
                       name: 'kits_update',
-                      component: () => import('../views/kits/KitForm.vue')
+                      component: () => import('@/views/kits/KitForm.vue')
                     }
                   ]
                 }
@@ -65,12 +65,12 @@ const router = createRouter({
                 {
                   path: '',
                   name: 'items',
-                  component: () => import('../views/items/ItemList.vue')
+                  component: () => import('@/views/items/ItemList.vue')
                 },
                 {
                   path: 'create',
                   name: 'items_create',
-                  component: () => import('../views/items/ItemForm.vue')
+                  component: () => import('@/views/items/ItemForm.vue')
                 },
                 {
                   path: ':id',
@@ -78,12 +78,12 @@ const router = createRouter({
                     {
                       path: 'detail',
                       name: 'items_detail',
-                      component: () => import('../views/items/ItemDetail.vue')
+                      component: () => import('@/views/items/ItemDetail.vue')
                     },
                     {
                       path: 'update',
                       name: 'items_update',
-                      component: () => import('../views/items/ItemForm.vue')
+                      component: () => import('@/views/items/ItemForm.vue')
                     }
                   ]
                 }
@@ -102,17 +102,17 @@ const router = createRouter({
                 {
                   path: '',
                   name: 'providers',
-                  component: () => import('../views/providers/ProviderList.vue')
+                  component: () => import('@/views/providers/ProviderList.vue')
                 },
                 {
                   path: 'create',
                   name: 'providers_create',
-                  component: () => import('../views/providers/ProviderForm.vue')
+                  component: () => import('@/views/providers/ProviderForm.vue')
                 },
                 {
                   path: 'change/self/password',
                   name: 'providers_change_self_password',
-                  component: () => import('../views/providers/ProviderChangeSelfPassword.vue')
+                  component: () => import('@/views/providers/ProviderChangeSelfPassword.vue')
                 },
                 {
                   path: ':id',
@@ -120,17 +120,17 @@ const router = createRouter({
                     {
                       path: 'update',
                       name: 'providers_update',
-                      component: () => import('../views/providers/ProviderForm.vue')
+                      component: () => import('@/views/providers/ProviderForm.vue')
                     },
                     {
                       path: 'detail',
                       name: 'providers_detail',
-                      component: () => import('../views/providers/ProviderDetail.vue')
+                      component: () => import('@/views/providers/ProviderDetail.vue')
                     },
                     {
                       path: 'change/self/password',
                       name: 'providers_change_password',
-                      component: () => import('../views/providers/ProviderChangePassword.vue')
+                      component: () => import('@/views/providers/ProviderChangePassword.vue')
                     }
                   ]
                 }
@@ -143,12 +143,12 @@ const router = createRouter({
                 {
                   path: '',
                   name: 'customers',
-                  component: () => import('../views/customers/CustomerList.vue')
+                  component: () => import('@/views/customers/CustomerList.vue')
                 },
                 {
                   path: 'create',
                   name: 'customers_create',
-                  component: () => import('../views/customers/CustomerForm.vue')
+                  component: () => import('@/views/customers/CustomerForm.vue')
                 },
                 {
                   path: ':id',
@@ -156,12 +156,12 @@ const router = createRouter({
                     {
                       path: 'detail',
                       name: 'customers_detail',
-                      component: () => import('../views/customers/CustomerDetail.vue')
+                      component: () => import('@/views/customers/CustomerDetail.vue')
                     },
                     {
                       path: 'update',
                       name: 'customers_update',
-                      component: () => import('../views/customers/CustomerForm.vue')
+                      component: () => import('@/views/customers/CustomerForm.vue')
                     },
                     // dependencies
                     {
@@ -171,19 +171,19 @@ const router = createRouter({
                           path: 'detail',
                           name: 'customer_dependecy_detail',
                           component: () =>
-                            import('../views/customerDependencies/CustomerDependencyDetail.vue')
+                            import('@/views/customerDependencies/CustomerDependencyDetail.vue')
                         },
                         {
                           path: 'create',
                           name: 'customer_dependecy_create',
                           component: () =>
-                            import('../views/customerDependencies/CustomerDependencyForm.vue')
+                            import('@/views/customerDependencies/CustomerDependencyForm.vue')
                         },
                         {
                           path: 'update',
                           name: 'customer_dependecy_update',
                           component: () =>
-                            import('../views/customerDependencies/CustomerDependencyForm.vue')
+                            import('@/views/customerDependencies/CustomerDependencyForm.vue')
                         }
                       ]
                     }
@@ -204,12 +204,12 @@ const router = createRouter({
                 {
                   path: '',
                   name: 'currencies',
-                  component: () => import('../views/currencies/CurrencyList.vue')
+                  component: () => import('@/views/currencies/CurrencyList.vue')
                 },
                 {
                   path: 'create',
                   name: 'currency_create',
-                  component: () => import('../views/currencies/CurrencyForm.vue')
+                  component: () => import('@/views/currencies/CurrencyForm.vue')
                 },
                 {
                   path: ':id',
@@ -217,12 +217,12 @@ const router = createRouter({
                     {
                       path: 'detail',
                       name: 'currency_detail',
-                      component: () => import('../views/currencies/CurrencyDetail.vue')
+                      component: () => import('@/views/currencies/CurrencyDetail.vue')
                     },
                     {
                       path: 'update',
                       name: 'currency_update',
-                      component: () => import('../views/currencies/CurrencyForm.vue')
+                      component: () => import('@/views/currencies/CurrencyForm.vue')
                     }
                   ]
                 }
@@ -240,7 +240,7 @@ const router = createRouter({
                 {
                   path: 'create',
                   name: 'orders_create',
-                  component: () => import('../views/orders/OrderForm.vue')
+                  component: () => import('@/views/orders/OrderForm.vue')
                 },
                 {
                   path: ':id',
@@ -248,17 +248,17 @@ const router = createRouter({
                     {
                       path: 'update',
                       name: 'orders_update',
-                      component: () => import('../views/orders/OrderForm.vue')
+                      component: () => import('@/views/orders/OrderForm.vue')
                     },
                     {
                       path: 'detail',
                       name: 'orders_detail',
-                      component: () => import('../views/orders/OrderDetail.vue')
+                      component: () => import('@/views/orders/OrderDetail.vue')
                     },
                     {
                       path: 'preorder',
                       name: 'orders_detail_pre_order',
-                      component: () => import('../views/orders/OrderDetail.vue'),
+                      component: () => import('@/views/orders/OrderDetail.vue'),
                       meta: {
                         preOrder: true
                       }
@@ -266,7 +266,7 @@ const router = createRouter({
                     {
                       path: 'confirm/delete',
                       name: 'orders_confirm_delete',
-                      component: () => import('../views/orders/OrderConfirmDelete.vue')
+                      component: () => import('@/views/orders/OrderConfirmDelete.vue')
                     }
                   ]
                 }
@@ -279,12 +279,12 @@ const router = createRouter({
                 {
                   path: '',
                   name: 'bills',
-                  component: () => import('../views/bills/BillList.vue')
+                  component: () => import('@/views/bills/BillList.vue')
                 },
                 {
                   path: 'create',
                   name: 'bills_create',
-                  component: () => import('../views/bills/BillForm.vue')
+                  component: () => import('@/views/bills/BillForm.vue')
                 },
                 {
                   path: ':id',
@@ -292,12 +292,12 @@ const router = createRouter({
                     {
                       path: 'detail',
                       name: 'bills_detail',
-                      component: () => import('../views/bills/BillDetail.vue')
+                      component: () => import('@/views/bills/BillDetail.vue')
                     },
                     {
                       path: 'update',
                       name: 'bills_update',
-                      component: () => import('../views/bills/BillForm.vue')
+                      component: () => import('@/views/bills/BillForm.vue')
                     }
                   ]
                 }
@@ -310,7 +310,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/auth/LoginView.vue'),
+      component: () => import('@/views/auth/LoginView.vue'),
       meta: {
         hideNavBar: true
       }
@@ -319,7 +319,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
-  const { useAuthStore } = await import('../stores/authStore')
+  const { useAuthStore } = await import('@/stores/authStore')
   const authStore = useAuthStore()
 
   // get refresh auth token
