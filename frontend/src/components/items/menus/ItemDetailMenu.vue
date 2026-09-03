@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import type { Item } from '../../../views/items/types'
+import type { Item } from '@/views/items/types'
 
 interface Props {
   item: Item
