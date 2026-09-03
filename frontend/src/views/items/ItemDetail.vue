@@ -1,14 +1,16 @@
-<script setup>
+<script setup lang="ts">
 // vue
-import { onMounted, ref, computed } from 'vue'
+import { ref } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { itemService } from '../../services/itemService'
 import ItemDetailMenu from '../../components/items/menus/ItemDetailMenu.vue'
 import DeleteModal from '../../components/common/DeleteModal.vue'
-import { useResourceLoader } from '../../composables/useResourceLoader.js'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { useResourceLoader } from '../../composables/useResourceLoader'
+import { useErrorHandler } from '../../composables/useErrorHandler'
+import type { Item } from './types'
 
 // Routing
 const route = useRoute()
@@ -33,14 +35,16 @@ const {
   isLoading,
   errorMessage: itemBackendErrors,
   load: loadItem
-} = useResourceLoader(itemService.detailItem, {
+} = useResourceLoader<Item>(itemService.detailItem, {
   initialData: {
-    id: null,
+    id: 0,
     code: '',
     name: '',
+    item_type: 'prod',
+    measurement: null,
+    price: 0,
     get_item_type: '',
-    get_measurement: '',
-    price: 0
+    get_measurement: null
   },
   objectName: 'Artículo',
   gender: 'm',
