@@ -1,16 +1,17 @@
-<script setup>
-defineProps({
-  item: {
-    type: Object,
-    required: true
-  },
-  isLoading: {
-    type: Boolean,
-    required: true
-  }
-})
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import type { Item } from '../../../views/items/types'
 
-defineEmits(['onDelete'])
+interface Props {
+  item: Item
+  isLoading: boolean
+}
+
+defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'onDelete'): void
+}>()
 </script>
 
 <template>
@@ -21,11 +22,9 @@ defineEmits(['onDelete'])
     <li class="list-group-item">
       <RouterLink :to="{ name: 'items' }">Artículos</RouterLink>
     </li>
-    <!-- new item -->
     <li class="list-group-item">
       <RouterLink :to="{ name: 'items_create' }">Nuevo</RouterLink>
     </li>
-    <!-- update item -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
@@ -33,7 +32,6 @@ defineEmits(['onDelete'])
     <li v-else class="list-group-item">
       <RouterLink :to="{ name: 'items_update', params: { id: item.id } }">Editar</RouterLink>
     </li>
-    <!-- delete item -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
