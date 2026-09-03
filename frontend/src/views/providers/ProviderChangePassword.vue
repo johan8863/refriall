@@ -8,9 +8,8 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 
 // app
-import ProviderChangeSelfPasswordMenu from '../../components/providers/menus/ProviderChangeSelfPasswordMenu.vue'
-import { providerService } from '../../services/providerService.js'
-import { useRouting } from '../../composables/routingFunctions.js'
+import ProviderChangeSelfPasswordMenu from '@/components/providers/menus/ProviderChangeSelfPasswordMenu.vue'
+import { providerService } from '@/services/providerService.js'
 
 // main object
 const providerChangePassword = ref({
