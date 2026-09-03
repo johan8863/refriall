@@ -1,7 +1,7 @@
 import { ref, computed, type Ref, type ComputedRef } from 'vue'
 import { useErrorHandler } from './useErrorHandler'
 import type { AxiosResponse } from 'axios'
-import type { PaginatedResponse } from '../types/shared'
+import type { PaginatedResponse } from '@/types/shared'
 
 /**
  * Configuration options for usePaginationSearch composable
