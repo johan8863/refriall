@@ -2,7 +2,6 @@ import { ref, type Ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { useFormErrorHandler } from './useErrorFormHandler'
 import { useRouting } from './routingFunctions'
-import type { Kit } from '../views/kits/types'
 
 interface Service<T> {
   create?: (data: any) => Promise<{ data: T }>
