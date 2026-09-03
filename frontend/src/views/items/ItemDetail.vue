@@ -5,11 +5,11 @@ import { onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
-import { itemService } from '../../services/itemService'
-import ItemDetailMenu from '../../components/items/menus/ItemDetailMenu.vue'
-import DeleteModal from '../../components/common/DeleteModal.vue'
-import { useResourceLoader } from '../../composables/useResourceLoader'
-import { useErrorHandler } from '../../composables/useErrorHandler'
+import { itemService } from '@/services/itemService'
+import ItemDetailMenu from '@/components/items/menus/ItemDetailMenu.vue'
+import DeleteModal from '@/components/common/DeleteModal.vue'
+import { useResourceLoader } from '@/composables/useResourceLoader'
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import type { Item } from './types'
 
 // Routing
