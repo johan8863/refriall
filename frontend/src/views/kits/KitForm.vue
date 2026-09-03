@@ -7,9 +7,9 @@ import { useRoute } from 'vue-router'
 import { required, helpers } from '@vuelidate/validators'
 
 // app
-import KitFormMenu from '../../components/kits/menus/KitFormMenu.vue'
-import { kitService } from '../../services/kitService'
-import { useForm } from '../../composables/useForm'
+import KitFormMenu from '@/components/kits/menus/KitFormMenu.vue'
+import { kitService } from '@/services/kitService'
+import { useForm } from '@/composables/useForm'
 import type { Kit } from './types'
 
 // Routing
