@@ -8,9 +8,9 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, helpers, numeric } from '@vuelidate/validators'
 
 // app
-import { providerService } from '../../services/providerService'
-import ProviderFormMenu from '../../components/providers/menus/ProviderFormMenu.vue'
-import { useForm } from '../../composables/useForm.js'
+import { providerService } from '@/services/providerService'
+import ProviderFormMenu from '@/components/providers/menus/ProviderFormMenu.vue'
+import { useForm } from '@/composables/useForm.js'
 
 // router utilities and handlers
 const route = useRoute()
