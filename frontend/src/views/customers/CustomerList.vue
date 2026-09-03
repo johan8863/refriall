@@ -3,12 +3,12 @@
 import { onMounted } from 'vue'
 
 // app
-import { customerService } from '../../services/customerService'
-import CustomerListMenu from '../../components/customers/menus/CustomerListMenu.vue'
-import CustomerListPagination from '../../components/customers/CustomerListPagination.vue'
-import CustomerListTable from '../../components/customers/CustomerListTable.vue'
-import SearchFormListTable from '../../components/SearchFormListTable.vue'
-import { usePaginationSearch } from '../../composables/usePaginationSearch'
+import { customerService } from '@/services/customerService'
+import CustomerListMenu from '@/components/customers/menus/CustomerListMenu.vue'
+import CustomerListPagination from '@/components/customers/CustomerListPagination.vue'
+import CustomerListTable from '@/components/customers/CustomerListTable.vue'
+import SearchFormListTable from '@/components/SearchFormListTable.vue'
+import { usePaginationSearch } from '@/composables/usePaginationSearch'
 import type { Customer } from './types'
 
 const {
