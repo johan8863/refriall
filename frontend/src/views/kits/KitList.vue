@@ -3,12 +3,12 @@
 import { onMounted } from 'vue'
 
 // app
-import { kitService } from '../../services/kitService'
-import KitsListTable from '../../components/kits/KitsListTable.vue'
-import KitListPagination from '../../components/kits/KitListPagination.vue'
-import SearchFormListTable from '../../components/SearchFormListTable.vue'
-import KitListMenu from '../../components/kits/menus/KitListMenu.vue'
-import { usePaginationSearch } from '../../composables/usePaginationSearch'
+import { kitService } from '@/services/kitService'
+import KitsListTable from '@/components/kits/KitsListTable.vue'
+import KitListPagination from '@/components/kits/KitListPagination.vue'
+import SearchFormListTable from '@/components/SearchFormListTable.vue'
+import KitListMenu from '@/components/kits/menus/KitListMenu.vue'
+import { usePaginationSearch } from '@/composables/usePaginationSearch'
 import type { Kit } from './types'
 
 /**
