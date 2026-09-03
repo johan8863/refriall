@@ -3,12 +3,12 @@
 import { onMounted } from 'vue'
 
 // app
-import { orderService } from '../../services/orderService'
-import OrdersListTable from '../../components/orders/OrdersListTable.vue'
-import OrdersListPagination from '../../components/orders/OrdersListPagination.vue'
-import SearchFormListTable from '../../components/SearchFormListTable.vue'
-import OrderListMenu from '../../components/orders/menus/OrderListMenu.vue'
-import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
+import { orderService } from '@/services/orderService'
+import OrdersListTable from '@/components/orders/OrdersListTable.vue'
+import OrdersListPagination from '@/components/orders/OrdersListPagination.vue'
+import SearchFormListTable from '@/components/SearchFormListTable.vue'
+import OrderListMenu from '@/components/orders/menus/OrderListMenu.vue'
+import { usePaginationSearch } from '@/composables/usePaginationSearch.js'
 
 const {
   items: orders,
