@@ -1,5 +1,6 @@
 import { ref, type Ref } from 'vue'
 import { useErrorHandler } from './useErrorHandler'
+import type { AxiosResponse } from 'axios'
 
 interface UseResourceLoaderOptions<T> {
   initialData?: T
@@ -22,7 +23,7 @@ interface UseResourceLoaderOptions<T> {
  * @returns {Object} Resource state and methods
  */
 export const useResourceLoader = <T>(
-  fetchFunction: (id: number) => Promise<T>,
+  fetchFunction: (id: number) => Promise<AxiosResponse<T>>,
   options: UseResourceLoaderOptions<T> = {}
 ) => {
   const {
