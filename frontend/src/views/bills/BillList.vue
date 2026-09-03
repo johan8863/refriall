@@ -3,12 +3,12 @@
 import { onMounted } from 'vue'
 
 // app
-import { billService } from '../../services/billService'
-import BillListTable from '../../components/bills/BillListTable.vue'
-import BillListPaginatin from '../../components/bills/BillListPaginatin.vue'
-import SearchFormListTable from '../../components/SearchFormListTable.vue'
-import BillListMenu from '../../components/bills/menus/BillListMenu.vue'
-import { usePaginationSearch } from '../../composables/usePaginationSearch.js'
+import { billService } from '@/services/billService'
+import BillListTable from '@/components/bills/BillListTable.vue'
+import BillListPaginatin from '@/components/bills/BillListPaginatin.vue'
+import SearchFormListTable from '@/components/SearchFormListTable.vue'
+import BillListMenu from '@/components/bills/menus/BillListMenu.vue'
+import { usePaginationSearch } from '@/composables/usePaginationSearch.js'
 
 const {
   items: bills,
