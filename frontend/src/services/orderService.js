@@ -1,4 +1,4 @@
-import { orderAPIEnvs } from '../settings/env'
+import { orderAPIEnvs } from '@/settings/env'
 import apiBase from './baseService'
 
 const urlOrder = orderAPIEnvs.orderUrl
