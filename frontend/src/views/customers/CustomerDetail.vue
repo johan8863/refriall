@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // vue
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -7,8 +7,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { customerService } from '../../services/customerService'
 import CustomerDetailMenu from '../../components/customers/menus/CustomerDetailMenu.vue'
 import DeleteModal from '../../components/common/DeleteModal.vue'
-import { useResourceLoader } from '../../composables/useResourceLoader.js'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { useResourceLoader } from '../../composables/useResourceLoader'
+import { useErrorHandler } from '../../composables/useErrorHandler'
+import type { CustomerDetail, CustomerDependency } from './types'
 
 // Routing
 const route = useRoute()
@@ -34,16 +35,16 @@ const {
   isLoading,
   errorMessage,
   load: loadCustomer
-} = useResourceLoader(customerService.detailCustomer, {
+} = useResourceLoader<CustomerDetail>(customerService.detailCustomer, {
   initialData: {
-    id: null,
-    customer_type: '',
+    id: 0,
+    customer_type: 'es',
     name: '',
     address: '',
     province: '',
     township: '',
     code: '',
-    client_nit: '',
+    client_nit: null,
     bank_account_header: '',
     bank_account: '',
     get_dependencies: []
@@ -56,7 +57,7 @@ const {
 })
 
 // Computed
-const filteredDependencies = computed(() => {
+const filteredDependencies = computed((): CustomerDependency[] => {
   if (!searchDependencyTerm.value.trim() || !customer.value?.get_dependencies) {
     return customer.value?.get_dependencies || []
   }
@@ -67,8 +68,8 @@ const filteredDependencies = computed(() => {
   )
 })
 
-const hasDependencies = computed(() => {
-  return customer.value?.get_dependencies?.length > 0
+const hasDependencies = computed((): boolean => {
+  return (customer.value?.get_dependencies?.length ?? 0) > 0
 })
 
 const deleteModalFields = computed(() => {
@@ -84,21 +85,21 @@ const deleteModalFields = computed(() => {
 })
 
 // Methods
-const clearDependencySearch = () => {
+const clearDependencySearch = (): void => {
   searchDependencyTerm.value = ''
 }
 
 // Delete methods
-const openDeleteModal = () => {
+const openDeleteModal = (): void => {
   clearErrors()
   showDeleteModal.value = true
 }
 
-const closeDeleteModal = () => {
+const closeDeleteModal = (): void => {
   showDeleteModal.value = false
 }
 
-const confirmDelete = async () => {
+const confirmDelete = async (): Promise<void> => {
   isDeleting.value = true
   try {
     await customerService.deleteCustomer(customer.value.id)
