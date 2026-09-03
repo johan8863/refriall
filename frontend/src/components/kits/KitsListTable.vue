@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import type { Kit } from '../../views/kits/types'
+import type { Kit } from '@/views/kits/types'
 
 defineProps<{
   kits: Kit[]
