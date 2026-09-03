@@ -5,14 +5,14 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 // app
-import { orderService } from '../../services/orderService'
-import { useResourceLoader } from '../../composables/useResourceLoader.js'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
-import DeleteModal from '../../components/common/DeleteModal.vue'
+import { orderService } from '@/services/orderService'
+import { useResourceLoader } from '@/composables/useResourceLoader.js'
+import { useErrorHandler } from '@/composables/useErrorHandler.js'
+import DeleteModal from '@/components/common/DeleteModal.vue'
 
 // third
 import html2pdf from 'html2pdf.js'
-import OrderDetailMenu from '../../components/orders/menus/OrderDetailMenu.vue'
+import OrderDetailMenu from '@/components/orders/menus/OrderDetailMenu.vue'
 
 // Constants
 const ITEMS_PER_PAGE = 12
@@ -264,7 +264,7 @@ onMounted(async () => {
 
           <div class="col-md-3 border-bottom pb-1 border-3 mb-1">
             <img
-              src="../../assets/logo.png"
+              src="@/assets/logo.png"
               class="img-fluid"
               alt="refriall logo"
               style="height: 100px"
