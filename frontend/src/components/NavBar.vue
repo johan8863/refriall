@@ -3,8 +3,8 @@
 import { RouterLink } from 'vue-router'
 
 // local
-import { useAuthStore } from '../stores/authStore'
-import router from '../router'
+import { useAuthStore } from '@/stores/authStore'
+import router from '@/router'
 
 // store
 const authStore = useAuthStore()
