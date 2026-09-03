@@ -4,11 +4,11 @@ import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
-import { billService } from '../../services/billService'
-import BillDetailMenu from '../../components/bills/menus/BillDetailMenu.vue'
-import DeleteModal from '../../components/common/DeleteModal.vue' // ✅ Importar componente
-import { useResourceLoader } from '../../composables/useResourceLoader.js'
-import { useErrorHandler } from '../../composables/useErrorHandler.js'
+import { billService } from '@/services/billService'
+import BillDetailMenu from '@/components/bills/menus/BillDetailMenu.vue'
+import DeleteModal from '@/components/common/DeleteModal.vue' // ✅ Importar componente
+import { useResourceLoader } from '@/composables/useResourceLoader.js'
+import { useErrorHandler } from '@/composables/useErrorHandler.js'
 
 // third
 import html2pdf from 'html2pdf.js'
@@ -230,7 +230,7 @@ onMounted(async () => {
 
           <div class="col-md-3 border-bottom pb-1 border-3 mb-1">
             <img
-              src="../../assets/logo.png"
+              src="@/assets/logo.png"
               class="img-fluid"
               alt="refriall logo"
               style="height: 100px"
