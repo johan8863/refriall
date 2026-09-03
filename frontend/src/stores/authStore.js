@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { authAPI } from '../services/authAPI'
-import router from '../router'
+import { authAPI } from '@/services/authAPI'
 
 export const useAuthStore = defineStore('authStore', () => {
   const isLoadingAuth = ref(false)
