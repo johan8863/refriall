@@ -7,9 +7,9 @@ import { useRoute } from 'vue-router'
 import { required, helpers, maxLength, minLength } from '@vuelidate/validators'
 
 // app
-import CurrencyFormMenu from '../../components/currencies/menus/CurrencyFormMenu.vue'
-import { currencyService } from '../../services/currencyService'
-import { useForm } from '../../composables/useForm'
+import CurrencyFormMenu from '@/components/currencies/menus/CurrencyFormMenu.vue'
+import { currencyService } from '@/services/currencyService'
+import { useForm } from '@/composables/useForm'
 import type { Currency } from './types'
 
 // Routing
