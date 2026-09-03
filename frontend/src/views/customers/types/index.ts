@@ -1,4 +1,4 @@
-import type { PaginatedResponse } from '../../../types/shared'
+import type { PaginatedResponse } from '@/types/shared'
 
 /**
  * Customer type options from Django model
