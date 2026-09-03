@@ -5,9 +5,9 @@ import { useRoute } from 'vue-router'
 import { helpers, required } from '@vuelidate/validators'
 
 // app
-import CustomerFormMenu from '../../components/customers/menus/CustomerFormMenu.vue'
-import { customerService } from '../../services/customerService'
-import { useForm } from '../../composables/useForm'
+import CustomerFormMenu from '@/components/customers/menus/CustomerFormMenu.vue'
+import { customerService } from '@/services/customerService'
+import { useForm } from '@/composables/useForm'
 import { CUSTOMER_TYPE_OPTIONS, type Customer } from './types'
 
 const route = useRoute()
