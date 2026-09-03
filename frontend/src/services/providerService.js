@@ -1,4 +1,4 @@
-import { providerAPIEnvs } from '../settings/env'
+import { providerAPIEnvs } from '@/settings/env'
 import apiBase from './baseService'
 
 const urlProvider = providerAPIEnvs.providerUrl
