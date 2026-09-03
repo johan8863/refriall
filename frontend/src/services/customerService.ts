@@ -1,7 +1,7 @@
-import { customerAPIEnvs } from '../settings/env'
+import { customerAPIEnvs } from '@/settings/env'
 import apiBase from './baseService'
-import type { Customer, CustomerCreate, CustomerDetail } from '../views/customers/types'
-import type { PaginatedResponse } from '../types/shared'
+import type { Customer, CustomerCreate, CustomerDetail } from '@/views/customers/types'
+import type { PaginatedResponse } from '@/types/shared'
 import type { AxiosResponse } from 'axios'
 
 const urlCustomer = customerAPIEnvs.customerUrl
