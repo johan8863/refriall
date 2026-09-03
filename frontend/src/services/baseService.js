@@ -4,7 +4,7 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL
 const REFRESH_URL = import.meta.env.VITE_REFRESH_TOKEN_URL
 
 const clearStateAndStorage = async () => {
-  const { useAuthStore } = await import('../stores/authStore')
+  const { useAuthStore } = await import('@/stores/authStore')
   const authStore = useAuthStore()
   authStore.isAuthenticated = false
   localStorage.removeItem('refriall_auth_access_token')
