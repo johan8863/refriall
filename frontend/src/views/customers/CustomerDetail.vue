@@ -4,11 +4,11 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
-import { customerService } from '../../services/customerService'
-import CustomerDetailMenu from '../../components/customers/menus/CustomerDetailMenu.vue'
-import DeleteModal from '../../components/common/DeleteModal.vue'
-import { useResourceLoader } from '../../composables/useResourceLoader'
-import { useErrorHandler } from '../../composables/useErrorHandler'
+import { customerService } from '@/services/customerService'
+import CustomerDetailMenu from '@/components/customers/menus/CustomerDetailMenu.vue'
+import DeleteModal from '@/components/common/DeleteModal.vue'
+import { useResourceLoader } from '@/composables/useResourceLoader'
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import type { CustomerDetail, CustomerDependency } from './types'
 
 // Routing
