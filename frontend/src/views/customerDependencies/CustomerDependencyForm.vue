@@ -1,48 +1,25 @@
-<script setup>
+<script setup lang="ts">
 // vue
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
-// third
-import { required, helpers } from '@vuelidate/validators'
-import { useVuelidate } from '@vuelidate/core'
+import { helpers, required } from '@vuelidate/validators'
 
 // app
 import CustomerDependencyCreateMenu from '@/components/customerDependencies/menus/CustomerDependencyCreateMenu.vue'
-import { customerDependecyService } from '@/services/customerDependencyService.js'
-import { useErrorHandler } from '@/composables/useErrorHandler.js'
-import { useRouting } from '@/composables/routingFunctions.js'
+import { customerDependencyService } from '@/services/customerDependencyService'
+import { useForm } from '@/composables/useForm'
+import type { CustomerDependency } from './types'
 
-// router utilities and handlers
-const router = useRouter()
 const route = useRoute()
+const router = useRouter()
 
-const { goToDetail } = useRouting()
+// Check if we're in create or update mode
+const isCreate = route.name === 'customer_dependecy_create'
 
-const handleGoToDetail = () => {
-  try {
-    goToDetail('customers_detail', dependency.value.customer)
-  } catch (error) {
-    console.error(error)
-  }
-}
+// Get customer ID from route params if creating
+const customerId = isCreate ? Number(route.params.id) : 0
 
-// dependency objects
-const dependency = ref({
-  id: null,
-  customer: '',
-  name: '',
-  address: '',
-  province: '',
-  township: ''
-})
-
-// useFormErrorHandler refs
-const { errorMessage, backendErrors, handleError, getFieldErrors } = useErrorHandler({
-  objectName: 'Dependencia'
-})
-
-// validation rules
+// Validation rules
 const rules = {
   name: {
     required: helpers.withMessage('El nombre es requerido.', required)
@@ -58,40 +35,48 @@ const rules = {
   }
 }
 
-// vuelidate object
-const v$ = useVuelidate(rules, dependency)
+// Use form composable with CustomerDependency type
+const {
+  formData: dependency,
+  isLoading,
+  isSaving,
+  errorMessage,
+  backendErrors,
+  v$,
+  loadData,
+  handleSubmit,
+  handleGoBack,
+  getFieldErrors
+} = useForm<CustomerDependency>({
+  initialData: {
+    id: 0,
+    customer: customerId,
+    name: '',
+    address: '',
+    province: '',
+    township: ''
+  },
+  rules,
+  service: customerDependencyService,
+  objectName: 'Dependencia',
+  gender: 'f',
+  createMethod: 'postCustomerDependency',
+  updateMethod: 'putCustomerDependency',
+  detailMethod: 'detailCustomerDependency',
+  listView: 'customers',
+  detailView: 'customer_dependecy_detail'
+})
 
-// methods
-const handleSubmit = async () => {
-  // vuelidate validations
-  if (await v$.value.$validate()) {
-    try {
-      const isUpdate = !!dependency.value.id
-      const method = isUpdate
-        ? customerDependecyService.putCustomerDependcy(dependency.value)
-        : customerDependecyService.postCustomerDependency(dependency.value)
-      await method
-      handleGoToDetail()
-    } catch (error) {}
-  } else {
-    console.error('Validation errors:', v$.value.$errors)
-  }
-}
-
+// Lifecycle
 onMounted(async () => {
-  if (route.name === 'customer_dependecy_create') {
-    dependency.value.customer = route.params.id
+  // For create mode, we already have the customer ID
+  if (isCreate) {
+    dependency.value.customer = customerId
     return
   }
 
-  try {
-    const id = route.params.id
-    const { data } = await customerDependecyService.detailCustomerDependecy(id)
-    dependency.value = data
-  } catch (error) {
-    console.error('General errors:', { error })
-    handleError(error)
-  }
+  // For update mode, load the dependency data
+  await loadData(route.params.id as string)
 })
 </script>
 
@@ -99,13 +84,20 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <customer-dependency-create-menu />
+      <CustomerDependencyCreateMenu />
     </div>
 
     <!-- main content -->
-    <div class="col-md-4">
-      <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="backendErrors.non_field_errors">
+    <div v-if="isLoading" class="col-md-4">
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+        <span role="status" class="text-primary">Cargando datos... </span>
+        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <div v-else class="col-md-4">
+      <!-- Non-field errors -->
+      <div v-if="backendErrors.non_field_errors">
         <p
           class="form-text text-danger"
           v-for="(error, index) in backendErrors.non_field_errors"
@@ -113,16 +105,15 @@ onMounted(async () => {
         >
           {{ error }}
         </p>
-      </span>
-      <!-- backend general errors -->
-      <span v-if="errorMessage">
-        <p class="form-text text-danger">
-          {{ errorMessage }}
-        </p>
-      </span>
-      <!-- form -->
+      </div>
+
+      <!-- General errors -->
+      <div v-if="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
       <form @submit.prevent="handleSubmit">
-        <!-- name control -->
+        <!-- Name field -->
         <div class="mb-2">
           <label for="name" class="form-label">Nombre</label>
           <input
@@ -131,12 +122,13 @@ onMounted(async () => {
             class="form-control"
             v-model.trim="dependency.name"
             @blur="v$.name.$touch"
+            autofocus
           />
-          <!-- frontend errors -->
+
           <p class="form-text text-danger" v-for="error in v$.name.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend errors -->
+
           <p
             v-for="(error, i) in getFieldErrors('name')"
             :key="`backend-${i}`"
@@ -146,11 +138,10 @@ onMounted(async () => {
           </p>
         </div>
 
-        <!-- address control -->
+        <!-- Address field -->
         <div class="mb-2">
-          <label for="address">Dirección</label>
+          <label for="address" class="form-label">Dirección</label>
           <textarea
-            name="address"
             id="address"
             class="form-control"
             v-model.trim="dependency.address"
@@ -158,11 +149,11 @@ onMounted(async () => {
             cols="5"
             rows="5"
           ></textarea>
-          <!-- frontend errors -->
+
           <p class="form-text text-danger" v-for="error in v$.address.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend errors -->
+
           <p
             v-for="(error, i) in getFieldErrors('address')"
             :key="`backend-${i}`"
@@ -172,9 +163,9 @@ onMounted(async () => {
           </p>
         </div>
 
-        <!-- province control -->
+        <!-- Province field -->
         <div class="mb-2">
-          <label for="province">Provincia</label>
+          <label for="province" class="form-label">Provincia</label>
           <input
             type="text"
             id="province"
@@ -182,11 +173,11 @@ onMounted(async () => {
             v-model.trim="dependency.province"
             @blur="v$.province.$touch"
           />
-          <!-- frontend errors -->
+
           <p class="form-text text-danger" v-for="error in v$.province.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend errors -->
+
           <p
             v-for="(error, i) in getFieldErrors('province')"
             :key="`backend-${i}`"
@@ -196,20 +187,21 @@ onMounted(async () => {
           </p>
         </div>
 
-        <!-- township control -->
+        <!-- Township field -->
         <div class="mb-2">
-          <label for="township">Municipio</label>
+          <label for="township" class="form-label">Municipio</label>
           <input
             type="text"
             id="township"
             class="form-control"
             v-model.trim="dependency.township"
+            @blur="v$.township.$touch"
           />
-          <!-- frontend errors -->
+
           <p class="form-text text-danger" v-for="error in v$.township.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
-          <!-- backend errors -->
+
           <p
             v-for="(error, i) in getFieldErrors('township')"
             :key="`backend-${i}`"
@@ -219,12 +211,13 @@ onMounted(async () => {
           </p>
         </div>
 
-        <!-- buttons -->
+        <!-- Buttons -->
         <div class="mb-2">
-          <button type="submit" class="btn btn-sm btn-primary">
+          <button type="submit" class="btn btn-sm btn-primary" :disabled="isSaving">
+            <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ dependency.id ? 'Actualizar' : 'Guardar' }}
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoToDetail">
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
             Cancelar
           </button>
         </div>
