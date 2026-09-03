@@ -1,16 +1,17 @@
-<script setup>
-defineProps({
-  customer: {
-    type: Object,
-    required: true
-  },
-  isLoading: {
-    type: Boolean,
-    required: true
-  }
-})
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import type { Customer } from '../../../views/customers/types'
 
-defineEmits(['onDelete'])
+interface Props {
+  customer: Customer
+  isLoading: boolean
+}
+
+defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'onDelete'): void
+}>()
 </script>
 
 <template>
@@ -18,15 +19,12 @@ defineEmits(['onDelete'])
     <li class="list-group-item">
       <strong>Clientes</strong>
     </li>
-    <!-- customers -->
     <li class="list-group-item">
       <RouterLink :to="{ name: 'customers' }">Clientes</RouterLink>
     </li>
-    <!-- new customer -->
     <li class="list-group-item">
       <RouterLink :to="{ name: 'customers_create' }">Nuevo</RouterLink>
     </li>
-    <!-- update customer -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
@@ -36,7 +34,6 @@ defineEmits(['onDelete'])
         >Editar</RouterLink
       >
     </li>
-    <!-- create customer dependency -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
@@ -46,7 +43,6 @@ defineEmits(['onDelete'])
         >Nueva dependencia</RouterLink
       >
     </li>
-    <!-- delete customer -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
