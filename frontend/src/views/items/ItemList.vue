@@ -3,12 +3,12 @@
 import { onMounted } from 'vue'
 
 // app
-import { itemService } from '../../services/itemService'
-import ItemListMenu from '../../components/items/menus/ItemListMenu.vue'
-import ItemListPagination from '../../components/items/ItemListPagination.vue'
-import ItemListTable from '../../components/items/ItemListTable.vue'
-import SearchFormListTable from '../../components/SearchFormListTable.vue'
-import { usePaginationSearch } from '../../composables/usePaginationSearch'
+import { itemService } from '@/services/itemService'
+import ItemListMenu from '@/components/items/menus/ItemListMenu.vue'
+import ItemListPagination from '@/components/items/ItemListPagination.vue'
+import ItemListTable from '@/components/items/ItemListTable.vue'
+import SearchFormListTable from '@/components/SearchFormListTable.vue'
+import { usePaginationSearch } from '@/composables/usePaginationSearch'
 import type { Item } from './types'
 
 const {
