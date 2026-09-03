@@ -1,5 +1,4 @@
 import { useErrorHandler } from './useErrorHandler'
-import type { Ref } from 'vue'
 
 interface UseErrorFormHandlerOptions {
   objectName?: string
