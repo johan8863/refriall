@@ -7,7 +7,7 @@ import { helpers, required } from '@vuelidate/validators'
 // app
 import { currencyService } from '@/services/currencyService'
 import CustomerDependencySelector from '@/components/orders/CustomerDependencySelector.vue'
-import { customerDependecyService } from '@/services/customerDependencyService'
+import { customerDependencyService } from '@/services/customerDependencyService'
 import { customerService } from '@/services/customerService'
 import { itemService } from '@/services/itemService'
 import ItemTime from '@/components/orders/ItemTime.vue'
@@ -154,7 +154,6 @@ const rules = {
 // useForm composable
 const {
   formData: order,
-  isLoading,
   isSaving,
   errorMessage,
   backendErrors,
@@ -198,6 +197,8 @@ const { orderTotalComputed } = useOrderTotalComputed(order, items)
 
 // looad data
 const loadBackendData = async () => {
+  // clear previous errors
+  clearErrors()
   try {
     isLoadingBackendData.value = true
     errorMessage.value = null
@@ -206,7 +207,7 @@ const loadBackendData = async () => {
       customerService.listAllCustomers(),
       kitService.getAllKits(),
       itemService.listItemsForSelect(),
-      customerDependecyService.listCustomerDependecy(),
+      customerDependencyService.listCustomerDependency(),
       currencyService.listCurrencies(),
       providerService.listAllProviders()
     ])
