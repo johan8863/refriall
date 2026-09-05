@@ -5,8 +5,11 @@
     "strict": false,
     "noImplicitAny": false,
     "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./src"]
+    },
     "types": ["vite/client"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.d.ts", "src/**/*.vue"],
   "exclude": ["node_modules", "dist"]
 }
