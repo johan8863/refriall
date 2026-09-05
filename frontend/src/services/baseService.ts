@@ -9,10 +9,6 @@ import axios, {
 const BASE_URL = import.meta.env.VITE_API_BASE_URL as string
 const REFRESH_URL = import.meta.env.VITE_REFRESH_TOKEN_URL as string
 
-<<<<<<< HEAD:frontend/src/services/baseService.js
-const clearStateAndStorage = async () => {
-  const { useAuthStore } = await import('@/stores/authStore')
-=======
 /**
  * Response structure for refresh token endpoint
  */
@@ -33,7 +29,6 @@ interface RequesConfigWithRetry extends InternalAxiosRequestConfig {
  */
 const clearStateAndStorage = async (): Promise<void> => {
   const { useAuthStore } = await import('../stores/authStore')
->>>>>>> 92e58f3 (feat: axios instance to typescript):frontend/src/services/baseService.ts
   const authStore = useAuthStore()
   authStore.isAuthenticated = false
   localStorage.removeItem('refriall_auth_access_token')
