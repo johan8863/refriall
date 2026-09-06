@@ -1,15 +1,15 @@
-<script setup>
+<script setup lang="ts">
 // vue
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
 // app
 import { providerService } from '@/services/providerService'
 import ProviderListMenu from '@/components/providers/menus/ProviderListMenu.vue'
-import { usePaginationSearch } from '@/composables/usePaginationSearch.js'
 import ProviderListTable from '@/components/providers/ProviderListTable.vue'
 import ListPagination from '@/components/common/ListPagination.vue'
+import { usePaginationSearch } from '@/composables/usePaginationSearch'
+import type { Provider } from './types'
 
-// pagination composable
 const {
   items: providers,
   currentPage,
@@ -24,14 +24,15 @@ const {
   loadNextItems,
   loadPrevItems,
   clearSearch
-} = usePaginationSearch({
+} = usePaginationSearch<Provider>({
   fetchFunction: providerService.listProvider,
   searchFunction: providerService.searchProviders,
   itemName: 'Prestadores',
-  gender: 'm'
+  gender: 'm',
+  pageSize: 10
 })
 
-// lifecycle
+// Lifecycle
 onMounted(async () => {
   await loadItems(1, '')
 })
@@ -39,35 +40,26 @@ onMounted(async () => {
 
 <template>
   <div class="row">
-    <!-- side menu -->
     <div class="col-md-2">
-      <provider-list-menu />
+      <ProviderListMenu />
     </div>
 
-    <!-- main content -->
     <div class="col-md-10">
       <div class="row">
         <div v-if="isLoading" class="text-center my-4">
-          <!-- loading state -->
           <div class="spinner-border text-primary" role="status"></div>
-          <div>
-            <span>Cargando...</span>
-          </div>
+          <div><span>Cargando...</span></div>
         </div>
 
-        <!-- error message -->
         <div v-else-if="errorMessage" class="alert alert-danger mt-3">
           {{ errorMessage }}
         </div>
 
-        <!-- results -->
         <div v-else class="col-md-4">
           <div v-if="providers.length > 0">
-            <!-- table list -->
-            <provider-list-table :providers="providers" />
+            <ProviderListTable :providers="providers" />
 
-            <!-- pagination list -->
-            <list-pagination
+            <ListPagination
               :show-prev-button="showPrevButton"
               :show-next-button="showNextButton"
               :is-loading="isLoading"
@@ -76,15 +68,14 @@ onMounted(async () => {
               @on-load-next-items="loadNextItems"
             />
           </div>
-          <!-- in case no providers -->
+
           <div v-else>
-            <p class="lead text-center">Inserte un Proveedor.</p>
+            <p class="lead text-center">
+              {{ hasSearched ? 'No se encontraron prestadores' : 'No hay prestadores registrados' }}
+            </p>
           </div>
-          <!-- end results -->
         </div>
       </div>
-      <!-- end main content -->
     </div>
-    <!-- end outer row -->
   </div>
 </template>
