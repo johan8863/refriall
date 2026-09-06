@@ -29,8 +29,8 @@ export type ProviderCreate = Omit<Provider, 'id'>
  * Data for changing password (admin)
  */
 export interface ProviderChangePassword {
-  password: string
-  confirm_password: string
+  confirm_new_password: string
+  new_password: string
 }
 
 /**
