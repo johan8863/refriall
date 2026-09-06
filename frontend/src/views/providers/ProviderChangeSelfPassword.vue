@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // vue
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -9,31 +9,32 @@ import { required, helpers } from '@vuelidate/validators'
 
 // app
 import ProviderChangeSelfPasswordMenu from '@/components/providers/menus/ProviderChangeSelfPasswordMenu.vue'
-import { providerService } from '@/services/providerService.js'
-import { useRouting } from '@/composables/routingFunctions.js'
+import { providerService } from '@/services/providerService'
+import { useRouting } from '@/composables/routingFunctions'
+import type { ProviderChangeSelfPassword, PasswordChangeErrors } from './types'
 
-// main object
-const providerChangePassword = ref({
+// Main object
+const providerChangePassword = ref<ProviderChangeSelfPassword>({
   current_password: '',
   new_password: '',
   confirm_new_password: ''
 })
 
-// object backend errors
-const backendErrors = ref({
+// Backend errors
+const backendErrors = ref<PasswordChangeErrors>({
   current_password: [],
   new_password: [],
   confirm_new_password: [],
   network: ''
 })
 
-// routing utilities
+// Routing
 const router = useRouter()
-const { goToListPost } = useRouting()
+const { goToList } = useRouting()
 
-const handleGoToList = () => goToListPost('providers')
+const handleGoToList = (): void => goToList('providers')
 
-// rules to manage front validations
+// Validation rules
 const rules = {
   current_password: {
     required: helpers.withMessage('La clave actual es requerida.', required)
@@ -46,18 +47,16 @@ const rules = {
   }
 }
 
-// vuelidate object
+// Vuelidate
 const v$ = useVuelidate(rules, providerChangePassword)
 
-// change password function
-const handleChangeSelfPassword = async () => {
+// Change password function
+const handleChangeSelfPassword = async (): Promise<void> => {
   try {
     if (await v$.value.$validate()) {
       await providerService.changeSelfPassword(providerChangePassword.value)
       router.push({ name: 'providers' })
     } else {
-      // always log vuelidate erros to de console
-      // just in case of unexpected behavior
       console.error(
         v$.value.$errors.map((err) => ({
           property: err.$property,
@@ -65,7 +64,7 @@ const handleChangeSelfPassword = async () => {
         }))
       )
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error({ error })
     if (error.response) {
       backendErrors.value = error.response.data
@@ -79,29 +78,29 @@ const handleChangeSelfPassword = async () => {
 
 <template>
   <div class="row">
-    <!-- side menu -->
     <div class="col-sm-2 col-md-2">
-      <provider-change-self-password-menu />
+      <ProviderChangeSelfPasswordMenu />
     </div>
 
-    <!-- main content -->
     <div class="col-md-2 col-sm-3">
-      <!-- backend errors from non_field_errors dictionary -->
-      <span v-if="backendErrors.non_field_errors">
+      <!-- Non-field errors -->
+      <div v-if="backendErrors.non_field_errors">
         <p
           class="form-text text-danger"
-          v-for="(error, index) in kitErrors.non_field_errors"
+          v-for="(error, index) in backendErrors.non_field_errors"
           :key="index"
         >
           {{ error }}
         </p>
-      </span>
-      <!-- network error -->
-      <span v-if="backendErrors.network">
+      </div>
+
+      <!-- Network error -->
+      <div v-if="backendErrors.network">
         <p class="form-text text-danger">{{ backendErrors.network }}</p>
-      </span>
+      </div>
+
       <form @submit.prevent="handleChangeSelfPassword">
-        <!-- current_password control -->
+        <!-- Current password -->
         <div class="mb-3">
           <label for="current_password" class="form-label">Clave actual</label>
           <input
@@ -112,7 +111,6 @@ const handleChangeSelfPassword = async () => {
             v-model="providerChangePassword.current_password"
             @blur="v$.current_password.$touch"
           />
-          <!-- frontend validations -->
           <p
             class="form-text text-danger"
             v-for="error in v$.current_password.$errors"
@@ -120,8 +118,7 @@ const handleChangeSelfPassword = async () => {
           >
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
-          <span v-if="backendErrors.current_password">
+          <div v-if="backendErrors.current_password">
             <p
               class="form-text text-danger"
               v-for="(error, index) in backendErrors.current_password"
@@ -129,9 +126,10 @@ const handleChangeSelfPassword = async () => {
             >
               {{ error }}
             </p>
-          </span>
+          </div>
         </div>
-        <!-- new_password control -->
+
+        <!-- New password -->
         <div class="mb-3">
           <label for="new_password" class="form-label">Nueva clave</label>
           <input
@@ -141,7 +139,6 @@ const handleChangeSelfPassword = async () => {
             v-model="providerChangePassword.new_password"
             @blur="v$.new_password.$touch"
           />
-          <!-- frontend validations -->
           <p
             class="form-text text-danger"
             v-for="error in v$.new_password.$errors"
@@ -149,8 +146,7 @@ const handleChangeSelfPassword = async () => {
           >
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
-          <span v-if="backendErrors.new_password">
+          <div v-if="backendErrors.new_password">
             <p
               class="form-text text-danger"
               v-for="(error, index) in backendErrors.new_password"
@@ -158,20 +154,19 @@ const handleChangeSelfPassword = async () => {
             >
               {{ error }}
             </p>
-          </span>
+          </div>
         </div>
-        <!-- confirm_new_password control -->
+
+        <!-- Confirm new password -->
         <div class="mb-3">
           <label for="confirm_new_password" class="form-label">Confirmar nueva clave</label>
           <input
-            autofocus
             type="password"
             id="confirm_new_password"
             class="form-control form-control-sm"
             v-model="providerChangePassword.confirm_new_password"
             @blur="v$.confirm_new_password.$touch"
           />
-          <!-- frontend validations -->
           <p
             class="form-text text-danger"
             v-for="error in v$.confirm_new_password.$errors"
@@ -179,8 +174,7 @@ const handleChangeSelfPassword = async () => {
           >
             {{ error.$message }}
           </p>
-          <!-- backend validations -->
-          <span v-if="backendErrors.confirm_new_password">
+          <div v-if="backendErrors.confirm_new_password">
             <p
               class="form-text text-danger"
               v-for="(error, index) in backendErrors.confirm_new_password"
@@ -188,12 +182,13 @@ const handleChangeSelfPassword = async () => {
             >
               {{ error }}
             </p>
-          </span>
+          </div>
         </div>
-        <!-- buttons -->
+
+        <!-- Buttons -->
         <div>
-          <button class="btn btn-sm btn-primary">Cambiar</button>
-          <button class="btn btn-sm btn-secondary" type="button" @click="handleGoToList">
+          <button type="submit" class="btn btn-sm btn-primary">Cambiar</button>
+          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoToList">
             Cancelar
           </button>
         </div>
