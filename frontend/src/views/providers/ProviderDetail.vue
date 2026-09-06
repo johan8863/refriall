@@ -1,14 +1,16 @@
-<script setup>
+<script setup lang="ts">
 // vue
-import { onMounted, ref, computed } from 'vue'
+import { ref } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { providerService } from '@/services/providerService'
 import ProviderDetailMenu from '@/components/providers/menus/ProviderDetailMenu.vue'
 import DeleteModal from '@/components/common/DeleteModal.vue'
-import { useResourceLoader } from '@/composables/useResourceLoader.js'
-import { useErrorHandler } from '@/composables/useErrorHandler.js'
+import { useResourceLoader } from '@/composables/useResourceLoader'
+import { useErrorHandler } from '@/composables/useErrorHandler'
+import type { Provider } from './types'
 
 // Routing
 const route = useRoute()
@@ -33,17 +35,19 @@ const {
   isLoading,
   errorMessage,
   load: loadProvider
-} = useResourceLoader(providerService.detailProvider, {
+} = useResourceLoader<Provider>(providerService.detailProvider, {
   initialData: {
-    id: null,
+    id: 0,
     username: '',
     first_name: '',
     last_name: '',
-    license_number: '',
     tcp_code: '',
-    personal_id: '',
     bank_account_header: '',
-    bank_account: ''
+    bank_account: '',
+    address: '',
+    activity: '',
+    license_number: '',
+    personal_id: ''
   },
   objectName: 'Proveedor',
   gender: 'm',
@@ -53,7 +57,7 @@ const {
 })
 
 // Computed
-const fullName = computed(() => {
+const fullName = computed((): string => {
   if (!provider.value) return ''
   return (
     `${provider.value.first_name || ''} ${provider.value.last_name || ''}`.trim() || 'Sin nombre'
@@ -70,16 +74,16 @@ const deleteModalFields = computed(() => {
 })
 
 // Delete methods
-const openDeleteModal = () => {
+const openDeleteModal = (): void => {
   clearErrors()
   showDeleteModal.value = true
 }
 
-const closeDeleteModal = () => {
+const closeDeleteModal = (): void => {
   showDeleteModal.value = false
 }
 
-const confirmDelete = async () => {
+const confirmDelete = async (): Promise<void> => {
   isDeleting.value = true
   try {
     await providerService.deleteProvider(provider.value.id)
@@ -88,12 +92,9 @@ const confirmDelete = async () => {
   } catch (error) {
     console.error('Error deleting provider:', error)
 
-    // Handle error manually to ensure it displays correctly in modal
     if (error.response) {
       if (error.response.status === 400) {
-        // Provider has associated orders
         const errorData = error.response.data
-        // Try to extract the error message from different possible structures
         let errorMessageText = 'El prestador no se puede eliminar porque tiene órdenes asociadas.'
 
         if (errorData && typeof errorData === 'object') {
@@ -108,16 +109,13 @@ const confirmDelete = async () => {
           }
         }
 
-        // Set the error message directly
         deletingError.value = errorMessageText
       } else if (error.response.status === 404) {
         deletingError.value = 'El prestador que intenta eliminar no existe.'
       } else {
-        // Let useErrorHandler handle other errors
         handleError(error)
       }
     } else {
-      // Network or other errors
       deletingError.value = error.message || 'Error inesperado, consulte al desarrollador'
     }
 
@@ -133,7 +131,6 @@ onMounted(async () => {
 
 <template>
   <div class="row">
-    <!-- side menu -->
     <div class="col-md-2">
       <ProviderDetailMenu
         :provider="provider"
@@ -142,22 +139,17 @@ onMounted(async () => {
       />
     </div>
 
-    <!-- loading provider data -->
     <div v-if="isLoading" class="col-md-4">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
-        <span role="status" class="text-primary">Cargando datos... </span>
-        <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+        <span class="text-primary">Cargando datos... </span>
+        <span class="spinner-border spinner-border-sm text-primary"></span>
       </div>
     </div>
 
-    <!-- error message -->
     <div v-else-if="errorMessage" class="col-md-4">
-      <span class="form-text text-danger">
-        {{ errorMessage }}
-      </span>
+      <span class="form-text text-danger">{{ errorMessage }}</span>
     </div>
 
-    <!-- main content -->
     <div v-else class="col-md-4">
       <h3>{{ fullName }}</h3>
       <hr />
@@ -171,9 +163,7 @@ onMounted(async () => {
       <p><strong>Nro de Cuenta:</strong> {{ provider.bank_account || 'No especificado' }}</p>
     </div>
   </div>
-  <!-- end row -->
 
-  <!-- Delete Confirmation Modal -->
   <DeleteModal
     v-model:show="showDeleteModal"
     title="Confirmar Eliminación"
