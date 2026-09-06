@@ -1,16 +1,15 @@
-<script setup>
-defineProps({
-  provider: {
-    type: Object,
-    required: true
-  },
-  isLoading: {
-    type: Boolean,
-    required: true
-  }
-})
+<script setup lang="ts">
+import type { Provider } from '@/views/providers/types'
+interface Props {
+  provider: Provider
+  isLoading: boolean
+}
 
-defineEmits(['onDelete'])
+defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'onDelete'): void
+}>()
 </script>
 
 <template>
