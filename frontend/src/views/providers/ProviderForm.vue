@@ -1,43 +1,40 @@
-<script setup>
+<script setup lang="ts">
 // vue
-import { onMounted, ref, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 // third
-import { useVuelidate } from '@vuelidate/core'
 import { required, helpers, numeric } from '@vuelidate/validators'
 
 // app
 import { providerService } from '@/services/providerService'
 import ProviderFormMenu from '@/components/providers/menus/ProviderFormMenu.vue'
-import { useForm } from '@/composables/useForm.js'
+import { useForm } from '@/composables/useForm'
+import type { Provider } from './types'
 
-// router utilities and handlers
 const route = useRoute()
 
 // main object
-const initialData = {
-  id: null,
+const initialData: Provider = {
+  id: 0,
   username: '',
   first_name: '',
   last_name: '',
   tcp_code: '',
+  license_number: '',
+  personal_id: '',
   bank_account_header: '',
   bank_account: '',
   address: '',
   activity: '',
-  license_number: '',
   password: '',
-  confirm_password: '',
-  personal_id: ''
+  confirm_password: ''
 }
 
-// validation rules
+// Custom validator
+const requiredLength = (len: number) => (value: string) => value?.length === len
 
-// custom
-const requiredlength = (lenData) => (value) => value.length === lenData
-
-// object rules
+// Validation rules
 const rules = computed(() => ({
   username: {
     required: helpers.withMessage('El Usuario es requerido.', required)
@@ -57,9 +54,9 @@ const rules = computed(() => ({
   bank_account: {
     required: helpers.withMessage('La Cuenta Bancaria es requerida.', required),
     numeric: helpers.withMessage('La Cuenta debe contener sólo números.', numeric),
-    requiredlength: helpers.withMessage(
+    requiredLength: helpers.withMessage(
       'La Cuenta debe contener 16 caracteres.',
-      requiredlength(16)
+      requiredLength(16)
     )
   },
   address: {
@@ -71,24 +68,24 @@ const rules = computed(() => ({
   license_number: {
     required: helpers.withMessage('La Licencia es requerida.', required)
   },
-  // both password and confirm_password rules will only be executed
-  // on creation form
   password: {
-    required: helpers.withMessage('La Clave es requerida.', (value) => {
+    required: helpers.withMessage('La Clave es requerida.', (value, siblingState, vm) => {
+      // Si estamos en modo edición (ya existe id), no requerimos password
       if (provider.value.id) return true
-      return required.$validator(value)
+      // Si es creación, la contraseña es requerida
+      return required.$validator(value, siblingState, vm)
     })
   },
   confirm_password: {
-    required: helpers.withMessage('La confirmación es requerida.', (value) => {
+    required: helpers.withMessage('La confirmación es requerida.', (value, siblingState, vm) => {
       if (provider.value.id) return true
-      return required.$validator(value)
+      return required.$validator(value, siblingState, vm)
     })
   },
   personal_id: {
     required: helpers.withMessage('El CI es requerido.', required),
     numeric: helpers.withMessage('El CI debe contener sólo números.', numeric),
-    requiredlength: helpers.withMessage('El CI debe contener 11 caracteres.', requiredlength(11))
+    requiredLength: helpers.withMessage('El CI debe contener 11 caracteres.', requiredLength(11))
   }
 }))
 
@@ -103,7 +100,7 @@ const {
   handleSubmit,
   handleGoBack,
   getFieldErrors
-} = useForm({
+} = useForm<Provider>({
   initialData,
   rules,
   service: providerService,
@@ -116,8 +113,9 @@ const {
   detailView: 'providers_detail'
 })
 
-// lifecycle
-onMounted(async () => await loadData(route.params.id))
+onMounted(async () => {
+  await loadData(route.params.id as string)
+})
 </script>
 
 <template>
@@ -139,7 +137,7 @@ onMounted(async () => await loadData(route.params.id))
       <!-- form -->
       <form v-else class="row" @submit.prevent="handleSubmit">
         <!-- backend errors -->
-        <span v-if="backendErrors.non_field_errors">
+        <div v-if="backendErrors.non_field_errors">
           <p
             class="form-text text-danger"
             v-for="(error, i) in backendErrors.non_field_errors"
@@ -147,12 +145,12 @@ onMounted(async () => await loadData(route.params.id))
           >
             {{ error }}
           </p>
-        </span>
-        <span v-if="errorMessage">
+        </div>
+        <div v-if="errorMessage">
           <p class="form-text text-danger">
             {{ errorMessage }}
           </p>
-        </span>
+        </div>
 
         <!-- username control -->
         <div class="col-md-3 mb-2">
