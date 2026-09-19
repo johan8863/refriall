@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // vue
 import { onMounted } from 'vue'
 
@@ -8,7 +8,8 @@ import BillListTable from '@/components/bills/BillListTable.vue'
 import BillListPaginatin from '@/components/bills/BillListPaginatin.vue'
 import SearchFormListTable from '@/components/SearchFormListTable.vue'
 import BillListMenu from '@/components/bills/menus/BillListMenu.vue'
-import { usePaginationSearch } from '@/composables/usePaginationSearch.js'
+import { usePaginationSearch } from '@/composables/usePaginationSearch'
+import type { BillListItem } from './types'
 
 const {
   items: bills,
@@ -24,15 +25,15 @@ const {
   loadNextItems,
   loadPrevItems,
   clearSearch
-} = usePaginationSearch({
-  fetchFunction: billService.listBillsPagination,
+} = usePaginationSearch<BillListItem>({
+  fetchFunction: (page) => billService.listBillsPagination(page, ''),
   searchFunction: billService.searchBills,
   itemName: 'Factura',
   gender: 'f',
   pageSize: 10
 })
 
-// lifecycle
+// Lifecycle
 onMounted(async () => {
   await loadItems(1, '')
 })
@@ -47,10 +48,8 @@ onMounted(async () => {
 
     <!-- main content -->
     <div class="col-md-10">
-      <!-- main row content -->
       <div class="row">
         <div class="col-md-12 mt-1">
-          <!-- search form row -->
           <SearchFormListTable
             v-model="searchTerm"
             :is-loading="isLoading"
@@ -79,10 +78,8 @@ onMounted(async () => {
 
               <!-- results -->
               <div v-else-if="bills.length > 0" class="mt-2">
-                <!-- bill list table -->
                 <BillListTable :bills="bills" />
 
-                <!-- pagination -->
                 <BillListPaginatin
                   :show-prev-button="showPrevButton"
                   :show-next-button="showNextButton"
