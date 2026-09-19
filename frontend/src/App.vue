@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // vue
 import { useRoute } from 'vue-router'
 import { computed, onMounted } from 'vue'
@@ -12,7 +12,7 @@ const authStore = useAuthStore()
 const route = useRoute()
 
 // computed to show/hide navbar based on meta properties
-const showNavBar = computed(() => !route.meta.hideNavBar)
+const showNavBar = computed((): boolean => !route.meta.hideNavBar)
 
 onMounted(() => authStore.initAuth())
 </script>
