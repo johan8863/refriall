@@ -1,11 +1,12 @@
-<script setup>
-defineProps({
-  bills: {
-    type: Array,
-    required: true
-  }
-})
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import type { BillListItem } from '@/views/bills/types'
+
+defineProps<{
+  bills: BillListItem[]
+}>()
 </script>
+
 <template>
   <div class="table-responsive">
     <table class="table table-striped table-hover mb-1">
