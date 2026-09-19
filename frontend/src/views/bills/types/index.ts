@@ -3,7 +3,7 @@ import type { PaginatedResponse } from '@/types/shared'
 import type { Customer } from '@/views/customers/types'
 import type { Provider } from '@/views/providers/types'
 import type { Currency } from '@/views/currencies/types'
-import type { OrderDetail } from '@/views/orders/types'
+import type { Order, OrderDetail } from '@/views/orders/types'
 
 /**
  * Order folio reference (used in get_orders_folio)
@@ -42,6 +42,7 @@ export interface BillDetail {
   customer: Customer | null
   currency: Currency
   folio: string
+  orders: Order[] | null
   provider: Provider | null
   provider_signature_date: string
   customer_signature_date: string | null
