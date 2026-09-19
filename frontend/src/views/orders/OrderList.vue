@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // vue
 import { onMounted } from 'vue'
 
@@ -8,8 +8,12 @@ import OrdersListTable from '@/components/orders/OrdersListTable.vue'
 import OrdersListPagination from '@/components/orders/OrdersListPagination.vue'
 import SearchFormListTable from '@/components/SearchFormListTable.vue'
 import OrderListMenu from '@/components/orders/menus/OrderListMenu.vue'
-import { usePaginationSearch } from '@/composables/usePaginationSearch.js'
+import { usePaginationSearch } from '@/composables/usePaginationSearch'
+import type { OrderList } from './types'
 
+/**
+ * Order list view with pagination and search
+ */
 const {
   items: orders,
   totalItems: ordersCount,
@@ -25,15 +29,15 @@ const {
   loadNextItems,
   loadPrevItems,
   clearSearch
-} = usePaginationSearch({
-  fetchFunction: orderService.listOrder,
+} = usePaginationSearch<OrderList>({
+  fetchFunction: (page) => orderService.listOrder(page, ''),
   searchFunction: orderService.searchOrders,
   itemName: 'Orden',
   gender: 'f',
   pageSize: 10
 })
 
-// lifecycle
+// Lifecycle
 onMounted(async () => {
   await loadItems(1, '')
 })
@@ -48,11 +52,9 @@ onMounted(async () => {
 
     <!-- main content -->
     <div class="col-md-10">
-      <!-- main content row -->
       <div class="row">
         <!-- search form col -->
         <div class="col-md-12 mt-1">
-          <!-- search form row -->
           <SearchFormListTable
             v-model="searchTerm"
             :is-loading="isLoading"

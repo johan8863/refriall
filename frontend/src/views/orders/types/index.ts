@@ -53,6 +53,7 @@ export interface Order {
   kit_serial: string
   job_description: string | null
   itemtime_set: ItemTime[]
+  itemtimeorder_set: ItemTimeOrder[]
   provider: number | Provider
   provider_signature_date: string
   customer_signature_date: string

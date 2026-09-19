@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // vue
 import { useRoute } from 'vue-router'
 import { onMounted, ref } from 'vue'
@@ -15,15 +15,22 @@ import { kitService } from '@/services/kitService'
 import OrderFormMenu from '@/components/orders/menus/OrderFormMenu.vue'
 import { orderService } from '@/services/orderService'
 import { providerService } from '@/services/providerService'
-import { useForm } from '@/composables/useForm.js'
+import { useForm } from '@/composables/useForm'
 import { useOrderTotalComputed } from '@/composables/OrderComposable'
+import type { Order, ItemTime as ItemTimeType } from './types'
+import type { Customer, CustomerDependency } from '@/views/customers/types'
+import type { Kit } from '@/views/kits/types'
+import type { Item } from '@/views/items/types'
+import type { Currency } from '@/views/currencies/types'
+import type { Provider } from '@/views/providers/types'
 
-// main order object to be used in composable
-const initialData = {
-  id: null,
-  customer: '',
-  currency: '',
-  customer_dependency: '',
+// Main order object to be used in composable
+const initialData: Order = {
+  id: 0,
+  bill: null,
+  customer: null,
+  currency: 0,
+  customer_dependency: null,
   symptom: '',
   flaw: '',
   repair_description: '',
@@ -32,58 +39,59 @@ const initialData = {
   repair: false,
   install: false,
   maintenance: false,
-  support: '',
-  kit: '',
+  support: 't',
+  kit: null,
   kit_brand: '',
   kit_model: '',
   kit_serial: '',
-  job_description: '',
+  job_description: null,
   itemtime_set: [],
-  provider: '',
+  itemtimeorder_set: [],
+  provider: null,
   provider_signature_date: '',
-  customer_signature_date: '',
-  check_number: '',
-  charge_aprove: '',
-  charge_check: '',
-  customer_charge: '',
-  customer_name: '',
-  customer_personal_id: '',
-  checked_by: '',
-  aproved_by: ''
+  customer_signature_date: null,
+  check_number: null,
+  charge_aprove: null,
+  charge_check: null,
+  customer_charge: null,
+  customer_name: null,
+  customer_personal_id: null,
+  checked_by: null,
+  aproved_by: null
 }
 
-// refs
-const customers = ref([])
-const dependencies = ref([])
-const kits = ref([])
-const items = ref([])
-const currencies = ref([])
-const providers = ref([])
+// Refs
+const customers = ref<Customer[]>([])
+const dependencies = ref<CustomerDependency[]>([])
+const kits = ref<Kit[]>([])
+const items = ref<Item[]>([])
+const currencies = ref<Currency[]>([])
+const providers = ref<Provider[]>([])
 const isLoadingBackendData = ref(false)
 const isLoadingOrderData = ref(false)
 
-// routing
+// Routing
 const route = useRoute()
 
-// custom rules
-const customerOrDependency = () => {
+// Custom rules
+const customerOrDependency = (): boolean => {
   if (!order.value.customer && !order.value.customer_dependency) return true
   if (order.value.customer && order.value.customer_dependency) return false
   return true
 }
 
-const atleastOneCustomerOrDependency = () =>
+const atleastOneCustomerOrDependency = (): boolean =>
   !!order.value.customer || !!order.value.customer_dependency
 
-const minimalItems = () => order.value.itemtime_set.length > 0
+const minimalItems = (): boolean => order.value.itemtime_set.length > 0
 
-const atLeastOneModality = () =>
+const atLeastOneModality = (): boolean =>
   order.value.check_diagnosis ||
   order.value.repair ||
   order.value.install ||
   order.value.maintenance
 
-// rules
+// Rules
 const rules = {
   provider: {
     required: helpers.withMessage('El prestador es requerido.', required)
@@ -94,7 +102,7 @@ const rules = {
       customerOrDependency
     ),
     required: helpers.withMessage(
-      'Debe Seleccionar un cliente o una dependencia.',
+      'Debe seleccionar un cliente o una dependencia.',
       atleastOneCustomerOrDependency
     )
   },
@@ -154,6 +162,7 @@ const rules = {
 // useForm composable
 const {
   formData: order,
+  isLoading,
   isSaving,
   errorMessage,
   backendErrors,
@@ -163,7 +172,7 @@ const {
   handleGoBack,
   getFieldErrors,
   clearErrors
-} = useForm({
+} = useForm<Order>({
   initialData,
   rules,
   service: orderService,
@@ -176,29 +185,24 @@ const {
   detailView: 'orders_detail'
 })
 
-// methods
-
-// item times preparation
+// Methods
 const DEFAULT_ITEMS_COUNT = 12
-const DEFAULT_ITEM_TIME = () => ({ item: 0, times: 1 })
+const DEFAULT_ITEM_TIME = (): ItemTimeType => ({ item: 0, times: 1 })
 
-const createItemTime = (elements = DEFAULT_ITEMS_COUNT) => {
+const createItemTime = (elements = DEFAULT_ITEMS_COUNT): void => {
   const newItems = Array.from({ length: elements }, DEFAULT_ITEM_TIME)
   order.value.itemtime_set.push(...newItems)
 }
 
-// delete item
-const deleteItem = (index) => {
+const deleteItem = (index: number): void => {
   order.value.itemtime_set.splice(index, 1)
 }
 
-// compute total value of the order
+// Compute total value of the order
 const { orderTotalComputed } = useOrderTotalComputed(order, items)
 
-// looad data
-const loadBackendData = async () => {
-  // clear previous errors
-  clearErrors()
+// Load data
+const loadBackendData = async (): Promise<void> => {
   try {
     isLoadingBackendData.value = true
     errorMessage.value = null
@@ -242,14 +246,13 @@ const loadBackendData = async () => {
   }
 }
 
-// handle submit wrapper
-const handleSubmit = async () => {
-  // Filter out empty items before submit
+// Handle submit wrapper
+const handleSubmit = async (): Promise<void> => {
   order.value.itemtime_set = order.value.itemtime_set.filter((x) => x.item !== 0)
   await useFormSubmit()
 }
 
-// lifecycle
+// Lifecycle
 onMounted(async () => {
   await loadBackendData()
 
@@ -257,10 +260,9 @@ onMounted(async () => {
   if (id) {
     try {
       isLoadingOrderData.value = true
-      await loadData(id)
-      // Map itemtime_set after loading
+      await loadData(Number(id))
       order.value.itemtime_set = order.value.itemtime_set.map((itemTime) => ({
-        item: itemTime.item,
+        item: typeof itemTime.item === 'object' ? itemTime.item.id : itemTime.item,
         times: itemTime.times
       }))
     } catch (error) {
@@ -278,7 +280,7 @@ onMounted(async () => {
   <div class="row">
     <!-- side menu -->
     <div class="col-md-2">
-      <order-form-menu @on-load-data="loadBackendData" />
+      <OrderFormMenu @on-load-data="loadBackendData" />
     </div>
 
     <!-- main content -->
@@ -303,7 +305,7 @@ onMounted(async () => {
         <span class="spinner-border spinner-border-sm text-primary"></span>
       </div>
 
-      <!-- Errors -->
+      <!-- Errors and form -->
       <div v-else>
         <div v-if="errorMessage" class="alert alert-danger">
           {{ errorMessage }}
@@ -331,15 +333,11 @@ onMounted(async () => {
               v-model.trim="order.provider"
               @blur="v$.provider.$touch"
             >
-              <option v-for="p in providers" :key="p.id" :value="p.id">
-                {{ p.first_name }}
-              </option>
+              <option v-for="p in providers" :key="p.id" :value="p.id">{{ p.first_name }}</option>
             </select>
-            <!-- frontend errors -->
             <p class="text-danger" v-for="error in v$.provider.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('provider')"
               :key="`backend-${i}`"
@@ -354,12 +352,12 @@ onMounted(async () => {
             <CustomerDependencySelector
               type="customer"
               :customers="customers"
-              v-model="order.customer"
+              v-model="order.customer as number"
               :disabled="!!order.customer_dependency"
               :vuelidate-errors="v$.customer.$errors"
               :get-field-errors="getFieldErrors"
               @blur="v$.customer.$touch"
-              @clear="order.customer = ''"
+              @clear="order.customer = null"
             />
           </div>
 
@@ -368,12 +366,12 @@ onMounted(async () => {
             <CustomerDependencySelector
               type="dependency"
               :dependencies="dependencies"
-              v-model="order.customer_dependency"
+              v-model="order.customer_dependency as number"
               :disabled="!!order.customer"
               :vuelidate-errors="v$.customer_dependency.$errors"
               :get-field-errors="getFieldErrors"
               @blur="v$.customer.$touch"
-              @clear="order.customer_dependency = ''"
+              @clear="order.customer_dependency = null"
             />
           </div>
 
@@ -387,11 +385,9 @@ onMounted(async () => {
               v-model.trim="order.symptom"
               @blur="v$.symptom.$touch"
             />
-            <!-- frontend errors -->
             <p class="text-danger" v-for="error in v$.symptom.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('symptom')"
               :key="`backend-${i}`"
@@ -411,11 +407,9 @@ onMounted(async () => {
               v-model.trim="order.flaw"
               @blur="v$.flaw.$touch"
             />
-            <!-- frontend errors -->
             <p class="text-danger" v-for="error in v$.flaw.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('flaw')"
               :key="`backend-${i}`"
@@ -435,11 +429,9 @@ onMounted(async () => {
               v-model.trim="order.repair_description"
               @blur="v$.repair_description.$touch"
             />
-            <!-- frontend errors -->
             <p class="text-danger" v-for="error in v$.repair_description.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('repair_description')"
               :key="`backend-${i}`"
@@ -459,11 +451,9 @@ onMounted(async () => {
               v-model.trim="order.folio"
               @blur="v$.folio.$touch"
             />
-            <!-- frontend errors -->
             <p class="text-danger" v-for="error in v$.folio.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('folio')"
               :key="`backend-${i}`"
@@ -485,11 +475,9 @@ onMounted(async () => {
               <option value="t">Taller</option>
               <option value="i">In Situ</option>
             </select>
-            <!-- frontend errors -->
             <p class="text-danger" v-for="error in v$.support.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('support')"
               :key="`backend-${i}`"
@@ -509,15 +497,11 @@ onMounted(async () => {
               v-model.number="order.currency"
               @blur="v$.currency.$touch"
             >
-              <option v-for="c in currencies" :key="c.id" :value="c.id">
-                {{ c.name }}
-              </option>
+              <option v-for="c in currencies" :key="c.id" :value="c.id">{{ c.name }}</option>
             </select>
-            <!-- frontend errors -->
             <p class="text-danger" v-for="error in v$.currency.$errors" :key="error.$uuid">
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('currency')"
               :key="`backend-${i}`"
@@ -537,7 +521,6 @@ onMounted(async () => {
                 class="form-check"
                 v-model.trim="order.check_diagnosis"
               />
-              <!-- frontend errors -->
               <p class="text-danger" v-for="error in v$.check_diagnosis.$errors" :key="error.$uid">
                 {{ error.$message }}
               </p>
@@ -571,11 +554,9 @@ onMounted(async () => {
             <select id="kit" class="form-select" v-model.trim="order.kit" @blur="v$.kit.$touch">
               <option v-for="k in kits" :key="k.id" :value="k.id">{{ k.name }}</option>
             </select>
-            <!-- frontend errors -->
             <p class="text-danger" v-for="error in v$.kit.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('kit')"
               :key="`backend-${i}`"
@@ -595,11 +576,9 @@ onMounted(async () => {
               v-model.trim="order.kit_brand"
               @blur="v$.kit_brand.$touch"
             />
-            <!-- frontend errors -->
             <p class="text-danger" v-for="error in v$.kit_brand.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('kit_brand')"
               :key="`backend-${i}`"
@@ -619,11 +598,9 @@ onMounted(async () => {
               v-model.trim="order.kit_model"
               @blur="v$.kit_model.$touch"
             />
-            <!-- frontend errors -->
             <p class="text-danger" v-for="error in v$.kit_model.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('kit_model')"
               :key="`backend-${i}`"
@@ -643,11 +620,9 @@ onMounted(async () => {
               v-model.trim="order.kit_serial"
               @blur="v$.kit_serial.$touch"
             />
-            <!-- frontend errors -->
             <p class="text-danger" v-for="error in v$.kit_serial.$errors" :key="error.$uid">
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('kit_serial')"
               :key="`backend-${i}`"
@@ -682,14 +657,13 @@ onMounted(async () => {
             <div class="col-md-1">U/M</div>
             <div class="col-md-1">Precio</div>
           </div>
-          <!-- frontend errors -->
           <p class="text-danger" v-for="error in v$.itemtime_set.$errors" :key="error.$uid">
             {{ error.$message }}
           </p>
 
           <div class="col-md-12 mb-2" style="overflow-y: auto; height: 400px">
             <template v-for="(item, index) in order.itemtime_set" :key="index">
-              <item-time
+              <ItemTime
                 v-if="order.itemtime_set.length > 0"
                 :items="items"
                 :item="item"
@@ -733,7 +707,6 @@ onMounted(async () => {
               :disabled="!!order.id"
               @blur="v$.provider_signature_date.$touch"
             />
-            <!-- frontend errors -->
             <p
               class="text-danger"
               v-for="error in v$.provider_signature_date.$errors"
@@ -741,7 +714,6 @@ onMounted(async () => {
             >
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('provider_signature_date')"
               :key="`backend-${i}`"
@@ -750,6 +722,7 @@ onMounted(async () => {
               {{ error }}
             </p>
           </div>
+
           <!-- customer_signature_date control -->
           <div class="col-md-3">
             <label for="customer_signature_date" class="form-label">Firma del Cliente</label>
@@ -759,7 +732,6 @@ onMounted(async () => {
               id="customer_signature_date"
               class="form-control"
             />
-            <!-- frontend errors -->
             <p
               class="text-danger"
               v-for="error in v$.customer_signature_date.$errors"
@@ -767,7 +739,6 @@ onMounted(async () => {
             >
               {{ error.$message }}
             </p>
-            <!-- backend errors -->
             <p
               v-for="(error, i) in getFieldErrors('customer_signature_date')"
               :key="`backend-${i}`"

@@ -1,28 +1,19 @@
-<script setup>
-import { required } from '@vuelidate/validators'
+<script setup lang="ts">
+defineProps<{
+  showPrevButton: boolean
+  showNextButton: boolean
+  isLoading: boolean
+  currentPage: number
+}>()
 
-defineProps({
-  showPrevButton: {
-    type: Boolean,
-    required: true
-  },
-  showNextButton: {
-    type: Boolean,
-    required: true
-  },
-  isLoading: {
-    type: Boolean,
-    required: true
-  },
-  currentPage: {
-    type: Number,
-    required: true
-  }
-})
-defineEmits(['onLoadPrevItems', 'onLoadNextItems'])
+defineEmits<{
+  (e: 'onLoadPrevItems'): void
+  (e: 'onLoadNextItems'): void
+}>()
 </script>
+
 <template>
-  <div class="d-flex justify-content-between align-items-center mt-2">
+  <div class="d-flex justify-content-between align-items-center mt-3">
     <button
       v-if="showPrevButton"
       class="btn btn-outline-primary btn-sm"

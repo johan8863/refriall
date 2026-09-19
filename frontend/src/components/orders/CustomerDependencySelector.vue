@@ -1,83 +1,63 @@
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
+import type { Customer, CustomerDependency } from '@/views/customers/types'
 
-const props = defineProps({
-  type: {
-    type: String,
-    required: true,
-    validator: (value) => ['customer', 'dependency'].includes(value)
-  },
-  customers: {
-    type: Array,
-    default: () => []
-  },
-  dependencies: {
-    type: Array,
-    default: () => []
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  },
-  vuelidateErrors: {
-    type: Array,
-    default: () => []
-  },
-  getFieldErrors: {
-    type: Function,
-    required: true
-  }
-})
+interface Props {
+  type: 'customer' | 'dependency'
+  customers?: Customer[]
+  dependencies?: CustomerDependency[]
+  modelValue: number | string | null // ✅ Aceptar null
+  disabled: boolean
+  vuelidateErrors: any[]
+  getFieldErrors: (field: string) => string[]
+}
 
-const model = defineModel({
-  type: [String, Number],
-  default: ''
-})
+const props = defineProps<Props>()
 
-const emit = defineEmits(['clear', 'blur'])
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: number | string | null): void
+  (e: 'blur'): void
+  (e: 'clear'): void
+}>()
 
-const isCustomer = computed(() => props.type === 'customer')
-const label = computed(() => (isCustomer.value ? 'Cliente' : 'Dependencia'))
-const options = computed(() => (isCustomer.value ? props.customers : props.dependencies))
+const label = props.type === 'customer' ? 'Cliente' : 'Dependencia'
+const options = props.type === 'customer' ? props.customers : props.dependencies
+const errorKey = props.type === 'customer' ? 'customer' : 'customer_dependency'
 </script>
 
 <template>
-  <fieldset :disabled="disabled">
-    <div class="row g-1">
-      <label :for="type" class="form-label">{{ label }}</label>
-      <div class="input-group input-group-sm">
-        <select :id="type" class="form-select" v-model="model" @blur="emit('blur')">
-          <option v-for="option in options" :key="option.id" :value="option.id">
-            {{ option.name }}
-          </option>
-        </select>
-        <button
-          type="button"
-          class="btn btn-sm btn-danger"
-          @click="emit('clear')"
-          :disabled="!model"
-        >
-          ✕
-        </button>
-      </div>
-
-      <!-- Vuelidate errors -->
-      <p
-        v-for="error in vuelidateErrors"
-        :key="`vuelidate-${error.$uid}`"
-        class="form-text text-danger"
+  <div class="row g-1">
+    <label :for="errorKey" class="form-label">{{ label }}</label>
+    <div class="col-md-11">
+      <select
+        :id="errorKey"
+        class="form-select form-select-sm"
+        :value="modelValue ?? ''"
+        :disabled="disabled"
+        @change="$emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
+        @blur="$emit('blur')"
       >
+        <option value="">-- Seleccione --</option>
+        <option v-for="option in options" :key="option.id" :value="option.id">
+          {{ option.name }}
+        </option>
+      </select>
+
+      <!-- Frontend errors -->
+      <p class="form-text text-danger" v-for="error in vuelidateErrors" :key="error.$uid">
         {{ error.$message }}
       </p>
 
       <!-- Backend errors -->
       <p
-        v-for="(error, i) in getFieldErrors(type)"
+        v-for="(error, i) in getFieldErrors(errorKey)"
         :key="`backend-${i}`"
         class="form-text text-danger"
       >
         {{ error }}
       </p>
     </div>
-  </fieldset>
+    <div class="col-md-1">
+      <button type="button" class="btn btn-sm btn-danger" @click="$emit('clear')">X</button>
+    </div>
+  </div>
 </template>

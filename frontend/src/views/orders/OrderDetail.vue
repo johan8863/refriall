@@ -1,18 +1,18 @@
-<script setup>
+<script setup lang="ts">
 // vue
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
 
 // app
 import { orderService } from '@/services/orderService'
-import { useResourceLoader } from '@/composables/useResourceLoader.js'
-import { useErrorHandler } from '@/composables/useErrorHandler.js'
+import { useResourceLoader } from '@/composables/useResourceLoader'
+import { useErrorHandler } from '@/composables/useErrorHandler'
 import DeleteModal from '@/components/common/DeleteModal.vue'
+import OrderDetailMenu from '@/components/orders/menus/OrderDetailMenu.vue'
+import type { OrderDetail } from './types'
 
 // third
 import html2pdf from 'html2pdf.js'
-import OrderDetailMenu from '@/components/orders/menus/OrderDetailMenu.vue'
 
 // Constants
 const ITEMS_PER_PAGE = 12
@@ -22,11 +22,11 @@ const route = useRoute()
 const router = useRouter()
 
 // State
-const paginatedOrders = ref([])
+const paginatedOrders = ref<any[]>([])
 const showDeleteModal = ref(false)
 const isDeleting = ref(false)
-const billDeleteErrorObject = ref(null)
-const billDeleteErrorMessage = ref(null)
+const billDeleteErrorObject = ref<{ id: number; folio: string } | null>(null)
+const billDeleteErrorMessage = ref<string | null>(null)
 
 // Error handler for deletion
 const {
@@ -43,9 +43,10 @@ const {
   isLoading,
   errorMessage,
   load: loadOrder
-} = useResourceLoader(orderService.detailOrder, {
+} = useResourceLoader<OrderDetail>(orderService.detailOrder, {
   initialData: {
-    id: null,
+    id: 0,
+    bill: null,
     customer: null,
     customer_dependency: null,
     symptom: '',
@@ -56,24 +57,26 @@ const {
     repair: false,
     install: false,
     maintenance: false,
+    support: 't',
     kit: null,
     kit_brand: '',
     kit_model: '',
     kit_serial: '',
-    job_description: '',
+    job_description: null,
     itemtime_set: [],
     itemtimeorder_set: [],
     provider: null,
     provider_signature_date: '',
-    customer_signature_date: '',
-    check_number: '',
-    charge_aprove: '',
-    charge_check: '',
-    customer_charge: '',
-    customer_name: '',
-    customer_personal_id: '',
-    checked_by: '',
-    aproved_by: '',
+    customer_signature_date: null,
+    currency: { id: 0, name: '', description: null },
+    check_number: null,
+    charge_aprove: null,
+    charge_check: null,
+    customer_charge: null,
+    customer_name: null,
+    customer_personal_id: null,
+    checked_by: null,
+    aproved_by: null,
     get_total_amount: 0,
     get_total_amount_revision: 0,
     get_total_amount_prod: 0,
@@ -81,7 +84,8 @@ const {
     get_total_amount_repair: 0,
     get_total_amount_maintenace: 0,
     get_total_amount_install: 0,
-    get_total_amount_unmounting: 0
+    get_total_amount_unmounting: 0,
+    get_order_support: ''
   },
   objectName: 'Orden',
   gender: 'f',
@@ -91,11 +95,11 @@ const {
 })
 
 // Computed
-const orderTitle = computed(() => {
+const orderTitle = computed((): string => {
   return route.meta.preOrder ? 'Prefactura' : 'Orden de Servicio'
 })
 
-const pdfFilename = computed(() => {
+const pdfFilename = computed((): string => {
   const prefix = route.meta.preOrder ? 'prefactura' : 'orden_de_servicio'
   const identifier = order.value?.customer_dependency
     ? order.value.customer_dependency.name
@@ -116,15 +120,15 @@ const deleteModalFields = computed(() => {
 })
 
 // Methods
-const paginateItems = (items, itemsPerPage) => {
-  const pages = []
+const paginateItems = (items: any[], itemsPerPage: number): any[] => {
+  const pages: any[] = []
   for (let i = 0; i < items.length; i += itemsPerPage) {
     pages.push(items.slice(i, i + itemsPerPage))
   }
   return pages
 }
 
-const prepareOrderPages = () => {
+const prepareOrderPages = (): any[] => {
   if (!order.value) return []
 
   const items = order.value.itemtimeorder_set || []
@@ -141,7 +145,7 @@ const prepareOrderPages = () => {
   }))
 }
 
-const generatePDF = () => {
+const generatePDF = (): void => {
   const element = document.getElementById('order-to-pdf')
   if (!element) {
     console.warn('PDF element not found')
@@ -153,9 +157,9 @@ const generatePDF = () => {
   html2pdf().from(element).set(opt).save()
 }
 
-const loadOrderData = async () => {
+const loadOrderData = async (): Promise<void> => {
   try {
-    await loadOrder(route.params.id)
+    await loadOrder(Number(route.params.id))
 
     if (order.value) {
       paginatedOrders.value = prepareOrderPages()
@@ -166,43 +170,39 @@ const loadOrderData = async () => {
 }
 
 // Delete methods
-const openDeleteModal = () => {
+const openDeleteModal = (): void => {
   clearErrors()
   billDeleteErrorMessage.value = null
   billDeleteErrorObject.value = null
   showDeleteModal.value = true
 }
 
-const closeDeleteModal = () => {
+const closeDeleteModal = (): void => {
   showDeleteModal.value = false
   billDeleteErrorMessage.value = null
   billDeleteErrorObject.value = null
   isDeleting.value = false
 }
 
-const confirmDelete = async () => {
+const confirmDelete = async (): Promise<void> => {
   isDeleting.value = true
   try {
     await orderService.deleteOrder(order.value.id)
     closeDeleteModal()
     router.push({ name: 'orders' })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error deleting order:', error)
 
-    // Handle specific error cases
     if (error.response) {
       if (error.response.status === 404) {
         handleError(error)
         isDeleting.value = false
       } else if (error.response.status === 400) {
-        // Order is associated with a bill
         const errorData = error.response.data
         billDeleteErrorObject.value = errorData
         billDeleteErrorMessage.value = errorData.folio
           ? `Esta orden está asociada a la factura con folio: ${errorData.folio}`
           : 'Esta orden está asociada a una factura y no puede ser eliminada'
-
-        // Keep modal open and stop deleting state
         isDeleting.value = false
       } else {
         handleError(error)
@@ -233,8 +233,6 @@ onMounted(async () => {
       />
     </div>
 
-    <!-- main content -->
-
     <!-- loading order data -->
     <div v-if="isLoading" class="col-md-9">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
@@ -252,9 +250,7 @@ onMounted(async () => {
 
     <!-- displaying order data -->
     <div v-else class="col-md-9">
-      <!-- order info -->
       <div id="order-to-pdf">
-        <!-- paginated orders -->
         <div v-for="(paginatedOrder, index) of paginatedOrders" :key="index" class="row px-3 py-1">
           <div
             class="col-md-9 d-flex align-items-center justify-content-center border-bottom border-3 mb-1"
@@ -389,9 +385,7 @@ onMounted(async () => {
 
               <tfoot>
                 <tr>
-                  <td>
-                    <strong>Total</strong>
-                  </td>
+                  <td><strong>Total</strong></td>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -465,13 +459,10 @@ onMounted(async () => {
           </div>
 
           <div v-if="index < paginatedOrders.length - 1" class="html2pdf__page-break"></div>
-          <!-- end paginated orders -->
         </div>
-        <!-- end order info -->
       </div>
     </div>
   </div>
-  <!-- end row -->
 
   <!-- Delete Confirmation Modal -->
   <DeleteModal
@@ -487,7 +478,6 @@ onMounted(async () => {
     @confirm="confirmDelete"
     @cancel="closeDeleteModal"
   >
-    <!-- Slot para mostrar el enlace a la factura cuando está asociada -->
     <template #extra-content>
       <div v-if="billDeleteErrorObject && billDeleteErrorObject.id" class="mt-2">
         <hr />

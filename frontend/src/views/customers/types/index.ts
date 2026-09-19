@@ -1,4 +1,5 @@
 import type { PaginatedResponse } from '@/types/shared'
+import type { CustomerDependency } from '@/views/customerDependencies/types'
 
 /**
  * Customer type options from Django model
@@ -8,15 +9,7 @@ export type CustomerType = 'es' | 'pr'
 /**
  * Customer dependency model
  */
-export interface CustomerDependency {
-  id: number
-  customer: number
-  name: string
-  address: string
-  province: string
-  township: string
-}
-
+export type { CustomerDependency } from '@/views/customerDependencies/types'
 /**
  * Customer model - matches Django Customer model
  */

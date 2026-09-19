@@ -1,16 +1,18 @@
-<script setup>
-defineProps({
-  order: {
-    type: Object,
-    required: true
-  },
-  isLoading: {
-    type: Boolean,
-    required: true
-  }
-})
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import type { Order } from '@/views/orders/types'
 
-defineEmits(['onPDF', 'onDelete'])
+interface Props {
+  order: Order
+  isLoading: boolean
+}
+
+defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'onPDF'): void
+  (e: 'onDelete'): void
+}>()
 </script>
 
 <template>
@@ -18,27 +20,22 @@ defineEmits(['onPDF', 'onDelete'])
     <li class="list-group-item">
       <strong>Órdenes</strong>
     </li>
-    <!-- orders -->
     <li class="list-group-item">
-      <router-link :to="{ name: 'orders' }">Órdenes</router-link>
+      <RouterLink :to="{ name: 'orders' }">Órdenes</RouterLink>
     </li>
-    <!-- new order -->
     <li class="list-group-item">
-      <router-link :to="{ name: 'orders_create' }">Nueva</router-link>
+      <RouterLink :to="{ name: 'orders_create' }">Nueva</RouterLink>
     </li>
-    <!-- update order -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
     </li>
     <li v-else class="list-group-item">
-      <router-link :to="{ name: 'orders_update', params: { id: order.id } }">Editar</router-link>
+      <RouterLink :to="{ name: 'orders_update', params: { id: order.id } }">Editar</RouterLink>
     </li>
-    <!-- generate pdf -->
     <li class="list-group-item">
       <a href="#" @click.prevent="$emit('onPDF')">PDF</a>
     </li>
-    <!-- delete order -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
