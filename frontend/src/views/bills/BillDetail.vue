@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // vue
 import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -6,9 +6,10 @@ import { useRoute, useRouter } from 'vue-router'
 // app
 import { billService } from '@/services/billService'
 import BillDetailMenu from '@/components/bills/menus/BillDetailMenu.vue'
-import DeleteModal from '@/components/common/DeleteModal.vue' // ✅ Importar componente
-import { useResourceLoader } from '@/composables/useResourceLoader.js'
-import { useErrorHandler } from '@/composables/useErrorHandler.js'
+import DeleteModal from '@/components/common/DeleteModal.vue'
+import { useResourceLoader } from '@/composables/useResourceLoader'
+import { useErrorHandler } from '@/composables/useErrorHandler'
+import type { BillDetail } from './types'
 
 // third
 import html2pdf from 'html2pdf.js'
@@ -21,8 +22,8 @@ const route = useRoute()
 const router = useRouter()
 
 // State
-const paginatedBills = ref([])
-const billToPaginate = ref(null)
+const paginatedBills = ref<any[]>([])
+const billToPaginate = ref<any>(null)
 const showDeleteModal = ref(false)
 const isDeleting = ref(false)
 
@@ -35,39 +36,40 @@ const {
   objectName: 'Factura'
 })
 
-// Resource loader for bill data
+// Resource loader
 const {
   data: bill,
   isLoading,
   errorMessage,
   load: loadBill
-} = useResourceLoader(billService.detailBill, {
+} = useResourceLoader<BillDetail>(billService.detailBill, {
   initialData: {
-    id: null,
+    id: 0,
     customer: null,
-    customer_dependency: null,
+    currency: { id: 0, name: '', description: null },
     folio: '',
     provider: null,
     provider_signature_date: '',
-    customer_signature_date: '',
+    customer_signature_date: null,
+    orders: [],
     get_orders: [],
     get_orders_folio: [],
-    get_total_amount: '',
-    get_total_amount_revision: '',
-    get_total_amount_prod: '',
-    get_total_amount_concept: '',
-    get_total_amount_repair: '',
-    get_total_amount_maintenace: '',
-    get_total_amount_install: '',
-    get_total_amount_unmounting: '',
-    check_number: '',
-    charge_aprove: '',
-    charge_check: '',
-    customer_charge: '',
-    customer_name: '',
-    customer_personal_id: '',
-    checked_by: '',
-    aproved_by: ''
+    get_total_amount: 0,
+    get_total_amount_revision: 0,
+    get_total_amount_prod: 0,
+    get_total_amount_concept: 0,
+    get_total_amount_repair: 0,
+    get_total_amount_maintenace: 0,
+    get_total_amount_install: 0,
+    get_total_amount_unmounting: 0,
+    check_number: null,
+    charge_aprove: null,
+    charge_check: null,
+    customer_charge: null,
+    customer_name: null,
+    customer_personal_id: null,
+    checked_by: null,
+    aproved_by: null
   },
   objectName: 'Factura',
   gender: 'f',
@@ -77,8 +79,8 @@ const {
 })
 
 // Computed
-const hasItems = computed(() => {
-  return bill.value?.get_orders?.some((order) => order.itemtime_set?.length > 0)
+const hasItems = computed((): boolean => {
+  return bill.value?.get_orders?.some((order) => order.itemtime_set?.length > 0) ?? false
 })
 
 const deleteModalFields = computed(() => {
@@ -89,11 +91,14 @@ const deleteModalFields = computed(() => {
 })
 
 // Methods
-const mergeItemsTimes = (itemsTimes) => {
+const mergeItemsTimes = (itemsTimes: any[]): any[] => {
   try {
     return Object.values(
       itemsTimes.reduce(
-        (acc, { item: { code, get_item_type, get_measurement, name, price }, times }) => {
+        (
+          acc: Record<string, any>,
+          { item: { code, get_item_type, get_measurement, name, price }, times }
+        ) => {
           ;(acc[code] ??= {
             item: { code, get_item_type, get_measurement, name, price },
             times: 0
@@ -105,14 +110,11 @@ const mergeItemsTimes = (itemsTimes) => {
     )
   } catch (error) {
     console.error('Error merging items:', error)
-    if (error instanceof TypeError) {
-      console.error("Array must contain values if initial value isn't provided")
-    }
     return []
   }
 }
 
-const prepareBillToPaginate = () => {
+const prepareBillToPaginate = (): void => {
   const { get_orders, ...rest } = bill.value
 
   const allItems = get_orders.flatMap((order) => order.itemtime_set || [])
@@ -124,29 +126,26 @@ const prepareBillToPaginate = () => {
   }
 }
 
-const paginate = (billData, itemsPerPage, start = 0, pages = []) => {
-  if (start >= billData.items.length) {
-    return pages
-  }
-
+const paginate = (billData: any, itemsPerPage: number, start = 0, pages: any[] = []): any[] => {
+  if (start >= billData.items.length) return pages
   const end = start + itemsPerPage
   const { items, ...rest } = billData
-
   pages.push({ items: items.slice(start, end), ...rest })
   return paginate(billData, itemsPerPage, end, pages)
 }
 
-const generatePDF = () => {
+const generatePDF = (): void => {
   const element = document.getElementById('bill-to-pdf')
+  if (!element) return
   const opt = {
     filename: `factura_${bill.value.folio}_${bill.value.customer?.name || 'sin_cliente'}`
   }
   html2pdf().from(element).set(opt).save()
 }
 
-const loadBillData = async () => {
+const loadBillData = async (): Promise<void> => {
   try {
-    await loadBill(route.params.id)
+    await loadBill(Number(route.params.id))
 
     if (bill.value && hasItems.value) {
       prepareBillToPaginate()
@@ -161,16 +160,16 @@ const loadBillData = async () => {
 }
 
 // Delete methods
-const openDeleteModal = () => {
+const openDeleteModal = (): void => {
   clearErrors()
   showDeleteModal.value = true
 }
 
-const closeDeleteModal = () => {
+const closeDeleteModal = (): void => {
   showDeleteModal.value = false
 }
 
-const confirmDelete = async () => {
+const confirmDelete = async (): Promise<void> => {
   isDeleting.value = true
   try {
     await billService.deleteBill(bill.value.id)
@@ -319,7 +318,8 @@ onMounted(async () => {
             <p>
               Órdenes asociadas:
               <span v-for="(order, idx) of paginatedBill.get_orders_folio" :key="idx">
-                {{ order.folio }}{{ idx < paginatedBill.get_orders_folio.length - 1 ? ', ' : '' }}
+                {{ order.folio
+                }}{{ Number(idx) < paginatedBill.get_orders_folio.length - 1 ? ', ' : '' }}
               </span>
             </p>
           </div>
