@@ -13,7 +13,7 @@ export const orderService = {
   listOrder: (
     currentPage: number | null = null,
     searchTerm: string | null = null
-  ): Promise<AxiosResponse<PaginatedResponse<OrderList[]>>> => {
+  ): Promise<AxiosResponse<PaginatedResponse<OrderList>>> => {
     const params: Record<string, string | number> = {
       ...(currentPage && { page: currentPage }),
       ...(searchTerm && { search: searchTerm })
