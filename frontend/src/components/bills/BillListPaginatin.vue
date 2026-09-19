@@ -1,25 +1,17 @@
-<script setup>
-defineProps({
-  showPrevButton: {
-    type: Boolean,
-    required: true
-  },
-  showNextButton: {
-    type: Boolean,
-    required: true
-  },
-  currentPage: {
-    type: Number,
-    required: true
-  },
-  isLoading: {
-    type: Boolean,
-    required: true
-  }
-})
+<script setup lang="ts">
+defineProps<{
+  showPrevButton: boolean
+  showNextButton: boolean
+  currentPage: number
+  isLoading: boolean
+}>()
 
-defineEmits(['onLoadPrevItems', 'onLoadNextItems'])
+defineEmits<{
+  (e: 'onLoadPrevItems'): void
+  (e: 'onLoadNextItems'): void
+}>()
 </script>
+
 <template>
   <div class="d-flex justify-content-between align-items-center mt-2">
     <button
