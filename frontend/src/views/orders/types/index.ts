@@ -37,13 +37,13 @@ export interface Order {
   id?: number
   bill: number | null
   customer: number | Customer | null
-  customer_depedency: number | CustomerDependency | null
+  customer_dependency: number | CustomerDependency | null
   symptom: string
   flaw: string
   repair_description: string
   folio: string
   check_diagnosis: boolean
-  repain: boolean
+  repair: boolean
   install: boolean
   maintenance: boolean
   support: SupportType
