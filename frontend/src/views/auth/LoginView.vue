@@ -1,34 +1,38 @@
-<script setup>
+<script setup lang="ts">
 // vue
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
 import { useAuthStore } from '@/stores/authStore'
+import type { LoginCredentials } from '@/services/authAPI'
 
 const authStore = useAuthStore()
 
 const router = useRouter()
 const route = useRoute()
 
-const user = ref({
+// ✅ Tipar el objeto user con LoginCredentials
+const user = ref<LoginCredentials>({
   username: '',
   password: ''
 })
 
-const submitButtonClasses = computed(() => {
+const submitButtonClasses = computed((): string => {
   return !authStore.isLoadingAuth ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-success'
 })
 
-const authError = ref(null)
+const authError = ref<string | null>(null)
 
-const handleLogin = async () => {
+const handleLogin = async (): Promise<void> => {
   try {
     authError.value = null
     await authStore.authenticate(user.value)
+
+    // ✅ Tipar el redirect
     const redirectRoute = route.query.redirect || { name: 'home' }
-    router.push(redirectRoute)
-  } catch (error) {
+    router.push(redirectRoute as any)
+  } catch (error: any) {
     if (error.response) {
       if (error.response.status === 400 || error.response.status === 401) {
         authError.value = 'Usuario o Clave incorrectos.'
@@ -45,6 +49,7 @@ const handleLogin = async () => {
   }
 }
 </script>
+
 <template>
   <!-- login form row -->
   <form
