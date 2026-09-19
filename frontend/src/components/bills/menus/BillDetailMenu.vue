@@ -1,16 +1,18 @@
-<script setup>
-defineProps({
-  bill: {
-    type: Object,
-    required: true
-  },
-  isLoading: {
-    type: Boolean,
-    required: true
-  }
-})
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import type { BillDetail } from '@/views/bills/types'
 
-defineEmits(['onPDF', 'onDelete'])
+interface Props {
+  bill: BillDetail
+  isLoading: boolean
+}
+
+defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'onPDF'): void
+  (e: 'onDelete'): void
+}>()
 </script>
 
 <template>
@@ -18,26 +20,20 @@ defineEmits(['onPDF', 'onDelete'])
     <li class="list-group-item">
       <strong>Facturas</strong>
     </li>
-    <!-- bills -->
     <li class="list-group-item">
-      <router-link :to="{ name: 'bills' }">Facturas</router-link>
+      <RouterLink :to="{ name: 'bills' }">Facturas</RouterLink>
     </li>
-    <!-- create bill -->
     <li class="list-group-item">
-      <router-link :to="{ name: 'bills_create' }">Nueva</router-link>
+      <RouterLink :to="{ name: 'bills_create' }">Nueva</RouterLink>
     </li>
-    <!-- bill detail -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
     </li>
     <li v-else-if="bill.id" class="list-group-item">
-      <router-link v-if="bill.id" :to="{ name: 'bills_update', params: { id: bill.id } }"
-        >Editar</router-link
-      >
+      <RouterLink :to="{ name: 'bills_update', params: { id: bill.id } }">Editar</RouterLink>
     </li>
     <li v-else class="list-group-item text-muted">No disponible</li>
-    <!-- generate bill pdf -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
@@ -46,7 +42,6 @@ defineEmits(['onPDF', 'onDelete'])
       <a href="#" @click.prevent="$emit('onPDF')">PDF</a>
     </li>
     <li v-else class="list-group-item text-muted">No disponible</li>
-    <!-- delete bill -->
     <li v-if="isLoading" class="list-group-item text-muted">
       <span class="spinner-border spinner-border-sm"></span>
       Cargando...
