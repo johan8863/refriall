@@ -6,9 +6,16 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      environment: 'jsdom',
+      environment: 'happy-dom',
       exclude: [...configDefaults.exclude, 'e2e/*'],
-      root: fileURLToPath(new URL('./', import.meta.url))
+      root: fileURLToPath(new URL('./', import.meta.url)),
+      globals: true,
+      // code coverage
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'json', 'html'],
+        exclude: ['node_modules/', 'src/types/', '**/*.d.ts']
+      }
     }
   })
 )
