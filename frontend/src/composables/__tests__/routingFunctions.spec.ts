@@ -108,7 +108,7 @@ describe('useRouting', () => {
     it('must throw when objectID is undefined', () => {
       const { goToDetail } = useRouting()
 
-      expect(() => goToDetail('kits_detail', undefined as any)).toThrow(
+      expect(() => goToDetail('kits_detail', null)).toThrow(
         '[goToDetail] Object ID must be a non empty value'
       )
       expect(mockPush).not.toHaveBeenCalled()

@@ -25,7 +25,7 @@ export const useRouting = () => {
    * @throws {Error} If object ID doesn't exist.
    */
   const validateObjectID = (objectID: ObjectID, functionName: string): void => {
-    if (typeof objectID == undefined || typeof objectID == null) {
+    if (objectID === null) {
       throw new Error(`[${functionName}] Object ID must be a non empty value.`)
     }
   }
