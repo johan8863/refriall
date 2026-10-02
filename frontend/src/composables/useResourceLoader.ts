@@ -37,7 +37,7 @@ export const useResourceLoader = <T>(
   // State
   const data = ref(initialData as T)
   const isLoading = ref(false)
-  const error = ref(null)
+  const error = ref<unknown>(null)
 
   // Use error handler for consistent error management
   const { errorMessage, backendErrors, hasErrors, handleError, clearErrors } = useErrorHandler({
