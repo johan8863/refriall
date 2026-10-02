@@ -1,4 +1,3 @@
-// composables/CheckAllCheckboxesComposable.ts
 import { computed, type Ref, type ComputedRef } from 'vue'
 
 interface HasId {
