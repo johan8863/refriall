@@ -46,7 +46,7 @@ const {
   initialData: {
     id: 0,
     customer: null,
-    currency: { id: 0, name: '', description: null },
+    currency: { id: 0, name: '', description: '' },
     folio: '',
     provider: null,
     provider_signature_date: '',
