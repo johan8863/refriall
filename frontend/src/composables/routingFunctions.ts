@@ -2,7 +2,7 @@ import { useRouter, type Router } from 'vue-router'
 
 export const useRouting = () => {
   const router: Router = useRouter()
-  type ObjectID = number | string
+  type ObjectID = number | string | null
 
   /**
    * Validates that a route name is not an empty string.
@@ -64,7 +64,7 @@ export const useRouting = () => {
    * @param routeDetailName - Name of the detail route
    * @param objectID - ID of the object
    */
-  const goToDetail = (routeDetailName, objectID) => {
+  const goToDetail = (routeDetailName: string, objectID: ObjectID) => {
     validateRouteName(routeDetailName, 'goToDetail')
     validateObjectID(objectID, 'goToDetail')
     router.push({ name: routeDetailName, params: { id: objectID } })
@@ -76,7 +76,7 @@ export const useRouting = () => {
    * @param routeDetailName - Name of the detail route
    * @param objectID - ID of the object (optional, if present goes to detail, otherwise list)
    */
-  const goBack = (routeListName, routeDetailName, objectID) => {
+  const goBack = (routeListName: string, routeDetailName: string, objectID?: ObjectID) => {
     validateRouteName(routeListName, 'goBack')
     validateRouteName(routeDetailName, 'goBack')
     validateObjectIDGoBack(objectID, 'goBack')
