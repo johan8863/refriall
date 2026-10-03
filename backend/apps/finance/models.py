@@ -223,7 +223,7 @@ class Order(models.Model):
     maintenance = models.BooleanField('Mtto')
     # end of modality set
     support = models.CharField(max_length=1, choices=SUPPORT_TYPE)
-    kit = models.ForeignKey(Kit, on_delete=models.PROTECT, null=True, verbose_name="Equipo")
+    kit = models.ForeignKey(Kit, on_delete=models.PROTECT, verbose_name="Equipo")
     kit_brand = models.CharField('Marca', max_length=20)
     kit_model = models.CharField('Modelo', max_length=20)
     kit_serial = models.CharField('No. de serie o Inv.', max_length=30)
@@ -245,7 +245,6 @@ class Order(models.Model):
     provider = models.ForeignKey(
         Provider,
         on_delete=models.PROTECT,
-        null=True,
         verbose_name='Prestador'
     )
     provider_signature_date = models.DateField('Firma del proveedor')
