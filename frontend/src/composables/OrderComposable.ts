@@ -17,7 +17,7 @@ export const useOrderTotalComputed = (order: Ref<Order>, items: Ref<Item[]>) => 
       .reduce((count, itemtime) => {
         const itemfiltered = items.value.filter((itf) => itf.id === itemtime.item)
         const itemRaw = itemfiltered[0]
-        return count + itemRaw.price * itemtime.times
+        return itemRaw ? count + itemRaw.price * itemtime.times : count
       }, 0)
   })
   return { orderTotalComputed }
