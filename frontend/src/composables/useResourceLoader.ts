@@ -1,4 +1,4 @@
-import { ref, type Ref } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 import { useErrorHandler } from './useErrorHandler'
 import type { AxiosResponse } from 'axios'
 
@@ -50,14 +50,14 @@ export const useResourceLoader = <T>(
    * @param {*} params - Parameters to pass to fetchFunction
    * @returns {Promise<Object>} Response data
    */
-  const load = async (params: any): Promise<any> => {
+  const load = async (params: number): Promise<AxiosResponse<T>> => {
     isLoading.value = true
     error.value = null
     clearErrors()
 
     try {
       const response = await fetchFunction(params)
-      data.value = (response as any).data
+      data.value = response.data
 
       if (onSuccess) {
         onSuccess(response)
@@ -91,9 +91,9 @@ export const useResourceLoader = <T>(
   /**
    * Check if the resource has data
    */
-  const hasData = (): boolean => {
+  const hasData = computed((): boolean => {
     return data.value !== null && data.value !== undefined
-  }
+  })
 
   return {
     // State
