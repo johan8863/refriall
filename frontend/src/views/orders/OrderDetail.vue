@@ -58,17 +58,17 @@ const {
     install: false,
     maintenance: false,
     support: 't',
-    kit: null,
+    kit: 1,
     kit_brand: '',
     kit_model: '',
     kit_serial: '',
     job_description: null,
     itemtime_set: [],
     itemtimeorder_set: [],
-    provider: null,
+    provider: 1,
     provider_signature_date: '',
-    customer_signature_date: null,
-    currency: { id: 0, name: '', description: null },
+    customer_signature_date: '',
+    currency: { id: 0, name: '', description: '' },
     check_number: null,
     charge_aprove: null,
     charge_check: null,
@@ -187,7 +187,7 @@ const closeDeleteModal = (): void => {
 const confirmDelete = async (): Promise<void> => {
   isDeleting.value = true
   try {
-    await orderService.deleteOrder(order.value.id)
+    await orderService.deleteOrder(order.value.id as number)
     closeDeleteModal()
     router.push({ name: 'orders' })
   } catch (error: any) {

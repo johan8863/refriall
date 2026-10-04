@@ -75,10 +75,10 @@ export interface OrderDetail extends Omit<
   Order,
   'customer' | 'customer_dependency' | 'kit' | 'provider' | 'currency'
 > {
-  customer: Customer
-  customer_dependency: CustomerDependency
-  kit: Kit
-  provider: Provider
+  customer: null | Customer
+  customer_dependency: null | CustomerDependency
+  kit: number | Kit
+  provider: number | Provider
   currency: Currency
   itemtime_set: ItemTime[]
   itemtimeorder_set: ItemTimeOrder[]
