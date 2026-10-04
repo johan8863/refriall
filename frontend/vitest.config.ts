@@ -10,6 +10,8 @@ export default mergeConfig(
       exclude: [...configDefaults.exclude, 'e2e/*'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       globals: true,
+      // Setup file for Vue Test Utils and global mocks
+      setupFiles: ['./src/tests/setup.ts'],
       // code coverage
       coverage: {
         provider: 'v8',
