@@ -22,7 +22,7 @@ export const currencyService = {
   listCurrencyPagination: (
     currentPage: number | null = null,
     searchTerm: string | null = null
-  ): Promise<PaginatedResponse<Currency>> => {
+  ): Promise<AxiosResponse<PaginatedResponse<Currency>>> => {
     const params: Record<string, string | number> = {
       ...(currentPage && { page: currentPage }),
       ...(searchTerm && { search: searchTerm })
@@ -35,7 +35,10 @@ export const currencyService = {
    * @param page - Page number (default: 1)
    * @returns Promise with paginated response
    */
-  searchCurrency: (searchTerm: string, page: number = 1): Promise<PaginatedResponse<Currency>> => {
+  searchCurrency: (
+    searchTerm: string,
+    page: number = 1
+  ): Promise<AxiosResponse<PaginatedResponse<Currency>>> => {
     const params: Record<string, string | number> = {
       search: searchTerm,
       ...(page > 1 && { page })
