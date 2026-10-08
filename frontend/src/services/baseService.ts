@@ -20,7 +20,7 @@ interface RefreshTokenResponse {
 /**
  * Extended request config with retry flag
  */
-interface RequesConfigWithRetry extends InternalAxiosRequestConfig {
+interface RequestConfigWithRetry extends InternalAxiosRequestConfig {
   _retry?: boolean
 }
 
@@ -64,7 +64,7 @@ apiBase.interceptors.request.use(
 apiBase.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => response,
   async (error: AxiosError): Promise<any> => {
-    const originalRequest = error.config as RequesConfigWithRetry
+    const originalRequest = error.config as RequestConfigWithRetry
 
     // Handle 401 errors, and not on login page
     if (error.response?.status === 401 && window.location.pathname !== '/login') {
