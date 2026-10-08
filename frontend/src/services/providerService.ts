@@ -1,5 +1,6 @@
+import type { AxiosResponse } from 'axios'
 import { providerAPIEnvs } from '@/settings/env'
-import apiBase, { type AxiosResponse } from './baseService'
+import apiBase from './baseService'
 import type {
   Provider,
   ProviderChangePassword,
