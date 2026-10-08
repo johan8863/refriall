@@ -79,7 +79,7 @@ apiBase.interceptors.response.use(
           }
 
           // If the original request was the refresh itself, we can't recover
-          if (originalRequest.url.includes(REFRESH_URL)) {
+          if (originalRequest.url?.includes(REFRESH_URL)) {
             // clear state and storage
             await clearStateAndStorage()
             return Promise.reject(error)
