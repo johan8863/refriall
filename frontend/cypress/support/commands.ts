@@ -31,44 +31,32 @@ interface LoginCredentials {
 }
 
 /**
- * Custom command to authenticate against the Django backend
- * and cache the session using cy.session().
+ * Custom command to authenticate against the Django backend.
+ * Stores the tokens directly in localStorage.
+ *
+ * Must be called before cy.visit() so that the app reads the
+ * tokens on its first render.
  *
  * @example
  * ```typescript
  * beforeEach(() => {
  *   cy.login({ username: 'provider1', password: 'pass123' })
+ *   cy.visit('/stock/kits')
  * })
  * ```
  */
 Cypress.Commands.add('login', (credentials: LoginCredentials) => {
-  cy.session(
-    [credentials.username, credentials.password],
-    () => {
-      cy.request({
-        method: 'POST',
-        url: 'http://127.0.0.1:8000/api/auth/token/',
-        body: {
-          username: credentials.username,
-          password: credentials.password
-        }
-      }).then((response) => {
-        window.localStorage.setItem('refriall_auth_access_token', response.body.access)
-        window.localStorage.setItem('refriall_auth_refresh_token', response.body.refresh)
-      })
-    },
-    {
-      // Validate that session is still avtive
-      validate() {
-        const token = window.localStorage.getItem('refriall_auth_access_token')
-        if (!token) {
-          throw new Error('No access token in localStorage')
-        }
-      },
-      // clear localstorage before creating a new session
-      cacheAcrossSpecs: true
+  cy.request({
+    method: 'POST',
+    url: 'http://127.0.0.1:8000/api/auth/token/',
+    body: {
+      username: credentials.username,
+      password: credentials.password
     }
-  )
+  }).then((response) => {
+    window.localStorage.setItem('refriall_auth_access_token', response.body.access)
+    window.localStorage.setItem('refriall_auth_refresh_token', response.body.refresh)
+  })
 })
 
 declare global {
