@@ -45,14 +45,16 @@ interface LoginCredentials {
  * })
  * ```
  */
-Cypress.Commands.add('login', (credentials: LoginCredentials) => {
+Cypress.Commands.add('login', (credentials?: LoginCredentials) => {
+  const finalCredentials = credentials ?? {
+    username: 'cypress_test',
+    password: 'cypress_pass_123'
+  }
+
   cy.request({
     method: 'POST',
     url: 'http://127.0.0.1:8000/api/auth/token/',
-    body: {
-      username: credentials.username,
-      password: credentials.password
-    }
+    body: finalCredentials
   }).then((response) => {
     window.localStorage.setItem('refriall_auth_access_token', response.body.access)
     window.localStorage.setItem('refriall_auth_refresh_token', response.body.refresh)
