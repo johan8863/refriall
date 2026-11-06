@@ -39,7 +39,7 @@ const {
   initialData: {
     id: 0,
     name: '',
-    description: null
+    description: ''
   },
   objectName: 'Moneda',
   gender: 'f',
@@ -69,7 +69,7 @@ const closeDeleteModal = () => {
 const confirmDelete = async () => {
   isDeleting.value = true
   try {
-    await currencyService.deleteCurrency(currency.value.id)
+    await currencyService.deleteCurrency(currency.value.id as number)
     closeDeleteModal()
     router.push({ name: 'currencies' })
   } catch (error) {
@@ -81,7 +81,7 @@ const confirmDelete = async () => {
 
 // Lifecycle
 onMounted(async () => {
-  await loadCurrency(route.params.id)
+  await loadCurrency(Number(route.params.id))
 })
 </script>
 

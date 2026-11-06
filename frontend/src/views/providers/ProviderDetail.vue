@@ -86,10 +86,10 @@ const closeDeleteModal = (): void => {
 const confirmDelete = async (): Promise<void> => {
   isDeleting.value = true
   try {
-    await providerService.deleteProvider(provider.value.id)
+    await providerService.deleteProvider(provider.value.id as number)
     closeDeleteModal()
     router.push({ name: 'providers' })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error deleting provider:', error)
 
     if (error.response) {
@@ -125,7 +125,7 @@ const confirmDelete = async (): Promise<void> => {
 
 // Lifecycle
 onMounted(async () => {
-  await loadProvider(route.params.id)
+  await loadProvider(Number(route.params.id))
 })
 </script>
 

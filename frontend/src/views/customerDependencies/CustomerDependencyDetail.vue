@@ -107,7 +107,7 @@ const confirmDelete = async (): Promise<void> => {
 
 // Lifecycle
 onMounted(async () => {
-  await loadDependency(route.params.id)
+  await loadDependency(Number(route.params.id))
 })
 </script>
 
