@@ -8,14 +8,14 @@ defineProps<{
 </script>
 
 <template>
-  <table class="table table-striped table-hover">
+  <table data-cy="kit-list-table" class="table table-striped table-hover">
     <thead class="table-dark">
       <tr>
         <th scope="col">Nombre del Equipo</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="kit in kits" :key="kit.id">
+      <tr v-for="kit in kits" :key="kit.id" :data-cy="`kit-row-${kit.id}`">
         <td>
           <RouterLink :to="{ name: 'kits_detail', params: { id: kit.id } }">
             {{ kit.name }}

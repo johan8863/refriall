@@ -67,7 +67,7 @@ onMounted(async () => {
 
         <!-- Loading state -->
         <div class="col-md-12">
-          <div v-if="isLoading" class="text-center my-4">
+          <div v-if="isLoading" data-cy="kit-list-loading" class="text-center my-4">
             <div class="spinner-border text-primary" role="status">
               <span class="visually-hidden">Cargando...</span>
             </div>
@@ -75,7 +75,7 @@ onMounted(async () => {
           </div>
 
           <!-- backend errors -->
-          <div v-else-if="kitsErrors" class="alert alert-danger mt-3">
+          <div v-else-if="kitsErrors" data-cy="kit-list-error" class="alert alert-danger mt-3">
             {{ kitsErrors }}
           </div>
 
@@ -96,7 +96,7 @@ onMounted(async () => {
           </div>
 
           <!-- in case no kits -->
-          <div v-else class="text-center my-5">
+          <div v-else data-cy="kit-list-empty" class="text-center my-5">
             <p class="lead text-muted">
               {{ hasSearched ? 'No se encontraron equipos' : 'No hay equipos registrados' }}
             </p>
