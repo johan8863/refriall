@@ -51,7 +51,7 @@ const {
   load: loadKit
 } = useResourceLoader<Kit>(kitService.detailKit, {
   initialData: {
-    id: null,
+    id: 0,
     name: ''
   },
   objectName: 'Equipo',
@@ -85,7 +85,7 @@ const closeDeleteModal = () => {
 const confirmDelete = async () => {
   isDeleting.value = true
   try {
-    await kitService.deleteKit(kit.value.id)
+    await kitService.deleteKit(kit.value.id as number)
     closeDeleteModal()
     router.push({ name: 'kits' })
   } catch (error) {
@@ -96,7 +96,7 @@ const confirmDelete = async () => {
 }
 
 // Lifecycle
-onMounted(async () => await loadKit(route.params.id))
+onMounted(async () => await loadKit(Number(route.params.id)))
 </script>
 
 <template>
@@ -109,7 +109,7 @@ onMounted(async () => await loadKit(route.params.id))
     <!-- main content -->
 
     <!-- loading kit data -->
-    <div v-if="isLoading" class="col-md-6">
+    <div v-if="isLoading" data-cy="kit-detail-loading" class="col-md-6">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
         <span role="status" class="text-primary">Cargando datos... </span>
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
@@ -117,14 +117,14 @@ onMounted(async () => await loadKit(route.params.id))
     </div>
 
     <!-- error message -->
-    <div v-else-if="errorMessage" class="col-md-4">
+    <div v-else-if="errorMessage" data-cy="kit-detail-error" class="col-md-4">
       <p class="form-text text-danger">
         {{ errorMessage }}
       </p>
     </div>
 
     <!-- displaying kit data -->
-    <div v-else class="col-md-4">
+    <div v-else data-cy="kit-detail" class="col-md-4">
       <h3>{{ kit.name }}</h3>
       <hr />
       <p><strong>ID:</strong> {{ kit.id }}</p>
