@@ -64,7 +64,7 @@ onMounted(async () => await loadData(route.params.id as string))
     <!-- main content -->
 
     <!-- loading kit data -->
-    <div v-if="isLoading" class="col-md-6">
+    <div v-if="isLoading" data-cy="kit-form-loading" class="col-md-6">
       <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
         <span role="status" class="text-primary">Cargando datos... </span>
         <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
@@ -72,7 +72,7 @@ onMounted(async () => await loadData(route.params.id as string))
     </div>
 
     <!-- displaying kit data -->
-    <div v-else class="col-md-4">
+    <div v-else data-cy="kit-form-backend-errors" class="col-md-4">
       <!-- backend errors from non_field_errors dictionary -->
       <div v-if="backendErrors.non_field_errors">
         <p
@@ -85,7 +85,7 @@ onMounted(async () => await loadData(route.params.id as string))
       </div>
 
       <!-- backend general errors -->
-      <div v-if="errorMessage" class="alert alert-danger">
+      <div v-if="errorMessage" data-cy="kit-form-error" class="alert alert-danger">
         {{ errorMessage }}
       </div>
 
@@ -96,6 +96,7 @@ onMounted(async () => await loadData(route.params.id as string))
           <label for="name" class="form-label">Nombre</label>
           <input
             autofocus
+            data-cy="kit-name-input"
             type="text"
             id="name"
             class="form-control"
@@ -104,12 +105,18 @@ onMounted(async () => await loadData(route.params.id as string))
           />
 
           <!-- frontend errors -->
-          <p class="form-text text-danger" v-for="error in v$.name.$errors" :key="error.$uid">
+          <p
+            class="form-text text-danger"
+            data-cy="kit-name-frontend-error"
+            v-for="error in v$.name.$errors"
+            :key="error.$uid"
+          >
             {{ error.$message }}
           </p>
 
           <!-- backend errors -->
           <p
+            data-cy="kit-name-backend-error"
             v-for="(error, i) in getFieldErrors('name')"
             :key="`backend-${i}`"
             class="form-text text-danger"
@@ -120,11 +127,21 @@ onMounted(async () => await loadData(route.params.id as string))
 
         <!-- buttons -->
         <div>
-          <button type="submit" class="btn btn-sm btn-primary" :disabled="isSaving">
+          <button
+            data-cy="kit-submit-button"
+            type="submit"
+            class="btn btn-sm btn-primary"
+            :disabled="isSaving"
+          >
             <span v-if="isSaving" class="spinner-border spinner-border-sm me-1"></span>
             {{ !kit.id ? 'Guardar' : 'Actualizar' }}
           </button>
-          <button type="button" class="btn btn-sm btn-secondary" @click="handleGoBack">
+          <button
+            data-cy="kit-cancel-button"
+            type="button"
+            class="btn btn-sm btn-secondary"
+            @click="handleGoBack"
+          >
             Cancelar
           </button>
         </div>

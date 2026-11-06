@@ -125,7 +125,7 @@ onMounted(async () => await loadKit(Number(route.params.id)))
 
     <!-- displaying kit data -->
     <div v-else data-cy="kit-detail" class="col-md-4">
-      <h3>{{ kit.name }}</h3>
+      <h3 data-cy="kit-detail-name">{{ kit.name }}</h3>
       <hr />
       <p><strong>ID:</strong> {{ kit.id }}</p>
       <p><strong>Nombre:</strong> {{ kit.name }}</p>

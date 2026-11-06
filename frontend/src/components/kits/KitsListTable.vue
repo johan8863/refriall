@@ -17,7 +17,10 @@ defineProps<{
     <tbody>
       <tr v-for="kit in kits" :key="kit.id" :data-cy="`kit-row-${kit.id}`">
         <td>
-          <RouterLink :to="{ name: 'kits_detail', params: { id: kit.id } }">
+          <RouterLink
+            :data-cy="`kit-title-${kit.id}`"
+            :to="{ name: 'kits_detail', params: { id: kit.id } }"
+          >
             {{ kit.name }}
           </RouterLink>
         </td>
