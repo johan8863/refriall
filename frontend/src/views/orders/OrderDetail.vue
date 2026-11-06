@@ -158,14 +158,10 @@ const generatePDF = (): void => {
 }
 
 const loadOrderData = async (): Promise<void> => {
-  try {
-    await loadOrder(Number(route.params.id))
+  await loadOrder(Number(route.params.id))
 
-    if (order.value) {
-      paginatedOrders.value = prepareOrderPages()
-    }
-  } catch (error) {
-    console.error('Error loading order:', error)
+  if (order.value) {
+    paginatedOrders.value = prepareOrderPages()
   }
 }
 
