@@ -64,7 +64,7 @@ Cypress.Commands.add('login', (credentials?: LoginCredentials) => {
 declare global {
   namespace Cypress {
     interface Chainable {
-      login(credentials: LoginCredentials): Chainable<void>
+      login(credentials?: LoginCredentials): Chainable<void>
     }
   }
 }
