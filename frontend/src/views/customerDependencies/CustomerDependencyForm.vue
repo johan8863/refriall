@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // vue
-import { onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { helpers, required } from '@vuelidate/validators'
 
 // app
@@ -11,7 +11,6 @@ import { useForm } from '@/composables/useForm'
 import type { CustomerDependency } from './types'
 
 const route = useRoute()
-const router = useRouter()
 
 // Check if we're in create or update mode
 const isCreate = route.name === 'customer_dependecy_create'
@@ -67,17 +66,18 @@ const {
   detailView: 'customer_dependecy_detail'
 })
 
-// Lifecycle
-onMounted(async () => {
-  // For create mode, we already have the customer ID
-  if (isCreate) {
-    dependency.value.customer = customerId
-    return
-  }
-
-  // For update mode, load the dependency data
-  await loadData(route.params.id as string)
-})
+watch(
+  () => route.params.id,
+  async (id) => {
+    if (isCreate) {
+      dependency.value.customer = customerId
+      return
+    }
+    // For update mode, load the dependency data
+    await loadData(Number(id))
+  },
+  { immediate: true }
+)
 </script>
 
 <template>

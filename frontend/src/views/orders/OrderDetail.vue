@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // vue
 import { useRoute, useRouter } from 'vue-router'
-import { ref, onMounted, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 // app
 import { orderService } from '@/services/orderService'
@@ -211,10 +211,13 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-// Lifecycle
-onMounted(async () => {
-  await loadOrderData()
-})
+watch(
+  () => route.params.id,
+  async (id) => {
+    await loadOrderData()
+  },
+  { immediate: true }
+)
 </script>
 
 <template>

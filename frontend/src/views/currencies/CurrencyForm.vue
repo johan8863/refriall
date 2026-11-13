@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue
-import { onMounted } from 'vue'
+import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 // third
@@ -67,8 +67,14 @@ const handleSubmit = async () => {
   await useFormSubmit()
 }
 
-// Lifecycle
-onMounted(async () => await loadData(route.params.id as string))
+// Async data fetching after navigation
+watch(
+  () => route.params.id,
+  async (id) => {
+    if (id) await loadData(Number(id))
+  },
+  { immediate: true }
+)
 </script>
 
 <template>

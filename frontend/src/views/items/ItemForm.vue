@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // vue
-import { onMounted, computed } from 'vue'
+import { watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { helpers, required, minValue } from '@vuelidate/validators'
+import { helpers, required, minValue, numeric } from '@vuelidate/validators'
 
 // app
 import { itemService } from '@/services/itemService'
@@ -76,8 +76,14 @@ const measurementOptions = computed(() => {
   return MEASUREMENT_OPTIONS.filter((opt) => opt.value === 'u')
 })
 
-// Lifecycle
-onMounted(async () => await loadData(route.params.id as string))
+// Async data fetching after navigation
+watch(
+  () => route.params.id,
+  async (id) => {
+    if (id) await loadData(Number(id))
+  },
+  { immediate: true }
+)
 </script>
 
 <template>

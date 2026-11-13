@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // vue
-import { ref } from 'vue'
-import { onMounted, computed } from 'vue'
+import { ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
@@ -79,10 +79,13 @@ const confirmDelete = async () => {
   }
 }
 
-// Lifecycle
-onMounted(async () => {
-  await loadCurrency(Number(route.params.id))
-})
+watch(
+  () => route.params.id,
+  async (id) => {
+    await loadCurrency(Number(id))
+  },
+  { immediate: true }
+)
 </script>
 
 <template>

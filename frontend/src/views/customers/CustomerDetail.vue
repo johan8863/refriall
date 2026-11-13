@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
@@ -111,6 +111,14 @@ const confirmDelete = async (): Promise<void> => {
     isDeleting.value = false
   }
 }
+
+watch(
+  () => route.params.id,
+  async (id) => {
+    await loadCustomer(Number(id))
+  },
+  { immediate: true }
+)
 
 // Lifecycle
 onMounted(async () => {

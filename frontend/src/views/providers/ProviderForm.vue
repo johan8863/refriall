@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 // third
@@ -113,9 +113,13 @@ const {
   detailView: 'providers_detail'
 })
 
-onMounted(async () => {
-  await loadData(route.params.id as string)
-})
+watch(
+  () => route.params.id,
+  async (id) => {
+    await loadData(Number(id))
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
