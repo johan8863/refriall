@@ -51,14 +51,32 @@ Cypress.Commands.add('login', (credentials?: LoginCredentials) => {
     password: 'cypress_pass_123'
   }
 
-  cy.request({
-    method: 'POST',
-    url: 'http://127.0.0.1:8000/api/auth/token/',
-    body: finalCredentials
-  }).then((response) => {
-    window.localStorage.setItem('refriall_auth_access_token', response.body.access)
-    window.localStorage.setItem('refriall_auth_refresh_token', response.body.refresh)
-  })
+  cy.session(
+    'refriall_auth',
+    () => {
+      // session ('refriall_auth' static argument) id must be changed if multiple users needed
+      cy.request({
+        method: 'POST',
+        url: 'http://127.0.0.1:8000/api/auth/token/',
+        body: finalCredentials
+      }).then((response) => {
+        window.localStorage.setItem('refriall_auth_access_token', response.body.access)
+        window.localStorage.setItem('refriall_auth_refresh_token', response.body.refresh)
+      })
+    },
+    {
+      validate() {
+        cy.request({
+          method: 'POST',
+          url: 'http://127.0.0.1:8000/api/auth/token/refresh/',
+          body: { refresh: window.localStorage.getItem('refriall_auth_refresh_token') },
+          failOnStatusCode: false
+        })
+          .its('status')
+          .should('eq', 200)
+      }
+    }
+  )
 })
 
 declare global {
