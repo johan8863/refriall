@@ -30,9 +30,7 @@ interface RequestConfigWithRetry extends InternalAxiosRequestConfig {
 const clearStateAndStorage = async (): Promise<void> => {
   const { useAuthStore } = await import('../stores/authStore')
   const authStore = useAuthStore()
-  authStore.isAuthenticated = false
-  localStorage.removeItem('refriall_auth_access_token')
-  localStorage.removeItem('refriall_auth_refresh_token')
+  authStore.logout()
 
   if (window.location.pathname !== '/login') {
     const currentPath = window.location.pathname
