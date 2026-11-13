@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // vue
 import { onMounted, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { helpers, required, minValue } from '@vuelidate/validators'
 
 // app
