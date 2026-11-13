@@ -336,11 +336,13 @@ router.beforeEach(async (to) => {
   const { useAuthStore } = await import('@/stores/authStore')
   const authStore = useAuthStore()
 
+  authStore.initAuth()
+
   // get refresh auth token
   const refreshToken = localStorage.getItem('refriall_auth_refresh_token')
 
   if (!refreshToken && to.name !== 'login') {
-    authStore.$reset()
+    authStore.logout()
     return {
       name: 'login',
       query: { redirect: to.fullPath }
@@ -353,7 +355,7 @@ router.beforeEach(async (to) => {
       const isExpired = refreshDecoded.exp * 1000 < Date.now()
 
       if (isExpired && to.name !== 'login') {
-        authStore.$reset()
+        authStore.logout()
 
         return {
           name: 'login',
@@ -361,7 +363,7 @@ router.beforeEach(async (to) => {
         }
       }
     } catch (error) {
-      authStore.$reset()
+      authStore.logout()
     }
   }
 
