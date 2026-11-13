@@ -10,7 +10,7 @@ import router from '@/router'
 const authStore = useAuthStore()
 
 const logout = () => {
-  authStore.$reset()
+  authStore.logout()
   router.push({ name: 'login' })
 }
 </script>
