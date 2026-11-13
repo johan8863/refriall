@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // vue
 import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { helpers, required } from '@vuelidate/validators'
 
 // app
@@ -40,16 +40,16 @@ const initialData: Order = {
   install: false,
   maintenance: false,
   support: 't',
-  kit: null,
+  kit: 0,
   kit_brand: '',
   kit_model: '',
   kit_serial: '',
   job_description: null,
   itemtime_set: [],
   itemtimeorder_set: [],
-  provider: null,
+  provider: 0,
   provider_signature_date: '',
-  customer_signature_date: null,
+  customer_signature_date: '',
   check_number: null,
   charge_aprove: null,
   charge_check: null,
