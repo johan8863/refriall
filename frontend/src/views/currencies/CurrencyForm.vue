@@ -19,7 +19,7 @@ const route = useRoute()
 const initialData: Currency = {
   id: 0,
   name: '',
-  description: null
+  description: ''
 }
 
 // Validation rules
