@@ -88,6 +88,7 @@ const iconClass = computed(() =>
     :style="{ display: isVisible ? 'block' : 'none' }"
     tabindex="-1"
     :aria-hidden="isVisible ? 'false' : 'true'"
+    data-cy="delete-modal"
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -105,7 +106,7 @@ const iconClass = computed(() =>
 
         <!-- Body -->
         <div class="modal-body">
-          <div v-if="errorMessage" class="alert alert-danger">
+          <div v-if="errorMessage" data-cy="delete-modal-error" class="alert alert-danger">
             <i class="bi bi-exclamation-circle"></i> {{ errorMessage }}
           </div>
 
@@ -143,6 +144,7 @@ const iconClass = computed(() =>
             :class="`btn btn-${variant}`"
             @click="confirmDelete"
             :disabled="isDeleting"
+            data-cy="delete-modal-confirm"
           >
             <span
               v-if="isDeleting"
@@ -157,6 +159,7 @@ const iconClass = computed(() =>
             class="btn btn-secondary"
             @click="closeModal"
             :disabled="isDeleting"
+            data-cy="delete-modal-cancel"
           >
             <i class="bi bi-x-circle"></i> Cancelar
           </button>
