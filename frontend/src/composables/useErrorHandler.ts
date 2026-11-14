@@ -51,7 +51,7 @@ export const useErrorHandler = (options: UseErrorHandlerOptions = {}) => {
     switch (status) {
       case 400:
         if (error.config?.method === 'delete') {
-          errorMessage.value = `${objectName} con información asociada.`
+          errorMessage.value = `${objectName} con registros relacionados.`
         } else {
           // form validation errors
           if (data && typeof data === 'object') {
