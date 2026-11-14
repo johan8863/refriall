@@ -36,7 +36,9 @@ const emit = defineEmits<{
       Cargando...
     </li>
     <li v-else class="list-group-item">
-      <a href="#" @click.prevent="$emit('onDelete')" class="text-danger">Eliminar</a>
+      <a data-cy="kit-delete-menu" href="#" @click.prevent="$emit('onDelete')" class="text-danger"
+        >Eliminar</a
+      >
     </li>
   </ul>
 </template>
