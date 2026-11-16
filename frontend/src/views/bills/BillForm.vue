@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 // third
@@ -254,26 +254,24 @@ const selectedOrders = computed<number[]>({
 
 const { checkAllCheckboxes } = useCheckAllCheckboxes<OrderListItemType>(orders, selectedOrders)
 
-watch(
-  () => route.params.id,
-  async (id) => {
-    isLoadingCurrencies.value = true
-    try {
-      const respCurrencies = await currencyService.listCurrencies()
-      currencies.value = respCurrencies.data
+watchEffect(async () => {
+  isLoadingCurrencies.value = true
+  try {
+    const respCurrencies = await currencyService.listCurrencies()
+    currencies.value = respCurrencies.data
 
-      if (id) {
-        await loadData(Number(id))
-        await loadBillFormData()
-      }
-    } catch (error) {
-      console.error('General errors:', { error })
-    } finally {
-      isLoadingCurrencies.value = false
+    const id = route.params.id
+
+    if (id) {
+      await loadData(Number(id))
+      await loadBillFormData()
     }
-  },
-  { immediate: true }
-)
+  } catch (error) {
+    console.error('General errors:', { error })
+  } finally {
+    isLoadingCurrencies.value = false
+  }
+})
 </script>
 
 <template>

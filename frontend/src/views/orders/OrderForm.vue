@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // vue
 import { useRoute } from 'vue-router'
-import { ref, watch } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import { helpers, required } from '@vuelidate/validators'
 
 // app
@@ -252,30 +252,28 @@ const handleSubmit = async (): Promise<void> => {
   await useFormSubmit()
 }
 
-watch(
-  () => route.params.id,
-  async (id) => {
-    await loadBackendData()
+watchEffect(async () => {
+  await loadBackendData()
 
-    if (id) {
-      try {
-        isLoadingOrderData.value = true
-        await loadData(Number(id))
-        order.value.itemtime_set = order.value.itemtime_set.map((itemTime) => ({
-          item: typeof itemTime.item === 'object' ? itemTime.item.id : itemTime.item,
-          times: itemTime.times
-        }))
-      } catch (error) {
-        console.error('Error loading order:', error)
-      } finally {
-        isLoadingOrderData.value = false
-      }
-    } else {
-      createItemTime()
+  const id = route.params.id
+
+  if (id) {
+    try {
+      isLoadingOrderData.value = true
+      await loadData(Number(id))
+      order.value.itemtime_set = order.value.itemtime_set.map((itemTime) => ({
+        item: typeof itemTime.item === 'object' ? itemTime.item.id : itemTime.item,
+        times: itemTime.times
+      }))
+    } catch (error) {
+      console.error('Error loading order:', error)
+    } finally {
+      isLoadingOrderData.value = false
     }
-  },
-  { immediate: true }
-)
+  } else {
+    createItemTime()
+  }
+})
 </script>
 
 <template>

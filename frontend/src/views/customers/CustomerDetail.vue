@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
@@ -112,18 +112,7 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-watch(
-  () => route.params.id,
-  async (id) => {
-    await loadCustomer(Number(id))
-  },
-  { immediate: true }
-)
-
-// Lifecycle
-onMounted(async () => {
-  await loadCustomer(Number(route.params.id))
-})
+watchEffect(async () => await loadCustomer(Number(route.params.id)))
 </script>
 
 <template>

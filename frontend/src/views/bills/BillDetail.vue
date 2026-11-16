@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // app
@@ -182,7 +182,7 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-watch(() => route.params.id, loadBillData, { immediate: true })
+watchEffect(loadBillData)
 </script>
 
 <template>

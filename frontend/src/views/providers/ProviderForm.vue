@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue
-import { onMounted, computed, watch } from 'vue'
+import { computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 // third
@@ -113,13 +113,7 @@ const {
   detailView: 'providers_detail'
 })
 
-watch(
-  () => route.params.id,
-  async (id) => {
-    await loadData(Number(id))
-  },
-  { immediate: true }
-)
+watchEffect(async () => await loadData(Number(route.params.id)))
 </script>
 
 <template>

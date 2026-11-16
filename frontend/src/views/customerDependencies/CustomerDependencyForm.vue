@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue
-import { watch } from 'vue'
+import { watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { helpers, required } from '@vuelidate/validators'
 
@@ -66,18 +66,7 @@ const {
   detailView: 'customer_dependecy_detail'
 })
 
-watch(
-  () => route.params.id,
-  async (id) => {
-    if (isCreate) {
-      dependency.value.customer = customerId
-      return
-    }
-    // For update mode, load the dependency data
-    await loadData(Number(id))
-  },
-  { immediate: true }
-)
+watchEffect(async () => await loadData(Number(route.params.id)))
 </script>
 
 <template>

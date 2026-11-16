@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue
-import { watch } from 'vue'
+import { watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { helpers, required } from '@vuelidate/validators'
 
@@ -77,13 +77,7 @@ const {
 })
 
 // Async data fetching after navigation
-watch(
-  () => route.params.id,
-  async (id) => {
-    if (id) await loadData(Number(id))
-  },
-  { immediate: true }
-)
+watchEffect(async () => await loadData(Number(route.params.id)))
 </script>
 
 <template>

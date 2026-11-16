@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue
-import { ref, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -79,13 +79,7 @@ const confirmDelete = async () => {
   }
 }
 
-watch(
-  () => route.params.id,
-  async (id) => {
-    await loadCurrency(Number(id))
-  },
-  { immediate: true }
-)
+watchEffect(async () => await loadCurrency(Number(route.params.id)))
 </script>
 
 <template>

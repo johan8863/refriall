@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // vue
 import { useRoute, useRouter } from 'vue-router'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 
 // app
 import { orderService } from '@/services/orderService'
@@ -211,13 +211,7 @@ const confirmDelete = async (): Promise<void> => {
   }
 }
 
-watch(
-  () => route.params.id,
-  async (id) => {
-    await loadOrderData()
-  },
-  { immediate: true }
-)
+watchEffect(async () => await loadOrderData())
 </script>
 
 <template>
