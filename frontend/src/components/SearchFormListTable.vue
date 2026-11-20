@@ -88,10 +88,16 @@ const handleSubmit = (): void => {
         :disabled="isLoading"
         @keyup.enter="handleSubmit"
         @search="handleSearchEvent"
+        data-cy="search-input"
       />
     </div>
     <div class="col-auto">
-      <button type="submit" class="btn btn-primary" :disabled="isLoading || !searchTerm.trim()">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        :disabled="isLoading || !searchTerm.trim()"
+        data-cy="search-submit"
+      >
         <span v-if="isLoading" class="spinner-border spinner-border-sm me-1"></span>
         Buscar
       </button>
@@ -101,6 +107,7 @@ const handleSubmit = (): void => {
         class="btn btn-secondary ms-1"
         :disabled="isLoading"
         v-if="hasSearched"
+        data-cy="search-clear"
       >
         Limpiar
       </button>

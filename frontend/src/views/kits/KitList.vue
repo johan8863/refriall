@@ -100,7 +100,12 @@ onMounted(async () => {
             <p class="lead text-muted">
               {{ hasSearched ? 'No se encontraron equipos' : 'No hay equipos registrados' }}
             </p>
-            <button v-if="hasSearched" class="btn btn-outline-primary" @click="clearSearch">
+            <button
+              v-if="hasSearched"
+              class="btn btn-outline-primary"
+              @click="clearSearch"
+              data-cy="kit-list-empty-clear"
+            >
               Volver a lista completa
             </button>
           </div>
