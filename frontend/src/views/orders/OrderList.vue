@@ -30,7 +30,7 @@ const {
   loadPrevItems,
   clearSearch
 } = usePaginationSearch<OrderList>({
-  fetchFunction: (page) => orderService.listOrder(page, ''),
+  fetchFunction: (page) => orderService.listOrderPagination(page),
   searchFunction: orderService.searchOrders,
   itemName: 'Orden',
   gender: 'f',

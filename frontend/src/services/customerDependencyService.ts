@@ -34,35 +34,26 @@ export const customerDependencyService = {
 
   /**
    * Get paginated list of customer dependencies with optional search
-   * @param currentPage - Page number (optional)
-   * @param searchTerm - Search term (optional)
+   * @param page - Page number
    * @returns Promise with paginated response
    */
   listCustomerDependencyPagination: (
-    currentPage: number | null = null,
-    searchTerm: string | null = null
+    page: number = 1
   ): Promise<AxiosResponse<PaginatedResponse<CustomerDependency>>> => {
-    const params: Record<string, string | number> = {}
-    if (currentPage) params.page = currentPage
-    if (searchTerm) params.search = searchTerm
-    return apiBase.get(`${urlCustomerDependency}/list-pagination/`, { params })
+    return apiBase.get(`${urlCustomerDependency}/list-pagination/`, { params: { page } })
   },
 
   /**
    * Search customer dependencies with pagination
-   * @param searchTerm - Search term
+   * @param search - Search term
    * @param page - Page number (default: 1)
    * @returns Promise with paginated response
    */
   searchCustomerDependency: (
-    searchTerm: string,
+    search: string,
     page: number = 1
   ): Promise<AxiosResponse<PaginatedResponse<CustomerDependency>>> => {
-    const params: Record<string, string | number> = {
-      search: searchTerm,
-      ...(page > 1 && { page })
-    }
-    return apiBase.get(`${urlCustomerDependency}/list-pagination/`, { params })
+    return apiBase.get(`${urlCustomerDependency}/list-pagination/`, { params: { search, page } })
   },
 
   /**

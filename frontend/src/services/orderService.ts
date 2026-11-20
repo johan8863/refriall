@@ -8,30 +8,19 @@ const urlOrder = orderAPIEnvs.orderUrl
 
 export const orderService = {
   /**
-   * Get paginated list of orders with optional search
+   * Get paginated list of orders
    */
-  listOrder: (
-    currentPage: number | null = null,
-    searchTerm: string | null = null
-  ): Promise<AxiosResponse<PaginatedResponse<OrderList>>> => {
-    const params: Record<string, string | number> = {
-      ...(currentPage && { page: currentPage }),
-      ...(searchTerm && { search: searchTerm })
-    }
-    return apiBase.get(`${urlOrder}/list-pagination/`, { params })
+  listOrderPagination: (page: number = 1): Promise<AxiosResponse<PaginatedResponse<OrderList>>> => {
+    return apiBase.get(`${urlOrder}/list-pagination/`, { params: { page } })
   },
   /**
    * Search orders by term with pagination
    */
   searchOrders: (
-    searchTerm: string,
+    search: string,
     page: number = 1
   ): Promise<AxiosResponse<PaginatedResponse<OrderList>>> => {
-    const params: Record<string, string | number> = {
-      search: searchTerm,
-      ...(page > 1 && { page })
-    }
-    return apiBase.get(`${urlOrder}/list-pagination/`, { params })
+    return apiBase.get(`${urlOrder}/list-pagination/`, { params: { search, page } })
   },
   /**
    * Get order detail with all nested relations

@@ -8,35 +8,23 @@ const urlKit = kitAPIEnvs.kitUrl
 
 export const kitService = {
   /*
-   * Paginated list kit service with optional search term
-   * @params currentPage - page number
-   * @params searchTerm - search term
+   * Paginated list kit service
+   * @params page - page number
    * @returns Promise with a paginated response
    */
-  listKit: (
-    page: number = 1,
-    search: string = ''
-  ): Promise<AxiosResponse<PaginatedResponse<Kit>>> => {
-    const params: Record<string, string | number> = {
-      ...(page && { page }),
-      ...(search && { search })
-    }
-    return apiBase.get(`${urlKit}/list-pagination/`, { params })
+  listKit: (page: number = 1): Promise<AxiosResponse<PaginatedResponse<Kit>>> => {
+    return apiBase.get(`${urlKit}/list-pagination/`, { params: { page } })
   },
   /*
-   * Searches kits based on the searchTerm param
-   * @param searchTerm - search term
+   * Searches kits based on the search param
+   * @param search - search term
    * @param page - page number(optional, default = 1)
    */
   searchKits: (
-    searchTerm: string,
+    search: string,
     page: number = 1
   ): Promise<AxiosResponse<PaginatedResponse<Kit>>> => {
-    const params: Record<string, string | number> = {
-      search: searchTerm,
-      ...(page > 1 && { page })
-    }
-    return apiBase.get(`${urlKit}/list-pagination/`, { params })
+    return apiBase.get(`${urlKit}/list-pagination/`, { params: { search, page } })
   },
   /*
    * Gets all kits(no pagination)

@@ -26,7 +26,7 @@ const {
   loadPrevItems,
   clearSearch
 } = usePaginationSearch<Customer>({
-  fetchFunction: (page) => customerService.listCustomer(page, ''),
+  fetchFunction: (page) => customerService.listCustomerPagination(page),
   searchFunction: customerService.searchCustomers,
   itemName: 'Clientes',
   gender: 'm',

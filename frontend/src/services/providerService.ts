@@ -12,31 +12,20 @@ const urlProvider = providerAPIEnvs.providerUrl
 
 export const providerService = {
   /**
-   * Get paginated list of providers with optional search
+   * Get paginated list of providers
    */
-  listProvider: (
-    page: number | null = null,
-    search: string | null = null
-  ): Promise<AxiosResponse<PaginatedResponse<Provider>>> => {
-    const params: Record<string, string | number> = {
-      ...(page && { page: page }),
-      ...(search && { search: search })
-    }
-    return apiBase.get(`${urlProvider}/list-pagination/`, { params })
+  listProvider: (page: number = 1): Promise<AxiosResponse<PaginatedResponse<Provider>>> => {
+    return apiBase.get(`${urlProvider}/list-pagination/`, { params: { page } })
   },
 
   /**
    * Search providers by term with pagination
    */
   searchProviders: (
-    searchTerm: string,
+    search: string,
     page: number = 1
   ): Promise<AxiosResponse<PaginatedResponse<Provider>>> => {
-    const params: Record<string, string | number> = {
-      search: searchTerm,
-      ...(page > 1 && { page })
-    }
-    return apiBase.get(`${urlProvider}/list-pagination/`, { params })
+    return apiBase.get(`${urlProvider}/list-pagination/`, { params: { search, page } })
   },
 
   /**

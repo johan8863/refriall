@@ -16,30 +16,22 @@ const urlBill = billsAPIEnvs.billUrl
 
 export const billService = {
   /**
-   * Get paginated list of bills with optional search
+   * Get paginated list of bills
    */
   listBillsPagination: (
-    currentPage: number | null = null,
-    searchTerm: string | null = null
+    page: number = 1
   ): Promise<AxiosResponse<PaginatedResponse<BillListItem>>> => {
-    const params: Record<string, string | number> = {}
-    if (currentPage) params.page = currentPage
-    if (searchTerm) params.search = searchTerm
-    return apiBase.get(`${urlBill}/list-pagination/`, { params })
+    return apiBase.get(`${urlBill}/list-pagination/`, { params: { page } })
   },
 
   /**
    * Search bills by term with pagination
    */
   searchBills: (
-    searchTerm: string,
+    search: string,
     page: number = 1
   ): Promise<AxiosResponse<PaginatedResponse<BillListItem>>> => {
-    const params: Record<string, string | number> = {
-      search: searchTerm,
-      ...(page > 1 && { page })
-    }
-    return apiBase.get(`${urlBill}/list-pagination/`, { params })
+    return apiBase.get(`${urlBill}/list-pagination/`, { params: { search, page } })
   },
 
   /**

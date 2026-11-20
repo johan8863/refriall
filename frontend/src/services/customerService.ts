@@ -13,7 +13,7 @@ export const customerService = {
    * @param searchTerm - Search term (optional)
    * @returns Promise with paginated response
    */
-  listCustomer: (
+  listCustomerPagination: (
     currentPage: number | null = null,
     searchTerm: string | null = null
   ): Promise<AxiosResponse<PaginatedResponse<Customer>>> => {

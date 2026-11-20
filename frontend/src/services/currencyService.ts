@@ -14,36 +14,26 @@ export const currencyService = {
   listCurrencies: (): Promise<AxiosResponse<Currency[]>> => apiBase.get(`${url}/`),
 
   /**
-   * Get paginated list of currencies with optional search
-   * @param currentPage - Page number (optional)
-   * @param searchTerm - Search term (optional)
+   * Get paginated list of currencies
+   * @param page - Page number (optional)
    * @returns Promise with paginated response
    */
   listCurrencyPagination: (
-    currentPage: number | null = null,
-    searchTerm: string | null = null
+    page: number = 1
   ): Promise<AxiosResponse<PaginatedResponse<Currency>>> => {
-    const params: Record<string, string | number> = {
-      ...(currentPage && { page: currentPage }),
-      ...(searchTerm && { search: searchTerm })
-    }
-    return apiBase.get(`${url}/list-pagination/`, { params })
+    return apiBase.get(`${url}/list-pagination/`, { params: { page } })
   },
   /**
    * Search currencies by term with pagination
-   * @param searchTerm - Search term
+   * @param search - Search term
    * @param page - Page number (default: 1)
    * @returns Promise with paginated response
    */
   searchCurrency: (
-    searchTerm: string,
+    search: string,
     page: number = 1
   ): Promise<AxiosResponse<PaginatedResponse<Currency>>> => {
-    const params: Record<string, string | number> = {
-      search: searchTerm,
-      ...(page > 1 && { page })
-    }
-    return apiBase.get(`${url}/list-pagination/`, { params })
+    return apiBase.get(`${url}/list-pagination/`, { params: { search, page } })
   },
 
   /**

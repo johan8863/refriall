@@ -26,7 +26,7 @@ const {
   loadPrevItems,
   clearSearch
 } = usePaginationSearch<BillListItem>({
-  fetchFunction: (page) => billService.listBillsPagination(page, ''),
+  fetchFunction: (page) => billService.listBillsPagination(page),
   searchFunction: billService.searchBills,
   itemName: 'Factura',
   gender: 'f',

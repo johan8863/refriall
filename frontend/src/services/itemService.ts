@@ -9,35 +9,25 @@ const urlItem = itemAPIEnvs.itemUrl
 export const itemService = {
   /**
    * Get paginated list of items with optional search
-   * @param currentPage - Page number (optional)
+   * @param page - Page number
    * @param searchTerm - Search term (optional)
    * @returns Promise with paginated response
    */
-  listItem: (
-    currentPage: number | null = null,
-    searchTerm: string | null = null
-  ): Promise<AxiosResponse<PaginatedResponse<Item>>> => {
-    const params: Record<string, string | number> = {}
-    if (currentPage) params.page = currentPage
-    if (searchTerm) params.search = searchTerm
-    return apiBase.get(`${urlItem}/list-pagination/`, { params })
+  listItemPagination: (page: number = 1): Promise<AxiosResponse<PaginatedResponse<Item>>> => {
+    return apiBase.get(`${urlItem}/list-pagination/`, { params: { page } })
   },
 
   /**
    * Search items by term with pagination
-   * @param searchTerm - Search term
+   * @param search - Search term
    * @param page - Page number (default: 1)
    * @returns Promise with paginated response
    */
   searchItems: (
-    searchTerm: string,
+    search: string,
     page: number = 1
   ): Promise<AxiosResponse<PaginatedResponse<Item>>> => {
-    const params: Record<string, string | number> = {
-      search: searchTerm,
-      ...(page > 1 && { page })
-    }
-    return apiBase.get(`${urlItem}/list-pagination/`, { params })
+    return apiBase.get(`${urlItem}/list-pagination/`, { params: { search, page } })
   },
 
   /**
