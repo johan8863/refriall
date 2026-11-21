@@ -10,7 +10,7 @@ export default defineConfig({
     video: false,
     screenshotOnRunFailure: true,
     defaultCommandTimeout: 8000,
-    // Reintentos automáticos en CI
+    // CI automatic retries
     retries: {
       runMode: 1,
       openMode: 0
