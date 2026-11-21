@@ -1,13 +1,14 @@
-<script setup>
+<script setup lang="ts">
+import type { Item } from '@/views/items/types'
 defineProps({
   items: {
-    type: Array,
+    type: Array<Item>,
     required: true
   }
 })
 </script>
 <template>
-  <table class="table table-striped table-hover">
+  <table class="table table-striped table-hover" data-cy="item-list-table">
     <thead class="table-dark">
       <tr>
         <th scope="col">Código</th>
