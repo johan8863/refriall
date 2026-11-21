@@ -59,14 +59,14 @@ onMounted(async () => await loadItems(1, ''))
         </div>
 
         <div class="col-md-12">
-          <div v-if="isLoading" class="text-center my-4">
+          <div v-if="isLoading" class="text-center my-4" data-cy="item-list-loading">
             <div class="spinner-border text-primary" role="status">
               <span class="visually-hidden">Cargando...</span>
             </div>
             <p class="mt-2">Buscando artículos...</p>
           </div>
 
-          <div v-else-if="errorMessage" class="alert alert-danger mt-3">
+          <div v-else-if="errorMessage" class="alert alert-danger mt-3" data-cy="item-list-error">
             {{ errorMessage }}
           </div>
 
@@ -83,11 +83,16 @@ onMounted(async () => await loadItems(1, ''))
             />
           </div>
 
-          <div v-else class="text-center my-5">
+          <div v-else class="text-center my-5" data-cy="item-list-empty">
             <p class="lead text-muted">
               {{ hasSearched ? 'No se encontraron artículos' : 'No hay artículos registrados' }}
             </p>
-            <button v-if="hasSearched" class="btn btn-outline-primary" @click="clearSearch">
+            <button
+              v-if="hasSearched"
+              class="btn btn-outline-primary"
+              @click="clearSearch"
+              data-cy="item-list-empty-clear"
+            >
               Volver a lista completa
             </button>
           </div>

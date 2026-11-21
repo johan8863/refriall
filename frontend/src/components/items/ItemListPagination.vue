@@ -28,15 +28,17 @@ defineEmits(['onLoadPrevItems', 'onLoadNextItems'])
       class="btn btn-outline-primary"
       @click="$emit('onLoadPrevItems')"
       :disabled="isLoading"
+      data-cy="pagination-prev"
     >
       ← Anterior
     </button>
-    <span class="text-muted">Página {{ currentPage }}</span>
+    <span class="text-muted" data-cy="pagination-current-page">Página {{ currentPage }}</span>
     <button
       v-if="showNextButton"
       class="btn btn-outline-primary"
       @click="$emit('onLoadNextItems')"
       :disabled="isLoading"
+      data-cy="pagination-next"
     >
       Siguiente →
     </button>
