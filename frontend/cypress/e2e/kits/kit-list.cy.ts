@@ -62,7 +62,7 @@ describe('Kit list', () => {
     cy.visit('/stock/kits')
     cy.wait('@getKits').its('request.url').should('include', 'page=1')
 
-    // cambia la respuesta para la siguiente llamada
+    // change the response to the next call
     cy.then(() => (currentBody = paginated([{ id: 1, name: 'Split' }], { count: 1 })))
 
     cy.get('[data-cy="search-input"]').type('Split')
