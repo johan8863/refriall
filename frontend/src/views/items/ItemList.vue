@@ -34,9 +34,7 @@ const {
 })
 
 // Load initial data
-onMounted(async () => {
-  await loadItems(1, '')
-})
+onMounted(async () => await loadItems(1, ''))
 </script>
 
 <template>
