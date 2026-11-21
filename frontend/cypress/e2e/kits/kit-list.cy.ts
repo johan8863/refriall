@@ -63,7 +63,7 @@ describe('Kit list', () => {
     cy.wait('@getKits').its('request.url').should('include', 'page=1')
 
     // cambia la respuesta para la siguiente llamada
-    currentBody = paginated([{ id: 1, name: 'Split' }], { count: 1 })
+    cy.then(() => (currentBody = paginated([{ id: 1, name: 'Split' }], { count: 1 })))
 
     cy.get('[data-cy="search-input"]').type('Split')
     cy.get('[data-cy="search-submit"]').click()
