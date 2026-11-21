@@ -1,4 +1,3 @@
-// views/items/types/index.ts
 import type { PaginatedResponse } from '@/types/shared'
 
 /**
