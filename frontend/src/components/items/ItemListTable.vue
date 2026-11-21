@@ -19,16 +19,19 @@ defineProps({
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in items" :key="item.id">
+      <tr v-for="item in items" :key="item.id" :data-cy="`item-row-${item.id}`">
         <td>
-          <RouterLink :to="{ name: 'items_detail', params: { id: item.id } }">
+          <RouterLink
+            :to="{ name: 'items_detail', params: { id: item.id } }"
+            :data-cy="`item-code-${item.id}`"
+          >
             {{ item.code }}
           </RouterLink>
         </td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.get_item_type }}</td>
-        <td>{{ item.get_measurement }}</td>
-        <td>$ {{ item.price.toFixed(2) }}</td>
+        <td :data-cy="`item-name-${item.id}`">{{ item.name }}</td>
+        <td :data-cy="`item-type-${item.id}`">{{ item.get_item_type }}</td>
+        <td :data-cy="`item-measurement-${item.id}`">{{ item.get_measurement }}</td>
+        <td :data-cy="`item-price-${item.id}`">$ {{ item.price.toFixed(2) }}</td>
       </tr>
     </tbody>
   </table>
