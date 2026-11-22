@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // vue
-import { watchEffect, computed } from 'vue'
+import { watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { helpers, required, minValue, numeric } from '@vuelidate/validators'
 
@@ -77,7 +77,14 @@ const measurementOptions = computed(() => {
 })
 
 // Async data fetching after navigation
-watchEffect(async () => await loadData(Number(route.params.id)))
+watch(
+  () => route.params.id,
+  async (id) => {
+    if (!id) return
+    await loadData(Number(id))
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
