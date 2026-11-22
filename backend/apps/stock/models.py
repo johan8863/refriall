@@ -3,6 +3,27 @@
 # django
 from django.db import models
 
+# Module-level constants shared by Item and ItemOrder.
+ITEM_TYPES = [
+    ('revision', 'Rev/Diag.'),
+    ('prod', 'Producto'),
+    ('concept', 'Concepto'),
+    ('repair', 'Reparación'),
+    ('maintenace', 'Mtto'),
+    ('install', 'Instal/Mont'),
+    ('unmounting', 'Desmontaje'),
+]
+
+MEASUREMENTS = [
+    ('u', 'Uno'),
+    ('m', 'Mts'),
+    ('kg', 'Kg'),
+    ('lts', 'Lts'),
+    ('gl', 'Gl'),
+    ('tr', 'Tr'),
+    ('pqt', 'Pqt'),
+]
+
 
 class Item(models.Model):
     """
@@ -10,26 +31,6 @@ class Item(models.Model):
     registered in service orders and bills. They can be six types as shown 
     in the item_type attribute.
     """
-
-    ITEM_TYPES = [
-        ('revision', 'Rev/Diag.'),
-        ('prod', 'Producto'),
-        ('concept', 'Concepto'),
-        ('repair', 'Reparación'),
-        ('maintenace', 'Mtto'),
-        ('install', 'Instal/Mont'),
-        ('unmounting', 'Desmontaje'),
-    ]
-
-    MEASUREMENTS = [
-        ('u', 'Uno'),
-        ('m', 'Mts'),
-        ('kg', 'Kg'),
-        ('lts', 'Lts'),
-        ('gl', 'Gl'),
-        ('tr', 'Tr'),
-        ('pqt', 'Pqt'),
-    ]
 
     code = models.CharField('Código', max_length=15, unique=True)
     name = models.CharField('Nombre', max_length=120)
@@ -67,26 +68,6 @@ class ItemOrder(models.Model):
     History model to save relation with orders to keep the current price isolated
     from changes in the Item model.
     """
-
-    ITEM_TYPES = [
-        ('revision', 'Rev/Diag.'),
-        ('prod', 'Producto'),
-        ('concept', 'Concepto'),
-        ('repair', 'Reparación'),
-        ('maintenace', 'Mtto'),
-        ('install', 'Instal/Mont'),
-        ('unmounting', 'Desmontaje'),
-    ]
-
-    MEASUREMENTS = [
-        ('u', 'Uno'),
-        ('m', 'Mts'),
-        ('kg', 'Kg'),
-        ('lts', 'Lts'),
-        ('gl', 'Gl'),
-        ('tr', 'Tr'),
-        ('pqt', 'Pqt'),
-    ]
 
     code = models.CharField('Código', max_length=15)
     name = models.CharField('Nombre', max_length=120)
