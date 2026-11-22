@@ -38,8 +38,6 @@ class Item(models.Model):
         'Unidad de medida',
         max_length=3,
         choices=MEASUREMENTS,
-        null=True,
-        blank=True
     )
     # consider to change this attribute and all the ones that requires
     # financial precision to an integer attribute including cents
@@ -97,8 +95,6 @@ class ItemOrder(models.Model):
         'Unidad de medida',
         max_length=3,
         choices=MEASUREMENTS,
-        null=True,
-        blank=True
     )
     price = models.FloatField('Precio')
 
