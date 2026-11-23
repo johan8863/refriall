@@ -87,12 +87,6 @@ class ItemOrderSerializerDetail(serializers.ModelSerializer):
             "get_measurement",
         ]
 
-        def validate(self, attrs):
-            # ItemOrder detail does NOT expose `item_type` nor `measurement`,
-            # so we skip those rules and only validate `price`.
-            validate_item_business_rules(attrs, skip_missing=('item_type', 'measurement'))
-            return super().validate(attrs)
-
 
 class KitSerializer(serializers.ModelSerializer):
     class Meta:
