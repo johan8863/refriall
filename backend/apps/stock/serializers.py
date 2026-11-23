@@ -9,6 +9,7 @@ from .models import Item, ItemOrder, Kit
 # Items that only accept 'u' (Uno) as measurement.
 # Products ('prod') are the only ones allowed to use other units.
 _SINGLE_UNIT_ITEM_TYPES = frozenset({
+    'revision',
     'concept',
     'repair',
     'maintenace',
