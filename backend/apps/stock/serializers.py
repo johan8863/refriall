@@ -18,13 +18,11 @@ _SINGLE_UNIT_ITEM_TYPES = frozenset({
 })
 
 
-def validate_item_business_rules(attrs, *, skip_missing=()):
+def validate_item_business_rules(attrs):
     """
     Shared business rules for Item and ItemOrder.
 
     :param attrs: validated data dict from the serializer.
-    :param skip_missing: field names to skip if absent (e.g. ItemOrderDetail
-        may not include `measurement` in its fields).
     :raises serializers.ValidationError: on rule violation.
     """
     item_type = attrs.get('item_type')
@@ -32,8 +30,7 @@ def validate_item_business_rules(attrs, *, skip_missing=()):
     price = attrs.get('price')
 
     if (
-        'measurement' not in skip_missing
-        and item_type in _SINGLE_UNIT_ITEM_TYPES
+        item_type in _SINGLE_UNIT_ITEM_TYPES
         and measurement != 'u'
     ):
         raise serializers.ValidationError({
@@ -42,7 +39,7 @@ def validate_item_business_rules(attrs, *, skip_missing=()):
             )
         })
 
-    if 'price' not in skip_missing and price is not None and price < 0.01:
+    if price is not None and price < 0.01:
         raise serializers.ValidationError({
             'price': 'El valor mínimo es 0.01.'
         })
